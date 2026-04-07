@@ -2,4 +2,4 @@
 *.key
 *.key.pem
 private/
-pki/
+pki/.DS_Store
