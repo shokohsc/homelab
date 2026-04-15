@@ -1,5 +1,7 @@
 .vite/
 *.key
 *.key.pem
+.DS_Store
+keys/
+pki/
 private/
-pki/.DS_Store

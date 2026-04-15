@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 set -euo pipefail
 
 PKI_SETUP_VERSION="1.0.0"
@@ -14,7 +14,8 @@ PKI_SETUP_VERSION="1.0.0"
 : "${INTERMEDIATE_KEY_SIZE:=prime256v1}"
 : "${INTERMEDIATE_KEY_LOCATION:=file}"
 : "${INTERMEDIATE_KEY_PATH:=}"
-: "${INTERMEDIATE_PKCS11_URI:=}"
+: "${INTERMEDIATE_KEY_PKCS11_URI:=}"
+: "${INTERMEDIATE_KEY_PKCS11_MODULE:=}"
 : "${COUNTRY:=US}"
 : "${STATE:=State}"
 : "${LOCALITY:=City}"
@@ -119,14 +120,14 @@ prompt_override() {
 check_files_and_prompt() {
     local files=("$@")
     local need_override=false
-    
+
     for file in "${files[@]}"; do
         if [[ -f "$file" ]]; then
             need_override=true
             break
         fi
     done
-    
+
     if $need_override; then
         print_warn "Some files already exist in ${PKI_DIR}"
         if [[ "$AUTO_OVERWRITE" != "true" ]]; then
@@ -254,12 +255,13 @@ generate_intermediate_key() {
             fi
             ;;
         pkcs11)
-            if [[ -z "$INTERMEDIATE_PKCS11_URI" ]]; then
-                print_error "PKCS11 URI required when INTERMEDIATE_KEY_LOCATION=pkcs11"
+            if [[ -z "$INTERMEDIATE_KEY_PKCS11_URI" ]]; then
+                print_error "PKCS#11 URI required when INTERMEDIATE_KEY_LOCATION=pkcs11"
+                print_error "Set INTERMEDIATE_KEY_PKCS11_URI environment variable"
                 exit 1
             fi
-            print_info "Using PKCS#11 key at: $INTERMEDIATE_PKCS11_URI"
-            INTERMEDIATE_KEY_FILE="$INTERMEDIATE_PKCS11_URI"
+            print_info "Using PKCS#11 key at: $INTERMEDIATE_KEY_PKCS11_URI"
+            INTERMEDIATE_KEY_FILE="$INTERMEDIATE_KEY_PKCS11_URI"
             ;;
         *)
             print_error "Unknown key location: $INTERMEDIATE_KEY_LOCATION"
@@ -348,7 +350,7 @@ create_root_crl() {
     if [[ "$CREATE_CRL" != "true" ]]; then
         return
     fi
-    
+
     print_info "Creating Root CA CRL..."
     if prompt_override "$ROOT_CRL_FILE"; then
         openssl ca -batch \
@@ -365,7 +367,7 @@ create_root_crl() {
                 "$ROOT_CERT_FILE" \
                 "$ROOT_KEY_FILE" 2>/dev/null || true
         }
-        
+
         if [[ -f "$ROOT_CRL_FILE" ]]; then
             chmod 444 "$ROOT_CRL_FILE"
             print_info "Root CA CRL created: $ROOT_CRL_FILE"
@@ -380,7 +382,7 @@ create_intermediate_crl() {
     if [[ "$CREATE_CRL" != "true" ]]; then
         return
     fi
-    
+
     print_info "Creating Intermediate CA CRL..."
     if prompt_override "$INTERMEDIATE_CRL_FILE"; then
         cat > "${PKI_DIR}/intermediate_crlopenssl.cnf" << EOF
@@ -400,12 +402,12 @@ crl_extensions = crl_ext
 [crl_ext]
 authorityKeyIdentifier = keyid:always
 EOF
-        
+
         openssl ca -batch -config "${PKI_DIR}/intermediate_crlopenssl.cnf" \
             -gencrl -out "$INTERMEDIATE_CRL_FILE"
         chmod 444 "$INTERMEDIATE_CRL_FILE"
         print_info "Intermediate CA CRL created: $INTERMEDIATE_CRL_FILE"
-        
+
         openssl crl -in "$INTERMEDIATE_CRL_FILE" -inform PEM -noout -text 2>/dev/null | head -10 || true
     fi
 }
@@ -414,26 +416,26 @@ create_ocsp_certificates() {
     if [[ "$CREATE_OCSP_RESPONDER" != "true" ]]; then
         return
     fi
-    
+
     print_info "Creating OCSP responder certificates..."
-    
+
     local ocsp_key="${INTERMEDIATE_PRIVATE_DIR}/ocsp.key.pem"
     local ocsp_root_csr="${INTERMEDIATE_CSR_DIR}/ocsp.root.csr.pem"
     local ocsp_root_cert="${INTERMEDIATE_CERTS_DIR}/ocsp.root.crt.pem"
     local ocsp_intermediate_csr="${INTERMEDIATE_CSR_DIR}/ocsp.intermediate.csr.pem"
     local ocsp_intermediate_cert="${INTERMEDIATE_CERTS_DIR}/ocsp.intermediate.crt.pem"
-    
+
     if prompt_override "$ocsp_key"; then
         openssl ecparam -name prime256v1 -genkey -noout -out "$ocsp_key"
         chmod 400 "$ocsp_key"
     fi
-    
+
     if prompt_override "$ocsp_root_csr"; then
         openssl req -new -key "$ocsp_key" \
             -subj "/C=${COUNTRY}/ST=${STATE}/L=${LOCALITY}/O=${ORGANIZATION}/OU=OCSP/CN=${ROOT_CN} OCSP Responder" \
             -out "$ocsp_root_csr"
     fi
-    
+
     if prompt_override "$ocsp_root_cert"; then
         cat > "${PKI_DIR}/ocsp_rootopenssl.cnf" << EOF
 [ca]
@@ -461,13 +463,13 @@ EOF
         chmod 444 "$ocsp_root_cert"
         rm -f "$ocsp_root_csr"
     fi
-    
+
     if prompt_override "$ocsp_intermediate_csr"; then
         openssl req -new -key "$ocsp_key" \
             -subj "/C=${COUNTRY}/ST=${STATE}/L=${LOCALITY}/O=${ORGANIZATION}/OU=OCSP/CN=${INTERMEDIATE_CN} OCSP Responder" \
             -out "$ocsp_intermediate_csr"
     fi
-    
+
     if prompt_override "$ocsp_intermediate_cert"; then
         cat > "${PKI_DIR}/ocsp_intermediateopenssl.cnf" << EOF
 [ca]
@@ -494,7 +496,7 @@ EOF
         chmod 444 "$ocsp_intermediate_cert"
         rm -f "$ocsp_intermediate_csr"
     fi
-    
+
     print_info "OCSP responder certificates created"
 }
 
@@ -538,27 +540,28 @@ Usage: $0 [options]
 
 Environment Variables:
   PKI_DIR                    Working directory (default: ./pki)
-  
+
   ROOT_CN                    Root CA Common Name (default: My Root CA)
   ROOT_VALIDITY_DAYS         Root certificate validity in days (default: 3650)
   ROOT_KEY_ALG               Root key algorithm: rsa|ec (default: ec)
   ROOT_KEY_SIZE              Root key size: for RSA: 2048|4096, for EC: prime256v1|secp384r1 (default: prime256v1)
-  
+
   INTERMEDIATE_CN            Intermediate CA Common Name (default: My Intermediate CA)
   INTERMEDIATE_VALIDITY_DAYS Intermediate certificate validity in days (default: 1825)
   INTERMEDIATE_KEY_ALG       Intermediate key algorithm: rsa|ec (default: ec)
   INTERMEDIATE_KEY_SIZE      Intermediate key size (default: prime256v1)
   INTERMEDIATE_KEY_LOCATION  Intermediate key location: file|pkcs11 (default: file)
   INTERMEDIATE_KEY_PATH      Path for intermediate key when using file location
-  INTERMEDIATE_PKCS11_URI    PKCS#11 URI for key when using pkcs11 location
-  
+  INTERMEDIATE_KEY_PKCS11_URI PKCS#11 URI for key when using pkcs11 location
+  INTERMEDIATE_KEY_PKCS11_MODULE PKCS#11 module path when using pkcs11
+
   COUNTRY                    Country code (default: US)
   STATE                      State/Province (default: State)
   LOCALITY                   City/Locality (default: City)
   ORGANIZATION               Organization name (default: Organization)
   ORGANIZATIONAL_UNIT        Organizational Unit (default: IT)
   EMAIL                      Email address (default: ca@example.com)
-  
+
   CREATE_CRL                 Create CRLs: true|false (default: true)
   CREATE_OCSP_RESPONDER      Create OCSP responder certs: true|false (default: false)
   AUTO_OVERWRITE             Auto overwrite existing files: true|false (default: false)
@@ -566,14 +569,16 @@ Environment Variables:
 Examples:
   # Default setup
   $0
-  
+
   # Custom configuration
   PKI_DIR=/tmp/my-pki ROOT_CN="Acme Root CA" INTERMEDIATE_CN="Acme Intermediate CA" $0
-  
+
   # Using YubiKey for intermediate key
   INTERMEDIATE_KEY_LOCATION=pkcs11 \\
-  INTERMEDIATE_PKCS11_URI="pkcs11:type=private;object=Intermediate%20CA" $0
-  
+  INTERMEDIATE_KEY_PKCS11_URI="pkcs11:type=private;object=Intermediate%20CA" \\
+  INTERMEDIATE_KEY_PKCS11_MODULE=/usr/lib/opensc-pkcs11.so \\
+  $0
+
   # RSA keys
   ROOT_KEY_ALG=rsa ROOT_KEY_SIZE=4096 INTERMEDIATE_KEY_ALG=rsa INTERMEDIATE_KEY_SIZE=2048 $0
 
@@ -585,12 +590,12 @@ main() {
         usage
         exit 0
     fi
-    
+
     print_info "PKI Setup Script v${PKI_SETUP_VERSION}"
     echo ""
-    
+
     check_openssl
-    
+
     echo "Configuration:"
     echo "  PKI Directory:           $PKI_DIR"
     echo "  Root CN:                 $ROOT_CN"
@@ -603,27 +608,27 @@ main() {
     echo "  Create CRL:              $CREATE_CRL"
     echo "  Create OCSP:             $CREATE_OCSP_RESPONDER"
     echo ""
-    
+
     check_files_and_prompt "$ROOT_KEY_FILE" "$ROOT_CERT_FILE" "$INTERMEDIATE_KEY_FILE" "$INTERMEDIATE_CERT_FILE"
-    
+
     create_directory_structure
     init_ca_databases
-    
+
     generate_root_key
     generate_root_cert
     generate_intermediate_key
     generate_intermediate_csr
     sign_intermediate_cert
-    
+
     echo ""
     print_info "Running verification commands..."
     verify_intermediate_from_root
-    
+
     create_chain_bundle
     create_root_crl
     create_intermediate_crl
     create_ocsp_certificates
-    
+
     print_summary
 }
 
