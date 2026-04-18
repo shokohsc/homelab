@@ -1,19 +1,20 @@
 # PKI and TLS Certificate Generation Scripts
 
-Two bash scripts for creating a two-tier PKI infrastructure and generating TLS certificates using only OpenSSL.
+Four bash scripts for creating a two-tier PKI infrastructure, optionally loading CA keys and certificates onto a YubiKey, and generating leaf TLS certificates using only OpenSSL.
 
 ## Scripts
 
-- `pki-setup.sh` - Creates Root CA and Intermediate CA
-- `pk-yubikey-load.sh` - (Optional) Loads Root CA & Key and Intermediate CA & Key onto Yubikey
-- `tls-cert.sh` - Generates TLS certificates from the Intermediate CA
+| Script | Purpose |
+|--------|--------|
+| `pki-root-ca.sh` | Creates the **Root CA** (filesystem only, no PKCS\#11) |
+| `pki-intermediate-ca.sh` | Creates / renews / revokes the **Intermediate CA**; the Root CA key **and cert** can be read from the filesystem **or** a YubiKey (PKCS\#11) |
+| `pki-leaf-cert.sh` | Generates leaf **TLS certificates** signed by the Intermediate CA (key/cert on filesystem or YubiKey) |
+| `pki-yubikey-load.sh` | Loads the Root CA and/or Intermediate CA keys + certs onto a YubiKey (staged: `root`, `intermediate`, or `all`) |
 
 ## Directory Structure
 
 ```
 pki/
-├── pki-setup.sh              # PKI setup script
-├── tls-cert.sh               # TLS certificate generation script
 ├── root/
 │   ├── private/              # Root CA private key (chmod 700)
 │   ├── certs/                # Root CA certificate
@@ -21,7 +22,7 @@ pki/
 │   └── newcerts/             # New certificates directory
 ├── intermediate/
 │   ├── private/              # Intermediate CA private key
-│   ├── certs/                # Intermediate CA certificate + chain
+│   ├── certs/                # Intermediate CA certificate + chain bundle
 │   ├── crl/                  # Intermediate CA CRL
 │   ├── csr/                  # Certificate signing requests
 │   └── newcerts/             # New certificates directory
@@ -36,20 +37,54 @@ pki/
 
 ## Quick Start
 
-### 1. Setup PKI (Root and Intermediate CA)
+### 1. Create the Root CA (filesystem)
 
 ```bash
-cd /workspace/pki
-./pki-setup.sh
+./pki-root-ca.sh
 ```
 
-### 2. Generate TLS Certificate
+### 2. (Optional) Load Root CA onto YubiKey
 
 ```bash
-./tls-cert.sh example.com
+PIN_CODE=123456 ./pki-yubikey-load.sh root
 ```
 
-## pki-setup.sh Options
+### 3. Create the Intermediate CA
+
+```bash
+# Root CA key and cert on filesystem (default)
+./pki-intermediate-ca.sh
+
+# Root CA key and cert both on YubiKey
+ROOT_CERT_LOCATION=pkcs11 \
+ROOT_CERT_PKCS11_SLOT=9d \
+ROOT_KEY_LOCATION=pkcs11 \
+ROOT_KEY_PKCS11_URI="pkcs11:type=private;object=Root%20CA" \
+ROOT_KEY_PKCS11_MODULE=/usr/lib/opensc-pkcs11.so \
+./pki-intermediate-ca.sh
+```
+
+### 4. (Optional) Load Intermediate CA onto YubiKey
+
+```bash
+PIN_CODE=123456 ./pki-yubikey-load.sh intermediate
+```
+
+### 5. Generate a TLS Leaf Certificate
+
+```bash
+# Intermediate CA on filesystem (default)
+./pki-leaf-cert.sh example.com
+
+# Intermediate CA key on YubiKey
+INTERMEDIATE_KEY_LOCATION=pkcs11 \
+INTERMEDIATE_KEY_PKCS11_URI="pkcs11:type=private;object=Intermediate%20CA" \
+./pki-leaf-cert.sh example.com
+```
+
+## pki-root-ca.sh Options
+
+Creates the **Root CA**. No PKCS\#11 or hardware-token logic at this level — the root key is always stored on the filesystem.
 
 ### Environment Variables
 
@@ -60,6 +95,86 @@ cd /workspace/pki
 | `ROOT_VALIDITY_DAYS` | Root certificate validity | `3650` (10 years) |
 | `ROOT_KEY_ALG` | Root key algorithm (`rsa` or `ec`) | `ec` |
 | `ROOT_KEY_SIZE` | Root key size (`prime256v1`, `secp384r1`, `2048`, `4096`) | `prime256v1` |
+| `COUNTRY` | Country code | `US` |
+| `STATE` | State/Province | `State` |
+| `LOCALITY` | City/Locality | `City` |
+| `ORGANIZATION` | Organization name | `Organization` |
+| `ORGANIZATIONAL_UNIT` | Organizational Unit | `IT` |
+| `EMAIL` | Email address | `ca@example.com` |
+| `CREATE_CRL` | Create Root CRL (`true`/`false`) | `true` |
+| `AUTO_OVERWRITE` | Auto overwrite files (`true`/`false`) | `false` |
+
+### Examples
+
+**Default setup:**
+```bash
+./pki-root-ca.sh
+```
+
+**Custom organization:**
+```bash
+ROOT_CN="Acme Corp Root CA" \
+ORGANIZATION="Acme Corporation" \
+./pki-root-ca.sh
+```
+
+**RSA keys:**
+```bash
+ROOT_KEY_ALG=rsa ROOT_KEY_SIZE=4096 ./pki-root-ca.sh
+```
+
+**Shorter validity for testing:**
+```bash
+ROOT_VALIDITY_DAYS=365 ./pki-root-ca.sh
+```
+
+**Auto overwrite without prompting:**
+```bash
+AUTO_OVERWRITE=true ./pki-root-ca.sh
+```
+
+### Output Files
+
+- `root/private/ca.root.key.pem` — Root CA private key
+- `root/certs/ca.root.crt.pem` — Root CA certificate
+- `root/crl/root.crl.pem` — Root CA CRL
+
+---
+
+## pki-intermediate-ca.sh Options
+
+Manages the **Intermediate CA** (create, renew, revoke). The Root CA **key** and **certificate** can each be read from the **filesystem** or from a **YubiKey / PKCS\#11 token**.
+
+### Commands
+
+| Command | Description |
+|---------|-------------|
+| `create` (default) | Generate the Intermediate CA key, CSR, and certificate |
+| `revoke` | Revoke the current Intermediate CA certificate and refresh the Root CA CRL |
+
+### Environment Variables
+
+**Root CA certificate (trust anchor for signing config and verification):**
+
+| Variable | Description | Default |
+|----------|-------------|---------|
+| `ROOT_CERT_LOCATION` | Root cert source (`file` or `pkcs11`) | `file` |
+| `ROOT_CERT_PATH` | Path to root cert (file mode) | auto |
+| `ROOT_CERT_PKCS11_SLOT` | YubiKey PIV slot containing the root cert (pkcs11 mode — requires `ykman`) | `9d` |
+
+**Root CA key (needed for signing / revoking / CRL updates):**
+
+| Variable | Description | Default |
+|----------|-------------|---------|
+| `ROOT_KEY_LOCATION` | Root key source (`file` or `pkcs11`) | `file` |
+| `ROOT_KEY_PATH` | Path to root key (file mode) | auto |
+| `ROOT_KEY_PKCS11_URI` | PKCS#11 URI for root key (pkcs11 mode) | - |
+| `ROOT_KEY_PKCS11_MODULE` | PKCS#11 module path (pkcs11 mode) | - |
+
+**Intermediate CA key:**
+
+| Variable | Description | Default |
+|----------|-------------|---------|
 | `INTERMEDIATE_CN` | Intermediate CA Common Name | `My Intermediate CA` |
 | `INTERMEDIATE_VALIDITY_DAYS` | Intermediate validity | `1825` (5 years) |
 | `INTERMEDIATE_KEY_ALG` | Intermediate key algorithm | `ec` |
@@ -68,65 +183,76 @@ cd /workspace/pki
 | `INTERMEDIATE_KEY_PATH` | Path to intermediate key (file mode) | auto-generated |
 | `INTERMEDIATE_KEY_PKCS11_URI` | PKCS#11 URI (pkcs11 mode) | - |
 | `INTERMEDIATE_KEY_PKCS11_MODULE` | PKCS#11 module path (pkcs11 mode) | - |
-| `COUNTRY` | Country code | `US` |
-| `STATE` | State/Province | `State` |
-| `LOCALITY` | City/Locality | `City` |
-| `ORGANIZATION` | Organization name | `Organization` |
-| `ORGANIZATIONAL_UNIT` | Organizational Unit | `IT` |
-| `EMAIL` | Email address | `ca@example.com` |
-| `CREATE_CRL` | Create CRLs (`true`/`false`) | `true` |
-| `CREATE_OCSP_RESPONDER` | Create OCSP responder certs | `false` |
-| `AUTO_OVERWRITE` | Auto overwrite files (`true`/`false`) | `false` |
+
+**Common subject fields:** `COUNTRY`, `STATE`, `LOCALITY`, `ORGANIZATION`, `ORGANIZATIONAL_UNIT`, `EMAIL`
+
+**Misc:** `PKI_DIR`, `CREATE_CRL`, `CREATE_OCSP_RESPONDER`, `AUTO_OVERWRITE`
 
 ### Examples
 
-**Default setup:**
+**Default — everything on filesystem:**
 ```bash
-./pki-setup.sh
+./pki-intermediate-ca.sh
 ```
 
-**Custom organization:**
+**Root CA key on YubiKey, cert on filesystem:**
 ```bash
-ROOT_CN="Acme Corp Root CA" \
+ROOT_KEY_LOCATION=pkcs11 \
+ROOT_KEY_PKCS11_URI="pkcs11:type=private;object=Root%20CA" \
+ROOT_KEY_PKCS11_MODULE=/usr/lib/opensc-pkcs11.so \
+./pki-intermediate-ca.sh
+```
+
+**Root CA key AND cert on YubiKey (slot 9d), intermediate key generated on filesystem:**
+```bash
+ROOT_CERT_LOCATION=pkcs11 \
+ROOT_CERT_PKCS11_SLOT=9d \
+ROOT_KEY_LOCATION=pkcs11 \
+ROOT_KEY_PKCS11_URI="pkcs11:type=private;object=Root%20CA" \
+ROOT_KEY_PKCS11_MODULE=/usr/lib/opensc-pkcs11.so \
+./pki-intermediate-ca.sh
+```
+
+**All on YubiKey (root slot 9d, intermediate slot 9c):**
+```bash
+ROOT_CERT_LOCATION=pkcs11 \
+ROOT_CERT_PKCS11_SLOT=9d \
+ROOT_KEY_LOCATION=pkcs11 \
+ROOT_KEY_PKCS11_URI="pkcs11:type=private;id=%02;object=Root%20CA" \
+INTERMEDIATE_KEY_LOCATION=pkcs11 \
+INTERMEDIATE_KEY_PKCS11_URI="pkcs11:type=private;id=%01;object=Intermediate%20CA" \
+./pki-intermediate-ca.sh
+```
+
+**Revoke — Root CA key AND cert on YubiKey:**
+```bash
+ROOT_CERT_LOCATION=pkcs11 \
+ROOT_CERT_PKCS11_SLOT=9d \
+ROOT_KEY_LOCATION=pkcs11 \
+ROOT_KEY_PKCS11_URI="pkcs11:type=private;object=Root%20CA" \
+./pki-intermediate-ca.sh revoke
+```
+
+**Revoke — everything on filesystem:**
+```bash
+./pki-intermediate-ca.sh revoke
+```
+
+**Custom organization, RSA intermediate key:**
+```bash
 INTERMEDIATE_CN="Acme Corp Intermediate CA" \
 ORGANIZATION="Acme Corporation" \
-./pki-setup.sh
-```
-
-**RSA keys:**
-```bash
-ROOT_KEY_ALG=rsa ROOT_KEY_SIZE=4096 \
 INTERMEDIATE_KEY_ALG=rsa INTERMEDIATE_KEY_SIZE=2048 \
-./pki-setup.sh
-```
-
-**Using YubiKey (PKCS#11):**
-```bash
-INTERMEDIATE_KEY_LOCATION=pkcs11 \
-INTERMEDIATE_PKCS11_URI="pkcs11:type=private;object=Intermediate%20CA;pin-value=your_pin" \
-./pki-setup.sh
-```
-
-**Shorter validity for testing:**
-```bash
-ROOT_VALIDITY_DAYS=365 INTERMEDIATE_VALIDITY_DAYS=180 \
-./pki-setup.sh
-```
-
-**Auto overwrite without prompting:**
-```bash
-AUTO_OVERWRITE=true ./pki-setup.sh
+./pki-intermediate-ca.sh
 ```
 
 ### Output Files
 
-- `root/private/ca.root.key.pem` - Root CA private key
-- `root/certs/ca.root.crt.pem` - Root CA certificate
-- `root/crl/root.crl.pem` - Root CA CRL
-- `intermediate/private/ca.intermediate.key.pem` - Intermediate CA key
-- `intermediate/certs/ca.intermediate.crt.pem` - Intermediate CA certificate
-- `intermediate/certs/ca.chain.crt.pem` - CA chain bundle (Intermediate + Root)
-- `intermediate/crl/intermediate.crl.pem` - Intermediate CA CRL
+- `intermediate/private/ca.intermediate.key.pem` — Intermediate CA key
+- `intermediate/certs/ca.intermediate.crt.pem` — Intermediate CA certificate
+- `intermediate/certs/ca.chain.crt.pem` — CA chain bundle (Intermediate + Root)
+- `intermediate/crl/intermediate.crl.pem` — Intermediate CA CRL
+- `root/crl/root.crl.pem` — Root CA CRL (refreshed after signing or revoking)
 
 ### Verification
 
@@ -135,23 +261,46 @@ After running, the script automatically verifies:
 openssl verify -CAfile pki/root/certs/ca.root.crt.pem pki/intermediate/certs/ca.intermediate.crt.pem
 ```
 
+---
+
 ## pki-yubikey-load.sh Options
+
+Loads Root CA and/or Intermediate CA **keys and certificates** into a YubiKey PIV application. The two CAs are loaded in separate stages so that the Intermediate CA can be created with its root already on the YubiKey.
+
+### Commands
+
+| Command | Description |
+|---------|-------------|
+| `root` | Import root CA key + certificate (slot `SLOT_ROOT`) |
+| `intermediate` | Import intermediate CA key + certificate (slot `SLOT_INTERMEDIATE`) |
+| `all` (default) | Import both |
 
 ### Environment Variables
 
 | Variable | Description | Default |
 |----------|-------------|---------|
 | `PKI_DIR` | PKI directory | `./pki` |
-| `PIN_CODE` | Yubikey PIV Code | `000000` |
-| `SLOT_ROOT` | PIV slot for root CA and Key | `9d` |
-| `SLOT_INTERMEDIATE` | PIV slot for intermediate CA and Key | `9c` |
+| `PIN_CODE` | YubiKey PIV PIN | `000000` |
+| `SLOT_ROOT` | PIV slot for Root CA | `9d` |
+| `SLOT_INTERMEDIATE` | PIV slot for Intermediate CA | `9c` |
 
-### Examples 
+### Examples
 
-**Basic usage:**
+**Load Root CA only:**
 ```bash
-./PIN_CODE=123456 pki-yubikey-load.sh
+PIN_CODE=123456 ./pki-yubikey-load.sh root
 ```
+
+**Load Intermediate CA only (after root is already on YubiKey):**
+```bash
+PIN_CODE=123456 ./pki-yubikey-load.sh intermediate
+```
+
+**Load both at once:**
+```bash
+PIN_CODE=123456 ./pki-yubikey-load.sh all
+```
+
 ### Verification
 
 After running, the script automatically verifies:
@@ -159,7 +308,9 @@ After running, the script automatically verifies:
 ykman piv info
 ```
 
-## tls-cert.sh Options
+---
+
+## pki-leaf-cert.sh Options
 
 ### Environment Variables
 
@@ -184,82 +335,82 @@ ykman piv info
 | `OUTPUT_FORMATS` | Output formats (crt,pem,der,pfx) | `crt,pem,der,pfx` |
 | `CREATE_CRL` | Create CRL | `true` |
 | `CREATE_OCSP_REQUEST` | Create OCSP request | `true` |
-| `COUNTRY`, `STATE`, etc. | Subject components | same as pki-setup |
+| `COUNTRY`, `STATE`, etc. | Subject components | same as pki-root-ca |
 | `AUTO_OVERWRITE` | Auto overwrite | `false` |
 
 ### Examples
 
 **Basic certificate:**
 ```bash
-./tls-cert.sh example.com
+./pki-leaf-cert.sh example.com
 ```
 
 **With SANs:**
 ```bash
 CERT_SAN="example.com,www.example.com,api.example.com" \
-./tls-cert.sh example.com
+./pki-leaf-cert.sh example.com
 ```
 
 **IP addresses in SANs:**
 ```bash
 CERT_SAN="example.com,192.168.1.1,10.0.0.1" \
-./tls-cert.sh example.com
+./pki-leaf-cert.sh example.com
 ```
 
 **Wildcard certificate:**
 ```bash
 CERT_CN="*.example.com" \
 CERT_SAN="example.com,*.example.com" \
-./tls-cert.sh wildcard
+./pki-leaf-cert.sh wildcard
 ```
 
 **RSA key:**
 ```bash
 CERT_KEY_ALG=rsa CERT_KEY_SIZE=4096 \
-./tls-cert.sh example.com
+./pki-leaf-cert.sh example.com
 ```
 
 **Custom output directory:**
 ```bash
 OUTPUT_DIR="/etc/ssl/private" \
-./tls-cert.sh example.com
+./pki-leaf-cert.sh example.com
 ```
 
 **Only PEM and PFX output:**
 ```bash
 OUTPUT_FORMATS="pem,pfx" \
-./tls-cert.sh example.com
+./pki-leaf-cert.sh example.com
 ```
 
 **Multiple certificates:**
 ```bash
-./tls-cert.sh example.com
-CERT_CN="api.example.com" CERT_SAN="api.example.com" ./tls-cert.sh api
-CERT_CN="internal.local" CERT_SAN="internal.local,192.168.1.10" ./tls-cert.sh internal
+./pki-leaf-cert.sh example.com
+CERT_CN="api.example.com" CERT_SAN="api.example.com" ./pki-leaf-cert.sh api
+CERT_CN="internal.local" CERT_SAN="internal.local,192.168.1.10" ./pki-leaf-cert.sh internal
 ```
 
-**Using YubiKey for key signing (PKCS#11):**
+**Using YubiKey for Intermediate CA key signing (PKCS#11):**
 ```bash
 INTERMEDIATE_KEY_LOCATION=pkcs11 \
 INTERMEDIATE_KEY_PKCS11_URI="pkcs11:type=private;object=Intermediate%20CA" \
 INTERMEDIATE_KEY_PKCS11_MODULE=/usr/lib/opensc-pkcs11.so \
-./tls-cert.sh example.com
+./pki-leaf-cert.sh example.com
 ```
 
 **YubiKey with specific slot:**
 ```bash
 INTERMEDIATE_KEY_LOCATION=pkcs11 \
 INTERMEDIATE_KEY_PKCS11_URI="pkcs11:type=private;id=%01;object=Intermediate-CA;pin-value=123456" \
-./tls-cert.sh example.com
+./pki-leaf-cert.sh example.com
 ```
 
-**Using YubiKey for BOTH certificate and key:**
+**Using YubiKey for BOTH Intermediate CA certificate and key:**
 ```bash
 INTERMEDIATE_CERT_LOCATION=pkcs11 \
 INTERMEDIATE_CERT_PKCS11_URI="pkcs11:type=cert;object=Intermediate%20CA" \
 INTERMEDIATE_KEY_LOCATION=pkcs11 \
 INTERMEDIATE_KEY_PKCS11_URI="pkcs11:type=private;object=Intermediate%20CA" \
-./tls-cert.sh example.com
+./pki-leaf-cert.sh example.com
 ```
 
 ### Output Files
@@ -488,7 +639,7 @@ Your PKI has more than 2 tiers. Adjust verification commands.
 
 ### "self-signed certificate"
 
-The intermediate CA must be signed by the Root CA, not self-signed. Run `pki-setup.sh` first.
+The intermediate CA must be signed by the Root CA, not self-signed. Run `pki-root-ca.sh` and `pki-intermediate-ca.sh` first.
 
 ### Key Permission Issues
 
@@ -696,7 +847,7 @@ resource "null_resource" "sign_certificate" {
       cd ${path.module}
       # Sign the CSR with your Intermediate CA
       PKI_DIR=${path.module}/pki \
-      ./scripts/tls-cert.sh ${var.cert_common_name}
+      ./scripts/pki-leaf-cert.sh ${var.cert_common_name}
     EOT
   }
 }

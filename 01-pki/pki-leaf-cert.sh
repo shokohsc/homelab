@@ -67,7 +67,7 @@ check_dependencies() {
             INTERMEDIATE_CERT_FILE="${INTERMEDIATE_CERT_PATH:-${INTERMEDIATE_CERTS_DIR}/ca.intermediate.crt.pem}"
             if [[ ! -f "$INTERMEDIATE_CERT_FILE" ]]; then
                 print_error "Intermediate certificate not found: $INTERMEDIATE_CERT_FILE"
-                print_error "Run pki-setup.sh first"
+                print_error "Run pki-root-ca.sh and pki-intermediate-ca.sh first"
                 exit 1
             fi
             ;;
@@ -92,7 +92,7 @@ check_dependencies() {
             INTERMEDIATE_KEY_FILE="${INTERMEDIATE_KEY_PATH:-${INTERMEDIATE_PRIVATE_DIR}/ca.intermediate.key.pem}"
             if [[ ! -f "$INTERMEDIATE_KEY_FILE" ]]; then
                 print_error "Intermediate key not found: $INTERMEDIATE_KEY_FILE"
-                print_error "Run pki-setup.sh first"
+                print_error "Run pki-root-ca.sh and pki-intermediate-ca.sh first"
                 exit 1
             fi
             ;;
@@ -114,7 +114,7 @@ check_dependencies() {
 
     if [[ ! -f "$ROOT_CERT_FILE" ]]; then
         print_error "Root certificate not found: $ROOT_CERT_FILE"
-        print_error "Run pki-setup.sh first"
+        print_error "Run pki-root-ca.sh first"
         exit 1
     fi
 }
