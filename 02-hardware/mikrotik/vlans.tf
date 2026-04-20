@@ -4,7 +4,7 @@
 
 resource "routeros_interface_bridge" "br0" {
   name           = "br0"
-  vlan_filtering = true
+  vlan_filtering = var.vlan_filtering
 #  arp            = "reply-only"
 }
 
@@ -126,6 +126,7 @@ resource "routeros_interface_vlan" "vlan_if" {
   name      = "vlan${each.key}"
   interface = routeros_interface_bridge.br0.name
   vlan_id   = each.key
+  comment   = each.value
 }
 
 ############################################
@@ -133,17 +134,9 @@ resource "routeros_interface_vlan" "vlan_if" {
 ############################################
 
 resource "routeros_ip_address" "gateway_ips" {
-  for_each = {
-    10  = "10.42.0.1/24"
-    20  = "10.42.20.1/24"
-    30  = "10.42.30.1/24"
-    40  = "10.42.40.1/24"
-    50  = "10.42.50.1/24"
-    60  = "10.42.60.1/24"
-    100 = "10.42.100.1/24"
-  }
+  for_each = local.vlan_names_filtered
 
-  address   = each.value
+  address   = cidrhost(local.vlan_cidrs[each.key], 1)
   interface = routeros_interface_vlan.vlan_if[each.key].name
 }
 
@@ -152,23 +145,15 @@ resource "routeros_ip_address" "gateway_ips" {
 ############################################
 
 resource "routeros_ip_pool" "pools" {
-  for_each = {
-    10  = "10.42.0.100-10.42.0.254"
-    20  = "10.42.20.100-10.42.20.254"
-    30  = "10.42.30.100-10.42.30.254"
-    40  = "10.42.40.100-10.42.40.254"
-    50  = "10.42.50.100-10.42.50.254"
-    60  = "10.42.60.100-10.42.60.254"
-    100 = "10.42.100.100-10.42.100.254"
-  }
+  for_each = local.vlan_names_filtered
 
   name   = "pool-vlan${each.key}"
-  ranges = [each.value]
+  ranges = [local.vlan_pools[each.key]]
 }
 
-############################################
+##############################################
 ##             DHCP Servers               ##
-############################################
+##############################################
 
 resource "routeros_ip_dhcp_server" "dhcp" {
   for_each = routeros_interface_vlan.vlan_if
@@ -180,39 +165,16 @@ resource "routeros_ip_dhcp_server" "dhcp" {
   disabled     = false
 }
 
-################################################
-## Optional: Block unknown devices (per VLAN) ##
-################################################
-
-resource "routeros_ip_dhcp_server" "secure_dhcp" {
-  for_each = routeros_ip_dhcp_server.dhcp
-
-  name            = each.value.name
-  interface       = each.value.interface
-  address_pool    = each.value.address_pool
-  lease_time      = each.value.lease_time
-  authoritative   = "yes"
-  add_arp         = true
-}
-
 ############################################
-##     DHCP Networks (Gateway + DNS)      ##
-############################################
+## DHCP Networks (Gateway + DNS)          ##
+################################################
 
 resource "routeros_ip_dhcp_server_network" "networks" {
-  for_each = {
-    10 = { subnet = "10.42.0.0/24", dns = ["10.42.0.1"] }
-    20 = { subnet = "10.42.20.0/24", dns = ["10.42.0.1"] }
-    30 = { subnet = "10.42.30.0/24", dns = ["10.42.0.1"] }
-    40 = { subnet = "10.42.40.0/24", dns = ["10.42.0.1"] }
-    50 = { subnet = "10.42.50.0/24", dns = ["1.1.1.1","9.9.9.9"] }
-    60 = { subnet = "10.42.60.0/24", dns = ["1.1.1.1"] }
-    100 = { subnet = "10.42.100.0/24", dns = ["10.42.0.1"] }
-  }
+  for_each = local.vlan_names_filtered
 
-  address    = each.value.subnet
-  gateway    = replace(each.value.subnet, "0/24", "1")
-  dns_server = each.value.dns
+  address    = local.vlan_cidrs[each.key]
+  gateway    = cidrhost(local.vlan_cidrs[each.key], 1)
+  dns_server = local.dns_servers[each.key == 10 ? "management" : each.key == 20 ? "k8s_guest" : each.key == 30 ? "proxmox" : "other"]
 }
 
 ############################################
@@ -221,6 +183,6 @@ resource "routeros_ip_dhcp_server_network" "networks" {
 
 resource "routeros_ip_dns" "dns" {
   allow_remote_requests = true
-  servers               = ["1.1.1.1", "9.9.9.9"]
+  servers               = [var.upstream_primary_dns, var.upstream_secondary_dns]
   cache_size            = 2048
 }

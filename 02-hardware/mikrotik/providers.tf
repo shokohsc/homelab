@@ -8,11 +8,11 @@ terraform {
       source  = "terraform-routeros/routeros"
     }
   }
-  required_version = ">= 0.13"
+  required_version = ">= 1.5.0"
 }
 
 provider "routeros" {
-  host     = var.routeros_protocol + "://"  + var.routeros_host
+  hosturl  = "${var.routeros_protocol}://${var.routeros_host}"
   username = var.routeros_username
   password = var.routeros_password
   insecure = var.routeros_insecure

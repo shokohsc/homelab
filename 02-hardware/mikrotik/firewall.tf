@@ -19,7 +19,7 @@ resource "routeros_ip_firewall_filter" "invalid" {
   chain = "forward"
   connection_state = "invalid"
   action = "drop"
-  log = yes
+  log = true
   log_prefix = "invalid_connection"
 }
 
@@ -27,48 +27,35 @@ resource "routeros_ip_firewall_filter" "new" {
   chain = "forward"
   connection_state = "new"
   connection_nat_state = "!dstnat"
-  in_interface = ether1
+  in_interface = "ether1"
   action = "drop"
-  log = yes
+  log = true
   log_prefix = "new_connection"
 }
 
 ############################################
-##          Block IoT → Internet          ##
-############################################
+##          Block IoT → Internet          #################################
+#####################################
 
 resource "routeros_ip_firewall_filter" "iot_no_internet" {
   chain = "forward"
-  src_address = "10.42.100.0/24"
+  src_address = local.vlan_cidrs[100]
   out_interface = "ether1"
   action = "drop"
 }
 
 ############################################
-##          Priority enforcement          ##
+##      Allow higher → lower VLANs        ##
 ############################################
 
-locals {
-  vlan_subnets = {
-    10  = "10.42.0.0/24"
-    20  = "10.42.20.0/24"
-    30  = "10.42.30.0/24"
-    40  = "10.42.40.0/24"
-    50  = "10.42.50.0/24"
-    60  = "10.42.60.0/24"
-    100 = "10.42.100.0/24"
-  }
-}
-
-# Allow higher → lower
 resource "routeros_ip_firewall_filter" "allow_priority" {
   for_each = {
-    for src_k, src_v in local.vlan_subnets :
+    for src_k, _ in local.vlan_names_filtered :
     src_k => {
-      src = src_v
+      src = local.vlan_cidrs[src_k]
       dsts = {
-        for dst_k, dst_v in local.vlan_subnets :
-        dst_k => dst_v if dst_k > src_k
+        for dst_k, _ in local.vlan_names_filtered :
+        dst_k => local.vlan_cidrs[dst_k] if dst_k < src_k
       }
     }
   }
@@ -91,7 +78,7 @@ resource "routeros_ip_firewall_filter" "deny_inter_vlan" {
 }
 
 ############################################
-##         NAT (Internet access).         ##
+##         NAT (Internet access)          ##
 ############################################
 
 resource "routeros_ip_firewall_nat" "masquerade" {
@@ -101,7 +88,7 @@ resource "routeros_ip_firewall_nat" "masquerade" {
 }
 
 ############################################
-##            DNS Firewall Rules.         ##
+##            DNS Firewall                ##
 ############################################
 
 resource "routeros_ip_firewall_filter" "dns_allow_trusted" {
@@ -113,13 +100,13 @@ resource "routeros_ip_firewall_filter" "dns_allow_trusted" {
 }
 
 ############################################
-##         Block Guest → internal DNS     ##
+##         Block Guest → DNS              ##
 ############################################
 
 resource "routeros_ip_firewall_filter" "guest_dns_block_internal" {
   chain = "forward"
-  src_address = "10.42.60.0/24"
-  dst_address = "10.42.0.1"
+  src_address = local.vlan_cidrs[60]
+  dst_address = cidrhost(local.vlan_cidrs["10"], 1)
   protocol = "udp"
   dst_port = "53"
   action = "drop"
@@ -131,10 +118,9 @@ resource "routeros_ip_firewall_filter" "guest_dns_block_internal" {
 
 resource "routeros_ip_firewall_filter" "iot_dns_lockdown" {
   chain = "forward"
-  src_address = "10.42.100.0/24"
-  dst_address = "!10.42.0.1"
+  src_address = local.vlan_cidrs[100]
+  dst_address = cidrhost(local.vlan_cidrs["10"], 1)
   protocol = "udp"
   dst_port = "53"
   action = "drop"
 }
-
