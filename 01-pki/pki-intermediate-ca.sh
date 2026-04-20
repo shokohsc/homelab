@@ -504,9 +504,25 @@ revoke_intermediate_cert() {
         -revoke "$INTERMEDIATE_CERT_FILE"
     print_info "Intermediate CA certificate revoked in Root CA database"
 
+    # Regenerate the Intermediate CRL to include any previously revoked leaf certs
+    print_info "Regenerating Intermediate CA CRL..."
+    mkdir -p "$INTERMEDIATE_CRL_DIR"
+    if [[ -f "$INTERMEDIATE_CRL_FILE" ]]; then
+        chmod 644 "$INTERMEDIATE_CRL_FILE"
+    fi
+    openssl ca -batch \
+        -config "${PKI_DIR}/intermediateopenssl.cnf" \
+        -notext -gencrl \
+        -out "$INTERMEDIATE_CRL_FILE"
+    chmod 444 "$INTERMEDIATE_CRL_FILE"
+    print_info "Intermediate CA CRL updated: $INTERMEDIATE_CRL_FILE"
+
     # Regenerate the Root CRL to publish the revocation
     print_info "Regenerating Root CA CRL..."
     mkdir -p "$ROOT_CRL_DIR"
+    if [[ -f "$ROOT_CRL_FILE" ]]; then
+        chmod 644 "$ROOT_CRL_FILE"
+    fi
     openssl ca -batch \
         -config "${PKI_DIR}/intermediateopenssl.cnf" \
         -notext -gencrl \

@@ -601,9 +601,11 @@ usage() {
 TLS Certificate Generation Script v${TLS_CERT_VERSION}
 
 Usage: $0 [cert_name] [options]
+       $0 revoke cert_name
 
 Positional Arguments:
   cert_name    Common Name for the certificate (required)
+  revoke      Revoke a leaf certificate
 
 Environment Variables:
   PKI_DIR                    PKI directory (default: ./pki)
@@ -673,12 +675,107 @@ Examples:
   INTERMEDIATE_KEY_PKCS11_URI="pkcs11:type=private;object=Intermediate%20CA" \\
   $0 example.com
 
+  # Revoke a leaf certificate
+  $0 revoke example.com
+
+  # Revoke with YubiKey for signing
+  INTERMEDIATE_KEY_LOCATION=pkcs11 \\
+  INTERMEDIATE_KEY_PKCS11_URI="pkcs11:type=private;object=Intermediate%20CA" \\
+  $0 revoke example.com
+
 EOF
+}
+
+revoke_leaf_cert() {
+    local cert_name="$1"
+    local sanitized_name=$(sanitize_cn "$cert_name")
+    local cert_dir="${OUTPUT_DIR}/${sanitized_name}"
+    local cert_file="${cert_dir}/certs/${sanitized_name}.crt.pem"
+
+    if [[ ! -f "$cert_file" ]]; then
+        print_error "Certificate not found: $cert_file"
+        exit 1
+    fi
+
+    print_info "Revoking leaf certificate: $cert_name"
+
+    local index_file="${PKI_DIR}/intermediate/index.txt"
+    local serial_file="${PKI_DIR}/intermediate/serial"
+    local new_certs_dir="${PKI_DIR}/intermediate/newcerts"
+    local crl_dir="${PKI_DIR}/intermediate/crl"
+
+    if [[ ! -f "$index_file" ]]; then
+        print_error "Intermediate CA index file not found: $index_file"
+        print_error "Run pki-intermediate-ca.sh first"
+        exit 1
+    fi
+
+    local serial=$(openssl x509 -in "$cert_file" -noout -serial | cut -d'=' -f2)
+
+    if ! grep -q "$serial" "$index_file" 2>/dev/null; then
+        print_error "Certificate serial $serial not found in intermediate CA index"
+        print_error "Certificate may not have been issued by this CA"
+        exit 1
+    fi
+
+    cat > "${PKI_DIR}/revoke_openssl.cnf" << EOF
+[ca]
+default_ca = CA_default
+
+[CA_default]
+database = ${index_file}
+serial = ${serial_file}
+new_certs_dir = ${new_certs_dir}
+certificate = ${INTERMEDIATE_CERT_FILE}
+private_key = ${INTERMEDIATE_KEY_FILE}
+default_md = sha256
+default_crl_days = 30
+EOF
+
+    case "$INTERMEDIATE_KEY_LOCATION" in
+        pkcs11)
+            print_info "Using PKCS#11 for revocation..."
+            if [[ -n "$INTERMEDIATE_KEY_PKCS11_MODULE" ]]; then
+                export PKCS11_MODULE_PATH="$INTERMEDIATE_KEY_PKCS11_MODULE"
+            fi
+            export OPENSSL_CONF="${PKI_DIR}/../openssl-pkcs11.cnf"
+            ;;
+    esac
+
+    openssl ca -batch -config "${PKI_DIR}/revoke_openssl.cnf" \
+        -revoke "$cert_file"
+    print_info "Certificate revoked in Intermediate CA database"
+
+    print_info "Regenerating Intermediate CA CRL..."
+    mkdir -p "$crl_dir"
+    local crl_file="${crl_dir}/intermediate.crl.pem"
+    if [[ -f "$crl_file" ]]; then
+        chmod 644 "$crl_file"
+    fi
+    openssl ca -batch -config "${PKI_DIR}/revoke_openssl.cnf" \
+        -notext -gencrl \
+        -out "$crl_file"
+    chmod 444 "$crl_file"
+    print_info "Intermediate CA CRL updated: $crl_file"
+
+    print_info "Distribute the updated CRL so relying parties can detect the revocation."
 }
 
 main() {
     if [[ "${1:-}" == "-h" || "${1:-}" == "--help" ]]; then
         usage
+        exit 0
+    fi
+
+    if [[ "${1:-}" == "revoke" ]]; then
+        if [[ $# -lt 2 ]]; then
+            print_error "Certificate name (Common Name) is required for revocation"
+            usage
+            exit 1
+        fi
+        check_openssl
+        check_dependencies
+        revoke_leaf_cert "$2"
         exit 0
     fi
 

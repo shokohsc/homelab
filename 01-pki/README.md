@@ -338,6 +338,13 @@ ykman piv info
 | `COUNTRY`, `STATE`, etc. | Subject components | same as pki-root-ca |
 | `AUTO_OVERWRITE` | Auto overwrite | `false` |
 
+### Commands
+
+| Command | Description |
+|---------|-------------|
+| `cert_name` (positional) | Generate a leaf certificate for the given Common Name |
+| `revoke cert_name` | Revoke a leaf certificate and regenerate the CRL |
+
 ### Examples
 
 **Basic certificate:**
@@ -349,6 +356,11 @@ ykman piv info
 ```bash
 CERT_SAN="example.com,www.example.com,api.example.com" \
 ./pki-leaf-cert.sh example.com
+```
+
+**Revoke a leaf certificate:**
+```bash
+./pki-leaf-cert.sh revoke example.com
 ```
 
 **IP addresses in SANs:**
