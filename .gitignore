@@ -5,3 +5,6 @@
 keys/
 pki/
 private/
+.terraform/
+.terraform.lock.hcl
+terraform.tfvars
