@@ -34,8 +34,8 @@ resource "routeros_ip_firewall_filter" "new" {
 }
 
 ############################################
-##          Block IoT → Internet          #################################
-#####################################
+##          Block IoT → Internet          ##
+############################################
 
 resource "routeros_ip_firewall_filter" "iot_no_internet" {
   chain = "forward"

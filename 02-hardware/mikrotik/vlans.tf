@@ -2,9 +2,15 @@
 ##                 Bridge                 ##
 ############################################
 
-resource "routeros_interface_bridge" "br0" {
-  name           = "br0"
+import {
+  to = routeros_interface_bridge.bridge
+  id = "*1D"
+}
+
+resource "routeros_interface_bridge" "bridge" {
+  name           = "bridge"
   vlan_filtering = var.vlan_filtering
+  comment        = "defconf"
 #  arp            = "reply-only"
 }
 
@@ -16,20 +22,20 @@ resource "routeros_interface_bridge" "br0" {
 
 # Management (MacBook via powerline)
 resource "routeros_interface_bridge_port" "eth3" {
-  bridge = routeros_interface_bridge.br0.name
+  bridge = routeros_interface_bridge.bridge.name
   interface = "ether3"
   pvid = 10
 }
 
 # OpenWRT AP (trunk)
 resource "routeros_interface_bridge_port" "eth5" {
-  bridge = routeros_interface_bridge.br0.name
+  bridge = routeros_interface_bridge.bridge.name
   interface = "ether5"
 }
 
 # Raspberry Pi (mgmt)
 resource "routeros_interface_bridge_port" "eth7" {
-  bridge = routeros_interface_bridge.br0.name
+  bridge = routeros_interface_bridge.bridge.name
   interface = "ether7"
   pvid = 10
 }
@@ -39,7 +45,7 @@ resource "routeros_interface_bridge_port" "k8s_ports" {
   for_each = toset([
     "ether8","ether9","ether11","ether13","ether23","sfp-sfpplus4"
   ])
-  bridge    = routeros_interface_bridge.br0.name
+  bridge    = routeros_interface_bridge.bridge.name
   interface = each.key
   pvid      = 20
 }
@@ -49,7 +55,7 @@ resource "routeros_interface_bridge_port" "proxmox_ports" {
   for_each = toset([
     "ether19","ether21","ether22"
   ])
-  bridge    = routeros_interface_bridge.br0.name
+  bridge    = routeros_interface_bridge.bridge.name
   interface = each.key
   pvid      = 30
 }
@@ -59,7 +65,7 @@ resource "routeros_interface_bridge_port" "iot_ports" {
   for_each = toset([
     "ether15","ether17"
   ])
-  bridge    = routeros_interface_bridge.br0.name
+  bridge    = routeros_interface_bridge.bridge.name
   interface = each.key
   pvid      = 100
 }
@@ -69,7 +75,7 @@ resource "routeros_interface_bridge_port" "sfp_admin" {
   for_each = toset([
     "sfp-sfpplus1","sfp-sfpplus2","sfp-sfpplus3"
   ])
-  bridge    = routeros_interface_bridge.br0.name
+  bridge    = routeros_interface_bridge.bridge.name
   interface = each.key
 }
 
@@ -96,11 +102,11 @@ locals {
 resource "routeros_interface_bridge_vlan" "vlans" {
   for_each = local.vlans
 
-  bridge  = routeros_interface_bridge.br0.name
+  bridge  = routeros_interface_bridge.bridge.name
   vlan_ids = [each.key]
 
   tagged = [
-    "br0",
+    "bridge",
     "ether5", # AP trunk
     "sfp-sfpplus1",
     "sfp-sfpplus2",
@@ -124,7 +130,7 @@ resource "routeros_interface_vlan" "vlan_if" {
   for_each = local.vlans
 
   name      = "vlan${each.key}"
-  interface = routeros_interface_bridge.br0.name
+  interface = routeros_interface_bridge.bridge.name
   vlan_id   = each.key
   comment   = each.value
 }
