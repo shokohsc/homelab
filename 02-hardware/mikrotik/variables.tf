@@ -1,9 +1,3 @@
-variable terraform_state_path {
-  type        = string
-  default     = "./mikrotik.tfstate"
-  description = "Terraform state path"
-}
-
 variable routeros_protocol {
   type        = string
   default     = "https"
@@ -99,33 +93,36 @@ variable vlan_names {
 }
 
 locals {
-   # Generate VLAN IDs from start to end (increment by 1)
-   vlan_ids = range(var.vlan_start_id, var.vlan_end_id + 1)
-   
-   # Filter VLANs with names defined (for resources that use vlan_names)
-   vlan_names_filtered = { for k, v in var.vlan_names : k => v if v != "" }
+    # Homelab CIDR
+    homelab_cidr = "${var.vlan_base_network}/16"
 
-   # Derive subnet CIDR for each VLAN (third octet = VLAN ID)
-   vlan_cidrs = { for id, name in local.vlan_names_filtered : id => cidrsubnet("10.42.0.0/16", 8, tonumber(id)) }
-   
-   # Gateway IPs (first usable IP of each subnet)
-   vlan_gateways = { for id, name in local.vlan_names_filtered : id => cidrhost(local.vlan_cidrs[id], 1) }
-   
-   # Calculate subnet index for /24+ subnets (for DHCP pool)
-   subnet_counts = { for id, name in local.vlan_names_filtered : id => id }
-   
-   # DHCP pool ranges (100-254 in each subnet)
-   vlan_pools = { 
-     for id, name in local.vlan_names_filtered : id => "${cidrhost(local.vlan_cidrs[id], 100)}-${cidrhost(local.vlan_cidrs[id], 254)}"
-   }
-   
-   # DNS servers configuration
-   dns_servers = {
-     primary      = var.upstream_primary_dns
-     secondary    = var.upstream_secondary_dns
-     management    = cidrhost(local.vlan_cidrs[10], 1)
-     k8s_guest     = ["1.1.1.1", "9.9.9.9"]
-     proxmox       = ["1.1.1.1", "9.9.9.9"]
-     other         = ["1.1.1.1"]
-   }
- }
+    # Generate VLAN IDs from start to end (increment by 1)
+    vlan_ids = range(var.vlan_start_id, var.vlan_end_id + 1)
+    
+    # Filter VLANs with names defined (for resources that use vlan_names)
+    vlan_names_filtered = { for k, v in var.vlan_names : k => v if v != "" }
+
+    # Derive subnet CIDR for each VLAN (third octet = VLAN ID)
+    vlan_cidrs = { for id, name in local.vlan_names_filtered : id => cidrsubnet(local.homelab_cidr, 8, tonumber(id)) }
+    
+    # Gateway IPs (first usable IP of each subnet)
+    vlan_gateways = { for id, name in local.vlan_names_filtered : id => cidrhost(local.vlan_cidrs[id], 1) }
+    
+    # Calculate subnet index for /24+ subnets (for DHCP pool)
+    subnet_counts = { for id, name in local.vlan_names_filtered : id => id }
+    
+    # DHCP pool ranges (100-254 in each subnet)
+    vlan_pools = { 
+      for id, name in local.vlan_names_filtered : id => "${cidrhost(local.vlan_cidrs[id], 100)}-${cidrhost(local.vlan_cidrs[id], 254)}"
+    }
+
+    # DNS servers configuration
+    dns_servers = {
+      primary      = var.upstream_primary_dns
+      secondary    = var.upstream_secondary_dns
+      management    = cidrhost(local.vlan_cidrs[10], 1)
+      k8s_guest     = ["1.1.1.1", "9.9.9.9"]
+      proxmox       = ["1.1.1.1", "9.9.9.9"]
+      other         = ["1.1.1.1", "9.9.9.9"]
+    }
+}

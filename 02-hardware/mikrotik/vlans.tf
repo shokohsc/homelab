@@ -9,9 +9,9 @@ import {
 
 resource "routeros_interface_bridge" "bridge" {
   name           = "bridge"
-  vlan_filtering = var.vlan_filtering
+  vlan_filtering = var.vlan_filtering  # Controls VLAN enforcement
   comment        = "defconf"
-#  arp            = "reply-only"
+  # arp            = "reply-only"
 }
 
 ############################################
@@ -33,11 +33,11 @@ resource "routeros_interface_bridge_port" "eth5" {
   interface = "ether5"
 }
 
-# Raspberry Pi (mgmt)
+# Raspberry Pi (guest)
 resource "routeros_interface_bridge_port" "eth7" {
   bridge = routeros_interface_bridge.bridge.name
   interface = "ether7"
-  pvid = 10
+  pvid = 60
 }
 
 # Kubernetes nodes
@@ -60,14 +60,14 @@ resource "routeros_interface_bridge_port" "proxmox_ports" {
   pvid      = 30
 }
 
-# iDRAC + JetKVM (IoT)
-resource "routeros_interface_bridge_port" "iot_ports" {
+# iDRAC + JetKVM (Management)
+resource "routeros_interface_bridge_port" "mgmt_ports" {
   for_each = toset([
     "ether15","ether17"
   ])
   bridge    = routeros_interface_bridge.bridge.name
   interface = each.key
-  pvid      = 100
+  pvid      = 10
 }
 
 # SFP Proxmox admin (tagged trunk)
@@ -110,15 +110,17 @@ resource "routeros_interface_bridge_vlan" "vlans" {
     "ether5", # AP trunk
     "sfp-sfpplus1",
     "sfp-sfpplus2",
-    "sfp-sfpplus3",
-    "sfp-sfpplus4"
+    "sfp-sfpplus3"
   ]
 
   untagged = lookup({
-    10  = ["ether3","ether7"]
-    20  = ["ether8","ether9","ether11","ether13","ether23"]
+    10  = ["ether3","ether15","ether17"]
+    20  = ["ether8","ether9","ether11","ether13","ether23","sfp-sfpplus4"]
     30  = ["ether19","ether21","ether22"]
-    100 = ["ether15","ether17"]
+    40  = []
+    50  = []
+    60  = ["ether7"]
+    100 = []
   }, each.key, [])
 }
 

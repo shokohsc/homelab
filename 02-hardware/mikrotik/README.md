@@ -16,10 +16,10 @@ All VLANs derive from `vlan_base_network` variable:
 VLAN 10: 10.42.0.0/24      # Management (gateway 10.42.0.1)
 VLAN 20: 10.42.20.0/24     # Kubernetes (gateway 10.42.20.1)
 VLAN 30: 10.42.30.0/24     # Proxmox (gateway 10.42.30.1)
-VLAN 40: 10.42.40.0/24     # Load Balancer
-VLAN 50: 10.42.50.0/24     # Windows
-VLAN 60: 10.42.60.0/24     # Guest WiFi
-VLAN 100: 10.42.100.0/24   # IoT devices
+VLAN 40: 10.42.40.0/24     # Load Balancer (gateway 10.42.40.1)
+VLAN 50: 10.42.50.0/24     # Windows (gateway 10.42.50.1)
+VLAN 60: 10.42.60.0/24     # Guest WiFi (gateway 10.42.60.1)
+VLAN 100: 10.42.100.0/24   # IoT devices (gateway 10.42.100.1)
 ```
 
 ## Quick Start
@@ -250,7 +250,7 @@ Different VLANs have different DNS settings:
 - **VLAN 10 (mgmt)**: Uses management VLAN gateway as DNS
 - **VLAN 20 (k8s)**: Uses Cloudflare (1.1.1.1, 9.9.9.9)
 - **VLAN 30 (proxmox)**: Uses Quad9 (1.1.1.1, 9.9.9.9)
-- **Other VLANs**: Uses Cloudflare (1.1.1.1)
+- **Other VLANs**: Uses Cloudflare (1.1.1.1, 9.9.9.9)
 
 ## Security Features
 

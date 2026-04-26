@@ -27,43 +27,70 @@ locals {
       mac  = "94:C6:91:A2:82:AD"
       ip   = cidrhost(local.vlan_cidrs["20"], 10)
       vlan = 20
+      hostname = "sombra"
     }
     k8s_cp2 = {
       mac  = "1C:69:7A:04:0B:76"
       ip   = cidrhost(local.vlan_cidrs["20"], 20)
       vlan = 20
+      hostname = "lucio"
     }
     k8s_cp3 = {
       mac  = "94:C6:91:1C:FF:2E"
       ip   = cidrhost(local.vlan_cidrs["20"], 30)
       vlan = 20
+      hostname = "zarya"
     }
     k8s_worker1 = {
       mac  = "1C:69:7A:69:D9:1E"
       ip   = cidrhost(local.vlan_cidrs["20"], 40)
       vlan = 20
+      hostname = "mercy"
     }
     k8s_worker2 = {
       mac  = "70:85:C2:5E:D0:D3"
       ip   = cidrhost(local.vlan_cidrs["20"], 50)
       vlan = 20
+      hostname = "dva"
     }
 
     # Proxmox (VLAN 30)
     proxmox1 = {
-      mac  = "B8:CA:3A:6C:3D:78"
+      mac  = "B8:CA:3A:6C:3D:7C"
       ip   = cidrhost(local.vlan_cidrs["30"], 10)
       vlan = 30
+      hostname = "roadhog"
     }
     proxmox2 = {
-      mac  = "AA:BB:CC:DD:EE:02"
+      mac  = "10:FF:E0:87:D3:5B"
       ip   = cidrhost(local.vlan_cidrs["30"], 20)
       vlan = 30
+      hostname = "hanzo"
     }
     proxmox3 = {
-      mac  = "AA:BB:CC:DD:EE:03"
+      mac  = "10:FF:E0:87:D1:3B"
       ip   = cidrhost(local.vlan_cidrs["30"], 30)
       vlan = 30
+      hostname = "genji"
+    }
+
+    # Guest (VLAN 60)
+    chromecast = {
+      mac  = "54:60:09:4A:28:CA"
+      ip   = cidrhost(local.vlan_cidrs["60"], 10)
+      vlan = 60
+    }
+    raspberry = {
+      mac  = "AA:BB:CC:DD:EE:FF"
+      ip   = cidrhost(local.vlan_cidrs["60"], 20)
+      vlan = 60
+    }
+
+    # IOT (VLAN 100)
+    printer = {
+      mac  = "C4:65:16:42:3E:0E"
+      ip   = cidrhost(local.vlan_cidrs["100"], 10)
+      vlan = 100
     }
   }
 }
@@ -75,7 +102,7 @@ resource "routeros_ip_dhcp_server_lease" "static" {
   mac_address = each.value.mac
   server      = "dhcp-vlan${each.value.vlan}"
   comment     = each.key
-  # dynamic     = false
+  # dynamic     = false # (know after apply)
 }
 
 ############################################
@@ -85,7 +112,7 @@ resource "routeros_ip_dhcp_server_lease" "static" {
 resource "routeros_ip_dns_record" "dhcp_hosts" {
   for_each = local.static_leases
 
-  name    = "${each.key}.home"
+  name    = "${can(each.value.hostname) ? each.value.hostname : each.key}.home.arpa"
   address = each.value.ip
   ttl     = "5m"
   type    = "A"
