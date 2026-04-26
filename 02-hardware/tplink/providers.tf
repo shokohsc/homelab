@@ -3,7 +3,7 @@
 ############################################
 
 locals {
-  openwrt_remote = format("%s://%s:%d", var.openwrt_protocol, var.openwrt_host, var.openwrt_port)
+  openwrt_remote = "${var.openwrt_protocol}://${var.openwrt_host}"
 }
 
 terraform {

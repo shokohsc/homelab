@@ -1,28 +1,70 @@
 resource "openwrt_configfile" "wireless" {
   name    = "wireless"
   content = <<-EOT
-config wifi-iface
-    option device 'radio0'
-    option mode 'ap'
-    option ssid 'MGMT'
-    option network 'mgmt'
-    option encryption 'sae-mixed'
-    option key 'strongpassword'
+config wifi-device 'radio0'
+        option type 'mac80211'
+        option path 'pci0000:00/0000:00:00.0'
+        option channel '36'
+        option band '5g'
+        option htmode 'VHT80'
+        option country 'FR'
+        option cell_density '0'
 
-config wifi-iface
+config wifi-device 'radio1'
+        option type 'mac80211'
+        option path 'platform/ahb/18100000.wmac'
+        option channel '1'
+        option band '2g'
+        option htmode 'HT20'
+        option country 'FR'
+        option cell_density '0'
+
+config wifi-iface 'mgmt_radio0'
     option device 'radio0'
     option mode 'ap'
-    option ssid 'GUEST'
+    option ssid 'MGMT_5GHZ'
+    option network 'mgmt'
+    option encryption 'psk2'
+    option key '${var.wifi_password_ssid_mgmt}'
+
+config wifi-iface 'mgmt_radio1'
+    option device 'radio1'
+    option mode 'ap'
+    option ssid 'MGMT_2GHZ'
+    option network 'mgmt'
+    option encryption 'psk2'
+    option key '${var.wifi_password_ssid_mgmt}'
+
+config wifi-iface 'guest_radio0'
+    option device 'radio0'
+    option mode 'ap'
+    option ssid 'GUEST_5GHZ'
     option network 'guest'
     option encryption 'psk2'
-    option key 'guestpassword'
+    option key '${var.wifi_password_ssid_guest}'
 
-config wifi-iface
+config wifi-iface 'guest_radio1'
+    option device 'radio1'
+    option mode 'ap'
+    option ssid 'GUEST_2GHZ'
+    option network 'guest'
+    option encryption 'psk2'
+    option key '${var.wifi_password_ssid_guest}'
+
+config wifi-iface 'iot_radio0'
     option device 'radio0'
     option mode 'ap'
-    option ssid 'IOT'
+    option ssid 'IOT_5GHZ'
     option network 'iot'
     option encryption 'psk2'
-    option key 'iotpassword'
+    option key '${var.wifi_password_ssid_iot}'
+
+config wifi-iface 'iot_radio1'
+    option device 'radio1'
+    option mode 'ap'
+    option ssid 'IOT_2GHZ'
+    option network 'iot'
+    option encryption 'psk2'
+    option key '${var.wifi_password_ssid_iot}'
 EOT
 }

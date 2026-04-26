@@ -1,9 +1,3 @@
-variable terraform_state_path {
-  type        = string
-  default     = "./tplink.tfstate"
-  description = "Terraform state path"
-}
-
 variable openwrt_protocol {
   type        = string
   default     = "https"
@@ -16,12 +10,6 @@ variable openwrt_host {
   description = "OpenWRT router host"
 }
 
-variable openwrt_port {
-  type        = number
-  default     = 8080
-  description = "OpenWRT router port"
-}
-
 variable openwrt_username {
   type        = string
   default     = "opentofu"
@@ -32,6 +20,24 @@ variable openwrt_password {
   type        = string
   default     = "opentofu"
   description = "OpenWRT router account password"
+}
+
+variable wifi_password_ssid_mgmt {
+  type       = string
+  default     = "mgmt-password"
+  description = "OpenWRT router wifi password for SSID MGMT"
+}
+
+variable wifi_password_ssid_guest {
+  type       = string
+  default     = "guest-password"
+  description = "OpenWRT router wifi password for SSID Guest"
+}
+
+variable wifi_password_ssid_iot {
+  type       = string
+  default     = "iot-password"
+  description = "OpenWRT router wifi password for SSID IoT"
 }
 
 variable openwrt_api_timeouts {
