@@ -1,38 +1,61 @@
 resource "openwrt_configfile" "network" {
-  name    = "network"
-  content = <<-EOT
-config device
-    option name 'br-lan'
-    option type 'bridge'
-    list ports 'eth0'
+    name    = "network"
+    content = <<-EOT
+config interface 'loopback'
+    option ifname 'lo'
+    option proto 'static'
+    option ipaddr '127.0.0.1'
+    option netmask '255.0.0.0'
 
-# VLAN filtering
-config bridge-vlan
-    option device 'br-lan'
+config interface 'wan'
+    option ifname 'eth1'
+    option proto 'none'
+
+config switch
+    option name 'switch0'
+    option reset '1'
+    option enable_vlan '1'
+
+config switch_vlan
+    option device 'switch0'
     option vlan '10'
-    list ports 'eth0:t'
+    option ports '0t 1t'
+    option vid '10'
 
-config bridge-vlan
-    option device 'br-lan'
+config switch_vlan
+    option device 'switch0'
     option vlan '60'
-    list ports 'eth0:t'
+    option ports '0t 1t'
+    option vid '60'
 
-config bridge-vlan
-    option device 'br-lan'
+config switch_vlan
+    option device 'switch0'
     option vlan '100'
-    list ports 'eth0:t'
+    option ports '0t 1t'
+    option vid '100'
 
-# Interfaces
-config interface 'mgmt'
-    option device 'br-lan.10'
-    option proto 'dhcp'
+config interface 'lan_mgmt'
+    option ifname 'eth0.10'
+    option type 'bridge'
+    option proto 'static'
+    option ipaddr '${cidrhost(local.vlan_cidrs["10"], 2)}'
+    option netmask '255.255.255.0'
+    option gateway '${cidrhost(local.vlan_cidrs["10"], 1)}'
+    option dns '${cidrhost(local.vlan_cidrs["10"], 1)}'
 
-config interface 'guest'
-    option device 'br-lan.60'
-    option proto 'dhcp'
+config interface 'lan_guest'
+    option ifname 'eth0.60'
+    option type 'bridge'
+    option proto 'static'
+    option ipaddr '${cidrhost(local.vlan_cidrs["60"], 2)}'
+    option netmask '255.255.255.0'
 
-config interface 'iot'
-    option device 'br-lan.100'
-    option proto 'dhcp'
+config interface 'lan_iot'
+    option ifname 'eth0.100'
+    option type 'bridge'
+    option proto 'static'
+    option ipaddr '${cidrhost(local.vlan_cidrs["100"], 2)}'
+    option netmask '255.255.255.0'
 EOT
+    depends_on = [openwrt_opkg.ap_mode_packages, openwrt_opkg.vlan_packages]
 }
