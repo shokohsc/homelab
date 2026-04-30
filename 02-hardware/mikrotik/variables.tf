@@ -92,6 +92,24 @@ variable vlan_names {
   description = "VLAN ID to name mappings"
 }
 
+# variable mikrotik_asn {
+#   type = string
+#   default = "65001"
+#   description = "ASN for MikroTik BGP instance"
+# }
+
+# variable cilium_asn {
+#   type = string
+#   default = "65000"
+#   description = "ASN for Cilium BGP instance"
+# }
+
+# variable mikrotik_router_id {
+#   type = string
+#   default = "10.42.0.1"
+#   description = "Router ID for MikroTik BGP instance"
+# }
+
 locals {
     # Homelab CIDR
     homelab_cidr = "${var.vlan_base_network}/16"
