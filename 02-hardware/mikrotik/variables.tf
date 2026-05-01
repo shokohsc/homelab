@@ -24,7 +24,7 @@ variable routeros_password {
 
 variable routeros_insecure {
   type        = bool
-  default     = true
+  default     = false
   description = "Mikrotik router insecure TLS"
 }
 

@@ -13,13 +13,13 @@ This Terraform configuration manages a MikroTik CRS328-24P-4S+RM switch with VLA
 ### VLAN Structure
 All VLANs derive from `vlan_base_network` variable:
 ```
-VLAN 10: 10.42.0.0/24      # Management (gateway 10.42.0.1)
-VLAN 20: 10.42.20.0/24     # Kubernetes (gateway 10.42.20.1)
-VLAN 30: 10.42.30.0/24     # Proxmox (gateway 10.42.30.1)
-VLAN 40: 10.42.40.0/24     # Load Balancer (gateway 10.42.40.1)
-VLAN 50: 10.42.50.0/24     # Windows (gateway 10.42.50.1)
-VLAN 60: 10.42.60.0/24     # Guest WiFi (gateway 10.42.60.1)
-VLAN 100: 10.42.100.0/24   # IoT devices (gateway 10.42.100.1)
+VLAN 10: 10.42.10.0/24      # Management (gateway 10.42.10.1)
+VLAN 20: 10.42.20.0/24      # Kubernetes (gateway 10.42.20.1)
+VLAN 30: 10.42.30.0/24      # Proxmox (gateway 10.42.30.1)
+VLAN 40: 10.42.40.0/24      # Load Balancer (gateway 10.42.40.1)
+VLAN 50: 10.42.50.0/24      # Windows (gateway 10.42.50.1)
+VLAN 60: 10.42.60.0/24      # Guest WiFi (gateway 10.42.60.1)
+VLAN 100: 10.42.100.0/24    # IoT devices (gateway 10.42.100.1)
 ```
 
 ## Quick Start
@@ -86,7 +86,7 @@ resource "routeros_ip_firewall_filter" "fasttrack" {
 ### Example 2: Custom Network Range
 ```terraform
 variable "vlan_base_network" {
-  default = "192.168.100.0"
+  default = "192.168.0.0"
 }
 
 variable "vlan_prefix_length" {
@@ -98,8 +98,10 @@ variable "vlan_start_id" {
 }
 ```
 Results in:
-- VLAN 100: `192.168.100.100.0/24`
-- VLAN 200: `192.168.100.200.0/24`
+- VLAN 100: `192.168.100.0/24`
+- VLAN 200: `192.168.200.0/24`
+
+The `cidrsubnet()` function uses the third octet as the subnet index from a `/16` base.
 
 ### Example 3: Larger Subnets (/23)
 ```terraform
@@ -133,7 +135,47 @@ variable "vlan_names" {
 }
 ```
 
-### Example 5: Complete Example with All Variables
+### Example 5: Static DHCP Leases
+```terraform
+# Static leases in dhcp.tf derive IPs from VLAN subnets automatically:
+# jetkvm     → 10.42.10.10  (VLAN 10, MAC: 30:52:53:00:9E:0A)
+# macbook    → 10.42.10.20  (VLAN 10, MAC: C8:A3:62:AA:C7:1A)
+# k8s_cp1    → 10.42.20.10  (VLAN 20, hostname: sombra)
+# proxmox1   → 10.42.30.10  (VLAN 30, hostname: roadhog)
+
+# DNS records are auto-created as <name>.home.arpa
+```
+
+### Example 6: System Configuration (misc.tf)
+```terraform
+# These resources configure system-level settings:
+
+# Disable IPv6
+resource "routeros_ipv6_settings" "disable" {
+  disable_ipv6 = "true"
+}
+
+# Interface lists for access control
+resource "routeros_interface_list" "wan" { name = "WAN" }
+resource "routeros_interface_list" "lan" { name = "LAN" }
+
+# Restrict MAC server and Winbox to LAN only
+resource "routeros_tool_mac_server" "mac_server" {
+  allowed_interface_list = routeros_interface_list.lan.name
+}
+resource "routeros_tool_mac_server_winbox" "winbox_mac_access" {
+  allowed_interface_list = routeros_interface_list.lan.name
+}
+
+# System identity and timezone
+resource "routeros_system_identity" "identity" { name = "Router" }
+resource "routeros_system_clock" "timezone" {
+  time_zone_name       = "Europe/Paris"
+  time_zone_autodetect = false
+}
+```
+
+### Example 7: Complete Example with All Variables
 ```terraform
 terraform {
   required_providers {
@@ -229,28 +271,47 @@ The following resources are automatically generated from the variable configurat
 - DHCP servers per VLAN interface
 - DHCP network definitions with gateway and DNS
 - Static IP reservations based on MAC addresses
+- Internal DNS records (.home.arpa) for static leases
+
+### System Configuration
+- IPv6 disabled
+- WAN/LAN interface lists
+- MAC server and Winbox restricted to LAN
+- System identity and timezone (Europe/Paris)
+
+## BGP Configuration
+
+The `bgp.tf` file contains a **commented-out** BGP configuration for integration with Cilium/Talos:
+- BGP instance (`routeros_routing_bgp_instance`)
+- BGP template with listen mode for dynamic peers
+- BGP connection for Talos subnet peers
+
+Uncomment and configure the variables (`mikrotik_asn`, `cilium_asn`, `mikrotik_router_id`) to enable BGP peering.
 
 ## Directory Structure
 
 ```
 mikrotik/
-├── main.tf          # Not used; replaced by separate files
-├── providers.tf     # Provider definitions
-├── backend.tf       # Local backend configuration
-├── variables.tf     # Input variables and locals
-├── vlans.tf         # Bridge, VLANs, IP addressing, DHCP
-├── firewall.tf      # Firewall rules
-├── dhcp.tf          # Static DHCP leases
-└── README.md        # This file
+├── backend.tf                 # PostgreSQL backend configuration
+├── bgp.tf                     # BGP configuration (commented out)
+├── config-before-upgrade.rsc  # Backup of config before RouterOS upgrade
+├── dhcp.tf                    # Static DHCP leases and DNS records
+├── firewall.tf                # Firewall rules (input, forward, NAT)
+├── misc.tf                    # System settings, interface lists, timezone
+├── providers.tf               # Provider definitions
+├── README.md                  # This file
+├── routeros-backup.backup     # RouterOS backup file
+├── variables.tf               # Input variables and locals
+└── vlans.tf                   # Bridge, VLANs, IP addressing, DHCP
 ```
 
 ## DNS Configuration
 
 Different VLANs have different DNS settings:
 - **VLAN 10 (mgmt)**: Uses management VLAN gateway as DNS
-- **VLAN 20 (k8s)**: Uses Cloudflare (1.1.1.1, 9.9.9.9)
-- **VLAN 30 (proxmox)**: Uses Quad9 (1.1.1.1, 9.9.9.9)
-- **Other VLANs**: Uses Cloudflare (1.1.1.1, 9.9.9.9)
+- **VLAN 20 (k8s)**: Uses Cloudflare (1.1.1.1) + Quad9 (9.9.9.9)
+- **VLAN 30 (proxmox)**: Uses Cloudflare (1.1.1.1) + Quad9 (9.9.9.9)
+- **Other VLANs**: Uses Cloudflare (1.1.1.1) + Quad9 (9.9.9.9)
 
 ## Security Features
 
