@@ -53,7 +53,7 @@ resource "routeros_ip_firewall_filter" "input_default_deny" {
 #   chain         = "forward"
 #   action        = "accept"
 #   comment       = "Rule 00-BGP-Forward Allow BGP traffic for LoadBalancer - place before fasttrack"
-#   dst_address   = local.vlan_cidrs["50"] # LoadBalancer cidr gateway
+#   dst_address   = local.vlan_cidrs["60"] # LoadBalancer cidr gateway
 #   protocol      = "tcp"
 #   dst_port      = "179"
 #   connection_state = "established,related"
@@ -161,7 +161,7 @@ resource "routeros_ip_firewall_filter" "deny_inter_vlan" {
 resource "routeros_ip_firewall_filter" "guest_dns_block" {
   chain       = "forward"
   action      = "drop"
-  src_address = local.vlan_cidrs["60"]
+  src_address = local.vlan_cidrs["50"]
   dst_address = cidrhost(local.vlan_cidrs["10"], 1)
   protocol    = "udp"
   dst_port    = "53"

@@ -37,7 +37,7 @@ resource "routeros_interface_bridge_port" "eth5" {
 resource "routeros_interface_bridge_port" "eth7" {
   bridge = routeros_interface_bridge.bridge.name
   interface = "ether7"
-  pvid = 60
+  pvid = 50
 }
 
 # Kubernetes nodes
@@ -88,9 +88,9 @@ locals {
     10  = "mgmt"
     20  = "k8s"
     30  = "proxmox"
-    40  = "lb"
-    50  = "windows"
-    60  = "guest"
+    40  = "windows"
+    50  = "guest"
+    60  = "lb"
     100 = "iot"
   }
 }
@@ -117,9 +117,9 @@ resource "routeros_interface_bridge_vlan" "vlans" {
     10  = ["ether3","ether15","ether17"] # Mgmt
     20  = ["ether8","ether9","ether11","ether13","ether23","sfp-sfpplus4"] # K8s
     30  = ["ether19","ether21","ether22"] # Proxmox
-    40  = [] # LB
-    50  = [] # VMs
-    60  = ["ether7"] # Guest
+    40  = [] # VMs
+    50  = ["ether7"] # Guest
+    60  = [] # LB
     100 = [] # IoT
   }, each.key, [])
 }

@@ -74,16 +74,16 @@ locals {
       hostname = "genji"
     }
 
-    # Guest (VLAN 60)
+    # Guest (VLAN 50)
     chromecast = {
       mac  = "54:60:09:4A:28:CA"
-      ip   = cidrhost(local.vlan_cidrs["60"], 10)
-      vlan = 60
+      ip   = cidrhost(local.vlan_cidrs["50"], 10)
+      vlan = 50
     }
     raspberry = {
       mac  = "AA:BB:CC:DD:EE:FF"
-      ip   = cidrhost(local.vlan_cidrs["60"], 20)
-      vlan = 60
+      ip   = cidrhost(local.vlan_cidrs["50"], 20)
+      vlan = 50
     }
 
     # IOT (VLAN 100)

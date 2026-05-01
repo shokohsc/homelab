@@ -16,9 +16,9 @@ All VLANs derive from `vlan_base_network` variable:
 VLAN 10: 10.42.10.0/24      # Management (gateway 10.42.10.1)
 VLAN 20: 10.42.20.0/24      # Kubernetes (gateway 10.42.20.1)
 VLAN 30: 10.42.30.0/24      # Proxmox (gateway 10.42.30.1)
-VLAN 40: 10.42.40.0/24      # Load Balancer (gateway 10.42.40.1)
-VLAN 50: 10.42.50.0/24      # Windows (gateway 10.42.50.1)
-VLAN 60: 10.42.60.0/24      # Guest WiFi (gateway 10.42.60.1)
+VLAN 40: 10.42.40.0/24      # Windows (gateway 10.42.40.1)
+VLAN 50: 10.42.50.0/24      # Guest WiFi (gateway 10.42.50.1)
+VLAN 60: 10.42.60.0/24      # Load Balancer (gateway 10.42.60.1)
 VLAN 100: 10.42.100.0/24    # IoT devices (gateway 10.42.100.1)
 ```
 
@@ -229,9 +229,9 @@ variable "vlan_names" {
     10  = "mgmt"
     20  = "k8s"
     30  = "proxmox"
-    40  = "lb"
-    50  = "windows"
-    60  = "guest"
+    40  = "windows"
+    50  = "guest"
+    60  = "lb"
     100 = "iot"
   }
 }
@@ -316,7 +316,7 @@ Different VLANs have different DNS settings:
 ## Security Features
 
 - **IoT Lockdown**: IoT VLAN (100) cannot access DNS except through router
-- **Guest Isolation**: Guest VLAN (60) blocked from internal DNS
+- **Guest Isolation**: Guest VLAN (50) blocked from internal DNS
 - **Inter-VLAN Routing**: Only higher priority VLANs can route to lower
 - **Default Deny**: East-west traffic dropped unless explicitly allowed
 

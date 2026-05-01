@@ -84,9 +84,9 @@ variable vlan_names {
     10  = "mgmt"
     20  = "k8s"
     30  = "proxmox"
-    40  = "lb"
-    50  = "windows"
-    60  = "guest"
+    40  = "windows"
+    50  = "guest"
+    60  = "lb"
     100 = "iot"
   }
   description = "VLAN ID to name mappings"
