@@ -24,9 +24,9 @@ config switch_vlan
 
 config switch_vlan
     option device 'switch0'
-    option vlan '60'
+    option vlan '50'
     option ports '0t 1t'
-    option vid '60'
+    option vid '50'
 
 config switch_vlan
     option device 'switch0'
@@ -44,10 +44,10 @@ config interface 'lan_mgmt'
     option dns '${cidrhost(local.vlan_cidrs["10"], 1)}'
 
 config interface 'lan_guest'
-    option ifname 'eth0.60'
+    option ifname 'eth0.50'
     option type 'bridge'
     option proto 'static'
-    option ipaddr '${cidrhost(local.vlan_cidrs["60"], 2)}'
+    option ipaddr '${cidrhost(local.vlan_cidrs["50"], 2)}'
     option netmask '255.255.255.0'
 
 config interface 'lan_iot'

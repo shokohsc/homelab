@@ -14,7 +14,7 @@ This OpenTofu configuration manages a TP-Link Archer C7 acting as a WiFi access 
 | VLAN ID | Network Interface | SSID (2.4GHz) | SSID (5GHz) | Purpose |
 |--------|-------------------|---------------|-------------|---------|
 | 10 | eth0.10 | OpenWrt-Management | OpenWrt-Management-5G | Management network |
-| 60 | eth0.60 | OpenWrt-Guest | OpenWrt-Guest-5G | Guest WiFi |
+| 50 | eth0.50 | OpenWrt-Guest | OpenWrt-Guest-5G | Guest WiFi |
 | 100 | eth0.100 | OpenWrt-IoT | OpenWrt-IoT-5G | IoT devices |
 
 ## Prerequisites
@@ -148,13 +148,13 @@ variable "vlan_base_network" {
 variable "vlan_names" {
   default = {
     10  = "mgmt"
-    60  = "guest"
+    50  = "guest"
     100 = "iot"
   }
 }
 ```
 This results in:
-- Management: `192.168.60.0/24` (AP IP: `192.168.60.2`, gateway: `192.168.60.1`)
+- Management: `192.168.50.0/24` (AP IP: `192.168.50.2`, gateway: `192.168.50.1`)
 - Guest: `192.168.110.0/24` (AP IP: `192.168.110.2`)
 - IoT: `192.168.150.0/24` (AP IP: `192.168.150.2`)
 
