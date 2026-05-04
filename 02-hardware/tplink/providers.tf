@@ -16,7 +16,8 @@ terraform {
 }
 
 provider "openwrt" {
-  user     = var.openwrt_username
-  password = var.openwrt_password
-  remote   = local.openwrt_remote
+  user         = var.openwrt_username
+  password     = var.openwrt_password
+  remote       = local.openwrt_remote
+  api_timeouts = var.openwrt_api_timeouts
 }
