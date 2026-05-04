@@ -185,7 +185,8 @@ resource "routeros_interface_vlan" "vlan_if" {
 resource "routeros_ip_address" "gateway_ips" {
   for_each = local.vlan_names_filtered
 
-  address   = "${cidrhost(local.vlan_cidrs[each.key], 1)}/32"
+  address   = "${cidrhost(local.vlan_cidrs[each.key], 1)}/${var.vlan_prefix_length}"
+  network   = cidrhost(local.vlan_cidrs[each.key], 1)
   interface = routeros_interface_vlan.vlan_if[each.key].name
   comment   = each.value
 }

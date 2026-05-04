@@ -221,24 +221,9 @@ resource "routeros_ip_firewall_filter" "allow_bridge_to_vlans" {
   disabled     = var.disable_firewall_rules
   chain        = "forward"
   action       = "accept"
-  src_address  = "${var.vlan_base_network}/24"
-  dst_address  = "${var.vlan_base_network}/16"
+  src_address  = var.homelab_cidr
+  dst_address  = var.homelab_cidr
   comment      = "Rule 055-Allow-Bridge-to-VLANs"
-  place_before = routeros_ip_firewall_filter.allow_priority["10"].id
-  lifecycle {
-    ignore_changes = [
-      disabled
-    ]
-  }
-}
-
-resource "routeros_ip_firewall_filter" "allow_mgmt_vlan_to_default_cidr" {
-  disabled     = var.disable_firewall_rules
-  chain        = "forward"
-  action       = "accept"
-  src_address  = local.vlan_cidrs["10"]
-  dst_address  = "${var.vlan_base_network}/24"
-  comment      = "Rule 056-Allow-MgmtVLAN-to-DefaultCIDR"
   place_before = routeros_ip_firewall_filter.allow_priority["10"].id
   lifecycle {
     ignore_changes = [

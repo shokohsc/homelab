@@ -267,6 +267,7 @@ The following resources are automatically generated from the variable configurat
 ### Interfaces
 - VLAN interfaces created for each configured VLAN ID
 - Bridge ports with appropriate PVIDs
+- LAN interface list members for bridge and all VLAN interfaces
 
 ### IP Addressing
 - Gateway IPs automatically calculated as first usable address
@@ -275,10 +276,17 @@ The following resources are automatically generated from the variable configurat
 ### Firewall Rules
 - Management access from default CIDR (10.42.0.0/24) and management VLAN CIDR (10.42.10.0/24)
 - Bidirectional forwarding between default CIDR and management VLAN CIDR
+- Inter-VLAN forwarding for all VLAN subnets (10.42.0.0/16)
 - Priority-based inter-VLAN routing (higher → lower VLAN)
 - IoT internet denial rules
 - DNS lockdown for restricted VLANs
 - MASQUERADE NAT for internet access
+
+### System Configuration
+- IPv6 disabled
+- WAN/LAN interface lists
+- LAN list populated with bridge and all VLAN interfaces
+- MAC server and Winbox restricted to LAN
 
 ### DHCP
 - DHCP servers per VLAN interface
@@ -337,15 +345,29 @@ Different VLANs have different DNS settings:
 
 **WARNING**: Enabling `vlan_filtering` on the bridge can lock you out if management access is not properly configured.
 
+### Root Causes of Lockout (All Fixed in This Project)
+
+| Issue | Effect | Fix |
+|-------|--------|-----|
+| Gateway IPs use `/32` mask | Gateway can't route to VLAN subnet devices | Changed to `/${var.vlan_prefix_length}` |
+| LAN interface list empty | `drop_all_not_lan` rule drops ALL traffic | Bridge + all VLAN interfaces added to LAN list |
+| `allow_bridge_to_vlans` uses `/24` source | VLAN 10 devices (`10.42.10.x`) can't forward | Changed to `/16` to cover all VLAN subnets |
+
 ### Prerequisites (already configured in this project)
 
-1. **Management VLAN firewall rules**: Input chain rules explicitly allow management from:
+1. **Gateway IPs use correct subnet mask** — `/${var.vlan_prefix_length}` (not `/32`) so the gateway can route to devices on each VLAN.
+
+2. **LAN interface list populated** — bridge and all VLAN interfaces are members of the LAN list, preventing the `drop_all_not_lan` firewall rule from blocking management traffic.
+
+3. **Forward rules cover all VLAN subnets** — `allow_bridge_to_vlans` uses `10.42.0.0/16` source/destination, covering all VLAN subnets.
+
+4. **Management VLAN firewall rules** — Input chain rules explicitly allow management from:
    - Default CIDR (`10.42.0.0/24`)
    - Management VLAN CIDR (`10.42.10.0/24`)
 
-2. **Bridge VLAN entries**: VLAN 10 (management) includes the bridge as tagged and management ports (ether3, ether15, ether17) as untagged.
+5. **Bridge VLAN entries** — VLAN 10 (management) includes the bridge as tagged and management ports (ether3, ether15, ether17) as untagged.
 
-3. **Inter-management traffic**: Forward chain rules allow bidirectional traffic between the default CIDR and management VLAN CIDR.
+6. **Inter-management traffic** — Forward chain rules allow bidirectional traffic between the default CIDR and management VLAN CIDR.
 
 ### Steps to Enable
 

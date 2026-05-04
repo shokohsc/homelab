@@ -14,6 +14,20 @@ import {
 }
 resource "routeros_interface_list" "lan" { name = "LAN" }
 
+resource "routeros_interface_list_member" "bridge_lan" {
+  interface = routeros_interface_bridge.bridge.name
+  list      = routeros_interface_list.lan.name
+  comment   = "Bridge in LAN"
+}
+
+resource "routeros_interface_list_member" "vlan_lan" {
+  for_each = var.vlan_names
+
+  interface = routeros_interface_vlan.vlan_if[each.key].name
+  list      = routeros_interface_list.lan.name
+  comment   = "${each.value} VLAN in LAN"
+}
+
 resource "routeros_ip_neighbor_discovery_settings" "lan_discovery" {
   discover_interface_list = routeros_interface_list.lan.name
 }
