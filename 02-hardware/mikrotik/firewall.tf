@@ -1,104 +1,198 @@
-############################################
-##  Read existing firewall rules (for ordering)##
-############################################
+###########################################################
+##            Input Chain - Management Access            ##
+##  Critical: must exist before enabling vlan_filtering  ##
+###########################################################
 
-data "routeros_ip_firewall" "existing" {
-  rules {}
+resource "routeros_ip_firewall_filter" "accept_established_related_untracked" {
+  disabled         = var.disable_firewall_rules
+  action           = "accept"
+  chain            = "input"
+  connection_state = "established,related,untracked"
+  comment          = "Rule 000-Accept-Established-Related-Untracked"
+  place_before     = routeros_ip_firewall_filter.drop_invalid.id
+  lifecycle {
+    ignore_changes = [
+      disabled
+    ]
+  }
 }
 
-############################################
-##       Input Chain - Management Access   ##
-##     Critical: must exist before enabling vlan_filtering
-############################################
-
-# Allow established connections to router
-resource "routeros_ip_firewall_filter" "input_established" {
-  chain        = "input"
-  action       = "accept"
-  connection_state = "established,related"
-  comment      = "Rule 00 - Allow established,related connections"
+resource "routeros_ip_firewall_filter" "drop_invalid" {
+  disabled         = var.disable_firewall_rules
+  action           = "drop"
+  chain            = "input"
+  connection_state = "invalid"
+  log              = true
+  log_prefix       = "drop_input_invalid"
+  comment          = "Rule 001-Drop-Invalid"
+  place_before     = routeros_ip_firewall_filter.accept_icmp.id
+  lifecycle {
+    ignore_changes = [
+      disabled
+    ]
+  }
 }
 
-# Allow ICMP (ping)
-resource "routeros_ip_firewall_filter" "input_icmp" {
-  chain        = "input"
+resource "routeros_ip_firewall_filter" "accept_icmp" {
+  disabled     = var.disable_firewall_rules
   action       = "accept"
+  chain        = "input"
   protocol     = "icmp"
-  comment      = "Rule 00 - Allow icmp connections"
+  comment      = "Rule 002-Accept-ICMP"
+  place_before = routeros_ip_firewall_filter.fasttrack.id
+  lifecycle {
+    ignore_changes = [
+      disabled
+    ]
+  }
 }
 
-# Allow management access from mgmt VLAN only
-resource "routeros_ip_firewall_filter" "input_mgmt" {
-  chain        = "input"
+resource "routeros_ip_firewall_filter" "capsman_accept_local_loopback" {
+  disabled     = var.disable_firewall_rules
   action       = "accept"
-  src_address  = local.vlan_cidrs["10"]
-  comment      = "Rule 00 - Allow management from VLAN 10"
+  chain        = "input"
+  dst_address  = "127.0.0.1"
+  comment      = "Rule 003-Capsman-Accept-Local-Loopback"
+  place_before = routeros_ip_firewall_filter.drop_all_not_lan.id
+  lifecycle {
+    ignore_changes = [
+      disabled
+    ]
+  }
 }
 
-# Drop everything else on input chain
-resource "routeros_ip_firewall_filter" "input_default_deny" {
-  chain  = "input"
-  action = "drop"
-  comment      = "Rule 00 - Drop everything else"
+resource "routeros_ip_firewall_filter" "accept_mgmt_default_cidr" {
+  disabled     = var.disable_firewall_rules
+  action       = "accept"
+  chain        = "input"
+  src_address  = "${var.vlan_base_network}/24"
+  comment      = "Rule 004-Accept-Mgmt-Default-CIDR"
+  place_before = routeros_ip_firewall_filter.drop_all_not_lan.id
+  lifecycle {
+    ignore_changes = [
+      disabled
+    ]
+  }
+}
+
+resource "routeros_ip_firewall_filter" "accept_mgmt_vlan_cidr" {
+  disabled     = var.disable_firewall_rules
+  action       = "accept"
+  chain        = "input"
+  src_address  = local.vlan_cidrs["10"]
+  comment      = "Rule 005-Accept-Mgmt-VLAN-CIDR"
+  place_before = routeros_ip_firewall_filter.accept_mgmt_default_cidr.id
+  lifecycle {
+    ignore_changes = [
+      disabled
+    ]
+  }
+}
+
+resource "routeros_ip_firewall_filter" "drop_all_not_lan" {
+  disabled          = var.disable_firewall_rules
+  action            = "drop"
+  chain             = "input"
+  in_interface_list = "!${routeros_interface_list.lan.name}"
+  log               = true
+  log_prefix        = "drop_not_lan"
+  comment           = "Rule 006-Drop-All-Not-LAN"
+  place_before      = routeros_ip_firewall_filter.fasttrack.id
+  lifecycle {
+    ignore_changes = [
+      disabled
+    ]
+  }
 }
 
 ############################################
 ##       Forward Chain - Core Rules       ##
-##   Ordered via place_before chaining    ##
 ############################################
 
 # # Critical: Allow BGP forward traffic - must be placed BEFORE fasttrack
 # # Note: RouterOS doesn't support rule ordering via TF, place manually or use scripts
 # resource "routeros_ip_firewall_filter" "bgp_forward" {
+#   disabled = var.disable_firewall_rules
 #   chain         = "forward"
 #   action        = "accept"
-#   comment       = "Rule 00-BGP-Forward Allow BGP traffic for LoadBalancer - place before fasttrack"
+#   comment       = "Rule 007-BGP-Forward Allow BGP traffic for LoadBalancer - place before fasttrack"
 #   dst_address   = local.vlan_cidrs["60"] # LoadBalancer cidr gateway
 #   protocol      = "tcp"
 #   dst_port      = "179"
 #   connection_state = "established,related"
-#   place_before    = routeros_ip_firewall_filter.fasttrack.id
+#   place_before = routeros_ip_firewall_filter.fasttrack.id
+# lifecycle {
+#     ignore_changes = [
+#       disabled
+#     ]  
+# }
 # }
 
 # Rule 1: Fasttrack (lowest priority, created first)
 resource "routeros_ip_firewall_filter" "fasttrack" {
-  chain           = "forward"
-  action          = "fasttrack-connection"
+  disabled         = var.disable_firewall_rules
+  chain            = "forward"
+  action           = "fasttrack-connection"
   connection_state = "established,related"
-  comment         = "Rule 01-Fasttrack"
+  comment          = "Rule 010-Fasttrack"
+  hw_offload       = true
+  place_before     = routeros_ip_firewall_filter.established.id
+  lifecycle {
+    ignore_changes = [
+      disabled
+    ]
+  }
 }
 
 # Rule 2: Accept established/related - placed before fasttrack
 resource "routeros_ip_firewall_filter" "established" {
-  chain           = "forward"
-  action          = "accept"
+  disabled         = var.disable_firewall_rules
+  chain            = "forward"
+  action           = "accept"
   connection_state = "established,related"
-  place_before    = routeros_ip_firewall_filter.fasttrack.id
-  comment         = "Rule 02-Accept-Established"
+  comment          = "Rule 020-Accept-Established"
+  place_before     = routeros_ip_firewall_filter.invalid.id
+  lifecycle {
+    ignore_changes = [
+      disabled
+    ]
+  }
 }
 
 # Rule 3: Drop invalid - placed before established
 resource "routeros_ip_firewall_filter" "invalid" {
-  chain           = "forward"
-  action          = "drop"
+  disabled         = var.disable_firewall_rules
+  chain            = "forward"
+  action           = "drop"
   connection_state = "invalid"
-  log             = true
-  log_prefix      = "invalid_connection"
-  place_before    = routeros_ip_firewall_filter.established.id
-  comment         = "Rule 03-Drop-Invalid"
+  log              = true
+  log_prefix       = "invalid_connection"
+  comment          = "Rule 030-Drop-Invalid"
+  place_before     = routeros_ip_firewall_filter.new_wan.id
+  lifecycle {
+    ignore_changes = [
+      disabled
+    ]
+  }
 }
 
 # Rule 4: Drop new from WAN - placed before invalid
 resource "routeros_ip_firewall_filter" "new_wan" {
+  disabled             = var.disable_firewall_rules
   chain                = "forward"
   action               = "drop"
-  connection_state      = "new"
-  connection_nat_state  = "!dstnat"
+  connection_state     = "new"
+  connection_nat_state = "!dstnat"
   in_interface         = "ether1"
   log                  = true
   log_prefix           = "new_connection"
-  place_before         = routeros_ip_firewall_filter.invalid.id
-  comment              = "Rule 04-Drop-New-From-WAN"
+  comment              = "Rule 040-Drop-New-From-WAN"
+  place_before         = routeros_ip_firewall_filter.iot_no_internet.id
+  lifecycle {
+    ignore_changes = [
+      disabled
+    ]
+  }
 }
 
 ############################################
@@ -107,16 +201,54 @@ resource "routeros_ip_firewall_filter" "new_wan" {
 ############################################
 
 resource "routeros_ip_firewall_filter" "iot_no_internet" {
+  disabled      = var.disable_firewall_rules
   chain         = "forward"
   action        = "drop"
   src_address   = local.vlan_cidrs["100"]
   out_interface = "ether1"
-  place_before  = routeros_ip_firewall_filter.new_wan.id
-  comment       = "Rule 05-Block-IoT-Internet"
+  log           = true
+  log_prefix    = "iot_no_internet"
+  comment       = "Rule 050-Block-IoT-Internet"
+  place_before  = routeros_ip_firewall_filter.allow_bridge_to_vlans.id
+  lifecycle {
+    ignore_changes = [
+      disabled
+    ]
+  }
+}
+
+resource "routeros_ip_firewall_filter" "allow_bridge_to_vlans" {
+  disabled     = var.disable_firewall_rules
+  chain        = "forward"
+  action       = "accept"
+  src_address  = "${var.vlan_base_network}/24"
+  dst_address  = "${var.vlan_base_network}/16"
+  comment      = "Rule 055-Allow-Bridge-to-VLANs"
+  place_before = routeros_ip_firewall_filter.allow_priority["10"].id
+  lifecycle {
+    ignore_changes = [
+      disabled
+    ]
+  }
+}
+
+resource "routeros_ip_firewall_filter" "allow_mgmt_vlan_to_default_cidr" {
+  disabled     = var.disable_firewall_rules
+  chain        = "forward"
+  action       = "accept"
+  src_address  = local.vlan_cidrs["10"]
+  dst_address  = "${var.vlan_base_network}/24"
+  comment      = "Rule 056-Allow-MgmtVLAN-to-DefaultCIDR"
+  place_before = routeros_ip_firewall_filter.allow_priority["10"].id
+  lifecycle {
+    ignore_changes = [
+      disabled
+    ]
+  }
 }
 
 ############################################
-##      Allow higher → lower VLANs       ##
+##      Allow lower → higher VLANs       ##
 ############################################
 
 resource "routeros_ip_firewall_filter" "allow_priority" {
@@ -126,17 +258,23 @@ resource "routeros_ip_firewall_filter" "allow_priority" {
       src = local.vlan_cidrs[src_k]
       dsts = {
         for dst_k, _ in local.vlan_names_filtered :
-        dst_k => local.vlan_cidrs[dst_k] if dst_k < src_k
+        dst_k => local.vlan_cidrs[dst_k] if dst_k > src_k
       }
     }
   }
 
-  chain        = "forward"
-  action       = "accept"
-  src_address  = each.value.src
-  dst_address  = join(",", values(each.value.dsts))
-  place_before = routeros_ip_firewall_filter.iot_no_internet.id
-  comment      = "Rule 06-Allow-Priority-${each.key}"
+  disabled         = var.disable_firewall_rules
+  chain            = "forward"
+  action           = "accept"
+  src_address      = each.value.src
+  dst_address_list = join(",", values(each.value.dsts))
+  comment          = "Rule 060-Allow-Priority-${each.key}"
+  place_before     = routeros_ip_firewall_filter.deny_inter_vlan.id
+  lifecycle {
+    ignore_changes = [
+      disabled
+    ]
+  }
 }
 
 ############################################
@@ -145,13 +283,21 @@ resource "routeros_ip_firewall_filter" "allow_priority" {
 ############################################
 
 resource "routeros_ip_firewall_filter" "deny_inter_vlan" {
-  chain        = "forward"
-  action       = "drop"
-  src_address  = var.homelab_cidr
-  dst_address  = var.homelab_cidr
+  disabled    = var.disable_firewall_rules
+  chain       = "forward"
+  action      = "drop"
+  src_address = var.homelab_cidr
+  dst_address = var.homelab_cidr
+  log         = true
+  log_prefix  = "deny_inter_vlan"
   # Place before first allow_priority rule (k8s with priority 20)
-  place_before = routeros_ip_firewall_filter.allow_priority["20"].id
-  comment      = "Rule 07-Deny-InterVLAN"
+  comment      = "Rule 070-Deny-InterVLAN"
+  place_before = routeros_ip_firewall_filter.guest_dns_block.id
+  lifecycle {
+    ignore_changes = [
+      disabled
+    ]
+  }
 }
 
 ############################################
@@ -159,14 +305,22 @@ resource "routeros_ip_firewall_filter" "deny_inter_vlan" {
 ############################################
 
 resource "routeros_ip_firewall_filter" "guest_dns_block" {
-  chain       = "forward"
-  action      = "drop"
-  src_address = local.vlan_cidrs["50"]
-  dst_address = cidrhost(local.vlan_cidrs["10"], 1)
-  protocol    = "udp"
-  dst_port    = "53"
-  place_before = routeros_ip_firewall_filter.deny_inter_vlan.id
-  comment     = "Rule 08-Block-Guest-DNS"
+  disabled     = var.disable_firewall_rules
+  chain        = "forward"
+  action       = "drop"
+  src_address  = local.vlan_cidrs["50"]
+  dst_address  = cidrhost(local.vlan_cidrs["10"], 1)
+  protocol     = "udp"
+  dst_port     = "53"
+  log          = true
+  log_prefix   = "deny_inter_vlan"
+  comment      = "Rule 080-Block-Guest-DNS"
+  place_before = routeros_ip_firewall_filter.iot_dns_lockdown.id
+  lifecycle {
+    ignore_changes = [
+      disabled
+    ]
+  }
 }
 
 ############################################
@@ -174,14 +328,22 @@ resource "routeros_ip_firewall_filter" "guest_dns_block" {
 ############################################
 
 resource "routeros_ip_firewall_filter" "iot_dns_lockdown" {
-  chain       = "forward"
-  action      = "drop"
-  src_address = local.vlan_cidrs["100"]
-  dst_address = cidrhost(local.vlan_cidrs["10"], 1)
-  protocol    = "udp"
-  dst_port    = "53"
-  place_before = routeros_ip_firewall_filter.guest_dns_block.id
-  comment     = "Rule 09-Block-IoT-DNS"
+  disabled     = var.disable_firewall_rules
+  chain        = "forward"
+  action       = "drop"
+  src_address  = local.vlan_cidrs["100"]
+  dst_address  = cidrhost(local.vlan_cidrs["10"], 1)
+  protocol     = "udp"
+  dst_port     = "53"
+  log          = true
+  log_prefix   = "iot_dns_lockdown"
+  comment      = "Rule 090-Block-IoT-DNS"
+  place_before = routeros_ip_firewall_filter.dns_allow_trusted.id
+  lifecycle {
+    ignore_changes = [
+      disabled
+    ]
+  }
 }
 
 ############################################
@@ -190,28 +352,28 @@ resource "routeros_ip_firewall_filter" "iot_dns_lockdown" {
 ############################################
 
 resource "routeros_ip_firewall_filter" "dns_allow_trusted" {
+  disabled    = var.disable_firewall_rules
   chain       = "forward"
   action      = "accept"
   protocol    = "udp"
   dst_port    = "53"
   src_address = var.homelab_cidr
-  place_before = routeros_ip_firewall_filter.iot_dns_lockdown.id
-  comment     = "Rule 10-Allow-DNS-Trusted"
+  comment     = "Rule 100-Allow-DNS-Trusted"
+  lifecycle {
+    ignore_changes = [
+      disabled
+    ]
+  }
 }
 
 ############################################
 ##         NAT (Internet access)         ##
 ############################################
 
-import {
-  to = routeros_ip_firewall_nat.masquerade
-  id = "*1"
-}
-
 resource "routeros_ip_firewall_nat" "masquerade" {
-  chain        = "srcnat"
-  out_interface = "ether1"
-  action       = "masquerade"
-  comment      = "NAT-Masquerade"
+  chain              = "srcnat"
+  out_interface      = "ether1"
+  action             = "masquerade"
+  comment            = "NAT-Masquerade"
   out_interface_list = routeros_interface_list.wan.name
 }

@@ -10,6 +10,17 @@ This Terraform configuration manages a MikroTik CRS328-24P-4S+RM switch with VLA
 - **Model**: MikroTik CRS328-24P-4S+RM
 - **Role**: Router backbone with VLAN filtering, DHCP servers, and firewall rules
 
+### Management Access
+
+The router can be managed from two networks:
+
+| Network | CIDR | Purpose |
+|---------|------|---------|
+| Default Management | `10.42.0.0/24` | Direct management access (pre-VLAN or ether1) |
+| Management VLAN | `10.42.10.0/24` | Management via VLAN 10 (ether3, ether15, ether17) |
+
+Both networks are explicitly allowed in the firewall input chain for router management. Traffic between these two CIDRs is also allowed in the forward chain, ensuring seamless access regardless of which management network you connect from.
+
 ### VLAN Structure
 All VLANs derive from `vlan_base_network` variable:
 ```
@@ -262,6 +273,8 @@ The following resources are automatically generated from the variable configurat
 - DHCP server address pools (100-254 range per VLAN)
 
 ### Firewall Rules
+- Management access from default CIDR (10.42.0.0/24) and management VLAN CIDR (10.42.10.0/24)
+- Bidirectional forwarding between default CIDR and management VLAN CIDR
 - Priority-based inter-VLAN routing (higher → lower VLAN)
 - IoT internet denial rules
 - DNS lockdown for restricted VLANs
@@ -319,6 +332,45 @@ Different VLANs have different DNS settings:
 - **Guest Isolation**: Guest VLAN (50) blocked from internal DNS
 - **Inter-VLAN Routing**: Only higher priority VLANs can route to lower
 - **Default Deny**: East-west traffic dropped unless explicitly allowed
+
+## Enabling VLAN Filtering
+
+**WARNING**: Enabling `vlan_filtering` on the bridge can lock you out if management access is not properly configured.
+
+### Prerequisites (already configured in this project)
+
+1. **Management VLAN firewall rules**: Input chain rules explicitly allow management from:
+   - Default CIDR (`10.42.0.0/24`)
+   - Management VLAN CIDR (`10.42.10.0/24`)
+
+2. **Bridge VLAN entries**: VLAN 10 (management) includes the bridge as tagged and management ports (ether3, ether15, ether17) as untagged.
+
+3. **Inter-management traffic**: Forward chain rules allow bidirectional traffic between the default CIDR and management VLAN CIDR.
+
+### Steps to Enable
+
+1. Ensure your device is connected to a management port (ether3, ether15, or ether17) or has an IP in the `10.42.0.0/24` range.
+
+2. Set the variable:
+   ```terraform
+   variable "vlan_filtering" {
+     default = true
+   }
+   ```
+
+3. Apply the configuration:
+   ```bash
+   tofu apply
+   ```
+
+4. Verify management access is still functional before proceeding with other changes.
+
+### Recovery
+
+If you lose access after enabling vlan_filtering:
+- Connect via console/serial access
+- Or connect to ether3/ether15/ether17 with an IP in `10.42.10.0/24`
+- Or disable vlan_filtering via the variable and re-apply
 
 ## References
 
