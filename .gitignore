@@ -8,4 +8,5 @@ private/
 .terraform/
 .terraform.lock.hcl
 terraform.tfvars
-postgres-data/routeros-backup.backup
+postgres-data/
+routeros-backup.backup
