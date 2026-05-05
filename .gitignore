@@ -8,5 +8,6 @@ private/
 .terraform/
 .terraform.lock.hcl
 terraform.tfvars
+*.tfstate
 postgres-data/
 routeros-backup.backup
