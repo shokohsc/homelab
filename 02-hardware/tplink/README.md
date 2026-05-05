@@ -11,18 +11,31 @@ This OpenTofu configuration manages a TP-Link Archer C7 acting as a WiFi access 
 
 ## VLANs
 
-| VLAN ID | Network Interface | SSID (2.4GHz) | SSID (5GHz) | Purpose |
-|--------|-------------------|---------------|-------------|---------|
-| 10 | eth0.10 | OpenWrt-Management | OpenWrt-Management-5G | Management network |
-| 50 | eth0.50 | OpenWrt-Guest | OpenWrt-Guest-5G | Guest WiFi |
-| 100 | eth0.100 | OpenWrt-IoT | OpenWrt-IoT-5G | IoT devices |
+| VLAN ID | Network Interface | SSID (2.4GHz + 5GHz) | Purpose |
+|--------|-------------------|----------------------|---------|
+| 10 | eth0.10 | OpenWrt-Management | Management network |
+| 50 | eth0.50 | OpenWrt-Guest | Guest WiFi |
+| 100 | eth0.100 | OpenWrt-IoT | IoT devices |
+
+Each SSID is broadcast on both 2.4GHz and 5GHz with the same name. The Management SSID is hidden.
 
 ## Prerequisites
 
 1. OpenTofu (tofu) >= 1.5.0
 2. OpenWrt with RPC API enabled (`luci-mod-rpc` and dependencies)
-3. Access to OpenWrt device via HTTPS
+3. Access to OpenWrt device via HTTP (default) or HTTPS (requires manual certificate setup)
 4. `luci`, `luci-ssl`, `luasocket`, `luci-lib-ipkg`, `luci-compat` installed beforehand (required for the provider)
+
+## Manual Setup
+
+The following steps must be done manually through the LuCI web UI or SSH before applying Terraform:
+
+1. **Upload SSH public key**: Add your public SSH key through the LuCI UI (System → Administration → SSH-Keys) for passwordless access.
+
+2. **Configure HTTPS certificate**: To access LuCI via HTTPS without browser SSL warnings, upload a trusted TLS certificate and key:
+   - Copy your certificate to `/etc/uhttpd.crt`
+   - Copy your private key to `/etc/uhttpd.key`
+   - Restart uhttpd: `/etc/init.d/uhttpd restart`
 
 ## Quick Start
 
@@ -45,7 +58,7 @@ tofu apply
 ### Connection Variables
 | Variable | Type | Default | Description |
 |----------|------|---------|-------------|
-| `openwrt_protocol` | string | `"https"` | Protocol (https/http) |
+| `openwrt_protocol` | string | `"http"` | Protocol (https/http) |
 | `openwrt_host` | string | `"example.com"` | Access point hostname/IP |
 | `openwrt_username` | string | `"opentofu"` | Admin username |
 | `openwrt_password` | string | `"opentofu"` | Admin password |
@@ -57,6 +70,11 @@ tofu apply
 | `wifi_password_ssid_guest` | string | `"guest-password"` | Guest WiFi password |
 | `wifi_password_ssid_iot` | string | `"iot-password"` | IoT WiFi password |
 
+### System Variables
+| Variable | Type | Default | Description |
+|----------|------|---------|-------------|
+| `system_timezone` | string | `"UTC"` | Device timezone |
+
 ### Network Variables
 | Variable | Type | Default | Description |
 |----------|------|---------|-------------|
@@ -64,7 +82,7 @@ tofu apply
 | `vlan_prefix_length` | number | `24` | CIDR prefix length per VLAN subnet |
 | `vlan_start_id` | number | `10` | Starting VLAN ID |
 | `vlan_end_id` | number | `100` | Ending VLAN ID |
-| `vlan_names` | map | `{10="mgmt", 60="guest", 100="iot"}` | VLAN ID to name mappings |
+| `vlan_names` | map | `{10="mgmt", 50="guest", 100="iot"}` | VLAN ID to name mappings |
 
 ### API Timeouts
 | Variable | Type | Default | Description |
@@ -154,9 +172,9 @@ variable "vlan_names" {
 }
 ```
 This results in:
-- Management: `192.168.50.0/24` (AP IP: `192.168.50.2`, gateway: `192.168.50.1`)
-- Guest: `192.168.110.0/24` (AP IP: `192.168.110.2`)
-- IoT: `192.168.150.0/24` (AP IP: `192.168.150.2`)
+- Management: `192.168.10.0/24` (AP IP: `192.168.10.2`, gateway: `192.168.10.1`)
+- Guest: `192.168.50.0/24`
+- IoT: `192.168.100.0/24`
 
 ### Example 4: Extended API Timeouts
 ```hcl
@@ -196,14 +214,11 @@ variable "openwrt_api_timeouts" {
 
 ## Wireless Security
 
-| SSID | Band | Encryption | Special Settings |
-|------|------|------------|-----------------|
-| OpenWrt-Management | 2.4GHz | WPA2-PSK | Hidden |
-| OpenWrt-Management-5G | 5GHz | WPA2-PSK | Hidden |
-| OpenWrt-Guest | 2.4GHz | WPA2-PSK | Client isolation |
-| OpenWrt-Guest-5G | 5GHz | WPA2-PSK | Client isolation |
-| OpenWrt-IoT | 2.4GHz | WPA2-PSK | - |
-| OpenWrt-IoT-5G | 5GHz | WPA2-PSK | - |
+| SSID | Bands | Encryption | Special Settings |
+|------|-------|------------|-----------------|
+| OpenWrt-Management | 2.4GHz + 5GHz | WPA2-PSK | Hidden SSID |
+| OpenWrt-Guest | 2.4GHz + 5GHz | WPA2-PSK | Client isolation |
+| OpenWrt-IoT | 2.4GHz + 5GHz | WPA2-PSK | - |
 
 ## Packages
 
@@ -229,37 +244,63 @@ The following packages are installed automatically via `openwrt_opkg`:
 
 ```
 tplink/
-├── backend.tf       # PostgreSQL backend configuration
+├── backend.tf       # Local backend configuration
+├── dhcp.tf          # DHCP configuration (disabled)
 ├── network.tf       # Network interfaces and switch VLAN config
 ├── packages.tf      # Package installation (firmware, swconfig)
 ├── providers.tf     # OpenWrt provider definition
 ├── README.md        # This file
 ├── services.tf      # Service management (dnsmasq, firewall)
+├── system.tf        # System settings (hostname, timezone)
 ├── variables.tf     # Input variables and locals
 └── wireless.tf      # WiFi radio and SSID configuration
 ```
 
 ## Radio Configuration
 
-### radio0 (2.4GHz)
-- **Chipset**: Atheros QCA988x (platform/ahb/18100000.wmac)
-- **Channel**: 1
-- **HT Mode**: HT20
-- **Country**: FR
-
-### radio1 (5GHz)
-- **Chipset**: Atheros QCA988x (pci0000:00/0000:00:00.0)
+### radio0 (5GHz)
+- **Path**: pci0000:00/0000:00:00.0
 - **Channel**: 36
 - **HT Mode**: VHT80
-- **Country**: FR
+- **Country**: US
+
+### radio1 (2.4GHz)
+- **Path**: platform/ahb/18100000.wmac
+- **Channel**: 1
+- **HT Mode**: HT20
+- **Country**: US
 
 ## Network Configuration
 
 The AP is configured as a bridged access point:
-- **WAN** (`eth1`): No protocol (trunk to MikroTik)
-- **Switch** (`switch0`): VLAN enabled, ports `0t 1t` for all VLANs
-- **LAN interfaces**: Static IPs on each VLAN interface (`eth0.X`)
-- **Management**: Gateway and DNS point to MikroTik router
+- **Trunk uplink**: LAN port 1 (switch port 2) carries tagged VLANs 10, 50, 100
+- **Switch** (`switch0`): VLAN enabled, per-VLAN port assignments:
+  - VLAN 10: `0t 1t 2t 3` (CPU + WAN + LAN_1 trunk, LAN_2 untagged)
+  - VLAN 50: `0t 1t 2t 4` (CPU + WAN + LAN_1 trunk, LAN_3 untagged)
+  - VLAN 100: `0t 1t 2t 5` (CPU + WAN + LAN_1 trunk, LAN_4 untagged)
+- **LAN interfaces**: VLAN subinterfaces `eth0.10`, `eth0.50`, `eth0.100` bridged into `br-mgmt`, `br-guest`, `br-iot`
+- **Management**: Static IP on `br-mgmt`, gateway and DNS point to MikroTik router
+
+### Switch Port Mapping (Archer C7 v2)
+
+| Physical Port | Switch Port | Role |
+|---------------|-------------|------|
+| WAN | 1 | Trunk (tagged) |
+| LAN 1 | 2 | Trunk (tagged) to MikroTik |
+| LAN 2 | 3 | Management (VLAN 10, untagged) |
+| LAN 3 | 4 | Guest (VLAN 50, untagged) |
+| LAN 4 | 5 | IoT (VLAN 100, untagged) |
+
+The WAN port and LAN_1 are both configured as trunk ports with tagged VLANs. LAN_2, LAN_3, and LAN_4 are access ports for their respective VLANs.
+
+## DHCP
+
+The AP does **not** run its own DHCP server. All DHCP is handled by the MikroTik router:
+- Devices on **OpenWrt-Management** receive IPs from `10.42.10.100-254` via MikroTik
+- Devices on **OpenWrt-Guest** receive IPs from `10.42.50.100-254` via MikroTik
+- Devices on **OpenWrt-IoT** receive IPs from `10.42.100.100-254` via MikroTik
+
+The AP itself gets a static IP (`10.42.10.2`) on the management VLAN for administrative access.
 
 ## Provider
 

@@ -1,3 +1,10 @@
+# Switch ports
+# CPU: 0
+# WAN: 1
+# LAN_1: 2
+# LAN_2: 3
+# LAN_3: 4
+# LAN_4: 5
 resource "openwrt_configfile" "network" {
   name       = "network"
   content    = <<-EOT
@@ -31,7 +38,6 @@ config interface 'mgmt'
         option ipaddr '${cidrhost(local.vlan_cidrs["10"], 2)}'
         option netmask '255.255.255.0'
         option gateway '${cidrhost(local.vlan_cidrs["10"], 1)}'
-        option dns '${cidrhost(local.vlan_cidrs["10"], 1)}'
 
 config interface 'guest'
         option device 'br-guest'
@@ -49,20 +55,20 @@ config switch
 config switch_vlan
         option device 'switch0'
         option vlan '10'
-        option ports '0t 1t'
         option vid '10'
+        option ports '0t 1t 2t 3'
 
 config switch_vlan
         option device 'switch0'
         option vlan '50'
-        option ports '0t 1t'
         option vid '50'
+        option ports '0t 1t 2t 4'
 
 config switch_vlan
         option device 'switch0'
         option vlan '100'
-        option ports '0t 1t'
         option vid '100'
+        option ports '0t 1t 2t 5'
 EOT
   depends_on = [openwrt_opkg.ap_mode_packages, openwrt_opkg.vlan_packages]
 }

@@ -6,8 +6,14 @@
 #   }
 # }
 
+# terraform {
+#   backend "pg" {
+#     conn_str = "postgres://postgres:opentofu@localhost:5432/opentofu?sslmode=disable"
+#   }
+# }
+
 terraform {
-  backend "pg" {
-    conn_str = "postgres://postgres:opentofu@localhost:5432/opentofu?sslmode=disable"
+  backend "local" {
+    path = "./mikrotik.tfstate"
   }
 }

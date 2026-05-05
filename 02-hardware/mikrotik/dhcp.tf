@@ -6,11 +6,6 @@ locals {
   # Static lease configuration - derive IPs from VLAN subnets
   static_leases = {
     # Management devices (VLAN 10)
-    tplink = {
-      mac  = "3C:84:6A:AA:B5:D7"
-      ip   = cidrhost(local.vlan_cidrs["10"], 2)
-      vlan = 10
-    }
     jetkvm = {
       mac  = "30:52:53:00:9E:0A"
       ip   = cidrhost(local.vlan_cidrs["10"], 10)

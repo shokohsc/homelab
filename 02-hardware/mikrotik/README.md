@@ -37,8 +37,17 @@ VLAN 100: 10.42.100.0/24    # IoT devices (gateway 10.42.100.1)
 
 ### Prerequisites
 1. Opentofu (tofu) >= 1.5.0
-2. MikroTik RouterOS Provider (community)
+2. MikroTik RouterOS Provider (community) >= 1.99.1
 3. Access to your MikroTik switch via HTTPS
+
+## Manual Setup
+
+The following steps must be done manually through the Winbox GUI before applying Terraform:
+
+1. **Upload SSH public key**: Add your public SSH key through the Winbox GUI (System → Users → SSH Keys) for passwordless access.
+
+2. **Configure HTTPS certificate**: To access Winbox via HTTPS without browser SSL warnings, upload a trusted TLS certificate and key:
+   - Upload as File a fullchain bundle certificate (ca + certificate + key) and use it for www-ssl service
 
 ### Installation
 
@@ -72,6 +81,7 @@ tofu apply
 |----------|------|---------|-------------|
 | `vlan_base_network` | string | `"10.42.0.0"` | **Base network prefix** |
 | `vlan_filtering` | bool | `false` | Bridge VLAN filtering, enable to enforce vlan firewall |
+| `disable_firewall_rules` | bool | `false` | Enable firewall rules, default false to prevent locking user out |
 | `vlan_prefix_length` | number | `24` | CIDR mask per VLAN |
 | `vlan_start_id` | number | `10` | First VLAN ID |
 | `vlan_end_id` | number | `100` | Last VLAN ID |
@@ -287,18 +297,14 @@ The following resources are automatically generated from the variable configurat
 - WAN/LAN interface lists
 - LAN list populated with bridge and all VLAN interfaces
 - MAC server and Winbox restricted to LAN
+- System identity set to "Router"
+- Timezone set to Europe/Paris with autodetect disabled
 
 ### DHCP
 - DHCP servers per VLAN interface
 - DHCP network definitions with gateway and DNS
 - Static IP reservations based on MAC addresses
 - Internal DNS records (.home.arpa) for static leases
-
-### System Configuration
-- IPv6 disabled
-- WAN/LAN interface lists
-- MAC server and Winbox restricted to LAN
-- System identity and timezone (Europe/Paris)
 
 ## BGP Configuration
 

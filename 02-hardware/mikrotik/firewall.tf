@@ -195,10 +195,10 @@ resource "routeros_ip_firewall_filter" "new_wan" {
   }
 }
 
-############################################
-##      Block IoT → Internet             ##
-##   Placed after core rules             ##
-############################################
+#################################
+##      Block IoT → Internet   ##
+##   Placed after core rules   ##
+#################################
 
 resource "routeros_ip_firewall_filter" "iot_no_internet" {
   disabled      = var.disable_firewall_rules

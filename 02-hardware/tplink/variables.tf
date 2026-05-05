@@ -1,6 +1,6 @@
 variable "openwrt_protocol" {
   type        = string
-  default     = "https"
+  default     = "http"
   description = "OpenWRT router protocol"
 }
 
@@ -38,6 +38,12 @@ variable "wifi_password_ssid_iot" {
   type        = string
   default     = "iot-password"
   description = "OpenWRT router wifi password for SSID IoT"
+}
+
+variable "system_timezone" {
+  type        = string
+  default     = "UTC"
+  description = "OpenWRT router timezone"
 }
 
 variable "openwrt_api_timeouts" {
