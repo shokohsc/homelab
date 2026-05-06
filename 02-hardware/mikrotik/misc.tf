@@ -40,6 +40,6 @@ resource "routeros_tool_mac_server_winbox" "winbox_mac_access" {
 
 resource "routeros_system_identity" "identity" { name = "Router" }
 resource "routeros_system_clock" "timezone" {
-  time_zone_name       = "Europe/Paris"
+  time_zone_name       = var.system_timezone
   time_zone_autodetect = false
 }

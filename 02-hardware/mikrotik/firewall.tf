@@ -203,21 +203,6 @@ resource "routeros_ip_firewall_filter" "iot_no_internet" {
   }
 }
 
-# resource "routeros_ip_firewall_filter" "allow_bridge_to_vlans" {
-#   disabled     = var.disable_firewall_rules
-#   chain        = "forward"
-#   action       = "accept"
-#   src_address  = var.homelab_cidr
-#   dst_address  = var.homelab_cidr
-#   comment      = "Rule 055-Allow-Bridge-to-VLANs"
-#   place_before = routeros_ip_firewall_filter.allow_priority["10"].id
-#   lifecycle {
-#     ignore_changes = [
-#       disabled
-#     ]
-#   }
-# }
-
 ############################################
 ##      Allow lower → higher VLANs       ##
 ############################################

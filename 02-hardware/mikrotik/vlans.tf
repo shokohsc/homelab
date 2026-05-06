@@ -227,7 +227,7 @@ resource "routeros_ip_dhcp_server_network" "networks" {
 
   address    = local.vlan_cidrs[each.key]
   gateway    = cidrhost(local.vlan_cidrs[each.key], 1)
-  dns_server = local.dns_servers[each.key == 10 ? "management" : each.key == 20 ? "k8s_guest" : each.key == 30 ? "proxmox" : "other"]
+  dns_server = [var.upstream_primary_dns, var.upstream_secondary_dns]
   comment    = each.value
 }
 

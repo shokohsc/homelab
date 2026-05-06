@@ -28,7 +28,7 @@ VLAN 10: 10.42.10.0/24      # Management (gateway 10.42.10.1)
 VLAN 20: 10.42.20.0/24      # Kubernetes (gateway 10.42.20.1)
 VLAN 30: 10.42.30.0/24      # Proxmox (gateway 10.42.30.1)
 VLAN 40: 10.42.40.0/24      # Windows (gateway 10.42.40.1)
-VLAN 50: 10.42.50.0/24      # Guest WiFi (gateway 10.42.50.1)
+VLAN 50: 10.42.50.0/24      # Guests (gateway 10.42.50.1)
 VLAN 60: 10.42.60.0/24      # Load Balancer (gateway 10.42.60.1)
 VLAN 100: 10.42.100.0/24    # IoT devices (gateway 10.42.100.1)
 ```
@@ -75,6 +75,11 @@ tofu apply
 | `routeros_username` | string | `"opentofu"` | Admin username |
 | `routeros_password` | string | `"opentofu"` | Admin password |
 | `routeros_insecure` | bool | `false` | Skip TLS verification |
+
+### System Variables
+| Variable | Type | Default | Description |
+|----------|------|---------|-------------|
+| `system_timezone` | string | `"UTC"` | Device timezone |
 
 ### Network Variables
 | Variable | Type | Default | Description |
@@ -159,12 +164,31 @@ variable "vlan_names" {
 ### Example 5: Static DHCP Leases
 ```terraform
 # Static leases in dhcp.tf derive IPs from VLAN subnets automatically:
-# jetkvm     → 10.42.10.10  (VLAN 10, MAC: 30:52:53:00:9E:0A)
-# macbook    → 10.42.10.20  (VLAN 10, MAC: C8:A3:62:AA:C7:1A)
-# k8s_cp1    → 10.42.20.10  (VLAN 20, hostname: sombra)
-# proxmox1   → 10.42.30.10  (VLAN 30, hostname: roadhog)
+# Management (VLAN 10)
+# jetkvm     → 10.42.10.10  (MAC: 30:52:53:00:9E:0A)
+# macbook    → 10.42.10.20  (MAC: C8:A3:62:AA:C7:1A)
+# idrac      → 10.42.10.30  (MAC: 50:9A:4C:68:D9:66)
 
-# DNS records are auto-created as <name>.home.arpa
+# Kubernetes (VLAN 20)
+# k8s_cp1    → 10.42.20.10  (hostname: sombra)
+# k8s_cp2    → 10.42.20.20  (hostname: lucio)
+# k8s_cp3    → 10.42.20.30  (hostname: zarya)
+# k8s_worker1→ 10.42.20.40  (hostname: mercy)
+# k8s_worker2→ 10.42.20.50  (hostname: dva)
+
+# Proxmox (VLAN 30)
+# proxmox1   → 10.42.30.10  (hostname: roadhog)
+# proxmox2   → 10.42.30.20  (hostname: hanzo)
+# proxmox3   → 10.42.30.30  (hostname: genji)
+
+# Guest (VLAN 50)
+# chromecast → 10.42.50.10
+# raspberry  → 10.42.50.20
+
+# IoT (VLAN 100)
+# printer    → 10.42.100.10
+
+# DNS records are auto-created as <name>.home.arpa (or <hostname>.home.arpa if set)
 ```
 
 ### Example 6: System Configuration (misc.tf)
@@ -286,8 +310,7 @@ The following resources are automatically generated from the variable configurat
 ### Firewall Rules
 - Management access from default CIDR (10.42.0.0/24) and management VLAN CIDR (10.42.10.0/24)
 - Bidirectional forwarding between default CIDR and management VLAN CIDR
-- Inter-VLAN forwarding for all VLAN subnets (10.42.0.0/16)
-- Priority-based inter-VLAN routing (higher → lower VLAN)
+- Priority-based inter-VLAN routing (lower → higher VLAN)
 - IoT internet denial rules
 - DNS lockdown for restricted VLANs
 - MASQUERADE NAT for internet access
@@ -298,7 +321,7 @@ The following resources are automatically generated from the variable configurat
 - LAN list populated with bridge and all VLAN interfaces
 - MAC server and Winbox restricted to LAN
 - System identity set to "Router"
-- Timezone set to Europe/Paris with autodetect disabled
+- Timezone set to UTC with autodetect disabled
 
 ### DHCP
 - DHCP servers per VLAN interface
@@ -319,32 +342,28 @@ Uncomment and configure the variables (`mikrotik_asn`, `cilium_asn`, `mikrotik_r
 
 ```
 mikrotik/
-├── backend.tf                 # PostgreSQL backend configuration
+├── backend.tf                 # Local backend configuration
 ├── bgp.tf                     # BGP configuration (commented out)
-├── config-before-upgrade.rsc  # Backup of config before RouterOS upgrade
 ├── dhcp.tf                    # Static DHCP leases and DNS records
 ├── firewall.tf                # Firewall rules (input, forward, NAT)
 ├── misc.tf                    # System settings, interface lists, timezone
 ├── providers.tf               # Provider definitions
 ├── README.md                  # This file
 ├── routeros-backup.backup     # RouterOS backup file
+├── terraform.tfvars           # Variable overrides
 ├── variables.tf               # Input variables and locals
 └── vlans.tf                   # Bridge, VLANs, IP addressing, DHCP
 ```
 
 ## DNS Configuration
 
-Different VLANs have different DNS settings:
-- **VLAN 10 (mgmt)**: Uses management VLAN gateway as DNS
-- **VLAN 20 (k8s)**: Uses Cloudflare (1.1.1.1) + Quad9 (9.9.9.9)
-- **VLAN 30 (proxmox)**: Uses Cloudflare (1.1.1.1) + Quad9 (9.9.9.9)
-- **Other VLANs**: Uses Cloudflare (1.1.1.1) + Quad9 (9.9.9.9)
+**All VLANs**: Uses Cloudflare (1.1.1.1) + Quad9 (9.9.9.9)
 
 ## Security Features
 
 - **IoT Lockdown**: IoT VLAN (100) cannot access DNS except through router
 - **Guest Isolation**: Guest VLAN (50) blocked from internal DNS
-- **Inter-VLAN Routing**: Only higher priority VLANs can route to lower
+- **Inter-VLAN Routing**: Only lower VLAN ids can route to higher
 - **Default Deny**: East-west traffic dropped unless explicitly allowed
 
 ## Enabling VLAN Filtering

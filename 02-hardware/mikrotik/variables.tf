@@ -28,6 +28,12 @@ variable "routeros_insecure" {
   description = "Mikrotik router insecure TLS"
 }
 
+variable "system_timezone" {
+  type        = string
+  default     = "UTC"
+  description = "Mikrotik router timezone"
+}
+
 # Note: This variable is deprecated - use vlan_base_network instead.
 # Kept for backward compatibility.
 variable "homelab_cidr" {
