@@ -71,6 +71,48 @@ config switch_vlan
         option vlan '100'
         option vid '100'
         option ports '0t 1t 2t 5'
+
+config device
+        option name 'eth0'
+
+config device
+        option name 'eth0.10'
+        option type '8021q'
+        option ifname 'eth0'
+        option vid '10'
+
+config device
+        option name 'eth0.50'
+        option type '8021q'
+        option ifname 'eth0'
+        option vid '50'
+        option multicast '1'
+
+config device
+        option name 'eth0.100'
+        option type '8021q'
+        option ifname 'eth0'
+        option vid '100'
+
+config device
+        option name 'wlan0'
+
+config device
+        option name 'wlan0-1'
+        option multicast '1'
+
+config device
+        option name 'wlan0-2'
+
+config device
+        option name 'wlan1'
+
+config device
+        option name 'wlan1-1'
+        option multicast '1'
+
+config device
+        option name 'wlan1-2'
 EOT
   depends_on = [openwrt_opkg.ap_mode_packages, openwrt_opkg.vlan_packages]
 }

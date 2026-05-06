@@ -6,7 +6,7 @@ This OpenTofu configuration manages a TP-Link Archer C7 acting as a WiFi access 
 
 ## Hardware
 
-- **Model**: TP-Link Archer C7 v2
+- **Model**: TP-Link Archer C7 v5
 - **Role**: WiFi access point with VLAN passthrough
 
 ## VLANs
@@ -220,6 +220,16 @@ variable "openwrt_api_timeouts" {
 | OpenWrt-Guest | 2.4GHz + 5GHz | WPA2-PSK | Client isolation |
 | OpenWrt-IoT | 2.4GHz + 5GHz | WPA2-PSK | - |
 
+## System Settings
+
+| Setting | Value | Description |
+|---------|-------|-------------|
+| `hostname` | `OpenWrt` | Device hostname |
+| `timezone` | `var.system_timezone` | Configurable (default: `UTC`) |
+| `ttylogin` | `0` | Disable TTY login |
+| `log_size` | `64` | System log buffer size (KB) |
+| `urandom_seed` | `0` | Use automatic urandom seed |
+
 ## Packages
 
 The following packages are installed automatically via `openwrt_opkg`:
@@ -244,31 +254,36 @@ The following packages are installed automatically via `openwrt_opkg`:
 
 ```
 tplink/
-├── backend.tf       # Local backend configuration
-├── dhcp.tf          # DHCP configuration (disabled)
-├── network.tf       # Network interfaces and switch VLAN config
-├── packages.tf      # Package installation (firmware, swconfig)
-├── providers.tf     # OpenWrt provider definition
+├── backend.tf       # State backend (local, with http/pg commented)
+├── dhcp.tf          # DHCP configuration (disabled via ignore)
+├── network.tf       # Network interfaces, bridges, and switch VLAN config
+├── packages.tf      # Package installation (firmware, bridge, swconfig)
+├── providers.tf     # OpenWrt provider definition and timeouts
 ├── README.md        # This file
-├── services.tf      # Service management (dnsmasq, firewall)
-├── system.tf        # System settings (hostname, timezone)
-├── variables.tf     # Input variables and locals
-└── wireless.tf      # WiFi radio and SSID configuration
+├── services.tf      # Service management (dnsmasq, firewall disabled)
+├── system.tf        # System settings (hostname, timezone, logging)
+├── terraform.tfvars # Variable overrides for the environment
+├── variables.tf     # Input variables, locals, and CIDR calculations
+└── wireless.tf      # WiFi radio and SSID configuration (2.4GHz + 5GHz)
 ```
 
 ## Radio Configuration
 
 ### radio0 (5GHz)
 - **Path**: pci0000:00/0000:00:00.0
+- **Band**: 5g
 - **Channel**: 36
 - **HT Mode**: VHT80
 - **Country**: US
+- **Cell Density**: 0
 
 ### radio1 (2.4GHz)
 - **Path**: platform/ahb/18100000.wmac
+- **Band**: 2g
 - **Channel**: 1
 - **HT Mode**: HT20
 - **Country**: US
+- **Cell Density**: 0
 
 ## Network Configuration
 
@@ -279,7 +294,8 @@ The AP is configured as a bridged access point:
   - VLAN 50: `0t 1t 2t 4` (CPU + WAN + LAN_1 trunk, LAN_3 untagged)
   - VLAN 100: `0t 1t 2t 5` (CPU + WAN + LAN_1 trunk, LAN_4 untagged)
 - **LAN interfaces**: VLAN subinterfaces `eth0.10`, `eth0.50`, `eth0.100` bridged into `br-mgmt`, `br-guest`, `br-iot`
-- **Management**: Static IP on `br-mgmt`, gateway and DNS point to MikroTik router
+- **Guest bridge**: IGMP snooping and multicast enabled on `br-guest` and `eth0.50`
+- **Management**: Static IP on `br-mgmt`, gateway points to MikroTik router
 
 ### Switch Port Mapping (Archer C7 v2)
 
