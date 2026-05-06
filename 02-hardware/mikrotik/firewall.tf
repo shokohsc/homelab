@@ -39,21 +39,7 @@ resource "routeros_ip_firewall_filter" "accept_icmp" {
   chain        = "input"
   protocol     = "icmp"
   comment      = "Rule 002-Accept-ICMP"
-  place_before = routeros_ip_firewall_filter.fasttrack.id
-  lifecycle {
-    ignore_changes = [
-      disabled
-    ]
-  }
-}
-
-resource "routeros_ip_firewall_filter" "capsman_accept_local_loopback" {
-  disabled     = var.disable_firewall_rules
-  action       = "accept"
-  chain        = "input"
-  dst_address  = "127.0.0.1"
-  comment      = "Rule 003-Capsman-Accept-Local-Loopback"
-  place_before = routeros_ip_firewall_filter.drop_all_not_lan.id
+  place_before = routeros_ip_firewall_filter.accept_mgmt_default_cidr.id
   lifecycle {
     ignore_changes = [
       disabled
@@ -66,8 +52,8 @@ resource "routeros_ip_firewall_filter" "accept_mgmt_default_cidr" {
   action       = "accept"
   chain        = "input"
   src_address  = "${var.vlan_base_network}/24"
-  comment      = "Rule 004-Accept-Mgmt-Default-CIDR"
-  place_before = routeros_ip_firewall_filter.drop_all_not_lan.id
+  comment      = "Rule 003-Accept-Mgmt-Default-CIDR"
+  place_before = routeros_ip_firewall_filter.accept_mgmt_vlan_cidr.id
   lifecycle {
     ignore_changes = [
       disabled
@@ -80,8 +66,8 @@ resource "routeros_ip_firewall_filter" "accept_mgmt_vlan_cidr" {
   action       = "accept"
   chain        = "input"
   src_address  = local.vlan_cidrs["10"]
-  comment      = "Rule 005-Accept-Mgmt-VLAN-CIDR"
-  place_before = routeros_ip_firewall_filter.accept_mgmt_default_cidr.id
+  comment      = "Rule 004-Accept-Mgmt-VLAN-CIDR"
+  place_before = routeros_ip_firewall_filter.drop_all_not_lan.id
   lifecycle {
     ignore_changes = [
       disabled
@@ -96,7 +82,7 @@ resource "routeros_ip_firewall_filter" "drop_all_not_lan" {
   in_interface_list = "!${routeros_interface_list.lan.name}"
   log               = true
   log_prefix        = "drop_not_lan"
-  comment           = "Rule 006-Drop-All-Not-LAN"
+  comment           = "Rule 005-Drop-All-Not-LAN"
   place_before      = routeros_ip_firewall_filter.fasttrack.id
   lifecycle {
     ignore_changes = [
@@ -115,7 +101,7 @@ resource "routeros_ip_firewall_filter" "drop_all_not_lan" {
 #   disabled = var.disable_firewall_rules
 #   chain         = "forward"
 #   action        = "accept"
-#   comment       = "Rule 007-BGP-Forward Allow BGP traffic for LoadBalancer - place before fasttrack"
+#   comment       = "Rule 006-BGP-Forward Allow BGP traffic for LoadBalancer - place before fasttrack"
 #   dst_address   = local.vlan_cidrs["60"] # LoadBalancer cidr gateway
 #   protocol      = "tcp"
 #   dst_port      = "179"
@@ -209,7 +195,7 @@ resource "routeros_ip_firewall_filter" "iot_no_internet" {
   log           = true
   log_prefix    = "iot_no_internet"
   comment       = "Rule 050-Block-IoT-Internet"
-  place_before  = routeros_ip_firewall_filter.allow_bridge_to_vlans.id
+  place_before  = routeros_ip_firewall_filter.allow_priority["10"].id
   lifecycle {
     ignore_changes = [
       disabled
@@ -217,20 +203,20 @@ resource "routeros_ip_firewall_filter" "iot_no_internet" {
   }
 }
 
-resource "routeros_ip_firewall_filter" "allow_bridge_to_vlans" {
-  disabled     = var.disable_firewall_rules
-  chain        = "forward"
-  action       = "accept"
-  src_address  = var.homelab_cidr
-  dst_address  = var.homelab_cidr
-  comment      = "Rule 055-Allow-Bridge-to-VLANs"
-  place_before = routeros_ip_firewall_filter.allow_priority["10"].id
-  lifecycle {
-    ignore_changes = [
-      disabled
-    ]
-  }
-}
+# resource "routeros_ip_firewall_filter" "allow_bridge_to_vlans" {
+#   disabled     = var.disable_firewall_rules
+#   chain        = "forward"
+#   action       = "accept"
+#   src_address  = var.homelab_cidr
+#   dst_address  = var.homelab_cidr
+#   comment      = "Rule 055-Allow-Bridge-to-VLANs"
+#   place_before = routeros_ip_firewall_filter.allow_priority["10"].id
+#   lifecycle {
+#     ignore_changes = [
+#       disabled
+#     ]
+#   }
+# }
 
 ############################################
 ##      Allow lower → higher VLANs       ##
