@@ -26,6 +26,8 @@ config device
         option name 'br-guest'
         option type 'bridge'
         list ports 'eth0.50'
+        option multicast '1'
+        option igmp_snooping '1'
 
 config device
         option name 'br-iot'
