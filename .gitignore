@@ -11,3 +11,7 @@ terraform.tfvars
 *.tfstate
 postgres-data/
 routeros-backup.backup
+secrets.yaml
+controlplane.yaml
+worker.yaml
+talosconfig
