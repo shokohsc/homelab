@@ -144,7 +144,10 @@ commonName = supplied
 emailAddress = optional
 
 [req]
-distinguished_name=req
+distinguished_name = req_distinguished_name
+prompt = no
+
+[req_distinguished_name]
 
 [v3_ca]
 basicConstraints = critical, CA:true

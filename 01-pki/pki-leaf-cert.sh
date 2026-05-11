@@ -37,6 +37,10 @@ TLS_CERT_VERSION="1.0.1"
 : "${EMAIL:=server@example.com}"
 : "${AUTO_OVERWRITE:=false}"
 
+# PKCS#11 configuration paths (adjust for your platform / distro)
+: "${PKCS11_OPENSSL_CONF:=${PKI_DIR}/../openssl-pkcs11.cnf}"
+: "${OPENSSL_MODULES:=/opt/homebrew/lib/ossl-modules}"
+
 RED='\033[0;31m'
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
@@ -218,7 +222,7 @@ generate_private_key() {
     print_info "Generating private key..."
     case "$key_alg" in
         rsa)
-            openssl genrsa -out "$key_file" "$key_size" 2048
+            openssl genrsa -out "$key_file" "$key_size"
             ;;
         ec)
             openssl ecparam -name "$key_size" -genkey -noout -out "$key_file"
@@ -233,16 +237,23 @@ generate_private_key() {
 }
 
 generate_csr() {
-    print_info "[+] Checking for PKCS11 openssl provider"
-    export PKCS11_MODULE_PATH="/opt/homebrew/lib/libykcs11.dylib"
-    export OPENSSL_MODULES="/opt/homebrew/lib/ossl-modules"
-    export OPENSSL_CONF="${PKI_DIR}/../openssl-pkcs11.cnf"
-    openssl list -providers
-
     local key_file="$1"
     local csr_file="$2"
     local san="$3"
     local config_file="$4"
+
+    : "${PKCS11_OPENSSL_CONF:=${PKI_DIR}/../openssl-pkcs11.cnf}"
+    : "${OPENSSL_MODULES:=/opt/homebrew/lib/ossl-modules}"
+
+    case "$INTERMEDIATE_KEY_LOCATION" in
+        pkcs11)
+            print_info "Configuring PKCS#11 provider for CSR..."
+            export PKCS11_MODULE_PATH="${INTERMEDIATE_KEY_PKCS11_MODULE:-/opt/homebrew/lib/libykcs11.dylib}"
+            export OPENSSL_MODULES
+            export OPENSSL_CONF="${PKCS11_OPENSSL_CONF}"
+            openssl list -providers | grep -i pkcs11 || true
+            ;;
+    esac
 
     print_info "Generating CSR..."
     create_openssl_config "$san" "$config_file"
@@ -255,7 +266,6 @@ sign_certificate() {
     local csr_file="$1"
     local cert_file="$2"
     local san="$3"
-    local config_file="$4"
 
     local index_file="${PKI_DIR}/intermediate/index.txt"
     local serial_file="${PKI_DIR}/intermediate/serial"
@@ -307,16 +317,21 @@ EOF
         ((counter++))
     done
 
+    rm -f "$config_file"
+
     [[ ! -f "$index_file" ]] && touch "$index_file"
     [[ ! -f "$serial_file" ]] && echo "01" > "$serial_file"
 
     case "$INTERMEDIATE_KEY_LOCATION" in
         pkcs11)
             print_info "Using PKCS#11 for signing..."
+            : "${PKCS11_OPENSSL_CONF:=${PKI_DIR}/../openssl-pkcs11.cnf}"
+            : "${OPENSSL_MODULES:=/opt/homebrew/lib/ossl-modules}"
             if [[ -n "$INTERMEDIATE_KEY_PKCS11_MODULE" ]]; then
                 export PKCS11_MODULE_PATH="$INTERMEDIATE_KEY_PKCS11_MODULE"
             fi
-            export OPENSSL_CONF="${PKI_DIR}/../openssl-pkcs11.cnf"
+            export OPENSSL_MODULES
+            export OPENSSL_CONF="${PKCS11_OPENSSL_CONF}"
             openssl list -providers 2>/dev/null | grep -i pkcs11 || true
             ;;
     esac
@@ -336,8 +351,10 @@ verify_certificate() {
     local cert_file="$1"
     print_info "Verifying certificate from Intermediate CA..."
 
+    # Use the chain bundle (root + intermediate) as a single CAfile,
+    # avoiding the need for -untrusted.  Fall back to root CA only.
     if [[ -f "$CHAIN_BUNDLE_FILE" ]]; then
-        if openssl verify -CAfile "$ROOT_CERT_FILE" -untrusted "$CHAIN_BUNDLE_FILE" "$cert_file"; then
+        if openssl verify -CAfile "$CHAIN_BUNDLE_FILE" "$cert_file"; then
             print_info "Verification successful: Certificate is valid"
         else
             print_error "Verification failed: Certificate is NOT valid"
@@ -366,13 +383,13 @@ export_formats() {
         fmt=$(echo "$fmt" | xargs | tr '[:upper:]' '[:lower:]')
         case "$fmt" in
             crt|pem)
-                if [[ "$fmt" == "pem" || -z "${formats_to_create:-}" ]]; then
-                    local pem_file="${formats_dir}/${output_name}.crt.pem"
-                    if prompt_override "$pem_file"; then
-                        cp "$cert_file" "$pem_file"
-                        chmod 444 "$pem_file"
-                        print_info "  PEM format: $pem_file"
-                    fi
+                local pem_file="${formats_dir}/${output_name}.crt.pem"
+                if [[ "$pem_file" == "$cert_file" ]]; then
+                    print_info "  PEM format: $pem_file (already exists)"
+                elif prompt_override "$pem_file"; then
+                    cp "$cert_file" "$pem_file"
+                    chmod 444 "$pem_file"
+                    print_info "  PEM format: $pem_file"
                 fi
                 ;;
             der)
@@ -407,6 +424,7 @@ create_fullchain_bundle() {
     local cert_file="$1"
     local bundle_dir="$2"
     local output_name="$3"
+    local key_file="$4"
 
     print_info "Creating full chain bundle..."
 
@@ -474,7 +492,7 @@ private_key = ${INTERMEDIATE_KEY_FILE}
 default_md = sha256
 default_crl_days = 30
 EOF
-        openssl ca -batch -config "${PKI_DIR}/crl_openssl.cnf" -gencrl -out "$crl_file" 2>&1 || true
+        openssl ca -batch -config "${PKI_DIR}/crl_openssl.cnf" -notext -gencrl -out "$crl_file" 2>&1 || true
         if [[ -f "$crl_file" ]]; then
             chmod 444 "$crl_file"
             print_info "  CRL created: $crl_file"
@@ -572,14 +590,14 @@ generate_certificate() {
 
     generate_private_key "$key_file" "$CERT_KEY_ALG" "$CERT_KEY_SIZE"
     generate_csr "$key_file" "$csr_file" "$san" "$config_file"
-    sign_certificate "$csr_file" "$cert_file" "$san" "$config_file"
+    sign_certificate "$csr_file" "$cert_file" "$san"
 
     echo ""
     print_info "Running verification commands..."
     verify_certificate "$cert_file"
 
-    # export_formats "$cert_file" "$key_file" "$output_name" "$certs_dir"
-    create_fullchain_bundle "$cert_file" "$bundle_dir" "$output_name"
+    export_formats "$cert_file" "$key_file" "$output_name" "$certs_dir"
+    create_fullchain_bundle "$cert_file" "$bundle_dir" "$output_name" "$key_file"
     create_crl "$cert_file" "$crl_dir"
     create_ocsp_request "$cert_file" "$ocsp_dir" "$output_name"
     display_certificate_info "$cert_file"
@@ -735,10 +753,13 @@ EOF
     case "$INTERMEDIATE_KEY_LOCATION" in
         pkcs11)
             print_info "Using PKCS#11 for revocation..."
+            : "${PKCS11_OPENSSL_CONF:=${PKI_DIR}/../openssl-pkcs11.cnf}"
+            : "${OPENSSL_MODULES:=/opt/homebrew/lib/ossl-modules}"
             if [[ -n "$INTERMEDIATE_KEY_PKCS11_MODULE" ]]; then
                 export PKCS11_MODULE_PATH="$INTERMEDIATE_KEY_PKCS11_MODULE"
             fi
-            export OPENSSL_CONF="${PKI_DIR}/../openssl-pkcs11.cnf"
+            export OPENSSL_MODULES
+            export OPENSSL_CONF="${PKCS11_OPENSSL_CONF}"
             ;;
     esac
 

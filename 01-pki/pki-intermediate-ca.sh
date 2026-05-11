@@ -40,6 +40,12 @@ PKI_INTERMEDIATE_VERSION="1.0.0"
 : "${CREATE_CRL:=true}"
 : "${CREATE_OCSP_RESPONDER:=false}"
 
+# PKCS#11 configuration paths (adjust for your platform / distro)
+# Use PKCS11_OPENSSL_CONF to point to a custom openssl-pkcs11.cnf location.
+# Use OPENSSL_MODULES to point to the directory containing the PKCS#11 provider.
+: "${PKCS11_OPENSSL_CONF:=${PKI_DIR}/../openssl-pkcs11.cnf}"
+: "${OPENSSL_MODULES:=/opt/homebrew/lib/ossl-modules}"
+
 # ---------------------------------------------------------------------------
 # Derived paths
 # ---------------------------------------------------------------------------
@@ -262,8 +268,10 @@ setup_pkcs11_for() {
     if [[ -n "$module" ]]; then
         export PKCS11_MODULE_PATH="$module"
     fi
-    export OPENSSL_MODULES="${OPENSSL_MODULES:-/opt/homebrew/lib/ossl-modules}"
-    export OPENSSL_CONF="${PKI_DIR}/../openssl-pkcs11.cnf"
+    : "${PKCS11_OPENSSL_CONF:=${PKI_DIR}/../openssl-pkcs11.cnf}"
+    : "${OPENSSL_MODULES:=/opt/homebrew/lib/ossl-modules}"
+    export OPENSSL_MODULES
+    export OPENSSL_CONF="${PKCS11_OPENSSL_CONF}"
     print_info "PKCS#11 provider configured for $side CA operations"
     openssl list -providers 2>/dev/null | grep -i pkcs11 \
         || print_warn "PKCS#11 provider not listed — verify openssl-pkcs11.cnf"
@@ -393,7 +401,8 @@ sign_intermediate_cert() {
             -extensions v3_intermediate_ca \
             -days "$INTERMEDIATE_VALIDITY_DAYS" \
             -in "$INTERMEDIATE_CSR_FILE" \
-            -out "$INTERMEDIATE_CERT_FILE"
+            -out "$INTERMEDIATE_CERT_FILE" \
+            -notext
         chmod 444 "$INTERMEDIATE_CERT_FILE"
         rm -f "$INTERMEDIATE_CSR_FILE"
         print_info "Intermediate CA certificate signed: $INTERMEDIATE_CERT_FILE"
@@ -478,7 +487,7 @@ EOF
         setup_pkcs11_for intermediate
 
         openssl ca -batch -config "${PKI_DIR}/intermediate_crlopenssl.cnf" \
-            -gencrl -out "$INTERMEDIATE_CRL_FILE"
+            -notext -gencrl -out "$INTERMEDIATE_CRL_FILE"
         chmod 444 "$INTERMEDIATE_CRL_FILE"
         print_info "Intermediate CA CRL created: $INTERMEDIATE_CRL_FILE"
         openssl crl -in "$INTERMEDIATE_CRL_FILE" -inform PEM -noout -text 2>/dev/null | head -10 || true
@@ -510,14 +519,34 @@ revoke_intermediate_cert() {
     if [[ -f "$INTERMEDIATE_CRL_FILE" ]]; then
         chmod 644 "$INTERMEDIATE_CRL_FILE"
     fi
+    cat > "${PKI_DIR}/revoke_intermediate_crl.cnf" << EOF
+[ca]
+default_ca = CA_default
+
+[CA_default]
+database = ${INTERMEDIATE_INDEX_FILE}
+serial = ${INTERMEDIATE_SERIAL_FILE}
+new_certs_dir = ${INTERMEDIATE_NEWCERTS_DIR}
+certificate = ${INTERMEDIATE_CERT_FILE}
+private_key = ${INTERMEDIATE_KEY_FILE}
+default_md = sha256
+default_crl_days = 30
+crl_extensions = crl_ext
+
+[crl_ext]
+authorityKeyIdentifier = keyid:always
+EOF
+    setup_pkcs11_for intermediate
     openssl ca -batch \
-        -config "${PKI_DIR}/intermediateopenssl.cnf" \
+        -config "${PKI_DIR}/revoke_intermediate_crl.cnf" \
         -notext -gencrl \
         -out "$INTERMEDIATE_CRL_FILE"
     chmod 444 "$INTERMEDIATE_CRL_FILE"
+    rm -f "${PKI_DIR}/revoke_intermediate_crl.cnf"
     print_info "Intermediate CA CRL updated: $INTERMEDIATE_CRL_FILE"
 
     # Regenerate the Root CRL to publish the revocation
+    setup_pkcs11_for root
     print_info "Regenerating Root CA CRL..."
     mkdir -p "$ROOT_CRL_DIR"
     if [[ -f "$ROOT_CRL_FILE" ]]; then
@@ -584,7 +613,8 @@ EOF
             -extensions ocsp_extensions \
             -days 365 \
             -in "$ocsp_root_csr" \
-            -out "$ocsp_root_cert"
+            -out "$ocsp_root_cert" \
+            -notext
         chmod 444 "$ocsp_root_cert"
         rm -f "$ocsp_root_csr"
     fi
@@ -619,7 +649,8 @@ EOF
             -extensions ocsp_extensions \
             -days 365 \
             -in "$ocsp_intermediate_csr" \
-            -out "$ocsp_intermediate_cert"
+            -out "$ocsp_intermediate_cert" \
+            -notext
         chmod 444 "$ocsp_intermediate_cert"
         rm -f "$ocsp_intermediate_csr"
     fi

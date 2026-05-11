@@ -188,6 +188,13 @@ Manages the **Intermediate CA** (create, renew, revoke). The Root CA **key** and
 
 **Misc:** `PKI_DIR`, `CREATE_CRL`, `CREATE_OCSP_RESPONDER`, `AUTO_OVERWRITE`
 
+**PKCS#11 configuration (used when any key location is `pkcs11`):**
+
+| Variable | Description | Default |
+|----------|-------------|---------|
+| `PKCS11_OPENSSL_CONF` | Path to OpenSSL PKCS#11 provider config | `${PKI_DIR}/../openssl-pkcs11.cnf` |
+| `OPENSSL_MODULES` | Directory containing the PKCS#11 provider module | `/opt/homebrew/lib/ossl-modules` |
+
 ### Examples
 
 **Default — everything on filesystem:**
@@ -337,6 +344,8 @@ ykman piv info
 | `CREATE_OCSP_REQUEST` | Create OCSP request | `true` |
 | `COUNTRY`, `STATE`, etc. | Subject components | same as pki-root-ca |
 | `AUTO_OVERWRITE` | Auto overwrite | `false` |
+| `PKCS11_OPENSSL_CONF` | Path to OpenSSL PKCS#11 provider config | `${PKI_DIR}/../openssl-pkcs11.cnf` |
+| `OPENSSL_MODULES` | Directory containing the PKCS#11 provider module | `/opt/homebrew/lib/ossl-modules` |
 
 ### Commands
 
@@ -449,8 +458,7 @@ leafs/example.com/
 
 After generating, the script automatically verifies:
 ```bash
-openssl verify -CAfile pki/root/certs/ca.root.crt.pem \
-    -untrusted pki/intermediate/certs/ca.chain.crt.pem \
+openssl verify -CAfile pki/intermediate/certs/ca.chain.crt.pem \
     pki/leafs/example.com/certs/leaf.crt.pem
 ```
 

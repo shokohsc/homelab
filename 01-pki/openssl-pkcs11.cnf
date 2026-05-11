@@ -1,3 +1,22 @@
+# OpenSSL PKCS#11 provider configuration
+#
+# Adjust module and module-path to match your platform:
+#
+#   macOS (Homebrew):
+#     module      = /opt/homebrew/lib/ossl-modules/pkcs11prov.dylib
+#     module-path = /opt/homebrew/lib/libykcs11.dylib
+#
+#   Linux (Debian/Ubuntu with opensc):
+#     module      = /usr/lib/x86_64-linux-gnu/ossl-modules/pkcs11.so
+#     module-path = /usr/lib/x86_64-linux-gnu/opensc-pkcs11.so
+#
+#   Linux (Fedora/RHEL):
+#     module      = /usr/lib64/ossl-modules/pkcs11.so
+#     module-path = /usr/lib64/opensc-pkcs11.so
+#
+# Override the config path at runtime:
+#   PKCS11_OPENSSL_CONF=/path/to/this/file
+
 openssl_conf = openssl_init
 
 [openssl_init]
