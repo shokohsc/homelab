@@ -110,7 +110,7 @@ resource "routeros_ip_firewall_filter" "drop_all_not_lan" {
 # lifecycle {
 #     ignore_changes = [
 #       disabled
-#     ]  
+#     ]
 # }
 # }
 
@@ -195,7 +195,7 @@ resource "routeros_ip_firewall_filter" "iot_no_internet" {
   log           = true
   log_prefix    = "iot_no_internet"
   comment       = "Rule 050-Block-IoT-Internet"
-  place_before  = routeros_ip_firewall_filter.allow_priority["10"].id
+  place_before  = routeros_ip_firewall_filter.deny_inter_vlan.id
   lifecycle {
     ignore_changes = [
       disabled
@@ -204,27 +204,30 @@ resource "routeros_ip_firewall_filter" "iot_no_internet" {
 }
 
 ############################################
+##         Address Lists for VLANs         ##
+##  Required for inter-VLAN routing rules  ##
+############################################
+
+resource "routeros_ip_firewall_addr_list" "vlan_subnets" {
+  for_each = local.vlan_names_filtered
+  address  = local.vlan_cidrs[each.key]
+  list     = "vlan-${each.value}"
+  comment  = "VLAN ${each.key} - ${each.value}"
+}
+
+############################################
 ##      Allow lower → higher VLANs       ##
 ############################################
 
 resource "routeros_ip_firewall_filter" "allow_priority" {
-  for_each = {
-    for src_k, _ in local.vlan_names_filtered :
-    src_k => {
-      src = local.vlan_cidrs[src_k]
-      dsts = {
-        for dst_k, _ in local.vlan_names_filtered :
-        dst_k => local.vlan_cidrs[dst_k] if dst_k > src_k
-      }
-    }
-  }
+  for_each = { for v in local.vlan_pairs : v.pair_key => v }
 
   disabled         = var.disable_firewall_rules
   chain            = "forward"
   action           = "accept"
   src_address      = each.value.src
-  dst_address_list = join(",", values(each.value.dsts))
-  comment          = "Rule 060-Allow-Priority-${each.key}"
+  dst_address_list = "vlan-${each.value.dst_name}"
+  comment          = "Rule 060-Allow-${each.value.src_name}-to-${each.value.dst_name}"
   place_before     = routeros_ip_firewall_filter.deny_inter_vlan.id
   lifecycle {
     ignore_changes = [

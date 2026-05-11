@@ -155,4 +155,19 @@ locals {
     proxmox    = ["1.1.1.1", "9.9.9.9"]
     other      = ["1.1.1.1", "9.9.9.9"]
   }
+
+  # Generate VLAN pairs where dst_vlan_id > src_vlan_id
+  vlan_pairs = flatten([
+    for src_k, src_v in local.vlan_names_filtered : [
+      for dst_k, dst_v in local.vlan_names_filtered : {
+        pair_key = "${src_k}-${dst_k}"
+        src_k    = src_k
+        dst_k    = dst_k
+        src      = local.vlan_cidrs[src_k]
+        dst      = local.vlan_cidrs[dst_k]
+      src_name = src_v
+      dst_name = dst_v
+      } if tonumber(dst_k) > tonumber(src_k)
+    ]
+  ])
 }

@@ -311,6 +311,8 @@ The following resources are automatically generated from the variable configurat
 - Management access from default CIDR (10.42.0.0/24) and management VLAN CIDR (10.42.10.0/24)
 - Bidirectional forwarding between default CIDR and management VLAN CIDR
 - Priority-based inter-VLAN routing (lower → higher VLAN)
+- Address lists created for each VLAN subnet (`vlan-subnets`)
+- Inter-VLAN rules use explicit `src_address`/`dst_address` for reliable matching
 - IoT internet denial rules
 - DNS lockdown for restricted VLANs
 - MASQUERADE NAT for internet access
@@ -364,6 +366,7 @@ mikrotik/
 - **IoT Lockdown**: IoT VLAN (100) cannot access DNS except through router
 - **Guest Isolation**: Guest VLAN (50) blocked from internal DNS
 - **Inter-VLAN Routing**: Only lower VLAN ids can route to higher
+- **Inter-VLAN Rules**: Use explicit `src_address`/`dst_address` with one rule per VLAN pair (not `dst_address_list`)
 - **Default Deny**: East-west traffic dropped unless explicitly allowed
 
 ## Enabling VLAN Filtering
