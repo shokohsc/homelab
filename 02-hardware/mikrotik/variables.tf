@@ -165,8 +165,8 @@ locals {
         dst_k    = dst_k
         src      = local.vlan_cidrs[src_k]
         dst      = local.vlan_cidrs[dst_k]
-      src_name = src_v
-      dst_name = dst_v
+        src_name = src_v
+        dst_name = dst_v
       } if tonumber(dst_k) > tonumber(src_k)
     ]
   ])
