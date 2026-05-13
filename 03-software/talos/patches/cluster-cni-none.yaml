@@ -1,0 +1,5 @@
+cluster:
+  proxy:
+    disabled: true
+  extraManifests:
+    - "https://github.com/kubernetes-sigs/gateway-api/releases/download/v1.5.1/experimental-install.yaml"

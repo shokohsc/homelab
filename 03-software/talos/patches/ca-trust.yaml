@@ -1,0 +1,8 @@
+---
+apiVersion: v1alpha1
+kind: TrustedRootsConfig
+name: custom-ca
+certificates: |
+    -----BEGIN CERTIFICATE-----
+    ${CA_CERT}
+    -----END CERTIFICATE-----

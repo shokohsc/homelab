@@ -1,0 +1,8 @@
+cluster:
+  extraManifests:
+    - "https://github.com/kubernetes-sigs/gateway-api/releases/download/v1.5.1/experimental-install.yaml"
+---
+apiVersion: v1alpha1
+kind: Layer2VIPConfig
+name: 10.42.20.2 # IP address to be advertised as a Layer 2 VIP.
+link: eno1 # Name of the link to assign the VIP to.

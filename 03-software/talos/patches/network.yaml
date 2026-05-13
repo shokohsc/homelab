@@ -1,0 +1,107 @@
+machine:
+  sysctls:
+    # https://github.com/OneUptime/blog/blob/master/posts/2026-03-03-tune-network-performance-on-talos-linux/README.md#tcp-buffer-tuning
+    # TCP receive buffer: min, default, max (in bytes)
+    net.ipv4.tcp_rmem: "4096 1048576 16777216"
+
+    # TCP send buffer: min, default, max (in bytes)
+    net.ipv4.tcp_wmem: "4096 1048576 16777216"
+
+    # Global socket buffer limits
+    net.core.rmem_max: "16777216"        # 16MB max receive buffer
+    net.core.wmem_max: "16777216"        # 16MB max send buffer
+    net.core.rmem_default: "1048576"     # 1MB default receive buffer
+    net.core.wmem_default: "1048576"     # 1MB default send buffer
+
+    # Total TCP memory (in pages, each page = 4KB)
+    net.ipv4.tcp_mem: "786432 1048576 1572864"
+
+    # https://github.com/OneUptime/blog/blob/master/posts/2026-03-03-tune-network-performance-on-talos-linux/README.md#connection-backlog-and-queue-tuning
+    # Listen backlog size
+    net.core.somaxconn: "65535"
+
+    # Maximum packets queued on the input side
+    net.core.netdev_max_backlog: "10000"
+
+    # SYN queue size for half-open connections
+    net.ipv4.tcp_max_syn_backlog: "65535"
+
+    # Enable SYN cookies for SYN flood protection
+    net.ipv4.tcp_syncookies: "1"
+
+    # Maximum number of orphaned TCP connections
+    net.ipv4.tcp_max_orphans: "262144"
+
+    # Maximum number of TIME_WAIT connections
+    net.ipv4.tcp_max_tw_buckets: "2000000"
+
+    # https://github.com/OneUptime/blog/blob/master/posts/2026-03-03-tune-network-performance-on-talos-linux/README.md#tcp-congestion-control
+    # Use BBR congestion control
+    net.ipv4.tcp_congestion_control: "bbr"
+    # Use FQ (Fair Queueing) as the default queueing discipline
+    net.core.default_qdisc: "fq"
+
+    # https://github.com/OneUptime/blog/blob/master/posts/2026-03-03-tune-network-performance-on-talos-linux/README.md#connection-reuse-and-timeout-settings
+    # Reuse TIME_WAIT connections for new outgoing connections
+    net.ipv4.tcp_tw_reuse: "1"
+
+    # Reduce FIN timeout from 60s to 30s
+    net.ipv4.tcp_fin_timeout: "30"
+
+    # Enable TCP keepalive
+    net.ipv4.tcp_keepalive_time: "600"    # Start keepalive after 10 minutes
+    net.ipv4.tcp_keepalive_intvl: "30"    # Send keepalive every 30 seconds
+    net.ipv4.tcp_keepalive_probes: "5"    # Drop after 5 failed probes
+
+    # Enable TCP Fast Open for both client and server
+    net.ipv4.tcp_fastopen: "3"
+
+    # Ephemeral port range
+    net.ipv4.ip_local_port_range: "1024 65535"
+
+    # https://github.com/OneUptime/blog/blob/master/posts/2026-03-03-tune-network-performance-on-talos-linux/README.md#receive-packet-steering-and-flow-control
+    # Enable reverse path filtering (security)
+    net.ipv4.conf.all.rp_filter: "1"
+
+    # Enable IP forwarding (required for Kubernetes)
+    net.ipv4.ip_forward: "1"
+    net.ipv6.conf.all.forwarding: "1"
+cluster:
+  inlineManifests:
+    - name: rps-tuning-daemonset
+      contents: |
+        apiVersion: apps/v1
+        kind: DaemonSet
+        metadata:
+          name: network-tuning
+          namespace: kube-system
+        spec:
+          selector:
+            matchLabels:
+              app: network-tuning
+          template:
+            metadata:
+              labels:
+                app: network-tuning
+            spec:
+              hostNetwork: true
+              hostPID: true
+              containers:
+              - name: tuner
+                image: busybox:latest
+                securityContext:
+                  privileged: true
+                command:
+                - /bin/sh
+                - -c
+                - |
+                  # Enable RPS on all network interfaces
+                  for rx_queue in /sys/class/net/*/queues/rx-*/rps_cpus; do
+                    echo "ff" > "$rx_queue"  # Distribute across 8 cores
+                  done
+                  # Set RFS flow entries
+                  echo 32768 > /proc/sys/net/core/rps_sock_flow_entries
+                  for flow in /sys/class/net/*/queues/rx-*/rps_flow_cnt; do
+                    echo 4096 > "$flow"
+                  done
+                  sleep infinity
