@@ -81,7 +81,7 @@ locals {
       vlan = 50
     }
     raspberry = {
-      mac  = "AA:BB:CC:DD:EE:FF"
+      mac  = "B8:27:EB:6B:10:E2"
       ip   = cidrhost(local.vlan_cidrs["50"], 20)
       vlan = 50
     }

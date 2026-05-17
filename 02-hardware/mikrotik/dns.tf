@@ -12,27 +12,6 @@ locals {
       hostname = "tplink"
     }
     # Talos endpoints
-    talos_vip = {
-      ip       = cidrhost(local.vlan_cidrs["20"], 2)
-      hostname = "talos"
-    }
-    talos_1 = {
-      ip       = cidrhost(local.vlan_cidrs["20"], 10)
-      hostname = "talos"
-    }
-    talos_2 = {
-      ip       = cidrhost(local.vlan_cidrs["20"], 20)
-      hostname = "talos"
-    }
-    talos_3 = {
-      ip       = cidrhost(local.vlan_cidrs["20"], 30)
-      hostname = "talos"
-    }
-    # Kubernetes endpoints
-    k8s_vip = {
-      ip       = cidrhost(local.vlan_cidrs["20"], 2)
-      hostname = "k8s"
-    }
     k8s_1 = {
       ip       = cidrhost(local.vlan_cidrs["20"], 10)
       hostname = "k8s"

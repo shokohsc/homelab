@@ -95,25 +95,6 @@ resource "routeros_ip_firewall_filter" "drop_all_not_lan" {
 ##       Forward Chain - Core Rules       ##
 ############################################
 
-# # Critical: Allow BGP forward traffic - must be placed BEFORE fasttrack
-# # Note: RouterOS doesn't support rule ordering via TF, place manually or use scripts
-# resource "routeros_ip_firewall_filter" "bgp_forward" {
-#   disabled = var.disable_firewall_rules
-#   chain         = "forward"
-#   action        = "accept"
-#   comment       = "Rule 006-BGP-Forward Allow BGP traffic for LoadBalancer - place before fasttrack"
-#   dst_address   = local.vlan_cidrs["60"] # LoadBalancer cidr gateway
-#   protocol      = "tcp"
-#   dst_port      = "179"
-#   connection_state = "established,related"
-#   place_before = routeros_ip_firewall_filter.fasttrack.id
-# lifecycle {
-#     ignore_changes = [
-#       disabled
-#     ]
-# }
-# }
-
 # Rule 1: Fasttrack (lowest priority, created first)
 resource "routeros_ip_firewall_filter" "fasttrack" {
   disabled         = var.disable_firewall_rules
