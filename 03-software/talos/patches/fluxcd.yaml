@@ -1,0 +1,10 @@
+cluster:
+  inlineManifests:
+    - name: flux-namespace
+      contents: |
+        apiVersion: v1
+        kind: Namespace
+        metadata:
+          name: flux-system
+  extraManifests:
+    - "https://github.com/fluxcd/flux2/releases/latest/download/install.yaml"

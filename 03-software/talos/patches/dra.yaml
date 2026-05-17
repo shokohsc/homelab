@@ -1,0 +1,14 @@
+machine:
+  kubelet:
+    extraArgs:
+      feature-gates: DynamicResourceAllocation=true
+cluster:
+  apiServer:
+    extraArgs:
+      feature-gates: DynamicResourceAllocation=true
+  controllerManager:
+    extraArgs:
+      feature-gates: DynamicResourceAllocation=true
+  scheduler:
+    extraArgs:
+      feature-gates: DynamicResourceAllocation=true

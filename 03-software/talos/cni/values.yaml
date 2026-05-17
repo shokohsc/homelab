@@ -1,0 +1,74 @@
+# Do NOT enable bpf.masquerade with KubeSpan
+operator:
+  replicas: 1
+ipam:
+  mode: kubernetes
+kubeProxyReplacement: true
+k8sServiceHost: localhost
+k8sServicePort: 7445
+securityContext:
+  capabilities:
+    ciliumAgent:
+      - CHOWN
+      - KILL
+      - NET_ADMIN
+      - NET_BIND_SERVICE
+      - NET_RAW
+      - IPC_LOCK
+      - SYS_ADMIN
+      - SYS_RESOURCE
+      - DAC_OVERRIDE
+      - FOWNER
+      - SETGID
+      - SETUID
+    cleanCiliumState:
+      - NET_ADMIN
+      - SYS_ADMIN
+      - SYS_RESOURCE
+cgroup:
+  autoMount:
+    enabled: false
+  hostRoot: /sys/fs/cgroup
+
+gatewayAPI:
+  enabled: true
+  externalTrafficPolicy: Local
+  enableAlpn: true
+  enableAppProtocol: true
+hubble:
+  enabled: true
+  relay:
+    enabled: true
+  ui:
+    enabled: true
+
+bgpControlPlane:
+  enabled: true
+
+externalIPs:
+  enabled: true
+
+devices: "eno+"
+loadBalancer:
+  mode: dsr
+  dsrDispatch: opt
+  l7:
+    backend: envoy
+routingMode: native
+autoDirectNodeRoutes: true
+ipv4NativeRoutingCIDR: 10.244.0.0/16
+# # https://github.com/OneUptime/blog/blob/master/posts/2026-03-03-tune-network-performance-on-talos-linux/README.md#cni-specific-optimizations
+enableIPv4Masquerade: true
+
+bpf:
+  masquerade:  true
+  lbModeAnnotation: true
+  hostLegacyRouting: true
+  disableExternalIPMitigation: true
+  hostRouting: true
+  tproxy: true
+#   lbExternalClusterIP: true
+bandwidthManager:
+  enabled: true
+  bbr: true
+  bbrHostNamespaceOnly: true
