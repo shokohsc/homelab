@@ -9,6 +9,7 @@ private/
 .terraform.lock.hcl
 terraform.tfvars
 *.tfstate
+*.tfstate.backup
 postgres-data/
 routeros-backup.backup
 secrets.yaml
