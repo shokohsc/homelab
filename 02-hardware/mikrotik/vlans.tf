@@ -244,8 +244,8 @@ resource "routeros_ip_dhcp_server_network" "networks" {
   address        = local.vlan_cidrs[each.key]
   gateway        = cidrhost(local.vlan_cidrs[each.key], 1)
   dns_server     = [cidrhost(local.vlan_cidrs[each.key], 1)]
-  next_server    = cidrhost(local.vlan_cidrs["50"], 20)
-  boot_file_name = "undionly.kpxe"
+  next_server    = each.key == "20" ? cidrhost(local.vlan_cidrs["50"], 20) : null
+  boot_file_name = each.key == "20" ? "undionly.kpxe" : null
   comment        = each.value
 }
 
