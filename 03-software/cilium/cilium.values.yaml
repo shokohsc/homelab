@@ -1,11 +1,14 @@
 # Do NOT enable bpf.masquerade with KubeSpan
 operator:
   replicas: 1
+
 ipam:
   mode: kubernetes
+
 kubeProxyReplacement: true
 k8sServiceHost: localhost
 k8sServicePort: 7445
+
 securityContext:
   capabilities:
     ciliumAgent:
@@ -25,6 +28,7 @@ securityContext:
       - NET_ADMIN
       - SYS_ADMIN
       - SYS_RESOURCE
+
 cgroup:
   autoMount:
     enabled: false
@@ -35,23 +39,26 @@ gatewayAPI:
   externalTrafficPolicy: Local
   enableAlpn: true
   enableAppProtocol: true
+
 hubble:
   enabled: true
   relay:
     enabled: true
+    tolerations:
+      - key: "node.kubernetes.io/nuc"
+        operator: "Exists"
+        effect: "NoSchedule"
   ui:
     enabled: true
+    tolerations:
+      - key: "node.kubernetes.io/nuc"
+        operator: "Exists"
+        effect: "NoSchedule"
 
 bgpControlPlane:
   enabled: true
 
-externalIPs:
-  enabled: true
-
-devices: "eno+"
 loadBalancer:
-  mode: dsr
-  dsrDispatch: opt
   l7:
     backend: envoy
 routingMode: native
@@ -64,9 +71,8 @@ bpf:
   lbModeAnnotation: true
   hostLegacyRouting: true
   disableExternalIPMitigation: true
-  hostRouting: true
   tproxy: true
-#   lbExternalClusterIP: true
+  lbExternalClusterIP: true
 bandwidthManager:
   enabled: true
   bbr: true

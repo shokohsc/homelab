@@ -53,6 +53,10 @@ spec:
               name: http
           args:
             - --port=8080
+      tolerations:
+        - key: "node.kubernetes.io/nuc"
+          operator: "Exists"
+          effect: "NoSchedule"
 ---
 apiVersion: v1
 kind: Service
