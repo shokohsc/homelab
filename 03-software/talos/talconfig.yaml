@@ -58,6 +58,10 @@ nodes:
                     - effect: NoSchedule
                       key: node.kubernetes.io/nuc
                       value: mercy
+            network:
+              interfaces:
+                - interface: eno1
+                  dhcp: true
     schematic:
       customization:
         systemExtensions:
@@ -69,6 +73,7 @@ nodes:
             - siderolabs/nfs-utils
             - siderolabs/nfsd
             - siderolabs/stargz-snapshotter
+
   - controlPlane: false
     hostname: winston
     installDisk: /dev/nvme0n1
@@ -80,7 +85,6 @@ nodes:
       customization:
         extraKernelArgs:
           - net.ifnames=0
-          - talos.config=http://tracer.home.arpa:8080/metadata?p=worker
           - talos.experimental.wipe=system:EPHEMERAL,STATE
           - vlan=enp1s0.30:enp1s0
         systemExtensions:
@@ -91,6 +95,7 @@ nodes:
             - siderolabs/nfs-utils
             - siderolabs/nfsd
             - siderolabs/stargz-snapshotter
+
   - controlPlane: false
     hostname: worker-vm
     installDisk: /dev/nvme0n1
@@ -107,6 +112,7 @@ nodes:
           - net.ifnames=0
           - talos.config=http://tracer.home.arpa:8080/metadata?p=worker-vm
           - talos.experimental.wipe=system:EPHEMERAL,STATE
+          - vlan=eth0.20:eth0
         systemExtensions:
           officialExtensions:
             - siderolabs/amd-ucode
@@ -135,6 +141,7 @@ nodes:
           - net.ifnames=0
           - talos.config=http://tracer.home.arpa:8080/metadata?p=worker-vm-gpu
           - talos.experimental.wipe=system:EPHEMERAL,STATE
+          - vlan=eth0.20:eth0
         systemExtensions:
           officialExtensions:
             - siderolabs/nvidia-container-toolkit-lts
@@ -151,6 +158,7 @@ nodes:
             - siderolabs/stargz-snapshotter
             - siderolabs/uhid
             - siderolabs/uinput
+
 controlPlane:
   # disableSearchDomain: true
   kernelModules:
@@ -179,6 +187,7 @@ controlPlane:
           - siderolabs/gvisor
           # - siderolabs/kata-containers
           - siderolabs/stargz-snapshotter
+
 worker:
   kernelModules:
     - name: br_netfilter

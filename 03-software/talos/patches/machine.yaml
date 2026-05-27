@@ -16,5 +16,5 @@ machine:
     user.max_user_namespaces: "11255"
   network:
     interfaces:
-      - interface: eno1
+      - interface: eth0
         dhcp: true
