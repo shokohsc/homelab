@@ -21,18 +21,19 @@ config device
         option name 'br-mgmt'
         option type 'bridge'
         list ports 'eth0.10'
+        option ipv6 '0'
 
 config device
         option name 'br-guest'
         option type 'bridge'
         list ports 'eth0.50'
-        option multicast '1'
-        option igmp_snooping '1'
+        option ipv6 '0'
 
 config device
         option name 'br-iot'
         option type 'bridge'
         list ports 'eth0.100'
+        option ipv6 '0'
 
 config interface 'mgmt'
         option device 'br-mgmt'
@@ -40,6 +41,7 @@ config interface 'mgmt'
         option ipaddr '${cidrhost(local.vlan_cidrs["10"], 2)}'
         option netmask '255.255.255.0'
         option gateway '${cidrhost(local.vlan_cidrs["10"], 1)}'
+        list dns '${cidrhost(local.vlan_cidrs["10"], 1)}'
 
 config interface 'guest'
         option device 'br-guest'
@@ -86,7 +88,6 @@ config device
         option type '8021q'
         option ifname 'eth0'
         option vid '50'
-        option multicast '1'
 
 config device
         option name 'eth0.100'
@@ -99,7 +100,6 @@ config device
 
 config device
         option name 'wlan0-1'
-        option multicast '1'
 
 config device
         option name 'wlan0-2'
@@ -109,7 +109,6 @@ config device
 
 config device
         option name 'wlan1-1'
-        option multicast '1'
 
 config device
         option name 'wlan1-2'
