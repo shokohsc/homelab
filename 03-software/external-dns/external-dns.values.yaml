@@ -74,3 +74,8 @@ extraArgs:
   - --ignore-ingress-tls-spec
   - --managed-record-types=A
   - --managed-record-types=CNAME
+
+tolerations:
+  - key: "node.kubernetes.io/nuc"
+    operator: "Exists"
+    effect: "NoSchedule"
