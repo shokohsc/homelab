@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: network-tuning
+  namespace: kube-system
+spec:
+  selector:
+    matchLabels:
+      app: network-tuning
+  template:
+    metadata:
+      labels:
+        app: network-tuning
+    spec:
+      hostNetwork: true
+      hostPID: true
+      containers:
+      - name: tuner
+        image: busybox:latest
+        securityContext:
+          privileged: true
+        command:
+        - /bin/sh
+        - -c
+        - |
+          #!/bin/sh
+          # Enable RPS on all network interfaces
+          CPUS=$(nproc)
+          MASK=$(( (1 << CPUS) - 1 ))
+          HEX_MASK=$(printf "%x" "$MASK")
+          # Enable RPS on all RX queues
+          for rx_queue in /sys/class/net/*/queues/rx-*/rps_cpus; do
+              echo "$HEX_MASK" > "$rx_queue"
+          done
+          # RFS entries
+          echo 32768 > /proc/sys/net/core/rps_sock_flow_entries
+          for flow in /sys/class/net/*/queues/rx-*/rps_flow_cnt; do
+              echo 4096 > "$flow"
+          done
+          sleep infinity

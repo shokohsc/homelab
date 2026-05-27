@@ -1,0 +1,20 @@
+machine:
+  certSANs:
+    - talos.${TALOS_DOMAIN}
+    - ${TALOS_SUBNET}.10
+    - ${TALOS_SUBNET}.20
+    - ${TALOS_SUBNET}.30
+  features:
+    hostDNS:
+        forwardKubeDNSToHost: false # Use the host DNS resolver as upstream for Kubernetes CoreDNS pods.
+  kubelet:
+    extraConfig:
+      featureGates:
+        UserNamespacesSupport: true
+        DynamicResourceAllocation: true
+  sysctls:
+    user.max_user_namespaces: "11255"
+  network:
+    interfaces:
+      - interface: eno1
+        dhcp: true

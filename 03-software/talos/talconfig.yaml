@@ -1,0 +1,201 @@
+---
+clusterName: talos
+talosVersion: v1.13.2
+kubernetesVersion: v1.36.1
+endpoint: https://talos.${TALOS_DOMAIN}:6443
+additionalApiServerCertSans:
+  - talos.local
+  - talos.${TALOS_DOMAIN}
+clusterPodNets:
+  - 10.244.0.0/16
+clusterSvcNets:
+  - 10.96.0.0/12
+cniConfig:
+  name: none
+inlineManifests:
+  - name: rps-ds-tuning
+    contents: "@./patches/rps-ds-tuning.yaml"
+    skipEnvsubst: true
+patches:
+  # - |-
+  #   apiVersion: v1alpha1
+  #   kind: TrustedRootsConfig
+  #   name: custom-ca
+  #   certificates: |
+  #       -----BEGIN CERTIFICATE-----
+  #       ${CA_CERT}
+  #       -----END CERTIFICATE-----
+  - "@./patches/cluster.yaml"
+  - "@./patches/machine.yaml"
+  - "@./patches/network.yaml"
+nodes:
+  - controlPlane: true
+    hostname: sombra
+    installDisk: /dev/nvme0n1
+    ipAddress: ${TALOS_SUBNET}.10
+  - controlPlane: true
+    hostname: lucio
+    installDisk: /dev/nvme0n1
+    ipAddress: ${TALOS_SUBNET}.20
+  - controlPlane: true
+    hostname: zarya
+    installDisk: /dev/sda
+    ipAddress: ${TALOS_SUBNET}.30
+
+  - controlPlane: false
+    hostname: mercy
+    installDisk: /dev/nvme0n1
+    ipAddress: ${TALOS_SUBNET}.40
+    nodeLabels:
+      topology.kubernetes.io/region: "metal"
+      topology.kubernetes.io/zone: "nuc"
+    patches:
+      - |-
+          machine:
+            kubelet:
+              extraConfig:
+                registerWithTaints:
+                    - effect: NoSchedule
+                      key: node.kubernetes.io/nuc
+                      value: mercy
+    schematic:
+      customization:
+        systemExtensions:
+          officialExtensions:
+            - siderolabs/intel-ucode
+            - siderolabs/i915
+            - siderolabs/gvisor
+            # - siderolabs/kata-containers
+            - siderolabs/nfs-utils
+            - siderolabs/nfsd
+            - siderolabs/stargz-snapshotter
+  - controlPlane: false
+    hostname: winston
+    installDisk: /dev/nvme0n1
+    ipAddress: ${TALOS_SUBNET}.50
+    nodeLabels:
+      topology.kubernetes.io/region: "metal"
+      topology.kubernetes.io/zone: "ryzen"
+    schematic:
+      customization:
+        extraKernelArgs:
+          - net.ifnames=0
+          - talos.config=http://tracer.home.arpa:8080/metadata?p=worker
+          - talos.experimental.wipe=system:EPHEMERAL,STATE
+          - vlan=enp1s0.30:enp1s0
+        systemExtensions:
+          officialExtensions:
+            - siderolabs/amd-ucode
+            - siderolabs/gvisor
+            # - siderolabs/kata-containers
+            - siderolabs/nfs-utils
+            - siderolabs/nfsd
+            - siderolabs/stargz-snapshotter
+  - controlPlane: false
+    hostname: worker-vm
+    installDisk: /dev/nvme0n1
+    ignoreHostname: true
+    ipAddress: ${TALOS_SUBNET}.255
+    machineSpec:
+      mode: nocloud
+      bootMethod: pxe
+    nodeLabels:
+      topology.kubernetes.io/region: "vm"
+    schematic:
+      customization:
+        extraKernelArgs:
+          - net.ifnames=0
+          - talos.config=http://tracer.home.arpa:8080/metadata?p=worker-vm
+          - talos.experimental.wipe=system:EPHEMERAL,STATE
+        systemExtensions:
+          officialExtensions:
+            - siderolabs/amd-ucode
+            - siderolabs/gvisor
+            # - siderolabs/kata-containers
+            - siderolabs/nfs-utils
+            - siderolabs/nfsd
+            - siderolabs/qemu-guest-agent
+            - siderolabs/stargz-snapshotter
+            - siderolabs/uhid
+            - siderolabs/uinput
+  - controlPlane: false
+    hostname: worker-vm-gpu
+    installDisk: /dev/nvme0n1
+    ignoreHostname: true
+    ipAddress: ${TALOS_SUBNET}.255
+    machineSpec:
+      mode: nocloud
+      bootMethod: pxe
+    nodeLabels:
+      topology.kubernetes.io/region: "vm"
+      node.kubernetes.io/gpu: "nvidia"
+    schematic:
+      customization:
+        extraKernelArgs:
+          - net.ifnames=0
+          - talos.config=http://tracer.home.arpa:8080/metadata?p=worker-vm-gpu
+          - talos.experimental.wipe=system:EPHEMERAL,STATE
+        systemExtensions:
+          officialExtensions:
+            - siderolabs/nvidia-container-toolkit-lts
+            - siderolabs/nvidia-open-gpu-kernel-modules-lts
+            - siderolabs/nonfree-kmod-nvidia-lts
+            # - siderolabs/nvidia-container-toolkit-production
+            # - siderolabs/nvidia-open-gpu-kernel-modules-production
+            # - siderolabs/nonfree-kmod-nvidia-production
+            - siderolabs/gvisor
+            # - siderolabs/kata-containers
+            - siderolabs/nfs-utils
+            - siderolabs/nfsd
+            - siderolabs/qemu-guest-agent
+            - siderolabs/stargz-snapshotter
+            - siderolabs/uhid
+            - siderolabs/uinput
+controlPlane:
+  # disableSearchDomain: true
+  kernelModules:
+    - name: br_netfilter
+      parameters:
+        - nf_conntrack_max=131072
+  # nameservers:
+  #   - ${TALOS_SUBNET}.1
+  nodeLabels:
+    node.kubernetes.io/exclude-from-external-load-balancers: ""
+  patches:
+    - |-
+        cluster:
+          etcd:
+            extraArgs:
+              listen-metrics-urls: http://0.0.0.0:2381
+  schematic:
+    customization:
+      extraKernelArgs:
+        - net.ifnames=0
+        - talos.config=http://tracer.home.arpa:8080/metadata?p=control-plane
+        - talos.experimental.wipe=system:EPHEMERAL,STATE
+      systemExtensions:
+        officialExtensions:
+          - siderolabs/intel-ucode
+          - siderolabs/gvisor
+          # - siderolabs/kata-containers
+          - siderolabs/stargz-snapshotter
+worker:
+  kernelModules:
+    - name: br_netfilter
+      parameters:
+        - nf_conntrack_max=131072
+  # nameservers:
+  #   - ${TALOS_SUBNET}.1
+  patches:
+    - |-
+      machine:
+        nodeLabels:
+          # topology.kubernetes.io/region: "metal"
+          # topology.kubernetes.io/zone: "nuc"
+          bgp-policy: active
+  schematic:
+    customization:
+      extraKernelArgs:
+        - net.ifnames=0
+        - talos.config=http://tracer.home.arpa:8080/metadata?p=worker
+        - talos.experimental.wipe=system:EPHEMERAL,STATE

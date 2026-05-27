@@ -1,0 +1,31 @@
+cluster:
+  apiServer:
+    extraArgs:
+      feature-gates: DynamicResourceAllocation=true
+  controllerManager:
+    extraArgs:
+      feature-gates: DynamicResourceAllocation=true
+  scheduler:
+    extraArgs:
+      feature-gates: DynamicResourceAllocation=true
+  proxy:
+    disabled: true
+  inlineManifests:
+    - name: flux-namespace
+      contents: |
+        apiVersion: v1
+        kind: Namespace
+        metadata:
+          name: flux-system
+    - name: cilium-namespace
+      contents: |
+        apiVersion: v1
+        kind: Namespace
+        metadata:
+          name: cilium
+          labels:
+            kubernetes.io/metadata.name: cilium
+            pod-security.kubernetes.io/enforce: privileged
+  extraManifests:
+    - "https://github.com/kubernetes-sigs/gateway-api/releases/download/v1.5.1/experimental-install.yaml"
+    - "https://github.com/fluxcd/flux2/releases/latest/download/install.yaml"

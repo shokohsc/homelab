@@ -1,5 +1,0 @@
----
-apiVersion: v1alpha1
-kind: KubeSpanConfig
-enabled: true
-mtu: 1420
