@@ -67,6 +67,23 @@ resource "routeros_ip_firewall_filter" "accept_mgmt_vlan_cidr" {
   chain        = "input"
   src_address  = local.vlan_cidrs["10"]
   comment      = "Rule 004-Accept-Mgmt-VLAN-CIDR"
+  place_before = routeros_ip_firewall_filter.accept_mdns.id
+  lifecycle {
+    ignore_changes = [
+      disabled
+    ]
+  }
+}
+
+resource "routeros_ip_firewall_filter" "accept_mdns" {
+  disabled     = var.disable_firewall_rules
+  action       = "accept"
+  chain        = "input"
+  dst_address  = "224.0.0.251"
+  protocol     = "udp"
+  src_port     = "5353"
+  dst_port     = "5353"
+  comment      = "Rule 006-Accept-mDNS"
   place_before = routeros_ip_firewall_filter.drop_all_not_lan.id
   lifecycle {
     ignore_changes = [
@@ -82,7 +99,7 @@ resource "routeros_ip_firewall_filter" "drop_all_not_lan" {
   in_interface_list = "!${routeros_interface_list.lan.name}"
   log               = true
   log_prefix        = "drop_not_lan"
-  comment           = "Rule 005-Drop-All-Not-LAN"
+  comment           = "Rule 007-Drop-All-Not-LAN"
   place_before      = routeros_ip_firewall_filter.fasttrack.id
   lifecycle {
     ignore_changes = [

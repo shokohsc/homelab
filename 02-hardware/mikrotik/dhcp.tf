@@ -51,7 +51,7 @@ locals {
       mac      = "70:85:C2:5E:D0:D3"
       ip       = cidrhost(local.vlan_cidrs["20"], 50)
       vlan     = 20
-      hostname = "dva"
+      hostname = "winston"
     }
 
     # Proxmox (VLAN 30)
@@ -81,9 +81,10 @@ locals {
       vlan = 50
     }
     raspberry = {
-      mac  = "B8:27:EB:6B:10:E2"
-      ip   = cidrhost(local.vlan_cidrs["50"], 20)
-      vlan = 50
+      mac      = "B8:27:EB:6B:10:E2"
+      ip       = cidrhost(local.vlan_cidrs["50"], 20)
+      vlan     = 50
+      hostname = "tracer"
     }
 
     # IOT (VLAN 100)

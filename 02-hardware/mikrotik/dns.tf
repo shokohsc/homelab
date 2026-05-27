@@ -12,17 +12,17 @@ locals {
       hostname = "tplink"
     }
     # Talos endpoints
-    k8s_1 = {
+    control_plane_1 = {
       ip       = cidrhost(local.vlan_cidrs["20"], 10)
-      hostname = "k8s"
+      hostname = "talos"
     }
-    k8s_2 = {
+    control_plane_2 = {
       ip       = cidrhost(local.vlan_cidrs["20"], 20)
-      hostname = "k8s"
+      hostname = "talos"
     }
-    k8s_3 = {
+    control_plane_3 = {
       ip       = cidrhost(local.vlan_cidrs["20"], 30)
-      hostname = "k8s"
+      hostname = "talos"
     }
   }
 }

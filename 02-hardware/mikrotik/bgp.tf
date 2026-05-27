@@ -16,7 +16,7 @@ resource "routeros_routing_bgp_connection" "cilium" {
   routing_table = "main"
   vrf           = "main"
   listen        = true
-  connect = false
+  connect       = false
   local {
     role = var.bgp_local_role
     port = 179

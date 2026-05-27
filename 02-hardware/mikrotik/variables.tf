@@ -123,8 +123,8 @@ variable "mikrotik_router_id" {
 }
 
 variable "bgp_local_role" {
-  type = string
-  default = "ibgp"
+  type        = string
+  default     = "ibgp"
   description = "BGP local role"
 }
 

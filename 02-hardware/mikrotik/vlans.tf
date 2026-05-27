@@ -202,6 +202,21 @@ resource "routeros_ip_pool" "pools" {
   comment = each.value
 }
 
+# ############################################
+# ##    TFTP Server for Talos PXE boot      ##
+# ############################################
+
+# resource "routeros_ip_dhcp_server_option" "tftp_option" {
+#   code  = 66
+#   name  = "tftpserver-66"
+#   value = "s'${cidrhost(local.vlan_cidrs["50"], 20)}'"
+# }
+
+# resource "routeros_ip_dhcp_server_option_sets" "lan_option_set" {
+#   name    = "lan-option-set"
+#   options = join(",", [routeros_ip_dhcp_server_option.tftp_option.name])
+# }
+
 ##############################################
 ##             DHCP Servers               ##
 ##############################################
@@ -215,7 +230,8 @@ resource "routeros_ip_dhcp_server" "dhcp" {
   lease_time                = "1d"
   dynamic_lease_identifiers = "client-mac"
   disabled                  = false
-  comment                   = each.value.comment
+  # dhcp_option_set           = routeros_ip_dhcp_server_option_sets.lan_option_set.name
+  comment = each.value.comment
 }
 
 ############################################
@@ -225,10 +241,12 @@ resource "routeros_ip_dhcp_server" "dhcp" {
 resource "routeros_ip_dhcp_server_network" "networks" {
   for_each = local.vlan_names_filtered
 
-  address    = local.vlan_cidrs[each.key]
-  gateway    = cidrhost(local.vlan_cidrs[each.key], 1)
-  dns_server = [cidrhost(local.vlan_cidrs[each.key], 1)]
-  comment    = each.value
+  address        = local.vlan_cidrs[each.key]
+  gateway        = cidrhost(local.vlan_cidrs[each.key], 1)
+  dns_server     = [cidrhost(local.vlan_cidrs[each.key], 1)]
+  next_server    = cidrhost(local.vlan_cidrs["50"], 20)
+  boot_file_name = "undionly.kpxe"
+  comment        = each.value
 }
 
 ############################################
@@ -239,4 +257,5 @@ resource "routeros_ip_dns" "dns" {
   allow_remote_requests = true
   servers               = [var.upstream_primary_dns, var.upstream_secondary_dns]
   cache_size            = 2048
+  mdns_repeat_ifaces    = ["vlan100", "vlan50", "vlan10", ]
 }
