@@ -1,0 +1,27 @@
+services:
+
+  booter:
+    image: ghcr.io/siderolabs/booter:v0.3.0
+    container_name: booter
+    command:
+      - --extra-kernel-args
+      - talos.config=http://tracer.home.arpa:8080/metadata?{{ booter_query_parameters }}
+    cap_add:
+      - NET_BIND_SERVICE
+    logging:
+      driver: journald
+    network_mode: host
+    restart: unless-stopped
+
+  remote-config:
+    image: ghcr.io/siderolabs/talos-remote-config:latest
+    container_name: remote-config
+    ports:
+      - "{{ http_port | default(8080) }}:8080/tcp"
+    volumes:
+      - ./config:/app/data:ro
+    logging:
+      driver: journald
+    restart: unless-stopped
+    depends_on:
+      - booter

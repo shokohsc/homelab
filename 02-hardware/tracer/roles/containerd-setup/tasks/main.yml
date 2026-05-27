@@ -1,0 +1,47 @@
+- name: Download nerdctl-full
+  become: yes
+  ansible.builtin.get_url:
+    url: https://github.com/containerd/nerdctl/releases/download/v{{ nerdctl_version }}/nerdctl-full-{{ nerdctl_version }}-linux-arm64.tar.gz
+    dest: "/home/{{ ansible_user }}/nerdctl-full.tar.gz"
+    checksum: "{{ nerdctl_checksum }}"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: '0755'
+
+- name: Extract nerdctl-full archive
+  become: yes
+  ansible.builtin.unarchive:
+    src: "/home/{{ ansible_user }}/nerdctl-full.tar.gz"
+    dest: /usr/local
+    remote_src: yes
+    mode: '0755'
+
+- name: Install a list of packages
+  ansible.builtin.apt:
+    pkg:
+    - uidmap
+
+- name: Containerd Rootless Setup
+  ansible.builtin.command: containerd-rootless-setuptool.sh install
+  become_user: "{{ ansible_user }}"
+
+- name: Containerd Rootless Privileged Ports
+  ansible.posix.sysctl:
+    name: net.ipv4.ip_unprivileged_port_start
+    value: "67"
+    sysctl_set: true
+
+- name: Enable service containerd
+  ansible.builtin.systemd_service:
+    name: containerd
+    enabled: true
+    scope: user
+    state: started
+  become_user: "{{ ansible_user }}"
+
+- name: Create symlink from docker to nerdctl
+  ansible.builtin.file:
+    src: /usr/local/bin/nerdctl
+    dest: /usr/local/bin/docker
+    state: link
+    force: yes

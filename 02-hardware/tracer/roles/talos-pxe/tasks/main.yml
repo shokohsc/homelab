@@ -1,0 +1,46 @@
+- name: Create Docker compose config directory
+  file:
+    path: /home/{{ ansible_user }}/talos-pxe
+    state: directory
+    mode: 0755
+  become_user: "{{ ansible_user }}"
+
+- name: Create docker-compose.yaml for Talos PXE services
+  vars:
+    booter_query_parameters: "h=$${hostname}&m=$${mac}&s=$${serial}&u=$${uuid}&p=$${profile}"
+  ansible.builtin.template:
+    src: docker-compose.yml.j2
+    dest: /home/{{ ansible_user }}/talos-pxe/docker-compose.yaml
+    mode: 0644
+  become_user: "{{ ansible_user }}"
+
+- name: Ensure PXE network interfaces are configured
+  ansible.builtin.command: ip addr add {{ ansible_default_ipv4.address | default('10.99.99.1') }}/24 dev {{ network_interface | default('eth0') }}
+  args:
+    removes: -net
+  ignore_errors: yes
+  become_user: "{{ ansible_user }}"
+
+- name: Install a list of packages
+  ansible.builtin.apt:
+    pkg:
+    - iptables
+
+- name: Create symlink from iptables
+  ansible.builtin.file:
+    src: /usr/sbin/iptables
+    dest: /usr/local/bin/iptables
+    state: link
+    force: yes
+
+- name: Start/Restart PXE containers
+  ansible.builtin.command:
+    argv:
+      - docker 
+      - compose 
+      - -f 
+      - docker-compose.yaml 
+      - up 
+      - -d
+    chdir: /home/{{ ansible_user }}/talos-pxe
+  become_user: "{{ ansible_user }}"

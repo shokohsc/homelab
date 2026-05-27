@@ -1,0 +1,60 @@
+- name: Creates backup directory
+  ansible.builtin.file:
+    path: "{{ backup_dir }}"
+    state: directory
+
+- name: Create backup of current fstab
+  ansible.builtin.copy:
+    src: /etc/fstab
+    dest: "{{ backup_dir }}/fstab.pre-{{ ansible_date_time.date }}"
+    remote_src: yes
+
+- name: Mount /var/log on tmpfs
+  ansible.posix.mount:
+    path: /var/log
+    src: tmpfs
+    fstype: tmpfs
+    opts: defaults,noatime,nosuid,size={{ tmpfs_log_size }}
+    state: mounted
+  notify: Restart systemd-journald
+
+- name: Mount /tmp on tmpfs
+  ansible.posix.mount:
+    path: /tmp
+    src: tmpfs
+    fstype: tmpfs
+    opts: defaults,noatime,nosuid,size={{ tmpfs_tmp_size }}
+    state: mounted
+  notify: Restart systemd-journald
+
+- name: Mount /var/tmp on tmpfs
+  ansible.posix.mount:
+    path: /var/tmp
+    src: tmpfs
+    fstype: tmpfs
+    opts: defaults,noatime,nosuid,size={{ tmpfs_var_tmp_size }}
+    state: mounted
+  notify: Restart systemd-journald
+
+- name: Ensure journald volatile is set
+  ansible.builtin.copy:
+    dest: /etc/systemd/journald.conf.journalbackup.{{ ansible_date_time.date }}
+    src: /etc/systemd/journald.conf
+    remote_src: yes
+  notify: Restart systemd-journald
+
+- name: Disable swap
+  ansible.builtin.shell: |
+    swapoff -a
+    sed -i '/ swap /s/^/#/' /etc/fstab
+    # Remove dphys-swapfile if installed
+    if [ -f /var/lib/dphys-swapfile ]; then
+      systemctl disable dphys-swapfile
+      systemctl stop dphys-swapfile
+    fi
+  when: ansible_pkg_mgr == 'apt'
+  changed_when: true
+
+- name: Reload Systemctl Daemon
+  ansible.builtin.systemd:
+    daemon_reload: yes

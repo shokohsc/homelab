@@ -1,0 +1,19 @@
+# Raspberry Pi running Talos PXE setup
+all:
+  hosts: 
+    tracer:
+      ansible_host: tracer.home.arpa
+      ansible_user: shokohsc
+      tmpfs_log_size: "50M"
+      tmpfs_tmp_size: "500M"
+      tmpfs_var_tmp_size: "30M"
+      journald_storage: volatile
+      journald_max_use: "50M"
+      docker_log_max_size: "10m"
+      docker_log_max_files: 3
+      network_interface: eth0
+      pxe_tftp_port: 69
+      http_port: 8080
+      nerdctl_version: 2.3.1
+      nerdctl_checksum: sha256:425fd2c43e91a0af32e91b7186080bf6dd12ee22d435429455085cb2204e8427
+      backup_dir: /etc/backups
