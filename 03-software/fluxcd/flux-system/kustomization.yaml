@@ -3,3 +3,75 @@ kind: Kustomization
 resources:
 - gotk-components.yaml
 - gotk-sync.yaml
+patches:
+  - patch: |
+      - op: add
+        path: /spec/template/spec/containers/0/args/-
+        value: --concurrent=20
+      - op: replace
+        path: /spec/template/spec/volumes/0
+        value:
+          name: temp
+          emptyDir:
+            medium: Memory      
+    target:
+      kind: Deployment
+      name: kustomize-controller
+  - patch: |
+      - op: add
+        path: /spec/template/spec/containers/0/args/-
+        value: --helm-cache-max-size=10
+      - op: add
+        path: /spec/template/spec/containers/0/args/-
+        value: --helm-cache-ttl=60m
+      - op: add
+        path: /spec/template/spec/containers/0/args/-
+        value: --helm-cache-purge-interval=5m
+    target:
+      kind: Deployment
+      name: source-controller
+  - patch: |
+      apiVersion: apps/v1
+      kind: Deployment
+      metadata:
+        name: all
+      spec:
+        template:
+          metadata:
+            annotations:
+              cluster-autoscaler.kubernetes.io/safe-to-evict: "true"
+          spec:
+            affinity:
+              nodeAffinity:
+                preferredDuringSchedulingIgnoredDuringExecution:
+                - weight: 1
+                  preference:
+                    matchExpressions:
+                    - key: topology.kubernetes.io/region
+                      operator: In
+                      values:
+                      - metal
+            tolerations:
+              - effect: NoSchedule
+                key: node.kubernetes.io/nuc
+                operator: Equal
+                value: nuc
+    target:
+      kind: Deployment
+      labelSelector: app.kubernetes.io/part-of=flux
+  - patch: |
+      # Enable OOM watch feature
+      - op: add
+        path: /spec/template/spec/containers/0/args/-
+        value: --feature-gates=OOMWatch=true
+      # Threshold at which to trigger a graceful shutdown (optional, default 95%)
+      - op: add
+        path: /spec/template/spec/containers/0/args/-
+        value: --oom-watch-memory-threshold=95
+      # Interval at which to check memory usage (optional, default 500ms)
+      - op: add
+        path: /spec/template/spec/containers/0/args/-
+        value: --oom-watch-interval=500ms      
+    target:
+      kind: Deployment
+      name: helm-controller
