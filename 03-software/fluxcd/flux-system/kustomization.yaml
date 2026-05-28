@@ -13,7 +13,7 @@ patches:
         value:
           name: temp
           emptyDir:
-            medium: Memory      
+            medium: Memory
     target:
       kind: Deployment
       name: kustomize-controller
@@ -54,8 +54,7 @@ patches:
             tolerations:
               - effect: NoSchedule
                 key: node.kubernetes.io/nuc
-                operator: Equal
-                value: nuc
+                operator: Exists
     target:
       kind: Deployment
       labelSelector: app.kubernetes.io/part-of=flux
@@ -71,7 +70,7 @@ patches:
       # Interval at which to check memory usage (optional, default 500ms)
       - op: add
         path: /spec/template/spec/containers/0/args/-
-        value: --oom-watch-interval=500ms      
+        value: --oom-watch-interval=500ms
     target:
       kind: Deployment
       name: helm-controller
