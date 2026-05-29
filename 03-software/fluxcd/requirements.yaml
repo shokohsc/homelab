@@ -9,6 +9,7 @@ spec:
     kind: GitRepository
     name: flux-system
   path: ./requirements
+  prune: true
   postBuild:
     substitute:
       domain: "home.arpa"
