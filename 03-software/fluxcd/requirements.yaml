@@ -8,8 +8,8 @@ spec:
   sourceRef:
     kind: GitRepository
     name: flux-system
-  path: ./requirements
   prune: true
+  path: ./03-software/fluxcd/requirements
   postBuild:
     substitute:
       domain: "home.arpa"

@@ -11,7 +11,7 @@ spec:
     kind: GitRepository
     name: flux-system
   prune: true
-  path: ./apps
+  path: ./03-software/fluxcd/apps
   postBuild:
     substitute:
       domain: "home.arpa"
