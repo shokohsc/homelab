@@ -54,7 +54,7 @@ spec:
     peers:
     - name: mikrotik
       peerASN: 65000
-      peerAddress: 10.42.20.1
+      peerAddress: ${talosSubnet}.1
       peerConfigRef:
         name: cilium
 ---
@@ -66,8 +66,8 @@ metadata:
     vlan: lb
 spec:
   blocks:
-  - start: 10.42.60.2
-    stop: 10.42.60.254
+  - start: ${vip}
+    stop: ${subnet}.254
   serviceSelector:
     matchExpressions:
     - key: vlan

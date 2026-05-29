@@ -1,16 +1,8 @@
 ---
-apiVersion: v1
-kind: Namespace
-metadata:
-  labels:
-    kubernetes.io/metadata.name: whoami
-  name: whoami
----
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: whoami
-  namespace: whoami
   labels:
     app: whoami
 spec:
@@ -57,59 +49,3 @@ spec:
         - key: "node.kubernetes.io/nuc"
           operator: "Exists"
           effect: "NoSchedule"
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: whoami
-  namespace: whoami
-  labels:
-    app: whoami
-    vlan: lb
-spec:
-  selector:
-    app: whoami
-  ports:
-    - protocol: TCP
-      port: 80
-      targetPort: http
-  type: ClusterIP
----
-apiVersion: gateway.networking.k8s.io/v1
-kind: HTTPRoute
-metadata:
-  name: whoami
-  namespace: whoami
-spec:
-  hostnames:
-  - whoami.home.arpa
-  parentRefs:
-  - name: cilium
-    namespace: cilium
-  rules:
-  - backendRefs:
-    - name: whoami
-      port: 80
-    matches:
-    - path:
-        type: PathPrefix
-        value: /
----
-apiVersion: gateway.networking.k8s.io/v1
-kind: HTTPRoute
-metadata:
-  name: hubble
-  namespace: cilium
-spec:
-  hostnames:
-  - hubble.home.arpa
-  parentRefs:
-  - name: cilium
-  rules:
-  - backendRefs:
-    - name: hubble-ui
-      port: 80
-    matches:
-    - path:
-        type: PathPrefix
-        value: /

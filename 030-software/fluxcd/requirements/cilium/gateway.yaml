@@ -18,11 +18,11 @@ spec:
     name: http
     port: 80
     protocol: HTTP
-    hostname: "*.home.arpa"
+    hostname: "*.${domain}"
   # - name: https
   #   port: 443
   #   protocol: HTTPS
-  #   hostname: "*.home.arpa"
+  #   hostname: "*.${domain}"
   #   tls:
   #     mode: Terminate
   #     certificateRefs:

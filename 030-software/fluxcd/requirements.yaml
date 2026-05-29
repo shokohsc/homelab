@@ -9,7 +9,7 @@ spec:
     kind: GitRepository
     name: flux-system
   prune: true
-  path: ./03-software/fluxcd/requirements
+  path: ./030-software/fluxcd/requirements
   postBuild:
     substitute:
       domain: "home.arpa"
@@ -19,6 +19,7 @@ spec:
       subnet: "10.42.60"
       gateway: "10.42.60.1"
       kubeDns: "10.96.0.10"
+      talosSubnet: "10.42.20"
       interval: 10m
       timezone: Europe/Paris
       pollingInterval: "2"

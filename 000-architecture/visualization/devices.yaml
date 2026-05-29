@@ -1,0 +1,344 @@
+--- 
+devices:
+
+- name: Internet
+  os: ''
+  network:
+    interfaces:
+      - ipv4:
+        - 78.245.133.16 # dynamic
+        mac: []
+  role: internet
+  group: internet
+  description: Internet
+  cpu: {}
+  ram: ''
+  linkedTo: []
+
+- name: OPPO 5G CPE T1a
+  os: ''
+  network:
+    interfaces:
+      - ipv4:
+        - 192.168.1.1
+        mac:
+        - 14:9B:F3:73:C1:79
+  role: gateway
+  group: gateway
+  description: Primary gateway for the network, providing internet access
+  cpu: {}
+  ram: ''
+  linkedTo:
+    - Internet
+
+- name: Mikrotik CRS328-24P-4S+RM
+  os: RouterOS
+  network:
+    interfaces:
+      - ipv4:
+        - 192.168.1.254
+        - 10.42.10.1 # VLAN for ethernet management devices
+        - 10.42.20.1 # VLAN for kubernetes nodes
+        - 10.42.30.1 # VLAN for proxmox nodes
+        - 10.42.40.1 # VLAN for windows VMs
+        - 10.42.50.1 # VLAN for Guest devices over wifi 2.4GHZ
+        - 10.42.50.1 # VLAN for Guest devices over wifi 5GHZ
+        - 10.42.60.1 # VLAN for semi-public load balancer ips
+        - 10.42.100.1 # VLAN for IoT devices over wifi 2.4GHZ
+        - 10.42.100.1 # VLAN for IoT devices over wifi 5GHZ
+        mac:
+        - 74:4D:28:6C:AF:AF
+  role: router
+  group: router
+  description: Primary router for the network, managing VLANs and routing traffic
+  cpu: {}
+  ram: ''
+  linkedTo:
+    - OPPO 5G CPE T1a
+
+- name: TPLink Archer C7 1750
+  os: OpenWRT
+  network:
+    interfaces:
+      - ipv4:
+        - 10.42.0.90
+        - 10.42.10.1 # VLAN for Management devices over wifi 2.4GHZ
+        - 10.42.10.1 # VLAN for Management devices over wifi 5GHZ
+        - 10.42.50.1 # VLAN for Guest devices over wifi 2.4GHZ
+        - 10.42.50.1 # VLAN for Guest devices over wifi 5GHZ
+        - 10.42.100.1 # VLAN for IoT devices over wifi 2.4GHZ
+        - 10.42.100.1 # VLAN for IoT devices over wifi 5GHZ
+        mac:
+        - 3C:84:6A:AA:B5:D8
+  role: bridge wifi
+  group: router
+  description: Provides WiFi access for IoT devices and more
+  cpu: {}
+  ram: ''
+  linkedTo:
+    - Mikrotik CRS328-24P-4S+RM
+
+- name: Intel NUC i3 7th gen
+  os: Talos Linux
+  network:
+    interfaces:
+      - ipv4:
+        - 10.42.20.10
+        mac:
+        - 94:C6:91:A2:82:AD
+  role: control-plane
+  group: talos
+  description: Kubernetes control plane node
+  cpu:
+    cores: 2
+    threads: 4
+  ram: 16GB
+  linkedTo:
+    - Mikrotik CRS328-24P-4S+RM
+
+- name: Intel NUC i3 7th gen
+  os: Talos Linux
+  network:
+    interfaces:
+      - ipv4:
+        - 10.42.20.20
+        mac:
+        - 1C:69:7A:04:0B:76
+  role: control-plane
+  group: talos
+  description: Kubernetes control plane node
+  cpu:
+    cores: 2
+    threads: 4
+  ram: 16GB
+  linkedTo:
+    - Mikrotik CRS328-24P-4S+RM
+
+- name: Intel NUC i3 7th gen
+  os: Talos Linux
+  network:
+    interfaces:
+      - ipv4:
+        - 10.42.20.30
+        mac:
+        - 94:C6:91:1C:FF:2E
+  role: control-plane
+  group: talos
+  description: Kubernetes control plane node
+  cpu:
+    cores: 2
+    threads: 4
+  ram: 16GB
+  linkedTo:
+    - Mikrotik CRS328-24P-4S+RM
+
+- name: Intel NUC i3 8th gen
+  os: Talos Linux
+  network:
+    interfaces:
+      - ipv4:
+        - 10.42.20.40
+        mac:
+        - 1C:69:7A:69:D9:1E
+  role: worker
+  group: talos
+  description: Kubernetes worker node
+  cpu:
+    cores: 2
+    threads: 4
+  ram: 32GB
+  linkedTo:
+    - Mikrotik CRS328-24P-4S+RM
+
+- name: AMD Ryzen r7 1700X
+  os: Talos Linux
+  network:
+    interfaces:
+      - ipv4:
+        - 10.42.20.50
+        mac:
+        - 70:85:C2:5E:D0:D3
+  role: worker
+  group: talos
+  description: Kubernetes worker node
+  cpu:
+    cores: 8
+    threads: 16
+  ram: 16GB
+  linkedTo:
+    - Mikrotik CRS328-24P-4S+RM
+
+- name: Dell Poweredge r730
+  os: Proxmox
+  network:
+    interfaces:
+      - ipv4:
+        - 10.42.30.10
+        - ''
+        mac:
+        - 50:9A:4C:68:D9:66 # IDRAC
+        - B8:CA:3A:6C:3D:78
+        - B8:CA:3A:6C:3D:7A
+        - B8:CA:3A:6C:3D:7C # RJ45 #1
+        - B8:CA:3A:6C:3D:7D
+  role: hypervisor
+  group: proxmox
+  description: Proxmox hypervisor node
+  cpu:
+    cores: 36
+    threads: 72
+  ram: 256GB
+  linkedTo:
+    - Mikrotik CRS328-24P-4S+RM
+
+- name: AMD Ryzen r9 3950X
+  os: Proxmox
+  network:
+    interfaces:
+      - ipv4:
+        - 10.42.30.20
+        - ''
+        mac:
+        - 10:FF:E0:87:D3:5B
+        - 98:b7:85:22:6f:0f
+  role: hypervisor
+  group: proxmox
+  description: Proxmox hypervisor node
+  cpu:
+    cores: 16
+    threads: 32
+  ram: 64GB
+  linkedTo:
+    - Mikrotik CRS328-24P-4S+RM
+
+- name: AMD Ryzen r9 3950X
+  os: Proxmox
+  network:
+    interfaces:
+      - ipv4:
+        - 10.42.30.30
+        - ''
+        mac:
+        - 10:FF:E0:87:D1:3B
+        - 98:b7:85:22:6e:ac
+  role: hypervisor
+  group: proxmox
+  description: Proxmox hypervisor node
+  cpu:
+    cores: 16
+    threads: 32
+  ram: 64GB
+  linkedTo:
+    - Mikrotik CRS328-24P-4S+RM
+
+- name: JetKVM
+  os: ''
+  network:
+    interfaces:
+      - ipv4:
+        - 10.42.10.10
+        mac:
+        - 30:52:53:00:9E:0A
+  role: management
+  group: management
+  description: IpKVM through patchpanel
+  cpu: {}
+  ram: ''
+  linkedTo:
+    - Mikrotik CRS328-24P-4S+RM
+
+- name: Raspberry Pi 3B+
+  os: ''
+  network:
+    interfaces:
+      - ipv4:
+        - 10.42.50.20
+        mac:
+        - ''
+  role: worker
+  group: talos
+  description: Kubernetes ARM worker node ? (maybe just standalone computer)
+  cpu: {}
+  ram: ''
+  linkedTo:
+    - Mikrotik CRS328-24P-4S+RM
+
+- name: Apple MacBookPro M1
+  os: OSX
+  network:
+    interfaces:
+      - ipv4:
+        - 10.42.10.20
+        mac:
+        - C8:A3:62:AA:C7:1A
+  role: management
+  group: management
+  description: Management Laptop
+  cpu: {}
+  ram: ''
+  linkedTo:
+    - Mikrotik CRS328-24P-4S+RM
+
+- name: Google Chromecast 2nd gen
+  os: ''
+  network:
+    interfaces:
+      - ipv4:
+        - 10.42.50.10
+        mac:
+        - 54:60:09:4A:28:CA
+  role: guest
+  group: guest
+  description: Media client
+  cpu: {}
+  ram: ''
+  linkedTo:
+    - TPLink Archer C7 1750
+
+- name: Klover Miss Air
+  os: ''
+  network:
+    interfaces:
+      - ipv4:
+        - 10.42.100.254
+        mac:
+        - 24:0A:C4:F6:F1:C0
+  role: iot
+  group: iot
+  description: Fireplace
+  cpu: {}
+  ram: ''
+  linkedTo:
+    - TPLink Archer C7 1750
+
+- name: HP LaserJet MFP M28w
+  os: ''
+  network:
+    interfaces:
+      - ipv4:
+        - 10.42.100.10
+        mac:
+        - C4:65:16:42:3E:0E
+  role: iot
+  group: iot
+  description: Home Printer
+  cpu: {}
+  ram: ''
+  linkedTo:
+    - TPLink Archer C7 1750
+
+- name: Thermor Heating water
+  os: ''
+  network:
+    interfaces:
+      - ipv4:
+        - 10.42.100.253
+        mac:
+        - C8:C9:A3:A7:19:8B
+  role: iot
+  group: iot
+  description: Home water heating
+  cpu: {}
+  ram: ''
+  linkedTo:
+    - TPLink Archer C7 1750
