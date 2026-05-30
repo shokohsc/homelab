@@ -1,0 +1,14 @@
+---
+apiVersion: config.gatekeeper.sh/v1alpha1
+kind: Config
+metadata:
+  name: config
+spec:
+  match:
+    - excludedNamespaces:
+        - cilium
+        - flux-system
+        - gatekeeper-system
+        - kube-system
+        - kube-*
+      processes: ["*"]
