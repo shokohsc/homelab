@@ -10,7 +10,7 @@ spec:
   sourceRef:
     kind: GitRepository
     name: flux-system
-  path: ./030-software/fluxcd/apps
+  path: ./030-software/apps
   prune: true
   postBuild:
     substitute:
