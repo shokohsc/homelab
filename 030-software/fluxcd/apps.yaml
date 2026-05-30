@@ -12,7 +12,6 @@ spec:
     name: flux-system
   path: ./030-software/fluxcd/apps
   prune: true
-  validation: client
   postBuild:
     substitute:
       domain: "home.arpa"
