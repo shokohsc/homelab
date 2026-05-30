@@ -20,8 +20,12 @@ portSelector:
     - 50000
   protocol: tcp
 ingress:
-  - subnet: 0.0.0.0/0
-  - subnet: ::/0
+{{- range $subnet := .ClusterConfig.ClusterNetwork.ServiceSubnet }}
+  - subnet: {{ $subnet }}
+  - subnet: ${TALOS_SUBNET}.0/24
+  - subnet: ${MGMT_SUBNET}.0/24
+{{- end -}}
+{{- if ne .MachineConfig.MachineType "worker" }}
 ---
 apiVersion: v1alpha1
 kind: NetworkRuleConfig
@@ -42,7 +46,7 @@ portSelector:
   protocol: tcp
 ingress:
   - subnet: 0.0.0.0/0
-  - subnet: ::/0
+  # - subnet: ::/0
 ---
 apiVersion: v1alpha1
 kind: NetworkRuleConfig
@@ -55,6 +59,7 @@ ingress:
   - subnet: $TALOS_SUBNET.10/32
   - subnet: $TALOS_SUBNET.20/32
   - subnet: $TALOS_SUBNET.30/32
+{{- end }}
 ---
 apiVersion: v1alpha1
 kind: NetworkRuleConfig

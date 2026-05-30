@@ -28,6 +28,7 @@ patches:
   - "@./patches/cluster.yaml"
   - "@./patches/machine.yaml"
   - "@./patches/network.yaml"
+  # - "@./patches/firewall.yaml"
 nodes:
   - controlPlane: true
     hostname: sombra
@@ -46,6 +47,9 @@ nodes:
     hostname: mercy
     installDisk: /dev/nvme0n1
     ipAddress: ${TALOS_SUBNET}.40
+    networkInterfaces:
+      - interface: eno1
+        dhcp: true
     nodeLabels:
       topology.kubernetes.io/region: "metal"
       topology.kubernetes.io/zone: "nuc"
@@ -58,10 +62,6 @@ nodes:
                     - effect: NoSchedule
                       key: node.kubernetes.io/nuc
                       value: mercy
-            network:
-              interfaces:
-                - interface: eno1
-                  dhcp: true
     schematic:
       customization:
         systemExtensions:
@@ -78,9 +78,28 @@ nodes:
     hostname: winston
     installDisk: /dev/nvme0n1
     ipAddress: ${TALOS_SUBNET}.50
+    networkInterfaces:
+      - interface: eno1
+        dhcp: true
+      - interface: eth0
+        dhcp: true
     nodeLabels:
       topology.kubernetes.io/region: "metal"
       topology.kubernetes.io/zone: "ryzen"
+    patches:
+      - |-
+          machine:
+            kubelet:
+              nodeIP:
+                validSubnets:
+                  - ${TALOS_SUBNET}.0/24
+      - |-
+          apiVersion: v1alpha1
+          kind: VLANConfig
+          name: eno1.30
+          vlanID: 30
+          parent: eno1
+          up: true
     schematic:
       customization:
         extraKernelArgs:
@@ -167,6 +186,9 @@ controlPlane:
         - nf_conntrack_max=131072
   # nameservers:
   #   - ${TALOS_SUBNET}.1
+  networkInterfaces:
+    - interface: eth0
+      dhcp: true
   nodeLabels:
     node.kubernetes.io/exclude-from-external-load-balancers: ""
   patches:
@@ -195,6 +217,9 @@ worker:
         - nf_conntrack_max=131072
   # nameservers:
   #   - ${TALOS_SUBNET}.1
+  networkInterfaces:
+    - interface: eth0
+      dhcp: true
   patches:
     - |-
       machine:

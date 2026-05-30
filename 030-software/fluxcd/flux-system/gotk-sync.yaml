@@ -6,7 +6,7 @@ metadata:
   name: flux-system
   namespace: flux-system
 spec:
-  interval: 1m0s
+  # interval: 1m0s
   ref:
     branch: main
   secretRef:
@@ -19,23 +19,9 @@ metadata:
   name: flux-system
   namespace: flux-system
 spec:
-  interval: 10m0s
+  # interval: 10m0s
   path: ./030-software/fluxcd
   prune: true
   sourceRef:
     kind: GitRepository
     name: flux-system
-  postBuild:
-    substitute:
-      domain: "home.arpa"
-      publicDomain: "shokohsc.com"
-      vip: "10.42.60.2"
-      cidr: "10.42.60.0/24"
-      subnet: "10.42.60"
-      gateway: "10.42.60.1"
-      kubeDns: "10.96.0.10"
-      talosSubnet: "10.42.20"
-      interval: 10m
-      timezone: Europe/Paris
-      pollingInterval: "2"
-      cooldownPeriod: "180"

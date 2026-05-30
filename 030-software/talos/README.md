@@ -107,6 +107,7 @@ The configuration uses several environment variables as placeholders. Create a `
 ```bash
 export TALOS_DOMAIN="home.arpa"        # Your domain
 export TALOS_SUBNET="10.42.20"         # Your cluster subnet
+export MGMT_SUBNET="10.42.10"         # Your management subnet
 # Optional: export CA_CERT if using custom CA certificates
 ```
 
