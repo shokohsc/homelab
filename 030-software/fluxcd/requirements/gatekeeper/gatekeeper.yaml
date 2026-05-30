@@ -15,6 +15,9 @@ metadata:
   name: gatekeeper
 spec:
   interval: ${interval}
+  dependsOn:
+    - name: requirements
+      namespace: flux-system
   wait: true
   prune: true
   sourceRef:
