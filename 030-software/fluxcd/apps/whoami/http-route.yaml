@@ -5,7 +5,7 @@ metadata:
   name: whoami
 spec:
   hostnames:
-  - whoami.${home.arpa}
+  - whoami.${domain}
   parentRefs:
   - name: cilium
     namespace: cilium
