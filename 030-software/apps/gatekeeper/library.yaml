@@ -1,0 +1,24 @@
+---
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: GitRepository
+metadata:
+  name: gatekeeper-library
+spec:
+  interval: ${interval}
+  url: https://github.com/open-policy-agent/gatekeeper-library
+  ref:
+    branch: master
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: gatekeeper-library
+spec:
+  interval: ${interval}
+  wait: true
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: gatekeeper-library
+  path: ./library
+  targetNamespace: gatekeeper-system
