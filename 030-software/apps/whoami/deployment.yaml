@@ -45,6 +45,10 @@ spec:
               name: http
           args:
             - --port=8080
+          resources:
+            limits: 
+              cpu: 100m
+              memory: 64Mi
       tolerations:
         - key: "node.kubernetes.io/nuc"
           operator: "Exists"
