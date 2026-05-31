@@ -38,3 +38,7 @@ spec:
               echo 4096 > "$flow"
           done
           sleep infinity
+      tolerations:
+        - effect: NoSchedule
+          key: node.kubernetes.io/nuc
+          operator: Exists
