@@ -11,3 +11,157 @@ spec:
   parameters:
     cpu: "200m"
     memory: "1Gi"
+---
+apiVersion: constraints.gatekeeper.sh/v1beta1
+kind: K8sPSPHostFilesystem
+metadata:
+  name: no-host-paths
+spec:
+  match:
+    kinds:
+      - apiGroups: [""]
+        kinds: ["Pod"]
+---
+apiVersion: constraints.gatekeeper.sh/v1beta1
+kind: K8sPSPHostNamespace
+metadata:
+  name: psp-host-namespace
+spec:
+  match:
+    kinds:
+      - apiGroups: [""]
+        kinds: ["Pod"]
+---
+apiVersion: constraints.gatekeeper.sh/v1beta1
+kind: K8sPSPPrivilegedContainer
+metadata:
+  name: psp-privileged-container
+spec:
+  match:
+    kinds:
+      - apiGroups: [""]
+        kinds: ["Pod"]
+    excludedNamespaces: ["kube-system"]
+  # parameters:
+  #   exemptImages:
+  #   - "safeimages.com/*"
+---
+apiVersion: constraints.gatekeeper.sh/v1beta1
+kind: K8sPSPAllowPrivilegeEscalationContainer
+metadata:
+  name: psp-allow-privilege-escalation-container
+spec:
+  match:
+    kinds:
+      - apiGroups: [""]
+        kinds: ["Pod"]
+  # parameters:
+  #   exemptImages: ["safeimages.com/*"]
+---
+apiVersion: constraints.gatekeeper.sh/v1beta1
+kind: K8sPSPReadOnlyRootFilesystem
+metadata:
+  name: psp-readonlyrootfilesystem
+spec:
+  match:
+    kinds:
+      - apiGroups: [""]
+        kinds: ["Pod"]
+  # parameters:
+  #   exemptImages:
+  #   - "specialprogram"
+---
+apiVersion: constraints.gatekeeper.sh/v1beta1
+kind: K8sPSPCapabilities
+metadata:
+  name: psp-capabilities-baseline
+spec:
+  match:
+    kinds:
+      - apiGroups: [""]
+        kinds: ["Pod"]
+  parameters:
+    allowedCapabilities:
+    - AUDIT_WRITE
+    - CHOWN
+    - DAC_OVERRIDE
+    - FOWNER
+    - FSETID
+    - KILL
+    - MKNOD
+    - NET_BIND_SERVICE
+    - NET_RAW
+    - SETFCAP
+    - SETGID
+    - SETPCAP
+    - SETUID
+    - SYS_CHROOT
+---
+apiVersion: constraints.gatekeeper.sh/v1beta1
+kind: K8sPSPAllowedUsers
+metadata:
+  name: psp-pods-allowed-user-ranges
+spec:
+  match:
+    kinds:
+      - apiGroups: [""]
+        kinds: ["Pod"]
+  parameters:
+    runAsUser:
+      rule: MustRunAsNonRoot
+    runAsGroup:
+      rule: RunAsAny
+    supplementalGroups:
+      rule: RunAsAny
+    fsGroup:
+      rule: RunAsAny
+---
+apiVersion: constraints.gatekeeper.sh/v1beta1
+kind: K8sDisallowAnonymous
+metadata:
+  name: no-anonymous
+spec:
+  match:
+    kinds:
+      - apiGroups: ["rbac.authorization.k8s.io"]
+        kinds: ["ClusterRoleBinding"]
+      - apiGroups: ["rbac.authorization.k8s.io"]
+        kinds: ["RoleBinding"]
+  parameters:
+    disallowAuthenticated: true
+---
+apiVersion: constraints.gatekeeper.sh/v1beta1
+kind: K8sDisallowAnonymous
+metadata:
+  name: no-anonymous
+spec:
+  match:
+    kinds:
+      - apiGroups: ["rbac.authorization.k8s.io"]
+        kinds: ["ClusterRoleBinding"]
+      - apiGroups: ["rbac.authorization.k8s.io"]
+        kinds: ["RoleBinding"]
+  parameters:
+    allowedRoles: 
+      - cluster-role-1
+---
+apiVersion: constraints.gatekeeper.sh/v1beta1
+kind: K8sPSPVolumeTypes
+metadata:
+  name: psp-volume-types
+spec:
+  match:
+    kinds:
+      - apiGroups: [""]
+        kinds: ["Pod"]
+  parameters:
+    volumes:
+    # - "*" # * may be used to allow all volume types
+    - configMap
+    - csi
+    - downwardAPI
+    - emptyDir
+    - ephemeral
+    - persistentVolumeClaim
+    - projected
+    - secret
