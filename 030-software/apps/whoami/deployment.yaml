@@ -36,6 +36,7 @@ spec:
           image: containous/whoami
           securityContext:
             allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
             runAsNonRoot: true
             capabilities:
               drop:
