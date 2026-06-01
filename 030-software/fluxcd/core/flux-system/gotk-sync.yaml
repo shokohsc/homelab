@@ -19,10 +19,9 @@ metadata:
   name: flux-system
   namespace: flux-system
 spec:
-  interval: 1m0s
+  interval: 10m0s
   path: ./030-software/fluxcd/core
   prune: true
-  wait: true
   sourceRef:
     kind: GitRepository
     name: flux-system
