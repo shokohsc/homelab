@@ -8,7 +8,7 @@ patches:
       apiVersion: apps/v1
       kind: Deployment
       metadata:
-        name: cert-manager
+        name: all
       spec:
         template:
           spec:
@@ -33,7 +33,7 @@ patches:
       apiVersion: apps/v1
       kind: Deployment
       metadata:
-        name: cert-manager-cainjector
+        name: cert-manager
       spec:
         template:
           spec:
@@ -52,7 +52,7 @@ patches:
       apiVersion: apps/v1
       kind: Deployment
       metadata:
-        name: cert-manager-webhook
+        name: cert-manager-cainjector
       spec:
         template:
           spec:
@@ -71,7 +71,7 @@ patches:
       apiVersion: apps/v1
       kind: Deployment
       metadata:
-        name: all
+        name: cert-manager-webhook
       spec:
         template:
           spec:
