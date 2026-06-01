@@ -1,16 +1,14 @@
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: apps
+  name: requirements
   namespace: flux-system
 spec:
-  interval: 1h0m0s
-  dependsOn:
-    - name: requirements
   sourceRef:
     kind: GitRepository
     name: flux-system
-  path: ./030-software/apps
+  path: ./030-software/fluxcd/requirements
+  wait: true
   prune: true
   postBuild:
     substitute:
