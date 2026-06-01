@@ -6,6 +6,7 @@ metadata:
   name: flux-system
   namespace: flux-system
 spec:
+  interval: 1m0s
   ref:
     branch: main
   secretRef:
@@ -18,6 +19,7 @@ metadata:
   name: flux-system
   namespace: flux-system
 spec:
+  interval: 1m0s
   path: ./030-software/fluxcd/core
   prune: true
   wait: true
