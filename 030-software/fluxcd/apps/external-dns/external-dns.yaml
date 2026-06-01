@@ -42,6 +42,11 @@ spec:
       seccompProfile:
         type: RuntimeDefault
 
+    resources:
+      limits:
+        cpu: 100m
+        memory: 64Mi
+
     provider:
       name: webhook
       webhook:
@@ -94,6 +99,10 @@ spec:
             port: http-webhook
           initialDelaySeconds: 10
           timeoutSeconds: 5
+        resources:
+          limits:
+            cpu: 100m
+            memory: 64Mi
 
     extraArgs:
       - --ignore-ingress-tls-spec
