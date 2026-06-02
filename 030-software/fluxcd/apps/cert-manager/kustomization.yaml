@@ -3,3 +3,4 @@ kind: Kustomization
 resources:
   - issuer.yaml
   - secret.yaml
+  - trust-manager.yaml

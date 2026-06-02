@@ -193,7 +193,32 @@ resource "routeros_ip_firewall_filter" "iot_no_internet" {
   log           = true
   log_prefix    = "iot_no_internet"
   comment       = "Rule 050-Block-IoT-Internet"
-  place_before  = routeros_ip_firewall_filter.deny_inter_vlan.id
+  place_before  = routeros_ip_firewall_filter.allow_isp_ui.id
+  lifecycle {
+    ignore_changes = [
+      disabled
+    ]
+  }
+}
+
+############################################
+##   Allow ISP UI from Management only    ##
+############################################
+
+resource "routeros_ip_firewall_filter" "allow_isp_ui" {
+  disabled    = var.disable_firewall_rules
+  chain       = "forward"
+  action      = "drop"
+  src_address = "!${local.vlan_cidrs[10]}"
+  dst_address = "192.168.1.1"
+  protocol    = "tcp"
+  dst_port    = "80"
+  log         = true
+  log_prefix  = "allow_isp_ui"
+  comment     = "Rule 055-Allow-ISP-UI-From-Management-Only"
+  # in_interface  = "ether1"
+  # out_interface = "WAN"
+  place_before = routeros_ip_firewall_filter.deny_inter_vlan.id
   lifecycle {
     ignore_changes = [
       disabled
