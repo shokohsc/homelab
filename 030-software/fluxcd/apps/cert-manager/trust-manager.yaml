@@ -21,4 +21,8 @@ spec:
   chartRef:
     kind: OCIRepository
     name: trust-manager
-  # values:
+  values:
+    resources:
+      limits:
+        cpu: 100m
+        memory: 128Mi
