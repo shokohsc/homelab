@@ -25,6 +25,8 @@ spec:
       containers:
         - name: blocky
           image: spx01/blocky:v0.26
+          securityContext:
+            readOnlyRootFilesystem: true
           env:
             - name: TZ
               value: ${timezone}
