@@ -4,3 +4,4 @@ namespace: cilium
 resources:
   - bgp.yaml
   - gateway.yaml
+  - http-route.yaml
