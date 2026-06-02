@@ -1,17 +1,17 @@
 ## Storage (create zfs pool from ubuntu beforehand)
-    sudo zpool create -f -o ashift=12 -o autotrim=on \
+    zpool create -f -o ashift=12 -o autotrim=on \
       -O compression=lz4 -O atime=off -O xattr=sa -O acltype=posixacl \
       tank \
       raidz2 \
-        /dev/disk/by-id/wwn-0x5000cca2559ee368 \
-        /dev/disk/by-id/wwn-0x5000c500843cd9bf \
-        /dev/disk/by-id/wwn-0x5000cca255456054 \
-        /dev/disk/by-id/wwn-0x5000c50084480e57 \
-        /dev/disk/by-id/wwn-0x5000cca255480ce4 \
-        /dev/disk/by-id/wwn-0x5000c500843cdf9b \
+        /dev/disk/by-id/scsi-35000cca2559ee368 \
+        /dev/disk/by-id/scsi-35000cca255456054 \
+        /dev/disk/by-id/scsi-35000cca255480ce4 \
+        /dev/disk/by-id/scsi-35000cca255449f70 \
+        /dev/disk/by-id/scsi-35000c500843cd9bf \
+        /dev/disk/by-id/scsi-35000c50084480e57 \
       spare \
-        /dev/disk/by-id/wwn-0x5000cca255449f70 \
-        /dev/disk/by-id/wwn-0x5000c500843d5717
+        /dev/disk/by-id/scsi-35000c500843cdf9b \
+        /dev/disk/by-id/scsi-35000c500843d5717
     
     sudo zfs create -o mountpoint=/mnt/tank tank/tank
 
@@ -38,3 +38,12 @@ sudo dd if=/dev/zero of=/dev/sde  bs=512  count=1
 sudo dd if=/dev/zero of=/dev/sdf  bs=512  count=1
 sudo dd if=/dev/zero of=/dev/sdg  bs=512  count=1
 sudo dd if=/dev/zero of=/dev/sdh  bs=512  count=1
+
+scsi-35000c500843cd9bf -> ../../sde
+scsi-35000c500843cdf9b -> ../../sdg
+scsi-35000c500843d5717 -> ../../sdh
+scsi-35000c50084480e57 -> ../../sdf
+scsi-35000cca255449f70 -> ../../sdd
+scsi-35000cca255456054 -> ../../sdb
+scsi-35000cca255480ce4 -> ../../sdc
+scsi-35000cca2559ee368 -> ../../sda
