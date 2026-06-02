@@ -1,0 +1,55 @@
+---
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: OCIRepository
+metadata:
+  name: cert-manager
+spec:
+  interval: ${interval}
+  url: oci://quay.io/jetstack/charts/cert-manager
+  layerSelector:
+    mediaType: "application/vnd.cncf.helm.chart.content.v1.tar+gzip"
+    operation: copy
+  ref:
+    semver: "^v1.20.2"
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: cert-manager
+spec:
+  interval: ${interval}
+  chartRef:
+    kind: OCIRepository
+    name: cert-manager
+  values:
+    crds:
+      enabled: true
+
+    resources:
+      requests:
+        cpu: 2m
+        memory: 128M
+      limits:
+        cpu: 100m
+        memory: 512M
+    webhook:
+      resources:
+        requests:
+          cpu: 1m
+          memory: 13M
+        limits:
+          cpu: 100m
+          memory: 512M
+    cainjector:
+      resources:
+        requests:
+          cpu: 3m
+          memory: 128M
+        limits:
+          cpu: 100m
+          memory: 512M
+
+    tolerations:
+      - key: "node.kubernetes.io/nuc"
+        operator: "Exists"
+        effect: "NoSchedule"
