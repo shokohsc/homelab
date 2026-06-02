@@ -9,8 +9,8 @@ spec:
       - apiGroups: [""]
         kinds: ["Pod"]
   parameters:
-    cpu: "200m"
-    memory: "1Gi"
+    cpu: "2000m"
+    memory: "4096Gi"
 ---
 apiVersion: constraints.gatekeeper.sh/v1beta1
 kind: K8sPSPHostFilesystem
