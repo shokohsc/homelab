@@ -26,3 +26,8 @@ spec:
       limits:
         cpu: 100m
         memory: 128Mi
+    defaultPackage:
+      resources:
+        limits:
+          cpu: 100m
+          memory: 128Mi
