@@ -3,6 +3,7 @@ kind: Kustomization
 namespace: gatekeeper-system
 resources:
   - https://raw.githubusercontent.com/open-policy-agent/gatekeeper/v3.22.2/deploy/gatekeeper.yaml
+  - library.yaml
 patches:
   - patch: |
       apiVersion: apps/v1
