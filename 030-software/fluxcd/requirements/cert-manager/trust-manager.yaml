@@ -22,12 +22,6 @@ spec:
     kind: OCIRepository
     name: trust-manager
   values:
-    # app: 
-    #   webhook: 
-    #     tls: 
-    #       approverPolicy: 
-    #         enabled: true
-    #         certManagerNamespace: cert-manager
     resources:
       limits:
         cpu: 100m

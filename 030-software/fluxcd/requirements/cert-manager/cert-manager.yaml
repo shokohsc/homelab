@@ -25,6 +25,9 @@ spec:
     crds:
       enabled: true
 
+    config:
+      enableGatewayAPI: true
+
     resources:
       requests:
         cpu: 2m

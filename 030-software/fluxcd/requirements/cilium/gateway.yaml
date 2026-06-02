@@ -4,30 +4,30 @@ kind: Gateway
 metadata:
   name: cilium
   namespace: cilium
-  # annotations:
-  #   cert-manager.io/cluster-issuer: k3d
+  annotations:
+    cert-manager.io/cluster-issuer: ca-cluster-issuer
 spec:
   gatewayClassName: cilium
   infrastructure:
     labels:
       vlan: lb
   listeners:
-  - allowedRoutes:
-      namespaces:
-        from: All
-    name: http
+  - name: http
     port: 80
     protocol: HTTP
     hostname: "*.${domain}"
-  # - name: https
-  #   port: 443
-  #   protocol: HTTPS
-  #   hostname: "*.${domain}"
-  #   tls:
-  #     mode: Terminate
-  #     certificateRefs:
-  #     - kind: Secret
-  #       name: wildcard
-  #   allowedRoutes:
-  #     namespaces:
-  #       from: All
+    allowedRoutes:
+      namespaces:
+        from: All
+  - name: https
+    port: 443
+    protocol: HTTPS
+    hostname: "*.${domain}"
+    allowedRoutes:
+      namespaces:
+        from: All
+    tls:
+      mode: Terminate
+      certificateRefs:
+      - kind: Secret
+        name: gateway-tls
