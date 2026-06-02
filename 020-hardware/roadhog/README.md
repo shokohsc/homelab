@@ -57,3 +57,5 @@ sudo dd if=/dev/zero of=/dev/sdh  bs=512  count=1
  /dev/disk/by-id/scsi-35000cca2554557f0 -> ../../sdf 
  /dev/disk/by-id/scsi-35000cca2553f3b7c -> ../../sdg 
  /dev/disk/by-id/scsi-35000cca2554262f0 -> ../../sdh 
+
+docker run --rm -it --network=host nicolaka/netshoot sh
