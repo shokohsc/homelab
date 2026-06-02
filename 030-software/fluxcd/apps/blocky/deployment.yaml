@@ -22,33 +22,44 @@ spec:
       dnsConfig:
         nameservers:
         - 1.1.1.1
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        seccompProfile:
+          type: RuntimeDefault
       containers:
         - name: blocky
-          image: spx01/blocky:v0.26
+          image: spx01/blocky:v0.30.0
           securityContext:
             allowPrivilegeEscalation: false
             readOnlyRootFilesystem: true
+            runAsNonRoot: true
+            capabilities:
+              drop:
+                - ALL
           env:
             - name: TZ
               value: ${timezone}
           ports:
             - name: dns-udp
-              containerPort: 53
+              containerPort: 8053
               protocol: UDP
             - name: dns-tcp
-              containerPort: 53
+              containerPort: 8053
               protocol: TCP
             - name: http
-              containerPort: 4000
+              containerPort: 8000
               protocol: TCP
             - name: doh
-              containerPort: 443
+              containerPort: 8443
               protocol: TCP
             - name: dot-udp
-              containerPort: 853
+              containerPort: 8853
               protocol: UDP
             - name: dot-tcp
-              containerPort: 853
+              containerPort: 8853
               protocol: TCP
           volumeMounts:
             - name: config
@@ -89,3 +100,7 @@ spec:
                   values:
                   - blocky
               topologyKey: kubernetes.io/hostname
+      tolerations:
+        - key: "node.kubernetes.io/nuc"
+          operator: "Exists"
+          effect: "NoSchedule"

@@ -191,10 +191,10 @@ blocking:
       # - countries
 
 ports:
-  https: 443
-  http: 4000
-  dns: 53
-  tls: 853
+  https: 8443
+  http: 8000
+  dns: 8053
+  tls: 8853
 
 
 prometheus:
