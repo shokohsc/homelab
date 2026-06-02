@@ -1,0 +1,120 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: blocky-udp
+  annotations:
+    metallb.universe.tf/allow-shared-ip: "true"
+    metallb.universe.tf/address-pool: "dns"
+  labels:
+    app.kubernetes.io/name: blocky
+spec:
+  type: LoadBalancer
+  externalTrafficPolicy: Cluster
+  ports:
+    - port: 53
+      targetPort: dns-udp
+      protocol: UDP
+      name: dns-udp
+    - port: 853
+      targetPort: dot-udp
+      protocol: UDP
+      name: dot-udp
+  selector:
+    app.kubernetes.io/name: blocky
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: blocky-tcp
+  annotations:
+    metallb.universe.tf/allow-shared-ip: "true"
+    metallb.universe.tf/address-pool: "dns"
+  labels:
+    app.kubernetes.io/name: blocky
+spec:
+  type: LoadBalancer
+  externalTrafficPolicy: Cluster
+  ports:
+    - port: 53
+      targetPort: dns-tcp
+      protocol: TCP
+      name: dns-tcp
+    - port: 853
+      targetPort: dot-tcp
+      protocol: TCP
+      name: dot-tcp
+    - port: 443
+      targetPort: doh
+      protocol: TCP
+      name: doh
+  selector:
+    app.kubernetes.io/name: blocky
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: blocky-failover-udp
+  annotations:
+    metallb.universe.tf/allow-shared-ip: "true"
+    metallb.universe.tf/address-pool: "dns-fail-over"
+  labels:
+    app.kubernetes.io/name: blocky
+spec:
+  type: LoadBalancer
+  externalTrafficPolicy: Cluster
+  ports:
+    - port: 53
+      targetPort: dns-udp
+      protocol: UDP
+      name: dns-udp
+    - port: 853
+      targetPort: dot-udp
+      protocol: UDP
+      name: dot-udp
+  selector:
+    app.kubernetes.io/name: blocky
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: blocky-failover-tcp
+  annotations:
+    metallb.universe.tf/allow-shared-ip: "true"
+    metallb.universe.tf/address-pool: "dns-fail-over"
+  labels:
+    app.kubernetes.io/name: blocky
+spec:
+  type: LoadBalancer
+  externalTrafficPolicy: Cluster
+  ports:
+    - port: 53
+      targetPort: dns-tcp
+      protocol: TCP
+      name: dns-tcp
+    - port: 853
+      targetPort: dot-tcp
+      protocol: TCP
+      name: dot-tcp
+    - port: 443
+      targetPort: doh
+      protocol: TCP
+      name: doh
+  selector:
+    app.kubernetes.io/name: blocky
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: blocky
+  labels:
+    app.kubernetes.io/name: blocky
+spec:
+  type: ClusterIP
+  ports:
+    - port: 4000
+      targetPort: http
+      protocol: TCP
+      name: http
+  selector:
+    app.kubernetes.io/name: blocky

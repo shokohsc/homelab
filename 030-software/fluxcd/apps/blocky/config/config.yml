@@ -1,0 +1,248 @@
+upstreams:
+  init:
+    strategy: fast
+  groups:
+    default:
+      # - https://d.adguard-dns.com/dns-query/6abe3635
+      # - https://d.adguard-dns.com/dns-query/lnx-9ff2f2e9-parano
+      # - https://d.adguard-dns.com/dns-query/lnx-71a98cd8-openbar
+      - https://1.1.1.1/dns-query
+      # - https://cloudflare-dns.com/dns-query
+      # - https://dns11.quad9.net:5053/dns-query
+
+bootstrapDns:
+  # - upstream: https://d.adguard-dns.com/dns-query/6abe3635
+  #   ips:
+  #     - 94.140.14.49
+  # - upstream: https://d.adguard-dns.com/dns-query/lnx-9ff2f2e9-parano
+  #   ips:
+  #     - 94.140.14.49
+  # - upstream: https://d.adguard-dns.com/dns-query/lnx-71a98cd8-openbar
+  #   ips:
+  #     - 94.140.14.49
+  - upstream: https://1.1.1.1/dns-query
+    ips:
+      - 1.1.1.1
+      - 1.0.0.1
+  # - upstream: https://cloudflare-dns.com/dns-query
+  #   ips:
+  #     - 104.16.248.249
+  #     - 104.16.249.249
+  # - upstream: https://dns11.quad9.net:5053/dns-query
+  #   ips:
+  #     - 9.9.9.11
+  #     - 149.112.112.11
+  - upstream: 10.233.0.3
+    ips:
+    - 10.233.0.3
+
+blocking:
+  denylists:
+    general:
+      - https://github.com/TG-Twilight/AWAvenue-Ads-Rule/raw/refs/heads/main/Filters/AWAvenue-Ads-Rule-RouterOS-Adlist.txt
+      - https://pgl.yoyo.org/adservers/serverlist.php?hostformat=hosts&showintro=1&mimetype=plaintext
+      # - https://github.com/badmojr/1Hosts/releases/download/latest/1hosts-Pro_domains.txt
+      - https://someonewhocares.org/hosts/zero/hosts
+      # - https://raw.githubusercontent.com/hagezi/dns-blocklists/main/wildcard/multi.txt
+      - https://raw.githubusercontent.com/hagezi/dns-blocklists/main/wildcard/popupads.txt
+      - https://raw.githubusercontent.com/hagezi/dns-blocklists/main/wildcard/gambling.txt
+      - https://big.oisd.nl/domainswild
+      - https://github.com/StevenBlack/hosts/raw/refs/heads/master/hosts
+    # security:
+      - https://malware-filter.gitlab.io/malware-filter/phishing-filter-wildcard.txt
+      # - https://github.com/DandelionSprout/adfilt/raw/refs/heads/master/Alternate%20versions%20Anti-Malware%20List/AntiMalwareDomains.txt
+      - https://github.com/hoshsadiq/adblock-nocoin-list/raw/refs/heads/master/hosts.txt
+      - https://phishing.army/download/phishing_army_blocklist_extended.txt
+      - https://github.com/durablenapkin/scamblocklist/raw/refs/heads/master/hosts.txt
+      - https://github.com/ShadowWhisperer/BlockLists/raw/refs/heads/master/Lists/Malware
+      - https://github.com/AssoEchap/stalkerware-indicators/raw/refs/heads/master/generated/hosts
+      # - https://github.com/mitchellkrogza/The-Big-List-of-Hacked-Malware-Web-Sites/raw/refs/heads/master/hosts
+      - https://urlhaus.abuse.ch/downloads/hostfile/
+      - https://raw.githubusercontent.com/hagezi/dns-blocklists/main/wildcard/fake.txt
+      - https://raw.githubusercontent.com/hagezi/dns-blocklists/main/wildcard/tif.txt
+      # - https://raw.githubusercontent.com/hagezi/dns-blocklists/main/wildcard/doh-vpn-proxy-bypass.txt
+      - https://raw.githubusercontent.com/hagezi/dns-blocklists/main/wildcard/nosafesearch.txt
+      - https://raw.githubusercontent.com/hagezi/dns-blocklists/main/wildcard/dyndns.txt
+      - https://raw.githubusercontent.com/hagezi/dns-blocklists/main/wildcard/hoster.txt
+    # other:
+      - https://github.com/Perflyst/PiHoleBlocklist/raw/refs/heads/master/SmartTV.txt
+    # privacy:
+      - https://raw.githubusercontent.com/hagezi/dns-blocklists/main/wildcard/native.amazon.txt
+      - https://raw.githubusercontent.com/hagezi/dns-blocklists/main/wildcard/native.apple.txt
+      - https://raw.githubusercontent.com/hagezi/dns-blocklists/main/wildcard/native.huawei.txt
+      - https://raw.githubusercontent.com/hagezi/dns-blocklists/main/wildcard/native.winoffice.txt
+      - https://raw.githubusercontent.com/hagezi/dns-blocklists/main/wildcard/native.samsung.txt
+      - https://raw.githubusercontent.com/hagezi/dns-blocklists/main/wildcard/native.tiktok.extended.txt
+      - https://raw.githubusercontent.com/hagezi/dns-blocklists/main/wildcard/native.lgwebos.txt
+      - https://raw.githubusercontent.com/hagezi/dns-blocklists/main/wildcard/native.roku.txt
+      - https://raw.githubusercontent.com/hagezi/dns-blocklists/main/wildcard/native.vivo.txt
+      - https://raw.githubusercontent.com/hagezi/dns-blocklists/main/wildcard/native.oppo-realme.txt
+      - https://raw.githubusercontent.com/hagezi/dns-blocklists/main/wildcard/native.xiaomi.txt
+
+    # malware:
+    #   - https://s3.amazonaws.com/lists.disconnect.me/simple_malvertising.txt
+    #   - https://v.firebog.net/hosts/Prigent-Malware.txt
+    #   - https://gitlab.com/quidsup/notrack-blocklists/raw/master/notrack-malware.txt
+    #   - https://bitbucket.org/ethanr/dns-blacklists/raw/8575c9f96e5b4a1308f2f12394abd86d0927a4a0/bad_lists/Mandiant_APT1_Report_Appendix_D.txt
+    # tracking:
+    #   - https://s3.amazonaws.com/lists.disconnect.me/simple_tracking.txt
+    #   - https://v.firebog.net/hosts/Easyprivacy.txt
+    #   - https://gitlab.com/quidsup/notrack-blocklists/raw/master/notrack-blocklist.txt
+    #   - https://raw.githubusercontent.com/kboghdady/youTube_ads_4_pi-hole/master/youtubelist.txt
+    #   - https://raw.githubusercontent.com/crazy-max/WindowsSpyBlocker/master/data/hosts/spy.txt
+    # porn:
+    #   - https://raw.githubusercontent.com/chadmayfield/my-pihole-blocklists/master/lists/pi_blocklist_porn_all.list
+    # ads:
+    #   - https://raw.githubusercontent.com/StevenBlack/hosts/master/alternates/fakenews/hosts
+    #   - https://raw.githubusercontent.com/StevenBlack/hosts/master/data/add.Spam/hosts
+    #   - https://raw.githubusercontent.com/StevenBlack/hosts/master/data/UncheckyAds/hosts
+    #   - https://s3.amazonaws.com/lists.disconnect.me/simple_ad.txt
+    #   - https://v.firebog.net/hosts/Prigent-Ads.txt
+    #   - https://raw.githubusercontent.com/anudeepND/blacklist/master/adservers.txt
+    #   - https://pgl.yoyo.org/adservers/serverlist.php?hostformat=nohtml&showintro=0
+    # global:
+    #   - https://raw.githubusercontent.com/StevenBlack/hosts/master/hosts
+    #   - https://raw.githubusercontent.com/StevenBlack/hosts/master/data/KADhosts/hosts
+    #   - https://raw.githubusercontent.com/StevenBlack/hosts/master/data/add.Risk/hosts
+    #   - https://raw.githubusercontent.com/StevenBlack/hosts/master/data/add.2o7Net/hosts
+    #   - https://v.firebog.net/hosts/AdguardDNS.txt
+    #   - https://v.firebog.net/hosts/Easylist.txt
+    #   - https://v.firebog.net/hosts/static/w3kbl.txt
+    #   - http://sysctl.org/cameleon/hosts
+    #   - https://github.com/fabriziosalmi/blacklists/releases/download/latest/blacklist.txt
+    #   - https://github.com/hagezi/dns-blocklists/raw/main/domains/doh.txt
+    #   - https://github.com/hagezi/dns-blocklists/raw/main/domains/multi.txt
+
+    # custom:
+      - |
+        /uber\.(com|fr)$/
+        /ubereats\.(com|fr)$/
+        /wsup\.ai$/
+    # countries:
+      - |
+        # /^(.+)\.ru$/
+        /^(.+)\.cn$/
+
+  allowlists:
+    general:
+    # crypto:
+      - |
+        binance.com
+        kraken.com
+    # marvel_snap:
+      - |
+        *.unity3d.com
+        *.braze.com
+        *.isnssdk.com
+    # torrent:
+      - https://raw.githubusercontent.com/hagezi/dns-blocklists/main/wildcard/anti.piracy.txt
+      # - https://gist.github.com/shokohsc/e0293c2fc39be738f2edaf53bd111308/raw/cb6f6469a9700fd55992e6d006059672d1cad922/gistfile1.txt
+      - http://shell2http.shell2http.svc.cluster.local/trackers
+      - |
+        *.freeopenvpn.org
+        *.ipspseed.info
+        *.openproxylist.com
+        *.eztvx.to
+        *.1337x.to
+        *.torrentgalaxy.to
+        *.bunkr.ru
+        *.pixhost.to
+        *.datanodes.to
+    # general:
+      - https://github.com/SystemJargon/allowlists/raw/refs/heads/main/lists/core-allowlist.txt
+    # custom:
+      - |
+        scira.ai
+        open.spotify.com
+        d.adguard-dns.com
+        binaries.prisma.sh
+        *.trycloudflare.com
+        *.comicfiles.ru
+        *.api.brilliant-bittern.buzz
+        tailscale.com
+        *.tailscale.com
+        openvpn.net
+        *.openvpn.net
+        id.twitch.tv
+        jukeboxhq.com
+        www.orangeconnex.com
+        www.siderolabs.com
+        time.cloudflare.com
+        *.omni.${publicDomain}
+        storage.googleapis.com
+        m1xdrop.net
+        m1xdrop.com
+      - |
+        vpnzsa.edf.fr
+        config.claspws.tv
+
+
+  clientGroupsBlock:
+    default:
+      - general
+      # - security
+      # - other
+      # # - malware
+      # # - tracking
+      # # - porn
+      # # - ads
+      # # - global
+      # - custom
+      # - countries
+
+ports:
+  https: 443
+  http: 4000
+  dns: 53
+  tls: 853
+
+
+prometheus:
+  enable: true
+  path: /metrics
+
+customDNS:
+  mapping:
+    # ${publicDomain}: ${vip}
+    # sombra: ${subnet}.60
+    # lucio: ${subnet}.70
+    # zarya: ${subnet}.80
+    # pi: ${subnet}.90
+    ${domain}: ${vip}
+
+redis:
+  address: valkey.valkey:6379
+
+filtering:
+  queryTypes:
+    - AAAA
+    # - PTR
+    # - HTTPS
+
+fqdnOnly:
+  enable: false
+
+caching:
+  minTime: 2s
+  maxTime: 10s
+  maxItemsCount: 50
+  prefetching: true
+  cacheTimeNegative: 30s
+  exclude:
+    - /.*\${domain}$/
+    - /.*\${publicDomain}$/
+
+# queryLog:
+#   type: postgresql
+#   target: postgres://blocky:blocky@postgresql.postgresql:5432/blocky
+#   logRetentionDays: 1
+
+conditional:
+  mapping:
+    svc.cluster.local: ${kubeDns}
+
+clientLookup:
+  upstream: ${gateway}
+
+ede:
+  enable: false
