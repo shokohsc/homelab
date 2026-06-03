@@ -8,6 +8,6 @@ resources:
 configMapGenerator:
 - name: config
   files:
-  - ./config/renovate.json
+  - ./config/config.js
 generatorOptions:
   disableNameSuffixHash: true
