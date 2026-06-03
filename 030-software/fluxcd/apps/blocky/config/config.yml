@@ -137,7 +137,7 @@ blocking:
     # torrent:
       - https://raw.githubusercontent.com/hagezi/dns-blocklists/main/wildcard/anti.piracy.txt
       # - https://gist.github.com/shokohsc/e0293c2fc39be738f2edaf53bd111308/raw/cb6f6469a9700fd55992e6d006059672d1cad922/gistfile1.txt
-      - http://shell2http.shell2http.svc.cluster.local/trackers
+      # - http://shell2http.shell2http.svc.cluster.local/trackers
       - |
         *.freeopenvpn.org
         *.ipspseed.info
