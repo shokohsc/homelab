@@ -59,7 +59,7 @@ metadata:
   name: blocky-failover-udp
   annotations:
     "lbipam.cilium.io/ips": "${subnet}.43"
-    "lbipam.cilium.io/sharing-key": "dns-failOver"
+    "lbipam.cilium.io/sharing-key": "1234"
   labels:
     app.kubernetes.io/name: blocky
     vlan: lb
@@ -84,7 +84,7 @@ metadata:
   name: blocky-failover-tcp
   annotations:
     "lbipam.cilium.io/ips": "${subnet}.43"
-    "lbipam.cilium.io/sharing-key": "dns-failOver"
+    "lbipam.cilium.io/sharing-key": "1234"
   labels:
     app.kubernetes.io/name: blocky
     vlan: lb
