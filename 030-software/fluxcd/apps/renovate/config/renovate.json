@@ -1,9 +1,10 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "addLabels": ["renovate"],
+  "autodiscover": false,
   "enabled": true,
   "extends": ["config:recommended"],
   "includePaths": ["030-software/fluxcd/apps/**", "030-software/fluxcd/requirements/**"],
-  "addLabels": ["renovate"],
   "onboarding": false,
   "platformAutomerge": true,
   "packageRules": [
