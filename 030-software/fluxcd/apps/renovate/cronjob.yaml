@@ -59,7 +59,7 @@ spec:
           volumes:
             - name: config
               configMap:
-                name: renovate-config
+                name: config
                 defaultMode: 0644
             - name: work
               emptyDir: {}
