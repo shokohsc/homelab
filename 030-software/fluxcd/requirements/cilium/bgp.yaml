@@ -67,10 +67,10 @@ metadata:
 spec:
   blocks:
   - start: ${vip}
-    stop: ${subnet}.254
-  serviceSelector:
-    matchExpressions:
-    - key: vlan
-      operator: In
-      values:
-        - 'lb'
+    stop: ${subnet}.39
+  # serviceSelector:
+  #   matchExpressions:
+  #   - key: vlan
+  #     operator: In
+  #     values:
+  #       - 'lb'
