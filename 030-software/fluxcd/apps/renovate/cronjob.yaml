@@ -45,10 +45,10 @@ spec:
               resources:
                 requests:
                   cpu: 10m
-                  memory: 64M
+                  memory: 64Mi
                 limits:
-                  cpu: 100m
-                  memory: 128M
+                  cpu: 1000m
+                  memory: 2048Mi
               volumeMounts:
                 - name: config
                   mountPath: /opt/renovate/renovate.json

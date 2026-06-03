@@ -31,7 +31,8 @@ spec:
           type: RuntimeDefault
       containers:
         - name: blocky
-          image: spx01/blocky:v0.30.0
+          # image: spx01/blocky:v0.30.0
+          image: spx01/blocky:main
           securityContext:
             allowPrivilegeEscalation: false
             readOnlyRootFilesystem: true
