@@ -41,11 +41,22 @@ spec:
             capabilities:
               drop:
                 - ALL
+          args:
+            - --port=8080
           ports:
             - containerPort: 8080
               name: http
-          args:
-            - --port=8080
+          startupProbe:
+            failureThreshold: 30
+            periodSeconds: 10
+            tcpSocket:
+              port: http
+          livenessProbe:
+            tcpSocket:
+              port: http
+          readinessProbe:
+            tcpSocket:
+              port: http
           resources:
             limits: 
               cpu: 100m

@@ -72,13 +72,13 @@ spec:
             failureThreshold: 30
             periodSeconds: 10
             tcpSocket:
-              port: 53
+              port: dns-tcp
           livenessProbe:
             tcpSocket:
-              port: 53
+              port: dns-tcp
           readinessProbe:
             tcpSocket:
-              port: 53
+              port: dns-tcp
           resources:
             requests:
               cpu: 10m
