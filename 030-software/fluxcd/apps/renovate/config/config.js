@@ -1,8 +1,11 @@
 module.exports = {
   autodiscover: false,
-  platform: 'github',
+  dependencyDashboard: true,
+  dependencyDashboardTitle: 'Renovate Dashboard',
   onboardingConfig: {
     extends: ['config:recommended'],
   },
+  platform: 'github',
   repositories: ['shokohsc/homelab'],
+  timezone: 'Europe/Paris',
 };

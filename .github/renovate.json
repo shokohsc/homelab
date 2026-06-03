@@ -3,7 +3,7 @@
   "addLabels": ["renovate"],
   "enabled": true,
   "extends": ["config:recommended"],
-  "includePaths": ["030-software/fluxcd/apps/**", "030-software/fluxcd/requirements/**"],
+  "includePaths": ["020-hardware/mikrotik/**", "020-hardware/tplink/**", "030-software/fluxcd/apps/**", "030-software/fluxcd/requirements/**", "030-software/talos/**"],
   "platformAutomerge": true,
   "packageRules": [
     {
