@@ -4,8 +4,8 @@ kind: Service
 metadata:
   name: blocky-udp
   annotations:
-    metallb.universe.tf/allow-shared-ip: "true"
-    metallb.universe.tf/address-pool: "dns"
+    "lbipam.cilium.io/ips": "${subnet}.42"
+    "lbipam.cilium.io/sharing-key": "dns"
   labels:
     app.kubernetes.io/name: blocky
 spec:
@@ -28,8 +28,8 @@ kind: Service
 metadata:
   name: blocky-tcp
   annotations:
-    metallb.universe.tf/allow-shared-ip: "true"
-    metallb.universe.tf/address-pool: "dns"
+    "lbipam.cilium.io/ips": "${subnet}.42"
+    "lbipam.cilium.io/sharing-key": "dns"
   labels:
     app.kubernetes.io/name: blocky
 spec:
@@ -56,8 +56,8 @@ kind: Service
 metadata:
   name: blocky-failover-udp
   annotations:
-    metallb.universe.tf/allow-shared-ip: "true"
-    metallb.universe.tf/address-pool: "dns-fail-over"
+    "lbipam.cilium.io/ips": "${subnet}.43"
+    "lbipam.cilium.io/sharing-key": "dns-failOver"
   labels:
     app.kubernetes.io/name: blocky
 spec:
@@ -80,8 +80,8 @@ kind: Service
 metadata:
   name: blocky-failover-tcp
   annotations:
-    metallb.universe.tf/allow-shared-ip: "true"
-    metallb.universe.tf/address-pool: "dns-fail-over"
+    "lbipam.cilium.io/ips": "${subnet}.43"
+    "lbipam.cilium.io/sharing-key": "dns-failOver"
   labels:
     app.kubernetes.io/name: blocky
 spec:
