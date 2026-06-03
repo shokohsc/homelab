@@ -42,7 +42,7 @@ blocking:
       - https://github.com/TG-Twilight/AWAvenue-Ads-Rule/raw/refs/heads/main/Filters/AWAvenue-Ads-Rule-RouterOS-Adlist.txt
       - https://pgl.yoyo.org/adservers/serverlist.php?hostformat=hosts&showintro=1&mimetype=plaintext
       # - https://github.com/badmojr/1Hosts/releases/download/latest/1hosts-Pro_domains.txt
-      - https://someonewhocares.org/hosts/zero/hosts
+      # - https://someonewhocares.org/hosts/zero/hosts
       # - https://raw.githubusercontent.com/hagezi/dns-blocklists/main/wildcard/multi.txt
       - https://raw.githubusercontent.com/hagezi/dns-blocklists/main/wildcard/popupads.txt
       - https://raw.githubusercontent.com/hagezi/dns-blocklists/main/wildcard/gambling.txt
@@ -59,7 +59,7 @@ blocking:
       # - https://github.com/mitchellkrogza/The-Big-List-of-Hacked-Malware-Web-Sites/raw/refs/heads/master/hosts
       - https://urlhaus.abuse.ch/downloads/hostfile/
       - https://raw.githubusercontent.com/hagezi/dns-blocklists/main/wildcard/fake.txt
-      - https://raw.githubusercontent.com/hagezi/dns-blocklists/main/wildcard/tif.txt
+      # - https://raw.githubusercontent.com/hagezi/dns-blocklists/main/wildcard/tif.txt
       # - https://raw.githubusercontent.com/hagezi/dns-blocklists/main/wildcard/doh-vpn-proxy-bypass.txt
       - https://raw.githubusercontent.com/hagezi/dns-blocklists/main/wildcard/nosafesearch.txt
       - https://raw.githubusercontent.com/hagezi/dns-blocklists/main/wildcard/dyndns.txt
@@ -210,8 +210,8 @@ customDNS:
     # pi: ${subnet}.90
     ${domain}: ${vip}
 
-redis:
-  address: valkey.valkey:6379
+# redis:
+#   address: valkey.valkey:6379
 
 filtering:
   queryTypes:
@@ -222,15 +222,15 @@ filtering:
 fqdnOnly:
   enable: false
 
-caching:
-  minTime: 2s
-  maxTime: 10s
-  maxItemsCount: 50
-  prefetching: true
-  cacheTimeNegative: 30s
-  exclude:
-    - /.*\${domain}$/
-    - /.*\${publicDomain}$/
+# caching:
+#   minTime: 2s
+#   maxTime: 10s
+#   maxItemsCount: 50
+#   prefetching: true
+#   cacheTimeNegative: 30s
+#   exclude:
+#     - /.*\${domain}$/
+#     - /.*\${publicDomain}$/
 
 # queryLog:
 #   type: postgresql
