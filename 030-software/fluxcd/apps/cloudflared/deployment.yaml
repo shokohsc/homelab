@@ -37,6 +37,10 @@ spec:
                 secretKeyRef:
                   name: cloudflare
                   key: token
+          args:
+            - tunnel
+            - --no-autoupdate
+            - run
           resources:
             limits: 
               cpu: 100m
