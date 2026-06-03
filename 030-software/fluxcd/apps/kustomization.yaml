@@ -3,6 +3,7 @@ kind: Kustomization
 resources:
   - blocky
   - cert-manager
+  - cloudflared
   - external-dns
   - gatekeeper
   - http-echo
