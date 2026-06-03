@@ -4,7 +4,6 @@
   "enabled": true,
   "extends": ["config:recommended"],
   "includePaths": ["030-software/fluxcd/apps/**", "030-software/fluxcd/requirements/**"],
-  "onboarding": false,
   "platformAutomerge": true,
   "packageRules": [
     {
