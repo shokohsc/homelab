@@ -68,9 +68,9 @@ spec:
   blocks:
   - start: ${vip}
     stop: ${subnet}.39
-  # serviceSelector:
-  #   matchExpressions:
-  #   - key: vlan
-  #     operator: In
-  #     values:
-  #       - 'lb'
+  serviceSelector:
+    matchExpressions:
+    - key: vlan
+      operator: In
+      values:
+        - 'lb'
