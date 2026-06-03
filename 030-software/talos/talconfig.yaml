@@ -201,7 +201,7 @@ controlPlane:
     customization:
       extraKernelArgs:
         - net.ifnames=0
-        - talos.config=http://tracer.home.arpa:8080/metadata?p=control-plane
+        - talos.config=http://tracer.home.arpa:8080/metadata?h=$${hostname}&m=$${mac}&s=$${serial}&u=$${uuid}
         - talos.experimental.wipe=system:EPHEMERAL,STATE
       systemExtensions:
         officialExtensions:
@@ -231,5 +231,5 @@ worker:
     customization:
       extraKernelArgs:
         - net.ifnames=0
-        - talos.config=http://tracer.home.arpa:8080/metadata?p=worker
+        - talos.config=http://tracer.home.arpa:8080/metadata?h=$${hostname}&m=$${mac}&s=$${serial}&u=$${uuid}
         - talos.experimental.wipe=system:EPHEMERAL,STATE

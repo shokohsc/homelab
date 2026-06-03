@@ -6,4 +6,5 @@ resources:
   - external-dns
   - gatekeeper
   # - reloader
+  - renovate
   - whoami

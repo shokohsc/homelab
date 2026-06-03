@@ -1,0 +1,56 @@
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: renovate
+spec:
+  schedule: "0 6 * * *"
+  successfulJobsHistoryLimit: 0
+  failedJobsHistoryLimit: 1
+  concurrencyPolicy: Forbid
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+            - name: renovate
+              image: ghcr.io/renovatebot/renovate:43.209.4
+              args:
+                - renovate
+                - --config=/usr/src/app/config/config.json
+              env:
+                - name: LOG_LEVEL
+                  value: debug
+                - name: RENOVATE_BASE_DIR
+                  value: '/tmp/renovate/'
+                - name: RENOVATE_CONFIG_FILE
+                  value: '/opt/renovate/renovate.json'
+              envFrom:
+                - secretRef:
+                    name: renovate-env
+              resources:
+                requests:
+                  cpu: 10m
+                  memory: 64M
+                limits:
+                  cpu: 100m
+                  memory: 128M
+              volumeMounts:
+                - name: config
+                  mountPath: /opt/renovate/renovate.json
+                  subPath: renovate.json
+                - name: work
+                  mountPath: /tmp/renovate/
+          restartPolicy: Never
+          volumes:
+            - name: config
+              configMap:
+                name: renovate-config
+                defaultMode: 0644
+            - name: work
+              emptyDir: {}
+
+          tolerations:
+            - key: "node.kubernetes.io/nuc"
+              operator: "Exists"
+              effect: "NoSchedule"

@@ -4,23 +4,23 @@ machine:
     - ${TALOS_SUBNET}.10
     - ${TALOS_SUBNET}.20
     - ${TALOS_SUBNET}.30
-  files:
-    - content: |
-        [metrics]
-          address = "0.0.0.0:11234"
-      path: /etc/cri/conf.d/20-customization.part
-      op: create
-    - content: |
-        [plugins."io.containerd.cri.v1.runtime"]
-          cdi_spec_dirs = ["/var/cdi/static", "/var/cdi/dynamic"]
-      path: /etc/cri/conf.d/20-customization.part
-      op: create
-    # - content: |
-    #     [plugins]
-    #       [plugins."io.containerd.nri.v1.nri"]
-    #           disable = false
-    #   path: /etc/cri/conf.d/20-customization.part
-    #   op: create
+  # files:
+  #   - content: |
+  #       [metrics]
+  #         address = "0.0.0.0:11234"
+  #     path: /etc/cri/conf.d/20-metrics.part
+  #     op: create
+  #   - content: |
+  #       [plugins."io.containerd.cri.v1.runtime"]
+  #         cdi_spec_dirs = ["/var/cdi/static", "/var/cdi/dynamic"]
+  #     path: /etc/cri/conf.d/20-cdi.part
+  #     op: create
+  #   # - content: |
+  #   #     [plugins]
+  #   #       [plugins."io.containerd.nri.v1.nri"]
+  #   #           disable = false
+  #   #   path: /etc/cri/conf.d/20-nri.part
+  #   #   op: create
   features:
     hostDNS:
         forwardKubeDNSToHost: false # Use the host DNS resolver as upstream for Kubernetes CoreDNS pods.
