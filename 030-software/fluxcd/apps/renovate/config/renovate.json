@@ -24,5 +24,6 @@
       "automerge": false,
       "addLabels": ["maintainer-review", "major"]
     }
-  ]
+  ],
+  "repositories": ["shokohsc/homelab"]
 }
