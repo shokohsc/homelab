@@ -17,12 +17,19 @@
     {
       "customType": "regex",
       "managerFilePatterns": ["/./.+\\.yaml$/"],
-      "datasourceTemplate": "helm"
+      "datasourceTemplate": "helm",
+      "matchStrings": [
+        "chart:\\s*(?<depName>[a-z0-9-]+)\\s*\\n\\s*version:\\s*\"?(?<currentValue>[\\w\\.\\*]+)"
+      ]
     },
     {
       "customType": "regex",
       "managerFilePatterns": ["/./.+\\.yaml$/"],
-      "datasourceTemplate": "docker"
+      "datasourceTemplate": "docker",
+      "matchStrings": [
+        "image:\\s*(?<depName>[^:\\s]+):(?<currentValue>[^\\s]+)",
+        "repository:\\s*(?<depName>[^\\s]+)\\s*\\n\\s*tag:\\s*\"?(?<currentValue>[^\"\\s]+)"
+      ]
     }
   ],
   "packageRules": [
