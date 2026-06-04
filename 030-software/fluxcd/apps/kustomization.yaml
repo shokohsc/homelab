@@ -7,6 +7,6 @@ resources:
   - external-dns
   - gatekeeper
   - http-echo
-  # - reloader
+  - reloader
   - renovate
   - whoami
