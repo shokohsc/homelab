@@ -31,7 +31,7 @@ spec:
                     - ALL
               env:
                 - name: LOG_LEVEL
-                  value: info
+                  value: debug
                 - name: RENOVATE_BASE_DIR
                   value: '/tmp/renovate/'
                 - name: RENOVATE_CONFIG_FILE
