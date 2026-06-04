@@ -2,6 +2,8 @@
   "addLabels": ["renovate"],
   "dependencyDashboardTitle": "Renovate Dashboard",
   "enabled": true,
+  "timezone": "Europe/Paris",
+  "semanticCommits": "enabled",
   "extends": ["config:recommended", ":dependencyDashboard", ":semanticCommits", "schedule:nonOfficeHours"],
   "includePaths": ["020-hardware/mikrotik/**", "020-hardware/tplink/**", "030-software/fluxcd/apps/**", "030-software/fluxcd/requirements/**", "030-software/talos/**"],
   "platformAutomerge": true,
@@ -52,12 +54,13 @@
     {
       "matchDatasources": ["docker"],
       "matchUpdateTypes": ["major"],
-      "labels": ["image-release", "major"]
+      "labels": ["image-release", "major"],
+      "automerge": false
     },
     {
       "matchDatasources": ["docker"],
       "matchUpdateTypes": ["minor"],
-      "labels": ["maintainer-review", "renovate/image-release", "minor"],
+      "labels": ["image-release", "minor"],
       "automerge": false
     },
     {
@@ -69,7 +72,8 @@
     {
       "matchDatasources": ["helm"],
       "matchUpdateTypes": ["major"],
-      "labels": ["helm-release", "major"]
+      "labels": ["helm-release", "major"],
+      "automerge": false
     },
     {
       "matchDatasources": ["helm"],
@@ -88,7 +92,7 @@
       "description": "Auto-merge patch updates",
       "matchCurrentVersion": "!/^0/",
       "automerge": true,
-      "addLabels": ["auto-merge", "patch"]
+      "addLabels": ["patch"]
     },
     {
       "matchUpdateTypes": ["minor"],
