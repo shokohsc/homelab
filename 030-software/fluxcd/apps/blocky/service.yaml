@@ -58,7 +58,7 @@ kind: Service
 metadata:
   name: blocky-failover-udp
   annotations:
-    "lbipam.cilium.io/ips": "${subnet}.43"
+    "lbipam.cilium.io/ips": "${subnet}.23"
     "lbipam.cilium.io/sharing-key": "dnsFailOver"
   labels:
     app.kubernetes.io/name: blocky
@@ -83,7 +83,7 @@ kind: Service
 metadata:
   name: blocky-failover-tcp
   annotations:
-    "lbipam.cilium.io/ips": "${subnet}.43"
+    "lbipam.cilium.io/ips": "${subnet}.23"
     "lbipam.cilium.io/sharing-key": "dnsFailOver"
   labels:
     app.kubernetes.io/name: blocky
