@@ -1,12 +1,76 @@
 {
-  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "addLabels": ["renovate"],
   "dependencyDashboardTitle": "Renovate Dashboard",
   "enabled": true,
   "extends": ["config:recommended", ":dependencyDashboard", ":semanticCommits", "schedule:nonOfficeHours"],
   "includePaths": ["020-hardware/mikrotik/**", "020-hardware/tplink/**", "030-software/fluxcd/apps/**", "030-software/fluxcd/requirements/**", "030-software/talos/**"],
   "platformAutomerge": true,
+  "helm-values": {
+    "managerFilePatterns": ["/./.+\\.yaml$/"]
+  },
+  "kubernetes": {
+    "managerFilePatterns": ["/\\.yaml$/"],
+    "ignorePaths": [".github", "010-pki", "020-hardware/", "030-software/fluxcd/core/"]
+  },
+  "customManagers": [
+    {
+      "customType": "regex",
+      "managerFilePatterns": ["/./.+\\.yaml$/"],
+      "datasourceTemplate": "helm"
+    },
+    {
+      "customType": "regex",
+      "managerFilePatterns": ["/./.+\\.yaml$/"],
+      "datasourceTemplate": "docker"
+    }
+  ],
   "packageRules": [
+    {
+      "matchDatasources": ["helm"],
+      "commitMessageTopic": "Helm chart {{depName}}",
+      "separateMinorPatch": true
+    },
+    {
+      "matchDatasources": ["docker"],
+      "commitMessageTopic": "Docker image {{depName}}",
+      "commitMessageExtra": "to {{#if isSingleVersion}}{{{newVersion}}}{{else}}{{{newValue}}}{{/if}}",
+      "matchUpdateTypes": ["major", "minor", "patch"],
+      "enabled": true
+    },
+    {
+      "matchDatasources": ["docker"],
+      "matchUpdateTypes": ["major"],
+      "labels": ["renovate/image-release", "major"]
+    },
+    {
+      "matchDatasources": ["docker"],
+      "matchUpdateTypes": ["minor"],
+      "labels": ["maintainer-review", "renovate/image-release", "minor"],
+      "automerge": false
+    },
+    {
+      "matchDatasources": ["docker"],
+      "matchUpdateTypes": ["patch"],
+      "labels": ["renovate/image-release", "patch"],
+      "automerge": true
+    },
+    {
+      "matchDatasources": ["helm"],
+      "matchUpdateTypes": ["major"],
+      "labels": ["renovate/helm-release", "major"]
+    },
+    {
+      "matchDatasources": ["helm"],
+      "matchUpdateTypes": ["minor"],
+      "labels": ["renovate/helm-release", "minor"],
+      "automerge": false
+    },
+    {
+      "matchDatasources": ["helm"],
+      "matchUpdateTypes": ["patch"],
+      "labels": ["renovate/helm-release", "patch"],
+      "automerge": true
+    },
     {
       "matchUpdateTypes": ["patch"],
       "description": "Auto-merge patch updates",
@@ -19,13 +83,13 @@
       "description": "Minor updates require maintainer approval",
       "matchCurrentVersion": "!/^0/",
       "automerge": false,
-      "addLabels": ["maintainer-review", "minor"]
+      "addLabels": ["minor"]
     },
     {
       "matchUpdateTypes": ["major"],
       "description": "Major updates require maintainer approval",
       "automerge": false,
-      "addLabels": ["maintainer-review", "major"]
+      "addLabels": ["major"]
     }
   ],
   "vulnerabilityAlerts": {
