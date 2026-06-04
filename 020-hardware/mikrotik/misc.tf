@@ -43,3 +43,11 @@ resource "routeros_system_clock" "timezone" {
   time_zone_name       = var.system_timezone
   time_zone_autodetect = false
 }
+
+resource "routeros_system_user" "opentofu" {
+  name     = "opentofu"
+  address  = "${local.vlan_cidrs[10]},${local.vlan_cidrs[20]}"
+  group    = "full"
+  password = var.system_opentofu_user_password
+  comment  = "Bot user for OpenTofu"
+}

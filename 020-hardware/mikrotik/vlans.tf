@@ -149,9 +149,9 @@ resource "routeros_interface_bridge_vlan" "vlans" {
   tagged = [
     "bridge",
     "ether5",       # AP trunk
-    "sfp-sfpplus1", # Proxmox
-    "sfp-sfpplus2", # Proxmox
-    "sfp-sfpplus3"  # Proxmox
+    "sfp-sfpplus1", # Proxmox trunk
+    "sfp-sfpplus2", # Proxmox trunk
+    "sfp-sfpplus3"  # Proxmox trunk
   ]
 
   untagged = lookup({
@@ -163,6 +163,16 @@ resource "routeros_interface_bridge_vlan" "vlans" {
     60  = []                                                                    # LB
     100 = []                                                                    # IoT
   }, each.key, [])
+}
+
+############################################
+##      Interfaces Bonding (Winston)      ##
+############################################
+
+resource "routeros_interface_bonding" "winston" {
+  name   = "bond.int"
+  slaves = ["ether23", "sfpplus4"]
+  mode   = "802.3ad"
 }
 
 ############################################

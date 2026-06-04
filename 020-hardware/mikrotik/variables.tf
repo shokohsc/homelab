@@ -34,6 +34,12 @@ variable "system_timezone" {
   description = "Mikrotik router timezone"
 }
 
+variable "system_opentofu_user_password" {
+  type        = string
+  default     = "opentofu_password"
+  description = "Mikrotik router opentofu user password"
+}
+
 # Note: This variable is deprecated - use vlan_base_network instead.
 # Kept for backward compatibility.
 variable "homelab_cidr" {
@@ -112,7 +118,7 @@ variable "mikrotik_asn" {
 
 variable "cilium_asn" {
   type        = string
-  default     = "65000"
+  default     = "65001"
   description = "ASN for Cilium BGP instance"
 }
 
@@ -124,7 +130,7 @@ variable "mikrotik_router_id" {
 
 variable "bgp_local_role" {
   type        = string
-  default     = "ibgp"
+  default     = "ebgp"
   description = "BGP local role"
 }
 
