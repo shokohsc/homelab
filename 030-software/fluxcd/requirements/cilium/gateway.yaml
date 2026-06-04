@@ -9,6 +9,8 @@ metadata:
 spec:
   gatewayClassName: cilium
   infrastructure:
+    annotations:
+      lbipam.cilium.io/sharing-key: vip
     labels:
       vlan: lb
   listeners:

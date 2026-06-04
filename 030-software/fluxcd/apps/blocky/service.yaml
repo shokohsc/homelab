@@ -4,8 +4,8 @@ kind: Service
 metadata:
   name: blocky-udp
   annotations:
-    "lbipam.cilium.io/ips": "${subnet}.22"
-    "lbipam.cilium.io/sharing-key": "dns"
+    lbipam.cilium.io/ips: ${subnet}.22
+    lbipam.cilium.io/sharing-key: dns
   labels:
     app.kubernetes.io/name: blocky
     vlan: lb
@@ -29,8 +29,8 @@ kind: Service
 metadata:
   name: blocky-tcp
   annotations:
-    "lbipam.cilium.io/ips": "${subnet}.22"
-    "lbipam.cilium.io/sharing-key": "dns"
+    lbipam.cilium.io/ips: ${subnet}.22
+    lbipam.cilium.io/sharing-key: dns
   labels:
     app.kubernetes.io/name: blocky
     vlan: lb
@@ -58,8 +58,8 @@ kind: Service
 metadata:
   name: blocky-failover-udp
   annotations:
-    "lbipam.cilium.io/ips": "${subnet}.23"
-    "lbipam.cilium.io/sharing-key": "dnsFailOver"
+    lbipam.cilium.io/ips: ${subnet}.23
+    lbipam.cilium.io/sharing-key: dnsFailOver
   labels:
     app.kubernetes.io/name: blocky
     vlan: lb
@@ -83,8 +83,8 @@ kind: Service
 metadata:
   name: blocky-failover-tcp
   annotations:
-    "lbipam.cilium.io/ips": "${subnet}.23"
-    "lbipam.cilium.io/sharing-key": "dnsFailOver"
+    lbipam.cilium.io/ips: ${subnet}.23
+    lbipam.cilium.io/sharing-key: dnsFailOver
   labels:
     app.kubernetes.io/name: blocky
     vlan: lb

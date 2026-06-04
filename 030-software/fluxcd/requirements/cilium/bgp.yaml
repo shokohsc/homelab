@@ -67,7 +67,7 @@ metadata:
 spec:
   blocks:
   - start: ${vip}
-    stop: ${subnet}.39
+    stop: ${subnet}.99
   serviceSelector:
     matchExpressions:
     - key: vlan
