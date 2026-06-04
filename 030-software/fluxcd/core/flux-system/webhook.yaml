@@ -18,7 +18,7 @@ spec:
         type: PathPrefix
         value: /
 ---
-apiVersion: notification.toolkit.fluxcd.io/v1beta2
+apiVersion: notification.toolkit.fluxcd.io/v1
 kind: Receiver
 metadata:
   name: receiver
