@@ -2,9 +2,13 @@
   "addLabels": ["renovate"],
   "dependencyDashboardTitle": "Renovate Dashboard",
   "enabled": true,
+  "commitHourlyLimit": 0,
+  "prConcurrentLimit": 0,
+  "prHourlyLimit": 0,
+  "rebaseWhen": "behind-base-branch",
   "timezone": "Europe/Paris",
   "semanticCommits": "enabled",
-  "extends": ["config:recommended", ":dependencyDashboard", ":semanticCommits", "schedule:nonOfficeHours"],
+  "extends": ["config:recommended", "docker:pinDigests", "helpers:pinGitHubActionDigests", ":configMigration", ":pinDevDependencies", "abandonments:recommended", "security:minimumReleaseAgeNpm", ":maintainLockFilesWeekly"],
   "includePaths": ["020-hardware/mikrotik/**", "020-hardware/tplink/**", "030-software/fluxcd/apps/**", "030-software/fluxcd/requirements/**", "030-software/talos/**"],
   "platformAutomerge": true,
   "flux": {
@@ -40,6 +44,10 @@
   ],
   "packageRules": [
     {
+      "dependencyDashboardApproval": true,
+      "matchUpdateTypes": ["minor", "major"]
+    },
+    {
       "matchDatasources": ["helm"],
       "commitMessageTopic": "Helm chart {{depName}}",
       "separateMinorPatch": true
@@ -67,6 +75,7 @@
       "matchDatasources": ["docker"],
       "matchUpdateTypes": ["patch"],
       "labels": ["image-release", "patch"],
+      "ignoreTests": true,
       "automerge": true
     },
     {
@@ -85,6 +94,7 @@
       "matchDatasources": ["helm"],
       "matchUpdateTypes": ["patch"],
       "labels": ["helm-release", "patch"],
+      "ignoreTests": true,
       "automerge": true
     },
     {
@@ -92,6 +102,7 @@
       "description": "Auto-merge patch updates",
       "matchCurrentVersion": "!/^0/",
       "automerge": true,
+      "ignoreTests": true,
       "addLabels": ["patch"]
     },
     {
