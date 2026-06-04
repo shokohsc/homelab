@@ -6,62 +6,62 @@ metadata:
 spec:
   ca:
     secretName: ca-key-pair
-# ---
-# apiVersion: cert-manager.io/v1
-# kind: ClusterIssuer
-# metadata:
-#   name: letsencrypt-staging
-# spec:
-#   acme:
-#     # The ACME server URL
-#     server: https://acme-staging-v02.api.letsencrypt.org/directory
-#     # Email address used for ACME registration
-#     email: postmaster@${publicDomain}
-#     # Name of a secret used to store the ACME account private key
-#     privateKeySecretRef:
-#       name: letsencrypt-staging
-#     # Enable the HTTP-01 challenge provider
-#     solvers:
-#     # An empty 'selector' means that this solver matches all domains
-#     - selector:
-#         matchLabels:
-#           challenge: http01
-#       http01:
-#         ingress:
-#           serviceType: ClusterIP
-#           class: nginx
-#     - selector:
-#         matchLabels:
-#           challenge: dns01
-#       dns01:
-#         cloudflare:
-#           apiTokenSecretRef:
-#             name: cloudflare
-#             key: api-token
-# ---
-# apiVersion: cert-manager.io/v1
-# kind: ClusterIssuer
-# metadata:
-#   name: letsencrypt
-# spec:
-#   acme:
-#     server: https://acme-v02.api.letsencrypt.org/directory
-#     email: postmaster@${publicDomain}
-#     privateKeySecretRef:
-#       name: letsencrypt
-#     solvers:
-#     - selector:
-#         matchLabels:
-#           challenge: http01
-#       http01:
-#         ingress:
-#           serviceType: ClusterIP
-#           class: nginx
-#     - selector:
-#         matchLabels:
-#           challenge: dns01
-#       dns01:
-#         cloudflare:
-#           apiTokenSecretRef:
-#             name: cloudflare
-#             key: api-token
+---
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: letsencrypt-staging
+spec:
+  acme:
+    # The ACME server URL
+    server: https://acme-staging-v02.api.letsencrypt.org/directory
+    # Email address used for ACME registration
+    email: postmaster@${publicDomain}
+    # Name of a secret used to store the ACME account private key
+    privateKeySecretRef:
+      name: letsencrypt-staging
+    # Enable the HTTP-01 challenge provider
+    solvers:
+    # An empty 'selector' means that this solver matches all domains
+    - selector:
+        matchLabels:
+          challenge: http01
+      http01:
+        ingress:
+          serviceType: ClusterIP
+          class: nginx
+    - selector:
+        matchLabels:
+          challenge: dns01
+      dns01:
+        cloudflare:
+          apiTokenSecretRef:
+            name: cloudflare
+            key: api-token
+---
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: letsencrypt
+spec:
+  acme:
+    server: https://acme-v02.api.letsencrypt.org/directory
+    email: postmaster@${publicDomain}
+    privateKeySecretRef:
+      name: letsencrypt
+    solvers:
+    - selector:
+        matchLabels:
+          challenge: http01
+      http01:
+        ingress:
+          serviceType: ClusterIP
+          class: nginx
+    - selector:
+        matchLabels:
+          challenge: dns01
+      dns01:
+        cloudflare:
+          apiTokenSecretRef:
+            name: cloudflare
+            key: api-token

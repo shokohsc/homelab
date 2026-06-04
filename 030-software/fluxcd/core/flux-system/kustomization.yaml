@@ -3,6 +3,35 @@ kind: Kustomization
 resources:
 - gotk-components.yaml
 - gotk-sync.yaml
+- webhook.yaml
+- secret.yaml
+patchesStrategicMerge:
+- patch.yaml
+- |-
+  apiVersion: source.toolkit.fluxcd.io/v1beta2
+  kind: GitRepository
+  metadata:
+    name: flux-system
+    namespace: flux-system
+  spec:
+    ignore: |
+      .git/
+      .github/
+      .sops.yaml
+- |-
+  apiVersion: kustomize.toolkit.fluxcd.io/v1beta2
+  kind: Kustomization
+  metadata:
+    name: flux-system
+    namespace: flux-system
+  spec:
+    postBuild:
+      substitute:
+        publicDomain: "shokohsc.com"
+    decryption:
+      provider: sops
+      secretRef:
+        name: sops-gpg
 patches:
   - patch: |
       - op: add
