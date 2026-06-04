@@ -5,7 +5,7 @@
   "commitHourlyLimit": 0,
   "prConcurrentLimit": 0,
   "prHourlyLimit": 0,
-  "rebaseWhen": "behind-base-branch",
+  "rebaseWhen": "auto",
   "timezone": "Europe/Paris",
   "semanticCommits": "enabled",
   "extends": ["config:recommended", "docker:pinDigests", "helpers:pinGitHubActionDigests", ":configMigration", ":pinDevDependencies", "abandonments:recommended", "security:minimumReleaseAgeNpm", ":maintainLockFilesWeekly"],
