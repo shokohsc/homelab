@@ -6,7 +6,8 @@
   "includePaths": ["020-hardware/mikrotik/**", "020-hardware/tplink/**", "030-software/fluxcd/apps/**", "030-software/fluxcd/requirements/**", "030-software/talos/**"],
   "platformAutomerge": true,
   "helm-values": {
-    "managerFilePatterns": ["/./.+\\.yaml$/"]
+    "managerFilePatterns": ["/./.+\\.yaml$/"],
+    "ignorePaths": [".github", "010-pki", "020-hardware/", "030-software/fluxcd/core/"]
   },
   "kubernetes": {
     "managerFilePatterns": ["/\\.yaml$/"],
