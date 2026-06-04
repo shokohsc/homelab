@@ -6,22 +6,21 @@
   "includePaths": ["020-hardware/mikrotik/**", "020-hardware/tplink/**", "030-software/fluxcd/apps/**", "030-software/fluxcd/requirements/**", "030-software/talos/**"],
   "platformAutomerge": true,
   "flux": {
-    "managerFilePatterns": ["/\\.yaml$/"],
+    "managerFilePatterns": ["030-software/fluxcd/{apps,requirements}/**/*.{yml,yaml}"],
     "includePaths": ["030-software/fluxcd/apps/**", "030-software/fluxcd/requirements/**"]
   },
   "helm-values": {
-    "managerFilePatterns": ["/\\.yaml$/"],
+    "managerFilePatterns": ["030-software/fluxcd/{apps,requirements}/**/*.{yml,yaml}"],
     "includePaths": ["030-software/fluxcd/apps/**", "030-software/fluxcd/requirements/**"]
   },
   "kubernetes": {
-    "managerFilePatterns": ["/\\.yaml$/"],
+    "managerFilePatterns": ["030-software/fluxcd/{apps,requirements}/**/*.{yml,yaml}"],
     "includePaths": ["030-software/fluxcd/apps/**", "030-software/fluxcd/requirements/**"]
   },
   "customManagers": [
     {
       "customType": "regex",
-      "managerFilePatterns": ["/\\.yaml$/"],
-      "ignorePaths": [".github", "010-pki/", "020-hardware/", "030-software/fluxcd/core/", "030-software/talos/"],
+      "managerFilePatterns": ["030-software/fluxcd/{apps,requirements}/**/*.{yml,yaml}"],
       "datasourceTemplate": "helm",
       "matchStrings": [
         "chart:\\s*(?<depName>[a-z0-9-]+)\\s*\\n\\s*version:\\s*\"?(?<currentValue>[\\w\\.\\*]+)"
@@ -29,8 +28,7 @@
     },
     {
       "customType": "regex",
-      "managerFilePatterns": ["/\\.yaml$/"],
-      "ignorePaths": [".github", "010-pki/", "020-hardware/", "030-software/fluxcd/core/", "030-software/talos/"],
+      "managerFilePatterns": ["030-software/fluxcd/{apps,requirements}/**/*.{yml,yaml}"],
       "datasourceTemplate": "docker",
       "matchStrings": [
         "image:\\s*(?<depName>[^:\\s]+):(?<currentValue>[^\\s]+)",
