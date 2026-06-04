@@ -95,11 +95,12 @@ nodes:
                   - ${TALOS_SUBNET}.0/24
       - |-
           apiVersion: v1alpha1
-          kind: VLANConfig
-          name: eno1.30
-          vlanID: 30
-          parent: eno1
-          up: true
+          kind: BondConfig
+          name: bond.int
+          links:
+              - eno1
+              - eth0
+          bondMode: 802.3ad 
     schematic:
       customization:
         extraKernelArgs:
