@@ -149,7 +149,7 @@ blocking:
         *.pixhost.to
         *.datanodes.to
     # general:
-      - https://github.com/SystemJargon/allowlists/raw/refs/heads/main/lists/core-allowlist.txt
+      # - https://github.com/SystemJargon/allowlists/raw/refs/heads/main/lists/core-allowlist.txt
     # custom:
       - |
         scira.ai
