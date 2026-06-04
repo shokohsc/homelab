@@ -4,8 +4,8 @@ kind: CronJob
 metadata:
   name: renovate
 spec:
-  schedule: "0 6 * * *"
-  successfulJobsHistoryLimit: 1
+  schedule: "0 * * * *"
+  successfulJobsHistoryLimit: 0
   failedJobsHistoryLimit: 1
   concurrencyPolicy: Forbid
   jobTemplate:
