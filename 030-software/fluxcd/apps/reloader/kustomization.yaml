@@ -3,4 +3,4 @@ kind: Kustomization
 namespace: reloader
 resources:
   - namespace.yaml
-  - https://github.com/stakater/Reloader/tree/v1.4.17/deployments/kubernetes
+  - reloader.yaml
