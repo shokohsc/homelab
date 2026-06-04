@@ -1,20 +1,23 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "addLabels": ["renovate"],
+  "dependencyDashboardTitle": "Renovate Dashboard",
   "enabled": true,
-  "extends": ["config:recommended"],
+  "extends": ["config:base", ":dependencyDashboard", ":semanticCommits", "schedule:nonOfficeHours"],
   "includePaths": ["020-hardware/mikrotik/**", "020-hardware/tplink/**", "030-software/fluxcd/apps/**", "030-software/fluxcd/requirements/**", "030-software/talos/**"],
   "platformAutomerge": true,
   "packageRules": [
     {
       "matchUpdateTypes": ["patch"],
       "description": "Auto-merge patch updates",
+      "matchCurrentVersion": "!/^0/",
       "automerge": true,
       "addLabels": ["auto-merge", "patch"]
     },
     {
       "matchUpdateTypes": ["minor"],
       "description": "Minor updates require maintainer approval",
+      "matchCurrentVersion": "!/^0/",
       "automerge": false,
       "addLabels": ["maintainer-review", "minor"]
     },
@@ -24,5 +27,9 @@
       "automerge": false,
       "addLabels": ["maintainer-review", "major"]
     }
-  ]
+  ],
+  "vulnerabilityAlerts": {
+		"labels": ["security"],
+		"automerge": true
+	}
 }
