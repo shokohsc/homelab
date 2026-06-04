@@ -4,7 +4,7 @@ kind: Service
 metadata:
   name: blocky-udp
   annotations:
-    "lbipam.cilium.io/ips": "${subnet}.42"
+    "lbipam.cilium.io/ips": "${subnet}.22"
     "lbipam.cilium.io/sharing-key": "dns"
   labels:
     app.kubernetes.io/name: blocky
@@ -29,7 +29,7 @@ kind: Service
 metadata:
   name: blocky-tcp
   annotations:
-    "lbipam.cilium.io/ips": "${subnet}.42"
+    "lbipam.cilium.io/ips": "${subnet}.22"
     "lbipam.cilium.io/sharing-key": "dns"
   labels:
     app.kubernetes.io/name: blocky

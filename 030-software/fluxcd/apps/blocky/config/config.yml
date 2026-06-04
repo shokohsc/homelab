@@ -46,7 +46,7 @@ blocking:
       # - https://raw.githubusercontent.com/hagezi/dns-blocklists/main/wildcard/multi.txt
       - https://raw.githubusercontent.com/hagezi/dns-blocklists/main/wildcard/popupads.txt
       - https://raw.githubusercontent.com/hagezi/dns-blocklists/main/wildcard/gambling.txt
-      - https://big.oisd.nl/domainswild
+      # - https://big.oisd.nl/domainswild
       - https://github.com/StevenBlack/hosts/raw/refs/heads/master/hosts
     # security:
       - https://malware-filter.gitlab.io/malware-filter/phishing-filter-wildcard.txt
