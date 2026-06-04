@@ -100,7 +100,7 @@ nodes:
           links:
               - eno1
               - eth0
-          bondMode: 802.3ad 
+          bondMode: 802.3ad
     schematic:
       customization:
         extraKernelArgs:
