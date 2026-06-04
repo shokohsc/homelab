@@ -7,21 +7,21 @@
   "platformAutomerge": true,
   "flux": {
     "managerFilePatterns": ["/\\.yaml$/"],
-    "ignorePaths": [".github", "010-pki", "020-hardware/", "030-software/fluxcd/core/", "030-software/talos/"]
+    "includePaths": ["030-software/fluxcd/apps/**", "030-software/fluxcd/requirements/**"]
   },
   "helm-values": {
     "managerFilePatterns": ["/\\.yaml$/"],
-    "ignorePaths": [".github", "010-pki", "020-hardware/", "030-software/fluxcd/core/", "030-software/talos/"]
+    "includePaths": ["030-software/fluxcd/apps/**", "030-software/fluxcd/requirements/**"]
   },
   "kubernetes": {
     "managerFilePatterns": ["/\\.yaml$/"],
-    "ignorePaths": [".github", "010-pki", "020-hardware/", "030-software/fluxcd/core/", "030-software/talos/"]
+    "includePaths": ["030-software/fluxcd/apps/**", "030-software/fluxcd/requirements/**"]
   },
   "customManagers": [
     {
       "customType": "regex",
       "managerFilePatterns": ["/\\.yaml$/"],
-      "ignorePaths": [".github", "010-pki", "020-hardware/", "030-software/fluxcd/core/", "030-software/talos/"],
+      "includePaths": ["030-software/fluxcd/apps/**", "030-software/fluxcd/requirements/**"],
       "datasourceTemplate": "helm",
       "matchStrings": [
         "chart:\\s*(?<depName>[a-z0-9-]+)\\s*\\n\\s*version:\\s*\"?(?<currentValue>[\\w\\.\\*]+)"
@@ -30,7 +30,7 @@
     {
       "customType": "regex",
       "managerFilePatterns": ["/\\.yaml$/"],
-      "ignorePaths": [".github", "010-pki", "020-hardware/", "030-software/fluxcd/core/", "030-software/talos/"],
+      "includePaths": ["030-software/fluxcd/apps/**", "030-software/fluxcd/requirements/**"],
       "datasourceTemplate": "docker",
       "matchStrings": [
         "image:\\s*(?<depName>[^:\\s]+):(?<currentValue>[^\\s]+)",
