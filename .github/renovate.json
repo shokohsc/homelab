@@ -3,7 +3,7 @@
   "addLabels": ["renovate"],
   "dependencyDashboardTitle": "Renovate Dashboard",
   "enabled": true,
-  "extends": ["config:base", ":dependencyDashboard", ":semanticCommits", "schedule:nonOfficeHours"],
+  "extends": ["config:recommended", ":dependencyDashboard", ":semanticCommits", "schedule:nonOfficeHours"],
   "includePaths": ["020-hardware/mikrotik/**", "020-hardware/tplink/**", "030-software/fluxcd/apps/**", "030-software/fluxcd/requirements/**", "030-software/talos/**"],
   "platformAutomerge": true,
   "packageRules": [
