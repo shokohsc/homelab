@@ -8,6 +8,11 @@ spec:
     kinds:
       - apiGroups: [""]
         kinds: ["Pod"]
+    labelSelector:
+      matchExpressions:
+      - key: policy.gatekeeper.sh/ignore
+        operator: NotIn
+        values: ["true"]
   parameters:
     cpu: "2000m"
     memory: "4096Gi"
@@ -21,6 +26,11 @@ spec:
     kinds:
       - apiGroups: [""]
         kinds: ["Pod"]
+    labelSelector:
+      matchExpressions:
+      - key: policy.gatekeeper.sh/ignore
+        operator: NotIn
+        values: ["true"]
 ---
 apiVersion: constraints.gatekeeper.sh/v1beta1
 kind: K8sPSPHostNamespace
@@ -31,6 +41,11 @@ spec:
     kinds:
       - apiGroups: [""]
         kinds: ["Pod"]
+    labelSelector:
+      matchExpressions:
+      - key: policy.gatekeeper.sh/ignore
+        operator: NotIn
+        values: ["true"]
 ---
 apiVersion: constraints.gatekeeper.sh/v1beta1
 kind: K8sPSPPrivilegedContainer
@@ -41,6 +56,11 @@ spec:
     kinds:
       - apiGroups: [""]
         kinds: ["Pod"]
+    labelSelector:
+      matchExpressions:
+      - key: policy.gatekeeper.sh/ignore
+        operator: NotIn
+        values: ["true"]
     excludedNamespaces: ["kube-system"]
   # parameters:
   #   exemptImages:
@@ -55,6 +75,11 @@ spec:
     kinds:
       - apiGroups: [""]
         kinds: ["Pod"]
+    labelSelector:
+      matchExpressions:
+      - key: policy.gatekeeper.sh/ignore
+        operator: NotIn
+        values: ["true"]
   # parameters:
   #   exemptImages: ["safeimages.com/*"]
 ---
@@ -67,6 +92,11 @@ spec:
     kinds:
       - apiGroups: [""]
         kinds: ["Pod"]
+    labelSelector:
+      matchExpressions:
+      - key: policy.gatekeeper.sh/ignore
+        operator: NotIn
+        values: ["true"]
   # parameters:
   #   exemptImages:
   #   - "specialprogram"
@@ -111,6 +141,11 @@ spec:
     kinds:
       - apiGroups: [""]
         kinds: ["Pod"]
+    labelSelector:
+      matchExpressions:
+      - key: policy.gatekeeper.sh/ignore
+        operator: NotIn
+        values: ["true"]
   parameters:
     runAsUser:
       rule: MustRunAsNonRoot
@@ -132,6 +167,11 @@ spec:
         kinds: ["ClusterRoleBinding"]
       - apiGroups: ["rbac.authorization.k8s.io"]
         kinds: ["RoleBinding"]
+    labelSelector:
+      matchExpressions:
+      - key: policy.gatekeeper.sh/ignore
+        operator: NotIn
+        values: ["true"]
   parameters:
     disallowAuthenticated: true
     allowedRoles: 
@@ -146,6 +186,11 @@ spec:
     kinds:
       - apiGroups: [""]
         kinds: ["Pod"]
+    labelSelector:
+      matchExpressions:
+      - key: policy.gatekeeper.sh/ignore
+        operator: NotIn
+        values: ["true"]
   parameters:
     volumes:
     # - "*" # * may be used to allow all volume types
@@ -167,6 +212,11 @@ spec:
     kinds:
       - apiGroups: [""]
         kinds: ["Pod"]
+    labelSelector:
+      matchExpressions:
+      - key: policy.gatekeeper.sh/ignore
+        operator: NotIn
+        values: ["true"]
   parameters:
     exemptImages:
     - nginx-exempt

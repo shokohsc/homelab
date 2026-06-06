@@ -19,4 +19,14 @@ patches:
                 operator: Exists
     target:
       kind: Deployment
-      labelSelector: 
+      labelSelector: k8s-app=metrics-server
+  - patch: |
+      - op: add
+        path: /spec/template/spec/containers/0/resources
+        value:
+          limits:
+            cpu: 100m
+            memory: 128M
+    target:
+      kind: Deployment
+      labelSelector: k8s-app=metrics-server
