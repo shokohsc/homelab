@@ -47,7 +47,7 @@ spec:
         - matches:
             - path:
                 type: PathPrefix
-                value: /headlamp
+                value: /
           backendRefs:
             - name: headlamp
               port: 80
