@@ -81,10 +81,6 @@ spec:
       - apiGroups: [""]
         kinds: ["Pod"]
   parameters:
-    rego: |
-      skip_policy {
-        input.review.object.metadata.annotations["policy.gatekeeper.sh/ignore"] == "true"
-      }
     allowedCapabilities:
     - AUDIT_WRITE
     - CHOWN
