@@ -51,6 +51,13 @@ spec:
           backendRefs:
             - name: headlamp
               port: 80
+    securityContext:
+      allowPrivilegeEscalation: false
+      readOnlyRootFilesystem: true
+      runAsNonRoot: true
+      capabilities:
+        drop:
+          - ALL
     resources:
       limits:
         cpu: 100m
