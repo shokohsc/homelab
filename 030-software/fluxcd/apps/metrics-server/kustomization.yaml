@@ -33,7 +33,13 @@ patches:
   - patch: |
       - op: add
         path: /spec/template/spec/containers/0/args
-        value: ["--kubelet-insecure-tls"]
+        value:
+        --cert-dir=/tmp
+        - --secure-port=10250
+        - --kubelet-insecure-tls
+        - --kubelet-preferred-address-types=InternalIP,ExternalIP,Hostname
+        - --kubelet-use-node-status-port
+        - --metric-resolution=15s
     target:
       kind: Deployment
       labelSelector: k8s-app=metrics-server
