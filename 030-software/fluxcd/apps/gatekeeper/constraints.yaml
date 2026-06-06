@@ -80,6 +80,10 @@ spec:
     kinds:
       - apiGroups: [""]
         kinds: ["Pod"]
+    labelSelector:
+      matchExpressions:
+      - key: policy.gatekeeper.sh/ignore
+        operator: DoesNotExist
   parameters:
     allowedCapabilities:
     - AUDIT_WRITE
