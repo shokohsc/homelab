@@ -31,15 +31,29 @@ patches:
       kind: Deployment
       labelSelector: k8s-app=metrics-server
   - patch: |
-      - op: add
+      - op: replace
         path: /spec/template/spec/containers/0/args
         value:
         - --cert-dir=/tmp
-        - --secure-port=10250
+        - --secure-port=4443
         - --kubelet-insecure-tls
         - --kubelet-preferred-address-types=InternalIP,ExternalIP,Hostname
         - --kubelet-use-node-status-port
         - --metric-resolution=15s
+    target:
+      kind: Deployment
+      labelSelector: k8s-app=metrics-server
+  - patch: |
+      - op: replace
+        path: /spec/template/spec/containers/0/containerPort
+        value: 4443
+    target:
+      kind: Deployment
+      labelSelector: k8s-app=metrics-server
+  - patch: |
+      - op: add
+        path: /spec/template/spec/hostNetwork
+        value: true
     target:
       kind: Deployment
       labelSelector: k8s-app=metrics-server
