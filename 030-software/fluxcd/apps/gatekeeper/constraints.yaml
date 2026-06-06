@@ -83,7 +83,8 @@ spec:
     labelSelector:
       matchExpressions:
       - key: policy.gatekeeper.sh/ignore
-        operator: DoesNotExist
+        operator: NotIn
+        values: ["true"]
   parameters:
     allowedCapabilities:
     - AUDIT_WRITE
