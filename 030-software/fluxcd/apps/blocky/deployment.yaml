@@ -8,6 +8,7 @@ metadata:
   annotations:
     configmap.reloader.stakater.com/reload: config
 spec:
+  revisionHistoryLimit: 0
   selector:
     matchLabels:
       app.kubernetes.io/name: blocky
