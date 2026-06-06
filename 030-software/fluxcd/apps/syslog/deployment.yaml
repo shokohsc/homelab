@@ -40,6 +40,8 @@ spec:
               containerPort: 8601
               protocol: TCP
           volumeMounts:
+            - name: data
+              mountPath: /var/lib/syslog-ng
             - name: config
               mountPath: /etc/syslog-ng/syslog-ng.conf
               subPath: syslog-ng.conf
@@ -60,6 +62,9 @@ spec:
               cpu: 10m
               memory: 64M
       volumes:
+        - name: data
+          emptyDir:
+            medium: Memory
         - name: config
           configMap:
             name: config

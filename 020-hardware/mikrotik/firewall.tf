@@ -274,7 +274,36 @@ resource "routeros_ip_firewall_filter" "deny_inter_vlan" {
   log_prefix  = "deny_inter_vlan"
   # Place before first allow_priority rule (k8s with priority 20)
   comment      = "Rule 070-Deny-InterVLAN"
-  place_before = routeros_ip_firewall_filter.guest_dns_block.id
+  place_before = routeros_ip_firewall_filter.allow_talos_http.id
+  lifecycle {
+    ignore_changes = [
+      disabled
+    ]
+  }
+}
+
+############################################
+##      Allow Talos Discovery service     ##
+############################################
+
+resource "routeros_ip_firewall_layer7_protocol" "allow_sidero" {
+  name   = "allow-sidero-discovery"
+  regexp = "discovery.talos.dev"
+  # regexp = <<-EOT
+  #   ^(GET|POST|HEAD|PUT|DELETE|OPTIONS|CONNECT)\s+\/.*\s+HTTPS\/[0-9\.]+\r\n(?:.*\r\n)*?Host:\s*([A-Za-z0-9-]+\.)*sidero\.dev(:[0-9]+)?\r\n
+  # EOT
+}
+
+resource "routeros_ip_firewall_filter" "allow_talos_http" {
+  disabled        = var.disable_firewall_rules
+  chain           = "forward"
+  action          = "accept"
+  src_address     = local.vlan_cidrs["20"]
+  protocol        = "tcp"
+  dst_port        = "443"
+  layer7_protocol = routeros_ip_firewall_layer7_protocol.allow_sidero.name
+  comment         = "Rule 071-Allow HTTPS to talos.dev"
+  place_before    = routeros_ip_firewall_filter.guest_dns_block.id
   lifecycle {
     ignore_changes = [
       disabled
