@@ -62,6 +62,8 @@ spec:
           volumeMounts:
             - name: temp
               mountPath: /tmp
+            - name: cache
+              mountPath: /.cache
           resources:
             requests:
               cpu: 10m
@@ -71,6 +73,9 @@ spec:
               memory: 512M
       volumes:
         - name: temp
+          emptyDir:
+            medium: Memory
+        - name: cache
           emptyDir:
             medium: Memory
       tolerations:
