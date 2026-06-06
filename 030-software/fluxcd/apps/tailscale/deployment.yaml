@@ -12,6 +12,8 @@ spec:
     metadata:
       labels:
         app.kubernetes.io/name: tailscale
+      annotations:
+        policy.gatekeeper.sh/ignore: "true"
     spec:
       serviceAccountName: tailscale
       securityContext:
@@ -29,8 +31,8 @@ spec:
             readOnlyRootFilesystem: true
             runAsNonRoot: true
             capabilities:
-              # add:
-              #   - NET_ADMIN
+              add:
+                - NET_ADMIN
               drop:
                 - ALL
           env:
