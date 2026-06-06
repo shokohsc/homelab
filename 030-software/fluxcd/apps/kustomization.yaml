@@ -8,6 +8,7 @@ resources:
   - gatekeeper
   - headlamp
   - http-echo
+  - metrics-server
   - reloader
   - renovate
   - syslog
