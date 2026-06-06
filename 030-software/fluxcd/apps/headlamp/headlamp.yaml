@@ -36,6 +36,22 @@ spec:
           - name: secretreader
             image: registry.k8s.io/cluster-inventory-api/secretreader:v0.1.2
             mountPath: /access-plugins/secretreader
+      watchPlugins: true
+    pluginsManager:
+      enabled: false
+      configContent: |
+        plugins:
+          - name: flux
+            source: https://artifacthub.io/packages/headlamp/my-repo/my_plugin
+            version: 0.6.0
+          - name: flux
+            source: https://artifacthub.io/packages/headlamp/my-repo/my_plugin
+            version: 0.2.0
+        installOptions:
+          parallel: true
+          maxConcurrent: 2
+      baseImage: node:lts-alpine
+      version: latest
     httpRoute:
       enabled: true
       parentRefs:

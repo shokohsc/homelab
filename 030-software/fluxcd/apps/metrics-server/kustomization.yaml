@@ -45,7 +45,7 @@ patches:
       labelSelector: k8s-app=metrics-server
   - patch: |
       - op: replace
-        path: /spec/template/spec/containers/0/containerPort
+        path: /spec/template/spec/containers/0/ports/0/containerPort
         value: 4443
     target:
       kind: Deployment
