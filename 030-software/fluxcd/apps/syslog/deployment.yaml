@@ -2,18 +2,19 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: whoami
-  labels:
-    app: whoami
+  name: syslog
+  annotations:
+    configmap.reloader.stakater.com/reload: "config"
 spec:
   selector:
     matchLabels:
-      app: whoami
+      app.kubernetes.io/name: syslog
   template:
     metadata:
       labels:
-        app: whoami
+        app.kubernetes.io/name: syslog
     spec:
+      automountServiceAccountToken: false
       securityContext:
         runAsNonRoot: true
         runAsUser: 1000
@@ -21,18 +22,9 @@ spec:
         fsGroup: 1000
         seccompProfile:
           type: RuntimeDefault
-      affinity:
-        podAntiAffinity:
-          preferredDuringSchedulingIgnoredDuringExecution:
-            - weight: 100
-              podAffinityTerm:
-                topologyKey: "kubernetes.io/hostname"
-                labelSelector:
-                  matchLabels:
-                    app: whoami
       containers:
-        - name: whoami
-          image: ghcr.io/traefik/whoami:v1.11
+        - name: syslog
+          image: balabit/syslog-ng:4.11.0
           securityContext:
             allowPrivilegeEscalation: false
             readOnlyRootFilesystem: true
@@ -41,25 +33,36 @@ spec:
               drop:
                 - ALL
           args:
-            - --port=8080
+            - --no-caps
           ports:
-            - containerPort: 8080
-              name: http
+            - name: syslog
+              containerPort: 8601
+              protocol: TCP
+          volumeMounts:
+            - name: config
+              mountPath: /etc/syslog-ng/syslog-ng.conf
+              subPath: syslog-ng.conf
           startupProbe:
-            failureThreshold: 30
-            periodSeconds: 10
             tcpSocket:
-              port: http
+              port: syslog
           livenessProbe:
             tcpSocket:
-              port: http
+              port: syslog
           readinessProbe:
             tcpSocket:
-              port: http
+              port: syslog
           resources:
-            limits: 
+            limits:
               cpu: 100m
-              memory: 64Mi
+              memory: 64M
+            requests:
+              cpu: 10m
+              memory: 64M
+      volumes:
+        - name: config
+          configMap:
+            name: config
+            defaultMode: 0644
       tolerations:
         - key: "node.kubernetes.io/nuc"
           operator: "Exists"

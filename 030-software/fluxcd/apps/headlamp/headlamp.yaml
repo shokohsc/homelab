@@ -1,0 +1,60 @@
+---
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: HelmRepository
+metadata:
+  name: headlamp
+spec:
+  interval: ${interval}
+  url: https://kubernetes-sigs.github.io/headlamp/
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: headlamp
+spec:
+  interval: ${interval}
+  chart:
+    spec:
+      chart: headlamp
+      version: 0.42.0
+      sourceRef:
+        kind: HelmRepository
+        name: headlamp
+      interval: ${interval}
+  values:
+    config:
+      clusterInventory:
+        enabled: true
+        accessProvidersConfig:
+          providers:
+            - name: secretreader
+              execConfig:
+                apiVersion: client.authentication.k8s.io/v1
+                command: /access-plugins/secretreader/secretreader-plugin
+                provideClusterInfo: true
+        plugins:
+          - name: secretreader
+            image: registry.k8s.io/cluster-inventory-api/secretreader:v0.1.1
+            mountPath: /access-plugins/secretreader
+    httpRoute:
+      enabled: true
+      parentRefs:
+        - name: cilium
+          namespace: cilium
+      hostnames:
+        - headlamp.${domain}
+      rules:
+        - matches:
+            - path:
+                type: PathPrefix
+                value: /headlamp
+          backendRefs:
+            - name: headlamp
+              port: 80
+    resources:
+      limits:
+        cpu: 100m
+        memory: 128Mi
+      requests:
+        cpu: 100m
+        memory: 128Mi

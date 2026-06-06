@@ -225,8 +225,6 @@ worker:
     - |-
       machine:
         nodeLabels:
-          # topology.kubernetes.io/region: "metal"
-          # topology.kubernetes.io/zone: "nuc"
           bgp-policy: active
   schematic:
     customization:

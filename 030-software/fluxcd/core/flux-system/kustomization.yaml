@@ -4,7 +4,7 @@ resources:
 - gotk-components.yaml
 - gotk-sync.yaml
 - webhook.yaml
-- secret.yaml
+# - secret.yaml
 patchesStrategicMerge:
 - patch.yaml
 - |-

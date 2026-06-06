@@ -1,0 +1,70 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tailscale
+spec:
+  revisionHistoryLimit: 0
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: tailscale
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: tailscale
+    spec:
+      serviceAccountName: tailscale
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: tailscale
+          image: ghcr.io/tailscale/tailscale:v1.96.5
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+            capabilities:
+              add:
+                - NET_ADMIN
+              drop:
+                - ALL
+          env:
+            - name: TS_KUBE_SECRET
+              value: tailscale-auth
+            - name: TS_USERSPACE
+              value: "true"
+            - name: TS_AUTHKEY
+              valueFrom:
+                secretKeyRef:
+                  name: tailscale-auth
+                  key: TS_AUTHKEY
+            - name: TS_ROUTES
+              value: ${kubeServicesCidr},${cidr},${otherCidr}
+            - name: TS_EXTRA_ARGS
+              value: "--accept-dns=false --advertise-exit-node"
+            - name: TS_AUTH_ONCE
+              value: "true"
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: POD_UID
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.uid
+          resources:
+            requests:
+              cpu: 10m
+              memory: 64M
+            limits:
+              cpu: 1000m
+              memory: 512M
+      tolerations:
+        - key: "node.kubernetes.io/nuc"
+          operator: "Exists"
+          effect: "NoSchedule"

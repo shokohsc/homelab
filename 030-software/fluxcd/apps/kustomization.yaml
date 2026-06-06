@@ -6,7 +6,10 @@ resources:
   - cloudflared
   - external-dns
   - gatekeeper
+  - headlamp
   - http-echo
   - reloader
   - renovate
+  - syslog
+  - tailscale
   - whoami
