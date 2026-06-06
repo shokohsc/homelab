@@ -12,7 +12,6 @@ spec:
     metadata:
       labels:
         app.kubernetes.io/name: tailscale
-      annotations:
         policy.gatekeeper.sh/ignore: "true"
     spec:
       serviceAccountName: tailscale
