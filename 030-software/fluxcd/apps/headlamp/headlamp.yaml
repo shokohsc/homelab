@@ -34,7 +34,7 @@ spec:
                 provideClusterInfo: true
         plugins:
           - name: secretreader
-            image: registry.k8s.io/cluster-inventory-api/secretreader:v0.1.1
+            image: registry.k8s.io/cluster-inventory-api/secretreader:v0.1.2
             mountPath: /access-plugins/secretreader
     httpRoute:
       enabled: true
