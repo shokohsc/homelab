@@ -30,3 +30,13 @@ patches:
     target:
       kind: Deployment
       labelSelector: k8s-app=metrics-server
+  - patch: |
+      - op: add
+        path: /spec/template/spec/containers/0/securityContext
+        value:
+          capabilities:
+            add:
+              - NET_BIND_SERVICE
+    target:
+      kind: Deployment
+      labelSelector: k8s-app=metrics-server
