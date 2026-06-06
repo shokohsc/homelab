@@ -4,8 +4,8 @@ namespace: flux-system
 resources:
 - gotk-components.yaml
 - gotk-sync.yaml
-- webhook.yaml
 # - secret.yaml
+# - webhook.yaml
 patchesStrategicMerge:
 - patch.yaml
 - |-
