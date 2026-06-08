@@ -16,7 +16,7 @@ spec:
           automountServiceAccountToken: false
           containers:
             - name: postgres
-              image: public.ecr.aws/bitnami/postgresql:18.3.0
+              image: public.ecr.aws/bitnami/postgresql:18.4.0
               command:
                 - psql
               args:
