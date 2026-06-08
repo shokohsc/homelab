@@ -1,0 +1,62 @@
+---
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: changedetection
+  annotations:
+    configmap.reloader.stakater.com/reload: common-env,config
+spec:
+  selector:
+    matchLabels:
+      app: changedetection
+  template:
+    metadata:
+      labels:
+        app: changedetection
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/path: /metrics
+        prometheus.io/port: "3030"
+    spec:
+      containers:
+        - name: changedetection
+          image: shokohsc/moleculer-sidekick
+          envFrom:
+            - configMapRef:
+                name: common-env
+          env:
+            - name: SERVICES
+              value: changedetection
+            - name: FIREBASE_PROJECT_ID
+              valueFrom:
+                secretKeyRef:
+                  name: firebase
+                  key: project-id
+            - name: FIREBASE_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: firebase
+                  key: api-key
+            - name: MOL_CACHER__TYPE
+              value: Memory
+          ports:
+            - name: metrics
+              containerPort: 3030
+              protocol: TCP
+          startupProbe:
+            tcpSocket:
+              port: metrics
+          livenessProbe:
+            tcpSocket:
+              port: metrics
+          readinessProbe:
+            httpGet:
+              port: metrics
+              path: /metrics
+          resources:
+            requests:
+              cpu: 10m
+              memory: 64M
+            limits:
+              cpu: 1000m
+              memory: 128M

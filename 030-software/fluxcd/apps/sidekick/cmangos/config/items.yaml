@@ -1,0 +1,95 @@
+---
+bags:
+- name: gigantic bag
+  id: '38082:11'
+  link: 'https://www.wowhead.com/tbc/item=38082'
+riding:
+- name: amani war bear
+  id: '33809'
+  link: 'https://www.wowhead.com/tbc/item=33809'
+- name: onyx drake
+  id: '32857'
+  link: 'https://www.wowhead.com/tbc/item=32857'
+- name: swift flying broom
+  id: '33182'
+  link: 'https://www.wowhead.com/tbc/item=33182'
+- name: artisan crop
+  id: '25653'
+  link: 'https://www.wowhead.com/tbc/item=25653'
+warlock:
+- name: cowl illidari warlord
+  id: '32525'
+  link: 'https://www.wowhead.com/tbc/item=32525'
+- name: loop cursed bones
+  id: '33466'
+  link: 'https://www.wowhead.com/tbc/item=33466'
+- name: hatefury mantle
+  id: '30884'
+  link: 'https://www.wowhead.com/tbc/item=30884'
+- name: nethervoid cloak
+  id: '32590'
+  link: 'https://www.wowhead.com/tbc/item=32590'
+- name: vestments sea witch
+  id: '30107'
+  link: 'https://www.wowhead.com/tbc/item=30107'
+- name: bracers nimble thought
+  id: '32586'
+  link: 'https://www.wowhead.com/tbc/item=32586'
+- name: tempest chaos
+  id: '30910'
+  link: 'https://www.wowhead.com/tbc/item=30910'
+- name: chronicle dark secrets
+  id: '30872'
+  link: 'https://www.wowhead.com/tbc/item=30872'
+- name: voidhart gloves
+  id: '28968'
+  link: 'https://www.wowhead.com/tbc/item=28968'
+- name: belt blasting
+  id: '30038'
+  link: 'https://www.wowhead.com/tbc/item=30038'
+- name: voidhart leggings
+  id: '28966'
+  link: 'https://www.wowhead.com/tbc/item=28966'
+- name: boots blasting
+  id: '30037'
+  link: 'https://www.wowhead.com/tbc/item=30037'
+- name: mana attuned band
+  id: '33497'
+  link: 'https://www.wowhead.com/tbc/item=33497'
+- name: band eternal sage
+  id: '29305'
+  link: 'https://www.wowhead.com/tbc/item=29305'
+- name: hex shrunken head
+  id: '33829'
+  link: 'https://www.wowhead.com/tbc/item=33829'
+- name: eye magh
+  id: '28789'
+  link: 'https://www.wowhead.com/tbc/item=28789'
+- name: wand forgotten star
+  id: '29982'
+  link: 'https://www.wowhead.com/tbc/item=29982'
+- name: imbued unstable diamond
+  id: '32641'
+  link: 'https://www.wowhead.com/tbc/item=32641'
+- name: glowing shadowsong amethyst
+  id: '32215:3'
+  link: 'https://www.wowhead.com/tbc/item=32215'
+- name: great lioneye
+  id: '32210'
+  link: 'https://www.wowhead.com/tbc/item=32210'
+- name: veiled pyrestone
+  id: '3221:4'
+  link: 'https://www.wowhead.com/tbc/item=3221'
+- name: runic spellthread
+  id: '24274'
+  link: 'https://www.wowhead.com/tbc/item=24274'
+- name: glyph power
+  id: '29191'
+  link: 'https://www.wowhead.com/tbc/item=29191'
+- name: power scourge
+  id: '23545'
+  link: 'https://www.wowhead.com/tbc/item=23545'
+# druid:
+# mage:
+# rogue:
+# shaman:

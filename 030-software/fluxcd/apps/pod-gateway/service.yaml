@@ -9,14 +9,18 @@ metadata:
 spec:
   type: ClusterIP
   ports:
-  - port: 67
-    targetPort: dhcp
-    protocol: UDP
-    name: dhcp
-  - port: 8472
-    targetPort: foo
-    protocol: UDP
-    name: foo
+    - port: 67
+      targetPort: dhcp
+      protocol: UDP
+      name: dhcp
+    - port: 8472
+      targetPort: vxlan
+      protocol: UDP
+      name: vxlan
+    - port: 4789
+      targetPort: cilium
+      protocol: UDP
+      name: cilium
   # - port: 9091
   #   targetPort: vector
   #   protocol: TCP

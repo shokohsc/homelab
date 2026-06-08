@@ -1,0 +1,43 @@
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: truncate-events
+spec:
+  schedule: "*/15 * * * *"
+  successfulJobsHistoryLimit: 0
+  failedJobsHistoryLimit: 1
+  jobTemplate:
+    spec:
+      backoffLimit: 0
+      template:
+        spec:
+          restartPolicy: OnFailure
+          automountServiceAccountToken: false
+          containers:
+            - name: postgres
+              image: public.ecr.aws/bitnami/postgresql:18.3.0
+              command:
+                - psql
+              args:
+                - --command
+                - "DELETE FROM events WHERE \"createdAt\" < now() - INTERVAL '1 days'"
+              env:
+                - name: PGDATABASE
+                  value: sidekick
+                - name: PGHOST
+                  value: postgresql.postgresql
+                - name: PGUSER
+                  value: sidekick
+                - name: PGPASSWORD
+                  valueFrom:
+                    secretKeyRef:
+                      name: sidekick
+                      key: postgresql-database-password
+              resources:
+                requests:
+                  cpu: 10m
+                  memory: 64M
+                limits:
+                  cpu: 100m
+                  memory: 64M

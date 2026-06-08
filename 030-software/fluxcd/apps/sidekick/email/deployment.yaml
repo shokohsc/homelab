@@ -1,0 +1,70 @@
+---
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: email
+  annotations:
+    configmap.reloader.stakater.com/reload: common-env,config
+spec:
+  selector:
+    matchLabels:
+      app: email
+  template:
+    metadata:
+      labels:
+        app: email
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/path: /metrics
+        prometheus.io/port: "3030"
+    spec:
+      containers:
+        - name: email
+          image: shokohsc/moleculer-sidekick
+          envFrom:
+            - configMapRef:
+                name: common-env
+          env:
+            - name: SERVICES
+              value: email
+            - name: EMAIL_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: email
+                  key: username
+            - name: EMAIL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: email
+                  key: password
+            - name: IMAP_HOST
+              value: imap.maddy
+            - name: IMAP_PORT
+              value: "993"
+            - name: SMTP_HOST
+              value: smtp.maddy
+            - name: SMTP_PORT
+              value: "465"
+            - name: NODE_TLS_REJECT_UNAUTHORIZED
+              value: "0"
+          ports:
+            - name: metrics
+              containerPort: 3030
+              protocol: TCP
+          startupProbe:
+            tcpSocket:
+              port: metrics
+          livenessProbe:
+            tcpSocket:
+              port: metrics
+          readinessProbe:
+            httpGet:
+              port: metrics
+              path: /metrics
+          resources:
+            requests:
+              cpu: 10m
+              memory: 64M
+            limits:
+              cpu: 300m
+              memory: 256M

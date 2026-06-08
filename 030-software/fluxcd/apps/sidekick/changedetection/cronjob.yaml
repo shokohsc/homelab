@@ -1,0 +1,45 @@
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: changedetection
+spec:
+  schedule: "0 * * * *"
+  successfulJobsHistoryLimit: 0
+  failedJobsHistoryLimit: 1
+  concurrencyPolicy: Forbid
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          automountServiceAccountToken: false
+          restartPolicy: OnFailure
+          containers:
+          - name: curl
+            image: linuxserver/yq:3.4.3
+            env:
+            - name: ITEMS_YAML_PATH
+              value: /mnt/items.yaml
+            - name: SIDEKICK_API_ENDPOINT
+              value: http://api.sidekick:3000/changedetection/rebuild
+            command:
+            - /usr/bin/changedetection.sh
+            resources:
+              requests:
+                cpu: 10m
+                memory: 64M
+              limits:
+                cpu: 100m
+                memory: 64M
+            volumeMounts:
+            - name: config
+              mountPath: /usr/bin/changedetection.sh
+              subPath: changedetection.sh
+            - name: config
+              mountPath: /mnt/items.yaml
+              subPath: items.yaml
+          volumes:
+          - name: config
+            configMap:
+              name: changedetection
+              defaultMode: 0755

@@ -69,8 +69,11 @@ spec:
             - name: dhcp
               containerPort: 67
               protocol: UDP
-            - name: foo
+            - name: vxlan
               containerPort: 8472
+              protocol: UDP
+            - name: cilium
+              containerPort: 4789
               protocol: UDP
           startupProbe:
             exec:
@@ -242,15 +245,15 @@ spec:
       affinity:
         podAntiAffinity:
           preferredDuringSchedulingIgnoredDuringExecution:
-          - weight: 100
-            podAffinityTerm:
-              labelSelector:
-                matchExpressions:
-                - key: app.kubernetes.io/name
-                  operator: In
-                  values:
-                  - pod-gateway
-              topologyKey: kubernetes.io/hostname
+            - weight: 100
+              podAffinityTerm:
+                labelSelector:
+                  matchExpressions:
+                    - key: app.kubernetes.io/name
+                      operator: In
+                      values:
+                        - pod-gateway
+                topologyKey: kubernetes.io/hostname
         # nodeAffinity:
         #   preferredDuringSchedulingIgnoredDuringExecution:
         #     - weight: 100

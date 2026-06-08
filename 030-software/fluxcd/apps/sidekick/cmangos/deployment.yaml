@@ -1,0 +1,70 @@
+---
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: cmangos
+  annotations:
+    configmap.reloader.stakater.com/reload: common-env,config
+spec:
+  selector:
+    matchLabels:
+      app: cmangos
+  template:
+    metadata:
+      labels:
+        app: cmangos
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/path: /metrics
+        prometheus.io/port: "3030"
+    spec:
+      containers:
+        - name: cmangos
+          image: shokohsc/moleculer-sidekick
+          envFrom:
+            - configMapRef:
+                name: common-env
+          env:
+            - name: SERVICES
+              value: cmangos
+            - name: CMANGOS_REMOTE_HOST
+              value: management.cmangos.svc.cluster.local
+            - name: CMANGOS_REMOTE_PORT
+              value: "3443"
+            - name: CMANGOS_REMOTE_ACCOUNT
+              value: ADMINISTRATOR
+            - name: CMANGOS_REMOTE_PASSWORD
+              value: ADMINISTRATOR
+            - name: CMANGOS_ITEMS_FILEPATH
+              value: /mnt/cmangos/items.yaml
+          ports:
+            - name: metrics
+              containerPort: 3030
+              protocol: TCP
+          startupProbe:
+            failureThreshold: 6
+            tcpSocket:
+              port: metrics
+          livenessProbe:
+            tcpSocket:
+              port: metrics
+          readinessProbe:
+            httpGet:
+              port: metrics
+              path: /metrics
+          resources:
+            requests:
+              cpu: 10m
+              memory: 64M
+            limits:
+              cpu: 100m
+              memory: 256M
+          volumeMounts:
+            - name: config
+              mountPath: /mnt/cmangos/items.yaml
+              subPath: items.yaml
+      volumes:
+        - name: config
+          configMap:
+            name: cmangos
+            defaultMode: 0644

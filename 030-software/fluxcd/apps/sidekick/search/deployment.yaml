@@ -1,0 +1,55 @@
+---
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: search
+  annotations:
+    configmap.reloader.stakater.com/reload: common-env,config
+spec:
+  selector:
+    matchLabels:
+      app: search
+  template:
+    metadata:
+      labels:
+        app: search
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/path: /metrics
+        prometheus.io/port: "3030"
+    spec:
+      containers:
+        - name: search
+          image: shokohsc/moleculer-sidekick
+          envFrom:
+            - configMapRef:
+                name: common-env
+          env:
+            - name: SERVICES
+              value: search
+            - name: SERPAPI_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: search
+                  key: serpapi-api-key
+          ports:
+            - name: metrics
+              containerPort: 3030
+              protocol: TCP
+          startupProbe:
+            tcpSocket:
+              port: metrics
+          livenessProbe:
+            tcpSocket:
+              port: metrics
+          readinessProbe:
+            httpGet:
+              port: metrics
+              path: /metrics
+          resources:
+            requests:
+              cpu: 10m
+              memory: 64M
+            limits:
+              cpu: 1000m
+              memory: 128M

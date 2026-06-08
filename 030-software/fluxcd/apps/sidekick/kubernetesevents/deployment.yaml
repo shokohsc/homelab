@@ -1,0 +1,55 @@
+---
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: kubernetesevents
+  annotations:
+    configmap.reloader.stakater.com/reload: common-env,config
+spec:
+  selector:
+    matchLabels:
+      app: kubernetesevents
+  template:
+    metadata:
+      labels:
+        app: kubernetesevents
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/path: /metrics
+        prometheus.io/port: "3030"
+    spec:
+      containers:
+        - name: kubernetesevents
+          image: shokohsc/moleculer-sidekick
+          envFrom:
+            - configMapRef:
+                name: common-env
+          env:
+            - name: SERVICES
+              value: kubernetesevents
+            - name: ADAPTER_URL
+              valueFrom:
+                secretKeyRef:
+                  name: sidekick
+                  key: adapter-url
+          ports:
+            - name: metrics
+              containerPort: 3030
+              protocol: TCP
+          startupProbe:
+            tcpSocket:
+              port: metrics
+          livenessProbe:
+            tcpSocket:
+              port: metrics
+          readinessProbe:
+            httpGet:
+              port: metrics
+              path: /metrics
+          resources:
+            requests:
+              cpu: 10m
+              memory: 64M
+            limits:
+              cpu: 1000m
+              memory: 256M

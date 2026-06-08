@@ -1,0 +1,68 @@
+---
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: vpn
+  annotations:
+    configmap.reloader.stakater.com/reload: common-env,config
+spec:
+  selector:
+    matchLabels:
+      app: vpn
+  template:
+    metadata:
+      labels:
+        app: vpn
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/path: /metrics
+        prometheus.io/port: "3030"
+    spec:
+      containers:
+        - name: vpn
+          image: shokohsc/moleculer-sidekick
+          envFrom:
+            - configMapRef:
+                name: common-env
+          env:
+            - name: SERVICES
+              value: vpn
+            - name: ADAPTER_URL
+              valueFrom:
+                secretKeyRef:
+                  name: sidekick
+                  key: adapter-url
+            - name: IPINFO_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: vpn
+                  key: ipinfo-token
+            # - name: VPN_PROVIDER_MODE
+            #   value: 'fallback'
+            - name: BROWSERLESS_TOKEN
+              value: EeJ4Ou3waagh7goMohsah6sooTeehoom
+            - name: BROWSERLESS_HOST
+              value: browserless.browserless
+            - name: BROWSERLESS_PORT
+              value: "80"
+          ports:
+            - name: metrics
+              containerPort: 3030
+              protocol: TCP
+          startupProbe:
+            tcpSocket:
+              port: metrics
+          livenessProbe:
+            tcpSocket:
+              port: metrics
+          readinessProbe:
+            httpGet:
+              port: metrics
+              path: /metrics
+          resources:
+            requests:
+              cpu: 10m
+              memory: 64M
+            limits:
+              cpu: 1000m
+              memory: 128M

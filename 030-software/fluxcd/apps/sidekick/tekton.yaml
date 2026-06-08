@@ -1,0 +1,25 @@
+---
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: get-ovpn-profile
+  annotations:
+    kustomize.toolkit.fluxcd.io/substitute: disabled
+spec:
+  description: >-
+    Get an openvpn profile from freeopenvpn.org or ipspeed.info via api.sidekick service
+  steps:
+  - name: get-ovpn-profile
+    image: curlimages/curl:8.19.0
+    args:
+      - -s
+      - -H
+      - "Cache-Control': 'public,max-age=300'"
+      - http://api.sidekick:3000/vpn/profile/ovpn
+    resources:
+      requests:
+        cpu: 10m
+        memory: 64M
+      limits:
+        cpu: 100m
+        memory: 64M

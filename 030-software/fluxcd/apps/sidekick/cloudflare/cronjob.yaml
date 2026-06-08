@@ -1,0 +1,32 @@
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: ddns-cloudflare
+spec:
+  schedule: "*/15 * * * *"
+  successfulJobsHistoryLimit: 0
+  failedJobsHistoryLimit: 1
+  concurrencyPolicy: Forbid
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          automountServiceAccountToken: false
+          restartPolicy: OnFailure
+          containers:
+          - name: curl
+            image: curlimages/curl:8.19.0
+            args:
+            - -LX
+            - PATCH
+            - -H
+            - "Content-Type: application/json"
+            - http://api:3000/cloudflare/dns
+            resources:
+              requests:
+                cpu: 10m
+                memory: 64M
+              limits:
+                cpu: 100m
+                memory: 64M

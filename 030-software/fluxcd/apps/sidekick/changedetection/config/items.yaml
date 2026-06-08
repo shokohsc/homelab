@@ -1,0 +1,176 @@
+watchy:
+# Need update from source repo
+- body: |
+    GIT_URL: https://github.com/freqtrade/freqtrade.git
+    IMAGE: shokohsc/freqtrade
+    DOCKERFILE_CONTENT: |-
+      RUN pip install psycopg2-binary
+# OOMKilled
+- body: |
+    GIT_URL: https://github.com/derailed/k9s.git
+    IMAGE: shokohsc/k9s
+    DOCKERFILE_CONTENT: |-
+      RUN apk add --no-cache aws-cli
+      RUN apk add --no-cache -q --virtual=build gcc musl-dev python3-dev py3-pip libffi-dev openssl-dev cargo make \
+        && pip install --no-cache-dir azure-cli -q \
+        && apk del --purge build
+- body: |
+    GIT_URL: https://github.com/24eme/signaturepdf.git
+    IMAGE: shokohsc/signaturepdf
+- body: |
+    GIT_URL: https://github.com/neon-mmd/websurfx.git
+    IMAGE: shokohsc/websurfx
+# - body: |
+#     GIT_URL: https://github.com/kubescape/kubescape.git
+#     IMAGE: shokohsc/kubescape
+#     DOCKERFILE: build/kubescape-cli.Dockerfile
+#     EXTRA_ARGS: [--build-arg, ks_binary=kubescape]
+- body: |
+    GIT_URL: https://github.com/AykutSarac/jsoncrack.com.git
+    IMAGE: shokohsc/jsoncrack
+- body: |
+    GIT_URL: https://github.com/anvaka/city-roads.git
+    IMAGE: shokohsc/city-roads
+    DOCKERFILE_CONTENT: |-
+      FROM node:lts-alpine as build-stage
+      WORKDIR /app
+      RUN apk add --no-cache bash
+      COPY package*.json ./
+      RUN npm install
+      COPY . .
+      RUN npm run build
+      FROM nginx:stable
+      WORKDIR /usr/share/nginx/html
+      COPY --from=build-stage /app/dist/ .
+# Not enough RAM available
+- body: |
+    GIT_URL: https://github.com/PrismarineJS/prismarine-web-client.git
+    IMAGE: shokohsc/prismarine-web-client
+- body: |
+    GIT_URL: https://github.com/BrowserSync/browser-sync.git
+    IMAGE: shokohsc/browser-sync
+    DOCKERFILE_CONTENT: |-
+      FROM node
+      RUN npm -g install browser-sync
+      WORKDIR /source
+      ENTRYPOINT ["browser-sync"]
+- body: |
+    GIT_URL: https://github.com/viliusle/miniPaint.git
+    IMAGE: shokohsc/mini-paint
+    DOCKERFILE_CONTENT: |-
+      FROM node:lts-alpine as build-stage
+      WORKDIR /app
+      COPY package*.json ./
+      RUN npm install
+      COPY . .
+      RUN npm run build
+      FROM nginx:stable
+      WORKDIR /usr/share/nginx/html
+      COPY --from=build-stage /app/dist/ ./dist
+      COPY --from=build-stage /app/images/ ./images
+      COPY --from=build-stage /app/index.html .
+- body: |
+    GIT_URL: https://github.com/petrkotek/chromecastize.git
+    IMAGE: shokohsc/chromecastize
+    DOCKERFILE_CONTENT: |-
+      FROM alpine
+      RUN apk add --no-cache mediainfo ffmpeg
+      WORKDIR /tmp
+      COPY *.sh .
+      RUN chmod 755 ./chromecastize.sh ./config.sh
+      ENTRYPOINT ./chromecastize.sh
+- body: |
+    GIT_URL: https://github.com/watson-developer-cloud/speech-to-text-nodejs.git
+    IMAGE: shokohsc/watson
+    EDIT_MODE: replace
+    DOCKERFILE_CONTENT: |-
+      FROM library/node:14.16-alpine
+      RUN mkdir -p /usr/app
+      WORKDIR /usr/app
+      COPY --chown=node:node package* /usr/app/
+      RUN yarn install --production && \
+          yarn autoclean --init && \
+          yarn autoclean --force
+      RUN npm uninstall -g npm && \
+          rm -rf /tmp/* /var/cache/apk/* /root/.npm /root/.node-gyp
+      COPY --chown=node:node . /usr/app
+      EXPOSE 3000 8020
+      ENTRYPOINT [\"node\", \"server.js\"]
+- body: |
+    GIT_URL: https://github.com/asapach/peerflix-server.git
+    IMAGE: shokohsc/peerflix-server
+    DOCKERFILE_CONTENT: |-
+      USER root
+      RUN apk add --no-cache curl
+      USER node
+- body: |
+    GIT_URL: https://github.com/DoseLibrary/MainServer.git
+    IMAGE: shokohsc/dose-mainserver
+# Need an update from the source repo
+- body: |
+    GIT_URL: https://github.com/DoseLibrary/ContentServer.git
+    IMAGE: shokohsc/dose-mainserver
+- body: |
+    GIT_URL: https://github.com/AmruthPillai/Reactive-Resume.git
+    IMAGE: shokohsc/reactive-resume
+- body: |
+    GIT_URL: https://github.com/BetterCorp/hugo.git
+    IMAGE: shokohsc/hugo
+# Need an update from the source repo
+# build github.com/barnacs/compy: cannot load embed: cannot find module providing package embed
+- body: |
+    GIT_URL: https://github.com/barnacs/compy.git
+    IMAGE: shokohsc/compy
+    EDIT_MODE: replace
+    DOCKERFILE_CONTENT: |-
+      FROM golang:1.12-alpine as builder
+      WORKDIR /root/go/src/github.com/barnacs/compy/
+      COPY . .
+      RUN apk add --no-cache --no-progress git g++ libjpeg-turbo-dev
+      RUN go get -d -v ./...
+      RUN go build -ldflags='-extldflags "-static" -s -w' -o /go/bin/compy
+      FROM scratch
+      COPY --from=builder /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
+      COPY --from=builder /go/bin/compy compy
+      ENTRYPOINT ["./compy"]
+# Need update from source repo, missing npm package linked to original project
+- body: |
+    GIT_URL: https://github.com/ligmajohn/mw.git
+    IMAGE: shokohsc/movie-web-movie-web
+- body: |
+    GIT_URL: https://github.com/ligmajohn/simple-proxy.git
+    IMAGE: shokohsc/movie-web-simple-proxy
+- body: |
+    GIT_URL: https://github.com/ligmajohn/mw-back.git
+    IMAGE: shokohsc/movie-web-backend
+- body: |
+    GIT_URL: https://github.com/bndw/wifi-card.git
+    IMAGE: shokohsc/wifi-card
+- body: |
+    GIT_URL: https://git.1e99.eu/1e99/passed.git
+    IMAGE: shokohsc/passed
+- body: |
+    GIT_URL: https://github.com/msoap/shell2http.git
+    IMAGE: shokohsc/shell2http
+- body: |
+    GIT_URL: https://github.com/AUTOMATIC1111/stable-diffusion-webui
+    IMAGE: shokohsc/stable-diffusion-webui
+    EDIT_MODE: replace
+    DOCKERFILE_CONTENT: |-
+        FROM rocm/pytorch
+        RUN cd / \
+        && git clone https://github.com/AUTOMATIC1111/stable-diffusion-webui \
+        && cd stable-diffusion-webui \
+        && python -m pip install --upgrade pip wheel \
+        && sed -i '/fastapi/c\fastapi==0.90.1' requirements.txt \
+        && sed -i '/pytorch_lightning/c\pytorch_lightning==1.6.5' requirements.txt \
+        && echo >> requirements.txt \
+        && echo timm >> requirements.txt
+        WORKDIR /stable-diffusion-webui
+        ENV REQS_FILE='requirements.txt'
+        CMD ["python", "launch.py", "--listen", "--api", "--data", "/data/stable-diffusion-webui/models"]
+# # OOMKilled
+# - body: |
+#     GIT_URL: https://github.com/live-codes/livecodes
+#     IMAGE: shokohsc/livecodes
+#     EXTRA_ARGS: [--build-arg, HOST_NAME=livecodes.shokohsc.home]

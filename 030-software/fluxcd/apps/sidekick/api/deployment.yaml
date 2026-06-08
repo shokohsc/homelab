@@ -1,0 +1,64 @@
+---
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: api
+  annotations:
+    configmap.reloader.stakater.com/reload: common-env,config
+spec:
+  selector:
+    matchLabels:
+      app: api
+  template:
+    metadata:
+      labels:
+        app: api
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/path: /metrics
+        prometheus.io/port: "3030"
+    spec:
+      serviceAccountName: api
+      containers:
+        - name: api
+          image: shokohsc/moleculer-sidekick
+          envFrom:
+            - configMapRef:
+                name: common-env
+          env:
+            - name: SERVICES
+              value: api
+            - name: DELUGE_HOST
+              value: "http://deluge.deluge.svc.cluster.local"
+          ports:
+            - name: http
+              containerPort: 3000
+              protocol: TCP
+            - name: metrics
+              containerPort: 3030
+              protocol: TCP
+          startupProbe:
+            tcpSocket:
+              port: http
+          livenessProbe:
+            tcpSocket:
+              port: http
+          readinessProbe:
+            httpGet:
+              port: http
+              path: /status/readiness
+          volumeMounts:
+            - name: shared
+              mountPath: /mnt/images
+          resources:
+            requests:
+              cpu: 10m
+              memory: 64M
+            limits:
+              cpu: 1000m
+              memory: 256M
+      volumes:
+        - name: shared
+          nfs:
+            server: nfs-shared.nfs-shared.svc.cluster.local
+            path: /wallpapers
