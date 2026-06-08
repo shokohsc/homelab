@@ -5,26 +5,17 @@ operator:
     requests:
       cpu: 10m
       memory: 64Mi
-    limits:
-      cpu: 100m
-      memory: 64Mi
 
 envoy:
   resources:
     requests:
       cpu: 10m
       memory: 64Mi
-    limits:
-      cpu: 100m
-      memory: 64Mi
 
 resources:
   requests:
     cpu: 10m
     memory: 64Mi
-  limits:
-    cpu: 1000m
-    memory: 512Mi
 
 ipam:
   mode: kubernetes
@@ -71,9 +62,6 @@ hubble:
     resources:
       requests:
         cpu: 10m
-        memory: 64Mi
-      limits:
-        cpu: 100m
         memory: 64Mi
     tolerations:
       - key: "node.kubernetes.io/nuc"

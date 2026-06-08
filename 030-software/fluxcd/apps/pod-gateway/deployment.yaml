@@ -15,6 +15,7 @@ spec:
     metadata:
       labels:
         app: pod-gateway
+        policy.gatekeeper.sh/ignore: "true"
       annotations:
         descheduler.alpha.kubernetes.io/evict: "true"
     spec:
@@ -281,11 +282,13 @@ spec:
       labels:
         app: pod-gateway-webhook
     spec:
-      volumes:
-        - name: certs
-          secret:
-            secretName: pod-gateway-webhook-tls
-            defaultMode: 420
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        seccompProfile:
+          type: RuntimeDefault
       containers:
         - name: webhook
           image: ghcr.io/k8s-at-home/gateway-admision-controller:v3.6.0
@@ -362,6 +365,11 @@ spec:
             periodSeconds: 1
             successThreshold: 1
             failureThreshold: 30
+      volumes:
+        - name: certs
+          secret:
+            secretName: pod-gateway-webhook-tls
+            defaultMode: 420
       tolerations:
         - key: "node.kubernetes.io/nuc"
           operator: "Exists"
