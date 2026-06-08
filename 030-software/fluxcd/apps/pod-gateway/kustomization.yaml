@@ -11,15 +11,17 @@ resources:
   - cilium-network-policy.yaml
   # - networkpolicy.yaml
 configMapGenerator:
-- name: pod-gateway
-  files:
-  - ./config/settings.sh
-  - ./config/nat.conf
-  - ./config/gateway_sidecar.sh
-- name: openvpn-client
-  files:
-  - ./config/entry.sh
-  - ./config/get_ovpn_profile.sh
+  - name: pod-gateway
+    files:
+      - ./config/settings.sh
+      - ./config/nat.conf
+      - ./config/gateway_sidecar.sh
+      - ./config/client_init.sh
+      - ./config/gateway_init.sh
+  - name: openvpn-client
+    files:
+      - ./config/entry.sh
+      - ./config/get_ovpn_profile.sh
 # - name: vector
 #   files:
 #   - ./config/vector.yaml

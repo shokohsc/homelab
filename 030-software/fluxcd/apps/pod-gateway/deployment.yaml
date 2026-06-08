@@ -47,6 +47,12 @@ spec:
             - mountPath: /config
               name: config
               readOnly: true
+            - name: config
+              mountPath: /bin/client_init.sh
+              subPath: client_init.sh
+            - name: config
+              mountPath: /bin/gateway_init.sh
+              subPath: gateway_init.sh
       containers:
         - name: pod-gateway
           image: ghcr.io/k8s-at-home/pod-gateway:v1.7.0
