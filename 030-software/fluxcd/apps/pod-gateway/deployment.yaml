@@ -33,17 +33,17 @@ spec:
             - /bin/gateway_init.sh
           image: ghcr.io/angelnu/pod-gateway:v1.13.0
           name: routes
-          # securityContext:
-          #   privileged: true
           securityContext:
-            allowPrivilegeEscalation: false
-            readOnlyRootFilesystem: true
-            # runAsNonRoot: true
-            capabilities:
-              drop:
-                - ALL
-              add:
-                - NET_ADMIN
+            privileged: true
+          # securityContext:
+          #   allowPrivilegeEscalation: false
+          #   readOnlyRootFilesystem: true
+          #   # runAsNonRoot: true
+          #   capabilities:
+          #     drop:
+          #       - ALL
+          #     add:
+          #       - NET_ADMIN
           volumeMounts:
             - mountPath: /config
               name: config
