@@ -16,8 +16,8 @@ configMapGenerator:
       - ./config/settings.sh
       - ./config/nat.conf
       - ./config/gateway_sidecar.sh
-      - ./config/client_init.sh
-      - ./config/gateway_init.sh
+      # - ./config/client_init.sh
+      # - ./config/gateway_init.sh
   - name: openvpn-client
     files:
       - ./config/entry.sh
