@@ -118,7 +118,7 @@ spec:
               mountPath: /bin/gateway_sidecar.sh
               subPath: gateway_sidecar.sh
 
-        - image: ghcr.io/wfg/openvpn-client:2.1.1
+        - image: ghcr.io/wfg/openvpn-client:3.1.0
           name: openvpn
           command:
             - /usr/bin/get_ovpn_profile.sh
