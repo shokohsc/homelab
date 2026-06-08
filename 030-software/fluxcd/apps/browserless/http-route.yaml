@@ -1,34 +1,22 @@
 ---
-apiVersion: networking.k8s.io/v1
-kind: Ingress
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
 metadata:
   name: browserless
-  annotations:
-    kubernetes.io/ingress.class: ${ingressClass}
-    cert-manager.io/cluster-issuer: ca-cluster-issuer
-    dashboard.${domain}/name: browserless
-    dashboard.${domain}/url: https://browserless.${domain}/debugger/?token=EeJ4Ou3waagh7goMohsah6sooTeehoom
-    dashboard.${domain}/icon: navigation
-
-    nginx.ingress.kubernetes.io/service-upstream: "true"
-    nginx.ingress.kubernetes.io/proxy-next-upstream-timeout: "60"
-    nginx.ingress.kubernetes.io/proxy-next-upstream-tries: "0"
 spec:
-  rules:
-  - host: browserless.${domain}
-    http:
-      paths:
-      - path: /
-        pathType: Prefix
-        backend:
-          service:
-            name: browserless
-            port:
-              number: 80
-  tls:
-  - hosts:
+  hostnames:
     - browserless.${domain}
-    secretName: browserless-cert
+  parentRefs:
+    - name: cilium
+      namespace: cilium
+  rules:
+    - backendRefs:
+        - name: browserless
+          port: 80
+      matches:
+        - path:
+            type: PathPrefix
+            value: /
 # ---
 # apiVersion: keda.sh/v1alpha1
 # kind: ScaledObject

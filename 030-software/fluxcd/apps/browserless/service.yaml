@@ -4,7 +4,7 @@ kind: Service
 metadata:
   name: browserless
   labels:
-    app.kubernetes.io/name: browserless
+    app: browserless
 spec:
   type: ClusterIP
   ports:
@@ -13,4 +13,4 @@ spec:
       protocol: TCP
       name: http
   selector:
-    app.kubernetes.io/name: browserless
+    app: browserless

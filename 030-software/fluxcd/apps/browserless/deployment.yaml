@@ -4,15 +4,16 @@ kind: Deployment
 metadata:
   name: browserless
   labels:
-    app.kubernetes.io/name: browserless
+    app: browserless
 spec:
+  revisionHistoryLimit: 0
   selector:
     matchLabels:
-      app.kubernetes.io/name: browserless
+      app: browserless
   template:
     metadata:
       labels:
-        app.kubernetes.io/name: browserless
+        app: browserless
     spec:
       automountServiceAccountToken: false
       securityContext:

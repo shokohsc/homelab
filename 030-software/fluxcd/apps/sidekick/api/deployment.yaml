@@ -6,6 +6,7 @@ metadata:
   annotations:
     configmap.reloader.stakater.com/reload: common-env,config
 spec:
+  revisionHistoryLimit: 0
   selector:
     matchLabels:
       app: api
