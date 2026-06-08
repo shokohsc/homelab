@@ -18,7 +18,7 @@ spec:
     spec:
       # renovate: registryUrl=https://nats-io.github.io/k8s/helm/charts/
       chart: nats
-      version: 2.12.6
+      version: 2.14.0
       sourceRef:
         kind: HelmRepository
         name: nats
