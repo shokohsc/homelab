@@ -1,6 +1,30 @@
 # Do NOT enable bpf.masquerade with KubeSpan
 operator:
   replicas: 1
+  resources:
+    requests:
+      cpu: 10m
+      memory: 64Mi
+    limits:
+      cpu: 100m
+      memory: 64Mi
+
+envoy:
+  resources:
+    requests:
+      cpu: 10m
+      memory: 64Mi
+    limits:
+      cpu: 100m
+      memory: 64Mi
+
+resources:
+  requests:
+    cpu: 10m
+    memory: 64Mi
+  limits:
+    cpu: 1000m
+    memory: 512Mi
 
 ipam:
   mode: kubernetes
@@ -49,7 +73,7 @@ hubble:
         cpu: 10m
         memory: 64Mi
       limits:
-        cpu: 10m
+        cpu: 100m
         memory: 64Mi
     tolerations:
       - key: "node.kubernetes.io/nuc"
@@ -57,13 +81,22 @@ hubble:
         effect: "NoSchedule"
   ui:
     enabled: true
-    resources:
-      requests:
-        cpu: 10m
-        memory: 64Mi
-      limits:
-        cpu: 10m
-        memory: 64Mi
+    backend:
+      resources:
+        requests:
+          cpu: 10m
+          memory: 64Mi
+        limits:
+          cpu: 100m
+          memory: 64Mi
+    frontend:
+      resources:
+        requests:
+          cpu: 10m
+          memory: 64Mi
+        limits:
+          cpu: 100m
+          memory: 64Mi
     tolerations:
       - key: "node.kubernetes.io/nuc"
         operator: "Exists"

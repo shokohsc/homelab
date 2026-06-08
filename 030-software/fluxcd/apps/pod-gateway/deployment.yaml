@@ -1,0 +1,368 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pod-gateway
+  labels:
+    app: pod-gateway
+  annotations:
+    configmap.reloader.stakater.com/reload: pod-gateway,openvpn-client
+spec:
+  selector:
+    matchLabels:
+      app: pod-gateway
+  template:
+    metadata:
+      labels:
+        app: pod-gateway
+      annotations:
+        descheduler.alpha.kubernetes.io/evict: "true"
+    spec:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        seccompProfile:
+          type: RuntimeDefault
+      automountServiceAccountToken: false
+      initContainers:
+        - command:
+            - /bin/gateway_init.sh
+          image: ghcr.io/k8s-at-home/pod-gateway:v1.7.0
+          name: routes
+          # securityContext:
+          #   privileged: true
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+            capabilities:
+              drop:
+                - ALL
+              add:
+                - NET_ADMIN
+          volumeMounts:
+            - mountPath: /config
+              name: config
+              readOnly: true
+      containers:
+        - name: pod-gateway
+          image: ghcr.io/k8s-at-home/pod-gateway:v1.7.0
+          command:
+            - /bin/gateway_sidecar.sh
+          # securityContext:
+          #   capabilities:
+          #     add:
+          #       - NET_ADMIN
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+            capabilities:
+              drop:
+                - ALL
+              add:
+                - NET_ADMIN
+          ports:
+            - name: dhcp
+              containerPort: 67
+              protocol: UDP
+            - name: foo
+              containerPort: 8472
+              protocol: UDP
+          startupProbe:
+            exec:
+              command:
+                - ip
+                - a
+                - s
+                - tun0
+          readinessProbe:
+            exec:
+              command:
+                - ip
+                - a
+                - s
+                - tun0
+          livenessProbe:
+            exec:
+              command:
+                - nc
+                - -zv
+                - google.com
+                - "443"
+          resources:
+            limits:
+              cpu: 1000m
+              memory: 1024M
+            requests:
+              cpu: 10m
+              memory: 64M
+          volumeMounts:
+            - name: config
+              mountPath: /config
+            - name: config
+              mountPath: /bin/gateway_sidecar.sh
+              subPath: gateway_sidecar.sh
+
+        - image: ghcr.io/wfg/openvpn-client:2.1.1
+          name: openvpn
+          command:
+            - /usr/bin/get_ovpn_profile.sh
+          # securityContext:
+          #   capabilities:
+          #     add:
+          #       - NET_ADMIN
+          #   runAsGroup: 0
+          #   runAsUser: 0
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+            capabilities:
+              drop:
+                - ALL
+              add:
+                - NET_ADMIN
+          env:
+            - name: KILL_SWITCH
+              value: on
+            - name: SUBNETS
+              value: "${kubeServicesCidr},172.16.0.0/24"
+            - name: PORTS
+              value: "67;udp,8472;udp"
+            - name: KEEP_DNS_UNCHANGED
+              value: "on"
+          startupProbe:
+            exec:
+              command:
+                - ip
+                - a
+                - s
+                - tun0
+          readinessProbe:
+            exec:
+              command:
+                - ip
+                - a
+                - s
+                - tun0
+          livenessProbe:
+            exec:
+              command:
+                - nc
+                - -zv
+                - google.com
+                - "443"
+          resources:
+            limits:
+              cpu: 1000m
+              memory: 2048M
+            requests:
+              cpu: 10m
+              memory: 64M
+          volumeMounts:
+            - name: openvpn-client
+              mountPath: /usr/bin/get_ovpn_profile.sh
+              subPath: get_ovpn_profile.sh
+            - name: openvpn-client
+              mountPath: /data/scripts/entry.sh
+              subPath: entry.sh
+            - name: tun-device
+              mountPath: /dev/net/tun
+              readOnly: true
+            - name: profile
+              mountPath: /data/vpn
+
+        # - name: vector
+        #   image: timberio/vector:0.41.1-alpine
+        #   env:
+        #     - name: VECTOR_SELF_NODE_NAME
+        #       valueFrom:
+        #         fieldRef:
+        #           fieldPath: spec.nodeName
+        #     - name: VECTOR_SELF_POD_NAME
+        #       valueFrom:
+        #         fieldRef:
+        #           fieldPath: metadata.name
+        #     - name: VECTOR_SELF_POD_NAMESPACE
+        #       valueFrom:
+        #         fieldRef:
+        #           fieldPath: metadata.namespace
+        #   args:
+        #     - -c
+        #     - /etc/vector/vector.yaml
+        #   ports:
+        #     - name: vector
+        #       containerPort: 9091
+        #       protocol: TCP
+        #   startupProbe:
+        #     tcpSocket:
+        #       port: vector
+        #   livenessProbe:
+        #     tcpSocket:
+        #       port: vector
+        #   readinessProbe:
+        #     tcpSocket:
+        #       port: vector
+        #   resources:
+        #     requests:
+        #       cpu: 100m
+        #       memory: 64M
+        #     limits:
+        #       cpu: 1000m
+        #       memory: 64M
+        #   volumeMounts:
+        #     - name: vector
+        #       mountPath: /etc/vector/vector.yaml
+        #       subPath: vector.yaml
+      volumes:
+        - name: config
+          configMap:
+            defaultMode: 365
+            name: pod-gateway
+        - name: openvpn-client
+          configMap:
+            defaultMode: 365
+            name: openvpn-client
+        # https://stackoverflow.com/questions/70089374/openvpn-client-in-kubernetes-pod
+        - name: tun-device
+          hostPath:
+            path: /dev/net/tun
+        - name: profile
+          emptyDir:
+            medium: Memory
+        # - name: vector
+        #   configMap:
+        #     name: vector
+        #     defaultMode: 0644
+
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 100
+            podAffinityTerm:
+              labelSelector:
+                matchExpressions:
+                - key: app.kubernetes.io/name
+                  operator: In
+                  values:
+                  - pod-gateway
+              topologyKey: kubernetes.io/hostname
+        # nodeAffinity:
+        #   preferredDuringSchedulingIgnoredDuringExecution:
+        #     - weight: 100
+        #       preference:
+        #         matchExpressions:
+        #           - key: kubernetes.io/hostname
+        #             operator: NotIn
+        #             values:
+        #               - zarya
+      tolerations:
+        - key: "node.kubernetes.io/nuc"
+          operator: "Exists"
+          effect: "NoSchedule"
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pod-gateway-webhook
+  labels:
+    app: pod-gateway-webhook
+spec:
+  strategy:
+    type: RollingUpdate
+  selector:
+    matchLabels:
+      app: pod-gateway-webhook
+  template:
+    metadata:
+      labels:
+        app: pod-gateway-webhook
+    spec:
+      volumes:
+        - name: certs
+          secret:
+            secretName: pod-gateway-webhook-tls
+            defaultMode: 420
+      containers:
+        - name: webhook
+          image: ghcr.io/k8s-at-home/gateway-admision-controller:v3.6.0
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+            capabilities:
+              drop:
+                - ALL
+          args:
+            - --webhook-listen-address=:8080
+            - --gateway=pod-gateway.pod-gateway.svc.cluster.local
+            - --DNS=172.16.0.1
+            - --configmapName=pod-gateway
+            - --setGatewayLabel=setGateway
+            - --setGatewayAnnotation=setGateway
+            - --setGatewayDefault
+            # Static
+            - --tls-cert-file-path=/tls/tls.crt
+            - --tls-key-file-path=/tls/tls.key
+            - --DNSPolicy=None
+            # Init container
+            - --initImage=ghcr.io/k8s-at-home/pod-gateway:v1.7.0
+            - --initImagePullPol=IfNotPresent
+            - --initCmd=/bin/client_init.sh
+            - --initMountPoint=/config
+            # Sidecar container
+            - --sidecarImage=ghcr.io/k8s-at-home/pod-gateway:v1.7.0
+            - --sidecarImagePullPol=IfNotPresent
+            - --sidecarCmd=/bin/client_sidecar.sh
+            - --sidecarMountPoint=/config
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+          resources:
+            limits:
+              cpu: 100m
+              memory: 64M
+            requests:
+              cpu: 10m
+              memory: 64M
+          volumeMounts:
+            - name: certs
+              readOnly: true
+              mountPath: /tls
+          livenessProbe:
+            httpGet:
+              path: /wh/health
+              port: 8080
+              scheme: HTTPS
+            initialDelaySeconds: 1
+            timeoutSeconds: 10
+            periodSeconds: 10
+            successThreshold: 1
+            failureThreshold: 5
+          readinessProbe:
+            httpGet:
+              path: /wh/health
+              port: 8080
+              scheme: HTTPS
+            initialDelaySeconds: 1
+            timeoutSeconds: 10
+            periodSeconds: 10
+            successThreshold: 1
+            failureThreshold: 5
+          startupProbe:
+            httpGet:
+              path: /wh/health
+              port: 8080
+              scheme: HTTPS
+            timeoutSeconds: 1
+            periodSeconds: 1
+            successThreshold: 1
+            failureThreshold: 30
+      tolerations:
+        - key: "node.kubernetes.io/nuc"
+          operator: "Exists"
+          effect: "NoSchedule"

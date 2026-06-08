@@ -1,0 +1,29 @@
+---
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: pod-gateway
+spec:
+  endpointSelector:
+    matchLabels:
+      app: pod-gateway
+  egress:
+    - toEndpoints:
+        - matchLabels:
+            io.kubernetes.pod.namespace: kube-system
+            k8s-app: kube-dns
+      toPorts:
+        - ports:
+            - port: "53"
+              protocol: UDP
+          rules:
+            dns:
+              - matchPattern: "*"
+    - toEndpoints:
+        - matchLabels:
+            app: api
+            io.kubernetes.pod.namespace.labels.namespace: sidekick
+    - toEndpoints:
+        - {}
+    - toEntities:
+        - world

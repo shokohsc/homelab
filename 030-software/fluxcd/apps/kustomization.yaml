@@ -9,6 +9,7 @@ resources:
   - headlamp
   - http-echo
   - metrics-server
+  - pod-gateway
   - reloader
   - renovate
   - syslog

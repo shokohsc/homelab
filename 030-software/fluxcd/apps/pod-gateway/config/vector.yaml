@@ -1,0 +1,37 @@
+data_dir: /var/lib/vector
+sources:
+  # metrics:
+  #   type: http
+  #   address: 0.0.0.0:9091
+  #   path: /metrics
+
+  http_in:
+    type: http
+    address: 0.0.0.0:8080
+    path: /
+  trigger:
+    type: "exec"
+    mode: streaming
+    command: ["/bin/sh", "-c", "inotifywait -m /tmp/vector-sink -e create | while read path action file; do /shared/listen_and_kill.sh; done"]
+
+sinks:
+  # prometheus-remote-write:
+  #   type: prometheus_remote_write
+  #   healthcheck:
+  #     enabled: false
+  #   inputs:
+  #     - metrics
+  #   endpoint: http://prometheus-server.prometheus/api/v1/write
+  # console:
+  #   type: console
+  #   inputs:
+  #     - metrics
+  #   encoding:
+  #     codec: json
+
+  trigger_file:
+    type: file
+    inputs: ["http_in"]
+    path: "/tmp/vector-sink/%Y-%m-%d-%H-%M-%S.json"
+    encoding:
+      codec: json

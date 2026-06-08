@@ -1,0 +1,34 @@
+---
+# Generate a CA Certificate used to sign certificates for the webhook
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: pod-gateway-webhook-ca
+  labels:
+    app: pod-gateway
+spec:
+  secretName: pod-gateway-webhook-ca
+  duration: 43800h # 5y
+  issuerRef:
+    name: pod-gateway-webhook-selfsign
+    kind: Issuer
+  commonName: "ca.pod-gateway.cert-manager"
+  isCA: true
+---
+# Finally, generate a serving certificate for the webhook to use
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: pod-gateway-webhook-tls
+  labels:
+    app: pod-gateway
+spec:
+  secretName: pod-gateway-webhook-tls
+  duration: 8760h # 1y
+  issuerRef:
+    name: pod-gateway-webhook-ca
+    kind: Issuer
+  dnsNames:
+  - pod-gateway-webhook
+  - pod-gateway-webhook.pod-gateway
+  - pod-gateway-webhook.pod-gateway.svc

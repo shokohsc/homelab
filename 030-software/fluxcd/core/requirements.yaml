@@ -19,6 +19,7 @@ spec:
       cidr: "10.42.60.0/24"
       subnet: "10.42.60"
       gateway: "10.42.60.1"
+      kubeServicesCidr: "10.96.0.0/12"
       kubeDns: "10.96.0.10"
       talosSubnet: "10.42.20"
       interval: 10m
