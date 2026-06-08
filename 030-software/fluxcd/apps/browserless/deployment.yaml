@@ -5,10 +5,6 @@ metadata:
   name: browserless
   labels:
     app.kubernetes.io/name: browserless
-  annotations:
-    keel.sh/policy: force
-    keel.sh/trigger: poll
-    keel.sh/pollSchedule: "@every 12h"
 spec:
   selector:
     matchLabels:
@@ -19,9 +15,23 @@ spec:
         app.kubernetes.io/name: browserless
     spec:
       automountServiceAccountToken: false
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        seccompProfile:
+          type: RuntimeDefault
       containers:
         - name: browserless
           image: ghcr.io/browserless/chromium:v2.46.0
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+            capabilities:
+              drop:
+                - ALL
           env:
             - name: TOKEN
               value: EeJ4Ou3waagh7goMohsah6sooTeehoom
@@ -54,3 +64,7 @@ spec:
             limits:
               cpu: 3
               memory: 4096M
+      tolerations:
+        - key: "node.kubernetes.io/nuc"
+          operator: "Exists"
+          effect: "NoSchedule"

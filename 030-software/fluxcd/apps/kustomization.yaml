@@ -2,6 +2,7 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
   - blocky
+  - browserless
   - cert-manager
   - cloudflared
   - external-dns
@@ -9,9 +10,11 @@ resources:
   - headlamp
   - http-echo
   - metrics-server
+  - nats
   - pod-gateway
   - reloader
   - renovate
+  - sidekick
   - syslog
   - tailscale
   - whoami

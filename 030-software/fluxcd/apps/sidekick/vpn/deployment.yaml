@@ -18,9 +18,23 @@ spec:
         prometheus.io/path: /metrics
         prometheus.io/port: "3030"
     spec:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        seccompProfile:
+          type: RuntimeDefault
       containers:
         - name: vpn
           image: shokohsc/moleculer-sidekick
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+            capabilities:
+              drop:
+                - ALL
           envFrom:
             - configMapRef:
                 name: common-env
@@ -66,3 +80,7 @@ spec:
             limits:
               cpu: 1000m
               memory: 128M
+      tolerations:
+        - key: "node.kubernetes.io/nuc"
+          operator: "Exists"
+          effect: "NoSchedule"

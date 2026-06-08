@@ -3,27 +3,27 @@ kind: Kustomization
 namespace: sidekick
 resources:
   - namespace.yaml
-  - tekton.yaml
+  # - tekton.yaml
 
   - api/
   - vpn/
-  - changedetection/
-  - kubernetesevents/
-  # - cmangos/
-  - email/
-  # - cloudflare/
-  - search/
+  # - changedetection/
+  # - kubernetesevents/
+  # # - cmangos/
+  # - email/
+  # # - cloudflare/
+  # - search/
 
 images:
   - name: shokohsc/moleculer-sidekick
-    newTag: 'fb8c753'
+    newTag: "fb8c753"
 
 configMapGenerator:
-- name: common-env
-  envs:
-    - ./config/common-env
-- name: config
-  files:
-  - ./config/nats.conf
+  - name: common-env
+    envs:
+      - ./config/common-env
+  - name: config
+    files:
+      - ./config/nats.conf
 generatorOptions:
   disableNameSuffixHash: true

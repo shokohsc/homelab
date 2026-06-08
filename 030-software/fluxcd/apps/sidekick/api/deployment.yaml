@@ -19,9 +19,23 @@ spec:
         prometheus.io/port: "3030"
     spec:
       serviceAccountName: api
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        seccompProfile:
+          type: RuntimeDefault
       containers:
         - name: api
           image: shokohsc/moleculer-sidekick
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+            capabilities:
+              drop:
+                - ALL
           envFrom:
             - configMapRef:
                 name: common-env
@@ -62,3 +76,7 @@ spec:
           nfs:
             server: nfs-shared.nfs-shared.svc.cluster.local
             path: /wallpapers
+      tolerations:
+        - key: "node.kubernetes.io/nuc"
+          operator: "Exists"
+          effect: "NoSchedule"
