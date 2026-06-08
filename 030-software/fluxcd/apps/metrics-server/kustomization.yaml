@@ -3,6 +3,7 @@ kind: Kustomization
 namespace: metrics-server
 resources:
   - namespace.yaml
+  - rbac.yaml
   - https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml
 patches:
   - patch: |
@@ -25,12 +26,11 @@ patches:
         path: /spec/template/spec/containers/0/resources
         value:
           limits:
-            cpu: 100m
+            cpu: 200m
             memory: 128M
-    target:
-      kind: Deployment
-      labelSelector: k8s-app=metrics-server
-  - patch: |
+      - op: add
+        path: /spec/template/spec/hostNetwork
+        value: true
       - op: replace
         path: /spec/template/spec/containers/0/args
         value:
@@ -40,30 +40,9 @@ patches:
         - --kubelet-preferred-address-types=InternalIP,ExternalIP,Hostname
         - --kubelet-use-node-status-port
         - --metric-resolution=15s
-    target:
-      kind: Deployment
-      labelSelector: k8s-app=metrics-server
-  - patch: |
       - op: replace
         path: /spec/template/spec/containers/0/ports/0/containerPort
         value: 4443
     target:
       kind: Deployment
       labelSelector: k8s-app=metrics-server
-  - patch: |
-      - op: add
-        path: /spec/template/spec/hostNetwork
-        value: true
-    target:
-      kind: Deployment
-      labelSelector: k8s-app=metrics-server
-  # - patch: |
-  #     - op: add
-  #       path: /spec/template/spec/containers/0/securityContext
-  #       value:
-  #         capabilities:
-  #           add:
-  #             - NET_BIND_SERVICE
-  #   target:
-  #     kind: Deployment
-  #     labelSelector: k8s-app=metrics-server

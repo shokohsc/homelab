@@ -45,7 +45,7 @@ nodes:
 
   - controlPlane: false
     hostname: mercy
-    installDisk: /dev/nvme0n1
+    installDisk: /dev/sda
     ipAddress: ${TALOS_SUBNET}.40
     networkInterfaces:
       - interface: eno1
