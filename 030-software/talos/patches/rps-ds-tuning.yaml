@@ -38,6 +38,13 @@ spec:
               echo 4096 > "$flow"
           done
           sleep infinity
+        resources:
+          requests:
+            cpu: 10m
+            memory: 64Mi
+          limits:
+            cpu: 100m
+            memory: 64Mi
       tolerations:
         - effect: NoSchedule
           key: node.kubernetes.io/nuc

@@ -75,12 +75,12 @@ spec:
         drop:
           - ALL
     resources:
+      requests:
+        cpu: 10m
+        memory: 64Mi
       limits:
         cpu: 100m
-        memory: 128Mi
-      requests:
-        cpu: 100m
-        memory: 128Mi
+        memory: 64Mi
     tolerations:
       - key: "node.kubernetes.io/nuc"
         operator: "Exists"

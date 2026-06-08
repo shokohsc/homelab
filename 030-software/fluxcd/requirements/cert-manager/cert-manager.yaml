@@ -31,19 +31,19 @@ spec:
     resources:
       requests:
         cpu: 2m
-        memory: 128M
+        memory: 128Mi
       limits:
         cpu: 100m
-        memory: 512M
+        memory: 512Mi
 
     webhook:
       resources:
         requests:
           cpu: 1m
-          memory: 13M
+          memory: 13Mi
         limits:
           cpu: 100m
-          memory: 512M
+          memory: 512Mi
       tolerations:
         - key: "node.kubernetes.io/nuc"
           operator: "Exists"
@@ -53,10 +53,10 @@ spec:
       resources:
         requests:
           cpu: 3m
-          memory: 128M
+          memory: 128Mi
         limits:
           cpu: 100m
-          memory: 512M
+          memory: 512Mi
       tolerations:
         - key: "node.kubernetes.io/nuc"
           operator: "Exists"

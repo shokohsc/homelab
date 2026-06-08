@@ -57,10 +57,10 @@ spec:
           resources:
             limits:
               cpu: 100m
-              memory: 64M
+              memory: 64Mi
             requests:
               cpu: 10m
-              memory: 64M
+              memory: 64Mi
       volumes:
         - name: data
           emptyDir:

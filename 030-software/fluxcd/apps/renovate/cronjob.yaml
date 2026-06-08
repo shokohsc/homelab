@@ -43,7 +43,7 @@ spec:
                     name: renovate-env
               resources:
                 requests:
-                  cpu: 10m
+                  cpu: 100m
                   memory: 64Mi
                 limits:
                   cpu: 1000m

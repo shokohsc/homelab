@@ -23,6 +23,10 @@ patches:
                       operator: In
                       values:
                       - metal
+            resources:
+              limits:
+                cpu: 100m
+                memory: 128Mi
             tolerations:
               - effect: NoSchedule
                 key: node.kubernetes.io/nuc
