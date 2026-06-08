@@ -8,6 +8,7 @@ metadata:
   annotations:
     configmap.reloader.stakater.com/reload: pod-gateway,openvpn-client
 spec:
+  revisionHistoryLimit: 0
   selector:
     matchLabels:
       app: pod-gateway
@@ -281,8 +282,7 @@ metadata:
   labels:
     app: pod-gateway-webhook
 spec:
-  strategy:
-    type: RollingUpdate
+  revisionHistoryLimit: 0
   selector:
     matchLabels:
       app: pod-gateway-webhook
