@@ -43,10 +43,12 @@ spec:
             - name: SERVICES
               value: vpn
             - name: ADAPTER_URL
-              valueFrom:
-                secretKeyRef:
-                  name: sidekick
-                  key: adapter-url
+              value: "postgres://user:password@localhost:5432/vpn"
+            # - name: ADAPTER_URL
+            #   valueFrom:
+            #     secretKeyRef:
+            #       name: sidekick
+            #       key: adapter-url
             - name: IPINFO_TOKEN
               valueFrom:
                 secretKeyRef:

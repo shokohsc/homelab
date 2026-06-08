@@ -74,9 +74,10 @@ spec:
               memory: 256M
       volumes:
         - name: shared
-          nfs:
-            server: nfs-shared.nfs-shared.svc.cluster.local
-            path: /wallpapers
+          emptyDir: {}
+          # nfs:
+          #   server: nfs-shared.nfs-shared.svc.cluster.local
+          #   path: /wallpapers
       tolerations:
         - key: "node.kubernetes.io/nuc"
           operator: "Exists"
