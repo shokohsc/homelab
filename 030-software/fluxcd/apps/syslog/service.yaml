@@ -4,6 +4,7 @@ kind: Service
 metadata:
   name: syslog
   annotations:
+    lbipam.cilium.io/ips: ${subnet}.42
     lbipam.cilium.io/sharing-key: vip
   labels:
     vlan: lb

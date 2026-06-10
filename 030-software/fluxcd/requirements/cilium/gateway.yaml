@@ -10,26 +10,27 @@ spec:
   gatewayClassName: cilium
   infrastructure:
     annotations:
+      lbipam.cilium.io/ips: ${subnet}.42
       lbipam.cilium.io/sharing-key: vip
     labels:
       vlan: lb
   listeners:
-  - name: http
-    port: 80
-    protocol: HTTP
-    hostname: "*.${domain}"
-    allowedRoutes:
-      namespaces:
-        from: All
-  - name: https
-    port: 443
-    protocol: HTTPS
-    hostname: "*.${domain}"
-    allowedRoutes:
-      namespaces:
-        from: All
-    tls:
-      mode: Terminate
-      certificateRefs:
-      - kind: Secret
-        name: gateway-tls
+    - name: http
+      port: 80
+      protocol: HTTP
+      hostname: "*.${domain}"
+      allowedRoutes:
+        namespaces:
+          from: All
+    - name: https
+      port: 443
+      protocol: HTTPS
+      hostname: "*.${domain}"
+      allowedRoutes:
+        namespaces:
+          from: All
+      tls:
+        mode: Terminate
+        certificateRefs:
+          - kind: Secret
+            name: gateway-tls
