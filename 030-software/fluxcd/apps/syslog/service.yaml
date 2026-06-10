@@ -5,12 +5,14 @@ metadata:
   name: syslog
   annotations:
     lbipam.cilium.io/sharing-key: vip
+  labels:
+    vlan: lb
 spec:
   type: LoadBalancer
   ports:
-  - port: 601
-    targetPort: syslog
-    protocol: TCP
-    name: syslog
+    - port: 601
+      targetPort: syslog
+      protocol: TCP
+      name: syslog
   selector:
     app.kubernetes.io/name: syslog
