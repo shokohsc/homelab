@@ -15,16 +15,10 @@ metadata:
 spec:
   deploymentTemplate:
     spec:
+      revisionHistoryLimit: 0
       selector: {}
       template:
         spec:
-          # securityContext:
-          #   runAsNonRoot: true
-          #   runAsUser: 1000
-          #   runAsGroup: 1000
-          #   fsGroup: 1000
-          #   seccompProfile:
-          #     type: RuntimeDefault
           containers:
             - name: package-runtime
               securityContext:
@@ -34,3 +28,7 @@ spec:
                 capabilities:
                   drop:
                     - ALL
+              resources:
+                limits:
+                  cpu: 100m
+                  memory: 64Mi
