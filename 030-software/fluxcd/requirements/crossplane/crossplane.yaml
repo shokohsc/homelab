@@ -16,7 +16,7 @@ spec:
   chart:
     spec:
       chart: crossplane
-      version: 2.4.0-rc.0.43.g68c67abcb
+      version: 2.3.2
       sourceRef:
         kind: HelmRepository
         name: crossplane
