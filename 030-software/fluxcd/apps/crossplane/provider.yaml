@@ -5,3 +5,32 @@ metadata:
   name: valkiriaaquaticamendi-provider-proxmox-bpg
 spec:
   package: xpkg.upbound.io/valkiriaaquaticamendi/provider-proxmox-bpg:v1.15.0
+  runtimeConfigRef:
+    name: enable-psa
+---
+apiVersion: pkg.crossplane.io/v1beta1
+kind: DeploymentRuntimeConfig
+metadata:
+  name: enable-psa
+spec:
+  deploymentTemplate:
+    spec:
+      selector: {}
+      template:
+        spec:
+          # securityContext:
+          #   runAsNonRoot: true
+          #   runAsUser: 1000
+          #   runAsGroup: 1000
+          #   fsGroup: 1000
+          #   seccompProfile:
+          #     type: RuntimeDefault
+          containers:
+            - name: package-runtime
+              securityContext:
+                allowPrivilegeEscalation: false
+                readOnlyRootFilesystem: true
+                runAsNonRoot: true
+                capabilities:
+                  drop:
+                    - ALL
