@@ -2,6 +2,8 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: haproxy
+  annotations:
+    configmap.reloader.stakater.com/reload: config
 spec:
   revisionHistoryLimit: 0
   selector:
@@ -38,12 +40,16 @@ spec:
               subPath: haproxy.cfg
             - mountPath: /etc/ssl/certs
               name: tls
+          startupProbe:
+            tcpSocket:
+              port: http
+          livenessProbe:
+            tcpSocket:
+              port: http
           readinessProbe:
             httpGet:
               path: /api2/json/
-              port: 80
-            initialDelaySeconds: 5
-            periodSeconds: 10
+              port: http
           resources:
             requests:
               cpu: 10m
