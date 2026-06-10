@@ -70,7 +70,7 @@ spec:
             value: debug
 
           - name: MIKROTIK_DEFAULT_TTL
-            value: "1800"
+            value: "60"
           - name: MIKROTIK_DEFAULT_COMMENT
             value: Managed by ExternalDNS
 
