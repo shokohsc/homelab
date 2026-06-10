@@ -17,7 +17,7 @@
     ":configMigration",
     ":pinDevDependencies",
     "abandonments:recommended",
-    "security:minimumReleaseAgeNpm"3",
+    "security:minimumReleaseAgeNpm",
     ":maintainLockFilesWeekly"
   ],
   "includePaths": [
