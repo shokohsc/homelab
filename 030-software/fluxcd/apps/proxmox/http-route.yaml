@@ -17,3 +17,10 @@ spec:
         - path:
             type: PathPrefix
             value: /
+    - backendRefs:
+        - name: haproxy
+          port: 8080
+      matches:
+        - path:
+            type: PathPrefix
+            value: /

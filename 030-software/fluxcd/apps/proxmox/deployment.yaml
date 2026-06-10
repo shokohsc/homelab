@@ -32,8 +32,10 @@ spec:
               drop:
                 - ALL
           ports:
-            - containerPort: 8080
+            - containerPort: 8000
               name: http
+            - containerPort: 8080
+              name: metrics
           volumeMounts:
             - name: config
               mountPath: /usr/local/etc/haproxy/haproxy.cfg
