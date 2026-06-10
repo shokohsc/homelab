@@ -17,7 +17,7 @@
     ":configMigration",
     ":pinDevDependencies",
     "abandonments:recommended",
-    "security:minimumReleaseAgeNpm",
+    "security:minimumReleaseAgeNpm"3",
     ":maintainLockFilesWeekly"
   ],
   "includePaths": [
@@ -90,7 +90,7 @@
         "lockFileMaintenance"
       ],
       "dependencyDashboardApproval": false,
-      "minimumReleaseAge": 0
+      "minimumReleaseAge": "3"
     },
     {
       "dependencyDashboardApproval": true,
@@ -124,7 +124,7 @@
       "matchDatasources": ["docker"],
       "matchUpdateTypes": ["patch"],
       "labels": ["image-release", "patch"],
-      "minimumReleaseAge": 0,
+      "minimumReleaseAge": "3",
       "ignoreTests": true,
       "automerge": true
     },
@@ -144,7 +144,7 @@
       "matchDatasources": ["helm"],
       "matchUpdateTypes": ["patch"],
       "labels": ["helm-release", "patch"],
-      "minimumReleaseAge": 0,
+      "minimumReleaseAge": "3",
       "ignoreTests": true,
       "automerge": true
     },
@@ -152,7 +152,7 @@
       "matchUpdateTypes": ["patch"],
       "description": "Auto-merge patch updates",
       "matchCurrentVersion": "!/^0/",
-      "minimumReleaseAge": 0,
+      "minimumReleaseAge": "3",
       "automerge": true,
       "ignoreTests": true,
       "addLabels": ["patch"]
