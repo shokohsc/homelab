@@ -1,0 +1,7 @@
+---
+apiVersion: pkg.crossplane.io/v1
+kind: Provider
+metadata:
+  name: valkiriaaquaticamendi-provider-proxmox-bpg
+spec:
+  package: xpkg.upbound.io/valkiriaaquaticamendi/provider-proxmox-bpg:v1.15.0
