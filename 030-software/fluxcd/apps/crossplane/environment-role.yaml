@@ -1,0 +1,36 @@
+---
+apiVersion: virtualenvironmentrole.proxmoxbpg.crossplane.io/v1alpha1
+kind: EnvironmentRole
+metadata:
+  name: crossplane
+spec:
+  forProvider:
+    privileges:
+      - Datastore.AllocateSpace
+      - Datastore.AllocateTemplate
+      - Datastore.Audit
+      - Pool.Allocate
+      - SDN.Use
+      - Sys.Console
+      - Sys.Modify
+      - Sys.PowerMgmt
+      - VM.Allocate
+      - VM.Audit
+      - VM.Clone
+      - VM.Config.CDROM
+      - VM.Config.CPU
+      - VM.Config.Cloudinit
+      - VM.Config.Disk
+      - VM.Config.HWType
+      - VM.Config.Memory
+      - VM.Config.Network
+      - VM.Config.Options
+      - VM.Migrate
+      - VM.Monitor
+      - VM.PowerMgmt
+      - VM.Console
+      - VM.GuestAgent.Audit
+      - VM.GuestAgent.Unrestricted
+    roleId: crossplane
+  providerConfigRef:
+    name: proxmox

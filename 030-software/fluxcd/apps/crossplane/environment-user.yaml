@@ -1,0 +1,22 @@
+---
+apiVersion: virtualenvironmentuser.proxmoxbpg.crossplane.io/v1alpha1
+kind: EnvironmentUser
+metadata:
+  name: crossplane
+spec:
+  forProvider:
+    # acl:
+    #   - path: /
+    #     propagate: true
+    #     roleId: crossplane
+    comment: Managed by Crossplane
+    enabled: true
+    groups:
+      - crossplane
+    passwordSecretRef:
+      key: password
+      name: corssplane-credentials
+      namespace: crossplane-system
+    userId: crossplane@pve
+  providerConfigRef:
+    name: proxmox

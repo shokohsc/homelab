@@ -1,0 +1,34 @@
+---
+apiVersion: virtualenvironmentcontainer.proxmoxbpg.crossplane.io/v1alpha1
+kind: EnvironmentContainer
+metadata:
+  name: roadhog-sftp
+spec:
+  forProvider:
+    description: Managed by Crossplane
+    disk: []
+      # - datastoreId: local-lvm
+      #   size: 4
+    features:
+      - nesting: true
+    # initialization:
+    #   - hostname: terraform-provider-proxmox-ubuntu-container
+    #     ipConfig:
+    #       - ipv4:
+    #           - address: dhcp
+    #     userAccount:
+    #       - keys:
+    #           - ${trimspace(tls_private_key.ubuntu_container_key.public_key_openssh)}
+    #         passwordSecretRef:
+    #           key: attribute.result
+    #           name: example-password
+    #           namespace: upbound-system
+    mountPoint:
+      - path: /mnt/shared
+        volume: /mnt/bindmounts/shared
+    networkInterface:
+      - name: veth0
+    nodeName: roadhog
+    unprivileged: true
+    startup:
+      - order: "5"

@@ -1,0 +1,15 @@
+---
+apiVersion: virtualenvironmentgroup.proxmoxbpg.crossplane.io/v1alpha1
+kind: EnvironmentGroup
+metadata:
+  name: crossplane
+spec:
+  forProvider:
+    acl:
+      - path: /
+        propagate: true
+        roleId: crossplane
+    comment: Managed by Crossplane
+    groupId: crossplane
+  providerConfigRef:
+    name: proxmox
