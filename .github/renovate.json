@@ -80,6 +80,31 @@
   ],
   "packageRules": [
     {
+      "description": "Group Helm chart updates from FluxCD into a single PR",
+      "matchDatasources": ["helm"],
+      "matchFileNames": ["030-software/fluxcd/{apps,requirements}/**"],
+      "groupName": "FluxCD Helm Charts",
+      "groupSlug": "fluxcd-helm-charts"
+    },
+    {
+      "description": "Group Docker image updates from Kubernetes manifests into a single PR",
+      "matchDatasources": ["docker"],
+      "matchFileNames": ["030-software/fluxcd/{apps,requirements}/**"],
+      "groupName": "Kubernetes Docker Images",
+      "groupSlug": "k8s-docker-images"
+    },
+    {
+      "description": "Group Terraform dependency updates per provider",
+      "matchManagers": ["terraform"],
+      "groupName": "Terraform {{depName}}"
+    },
+    {
+      "description": "Group Talos dependency updates",
+      "matchManagers": ["talos"],
+      "groupName": "Talos Dependencies",
+      "groupSlug": "talos-deps"
+    },
+    {
       "description": "lockFileMaintenance",
       "matchUpdateTypes": [
         "pin",
@@ -98,11 +123,12 @@
     },
     {
       "matchDatasources": ["helm"],
-      "commitMessageTopic": "Helm chart {{depName}}",
-      "separateMinorPatch": true
+      "matchFileNames": ["030-software/fluxcd/{apps,requirements}/**"],
+      "commitMessageTopic": "Helm chart {{depName}}"
     },
     {
       "matchDatasources": ["docker"],
+      "matchFileNames": ["030-software/fluxcd/{apps,requirements}/**"],
       "commitMessageTopic": "Docker image {{depName}}",
       "commitMessageExtra": "to {{#if isSingleVersion}}{{{newVersion}}}{{else}}{{{newValue}}}{{/if}}",
       "matchUpdateTypes": ["major", "minor", "patch"],
@@ -110,18 +136,21 @@
     },
     {
       "matchDatasources": ["docker"],
+      "matchFileNames": ["030-software/fluxcd/{apps,requirements}/**"],
       "matchUpdateTypes": ["major"],
       "labels": ["image-release", "major"],
       "automerge": false
     },
     {
       "matchDatasources": ["docker"],
+      "matchFileNames": ["030-software/fluxcd/{apps,requirements}/**"],
       "matchUpdateTypes": ["minor"],
       "labels": ["image-release", "minor"],
       "automerge": false
     },
     {
       "matchDatasources": ["docker"],
+      "matchFileNames": ["030-software/fluxcd/{apps,requirements}/**"],
       "matchUpdateTypes": ["patch"],
       "labels": ["image-release", "patch"],
       "minimumReleaseAge": "3",
@@ -130,18 +159,21 @@
     },
     {
       "matchDatasources": ["helm"],
+      "matchFileNames": ["030-software/fluxcd/{apps,requirements}/**"],
       "matchUpdateTypes": ["major"],
       "labels": ["helm-release", "major"],
       "automerge": false
     },
     {
       "matchDatasources": ["helm"],
+      "matchFileNames": ["030-software/fluxcd/{apps,requirements}/**"],
       "matchUpdateTypes": ["minor"],
       "labels": ["helm-release", "minor"],
       "automerge": false
     },
     {
       "matchDatasources": ["helm"],
+      "matchFileNames": ["030-software/fluxcd/{apps,requirements}/**"],
       "matchUpdateTypes": ["patch"],
       "labels": ["helm-release", "patch"],
       "minimumReleaseAge": "3",
