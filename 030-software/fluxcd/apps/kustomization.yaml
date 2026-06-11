@@ -5,7 +5,7 @@ resources:
   # - browserless
   - cert-manager
   - cloudflared
-  - crossplane
+  # - crossplane
   - external-dns
   - gatekeeper
   # - headlamp
