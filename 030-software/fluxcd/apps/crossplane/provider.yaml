@@ -35,6 +35,14 @@ spec:
                 limits:
                   cpu: 100m
                   memory: 64Mi
+              volumeMounts:
+                - mountPath: /etc/ssl/certs
+                  name: tls
+          volumes:
+            - name: tls
+              configMap:
+                name: homelab-ca
+                defaultMode: 0600
           tolerations:
             - key: "node.kubernetes.io/nuc"
               operator: "Exists"
