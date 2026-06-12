@@ -5,6 +5,7 @@ resources:
   # - browserless
   - cert-manager
   - cloudflared
+  # - crossplane
   - external-dns
   - gatekeeper
   # - headlamp
@@ -13,6 +14,7 @@ resources:
   - metrics-server
   # - nats
   # - pod-gateway
+  # - proxmox
   - reloader
   - renovate
   # - sidekick
