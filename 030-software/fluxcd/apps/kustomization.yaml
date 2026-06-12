@@ -14,7 +14,7 @@ resources:
   - metrics-server
   # - nats
   # - pod-gateway
-  # - proxmox
+  - proxmox
   - reloader
   - renovate
   # - sidekick
