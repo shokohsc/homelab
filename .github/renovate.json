@@ -36,6 +36,12 @@
       "addLabels": ["minor"]
     },
     {
+      "matchUpdateTypes": ["major"],
+      "description": "Major updates require maintainer approval",
+      "automerge": false,
+      "addLabels": ["major"]
+    },
+    {
       "description": "lockFileMaintenance",
       "matchUpdateTypes": [
         "pin",
