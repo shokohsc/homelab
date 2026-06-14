@@ -61,7 +61,7 @@ spec:
               - ALL
         image:
           repository: ghcr.io/mirceanton/external-dns-provider-mikrotik
-          tag: v1.6.2
+          tag: v1.6.3
           pullPolicy: IfNotPresent
         env:
           - name: LOG_FORMAT
