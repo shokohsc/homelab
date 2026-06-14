@@ -13,5 +13,44 @@
     "030-software/fluxcd/apps/**",
     "030-software/fluxcd/requirements/**",
     "030-software/talos/**"
-  ]
+  ],
+  "packageRules": [
+    {
+      "matchUpdateTypes": ["patch"],
+      "description": "Auto-merge patch updates",
+      "matchCurrentVersion": "!/^0/",
+      "minimumReleaseAge": "3",
+      "dependencyDashboardApproval": false,
+      "automerge": true,
+      "ignoreTests": true,
+      "addLabels": ["patch"]
+    },
+    {
+      "matchUpdateTypes": ["minor"],
+      "description": "Minor updates",
+      "matchCurrentVersion": "!/^0/",
+      "minimumReleaseAge": "3",
+      "dependencyDashboardApproval": false,
+      "automerge": true,
+      "ignoreTests": true,
+      "addLabels": ["minor"]
+    },
+    {
+      "description": "lockFileMaintenance",
+      "matchUpdateTypes": [
+        "pin",
+        "digest",
+        "patch",
+        "minor",
+        "major",
+        "lockFileMaintenance"
+      ],
+      "dependencyDashboardApproval": false,
+      "minimumReleaseAge": "3"
+    }
+  ],
+  "vulnerabilityAlerts": {
+    "labels": ["security"],
+    "automerge": true
+  }
 }
