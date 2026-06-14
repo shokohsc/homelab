@@ -8,52 +8,14 @@
   "timezone": "Europe/Paris",
   "extends": ["github>home-operations/renovate-presets"],
   "includePaths": [
+    "020-hardware/hanzo/**",
+    "020-hardware/genji/**",
     "020-hardware/mikrotik/**",
+    "020-hardware/roadhog/**",
     "020-hardware/tplink/**",
     "030-software/fluxcd/apps/**",
     "030-software/fluxcd/requirements/**",
     "030-software/talos/**"
-  ],
-  "packageRules": [
-    {
-      "matchUpdateTypes": ["patch"],
-      "description": "Auto-merge patch updates",
-      "matchCurrentVersion": "!/^0/",
-      "minimumReleaseAge": "3",
-      "dependencyDashboardApproval": false,
-      "automerge": true,
-      "ignoreTests": true,
-      "addLabels": ["patch"]
-    },
-    {
-      "matchUpdateTypes": ["minor"],
-      "description": "Minor updates",
-      "matchCurrentVersion": "!/^0/",
-      "minimumReleaseAge": "3",
-      "dependencyDashboardApproval": false,
-      "automerge": true,
-      "ignoreTests": true,
-      "addLabels": ["minor"]
-    },
-    {
-      "matchUpdateTypes": ["major"],
-      "description": "Major updates require maintainer approval",
-      "automerge": false,
-      "addLabels": ["major"]
-    },
-    {
-      "description": "lockFileMaintenance",
-      "matchUpdateTypes": [
-        "pin",
-        "digest",
-        "patch",
-        "minor",
-        "major",
-        "lockFileMaintenance"
-      ],
-      "dependencyDashboardApproval": false,
-      "minimumReleaseAge": "3"
-    }
   ],
   "vulnerabilityAlerts": {
     "labels": ["security"],
