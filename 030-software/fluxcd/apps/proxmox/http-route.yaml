@@ -24,7 +24,7 @@ metadata:
   name: metrics
 spec:
   hostnames:
-    - metrics.proxmox.${domain}
+    - haproxy.${domain}
   parentRefs:
     - name: cilium
       namespace: cilium
