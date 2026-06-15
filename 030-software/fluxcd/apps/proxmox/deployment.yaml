@@ -51,7 +51,7 @@ spec:
           readinessProbe:
             httpGet:
               path: /
-              port: http
+              port: metrics
           resources:
             requests:
               cpu: 10m
