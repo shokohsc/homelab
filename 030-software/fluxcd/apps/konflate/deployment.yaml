@@ -1,0 +1,89 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: konflate
+  labels:
+    app: konflate
+spec:
+  revisionHistoryLimit: 0
+  selector:
+    matchLabels:
+      app: konflate
+  template:
+    metadata:
+      labels:
+        app: konflate
+    spec:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        seccompProfile:
+          type: RuntimeDefault
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              podAffinityTerm:
+                topologyKey: "kubernetes.io/hostname"
+                labelSelector:
+                  matchLabels:
+                    app: konflate
+      containers:
+        - name: konflate
+          image: ghcr.io/home-operations/konflate:0.2.27
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+            capabilities:
+              drop:
+                - ALL
+          env:
+            - name: KONFLATE_REPO
+              value: github://shokohsc/homelab
+            - name: KONFLATE_CLUSTER_PATH
+              value: 030-software/fluxcd
+            - name: KONFLATE_CACHE_DIR
+              value: /tmp/cache
+            - name: KONFLATE_CLONE_DIR
+              value: /tmp/clone
+            - name: KONFLATE_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: github
+                  key: token
+          ports:
+            - containerPort: 8080
+              name: http
+            - containerPort: 9090
+              name: metrics
+          startupProbe:
+            tcpSocket:
+              port: http
+          livenessProbe:
+            tcpSocket:
+              port: http
+          readinessProbe:
+            tcpSocket:
+              port: http
+          resources:
+            requests:
+              cpu: 10m
+              memory: 64Mi
+            limits:
+              cpu: 100m
+              memory: 256Mi
+          volumeMounts:
+            - mountPath: /tmp
+              name: work
+      volumes:
+        - name: work
+          emptyDir:
+            medium: Memory
+      tolerations:
+        - key: "node.kubernetes.io/nuc"
+          operator: "Exists"
+          effect: "NoSchedule"

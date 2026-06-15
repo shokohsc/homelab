@@ -1,0 +1,16 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: konflate
+  labels:
+    app: konflate
+    vlan: lb
+spec:
+  selector:
+    app: konflate
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: http
+  type: ClusterIP
