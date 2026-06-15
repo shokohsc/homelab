@@ -38,11 +38,16 @@ spec:
               volumeMounts:
                 - mountPath: /etc/ssl/certs
                   name: tls
+                - mountPath: /tmp
+                  name: work
           volumes:
             - name: tls
               configMap:
                 name: homelab-ca
                 defaultMode: 0600
+            - name: work
+              emptyDir:
+                medium: Memory
           tolerations:
             - key: "node.kubernetes.io/nuc"
               operator: "Exists"
