@@ -15,6 +15,7 @@ spec:
       labels:
         app: konflate
     spec:
+      enableServiceLinks: false
       securityContext:
         runAsNonRoot: true
         runAsUser: 1000
