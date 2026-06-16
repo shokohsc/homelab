@@ -1,38 +1,12 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
-namespace: flux-system
+namespace:
+  flux-system
+  # - secret.yaml
 resources:
-- gotk-components.yaml
-- gotk-sync.yaml
-# - secret.yaml
-- webhook.yaml
-patchesStrategicMerge:
-- patch.yaml
-- |-
-  apiVersion: source.toolkit.fluxcd.io/v1
-  kind: GitRepository
-  metadata:
-    name: flux-system
-    namespace: flux-system
-  spec:
-    ignore: |
-      .git/
-      .github/
-      .sops.yaml
-- |-
-  apiVersion: kustomize.toolkit.fluxcd.io/v1
-  kind: Kustomization
-  metadata:
-    name: flux-system
-    namespace: flux-system
-  spec:
-    postBuild:
-      substitute:
-        publicDomain: "shokohsc.com"
-    decryption:
-      provider: sops
-      secretRef:
-        name: sops-gpg
+  - gotk-components.yaml
+  - gotk-sync.yaml
+  - webhook.yaml
 patches:
   - patch: |
       - op: add
@@ -104,3 +78,30 @@ patches:
     target:
       kind: Deployment
       name: helm-controller
+  - patch: |-
+      apiVersion: source.toolkit.fluxcd.io/v1
+      kind: GitRepository
+      metadata:
+        name: flux-system
+        namespace: flux-system
+      spec:
+        interval: 24h
+        ignore: |
+          .git/
+          .github/
+          .sops.yaml
+  - patch: |-
+      apiVersion: kustomize.toolkit.fluxcd.io/v1
+      kind: Kustomization
+      metadata:
+        name: flux-system
+        namespace: flux-system
+      spec:
+        interval: 24h
+        postBuild:
+          substitute:
+            publicDomain: "shokohsc.com"
+        decryption:
+          provider: sops
+          secretRef:
+            name: sops-gpg
