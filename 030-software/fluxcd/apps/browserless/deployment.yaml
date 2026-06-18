@@ -26,7 +26,7 @@ spec:
           type: RuntimeDefault
       containers:
         - name: browserless
-          image: ghcr.io/browserless/chromium:v2.53.0
+          image: ghcr.io/browserless/chromium:v2.53.1
           securityContext:
             allowPrivilegeEscalation: false
             readOnlyRootFilesystem: true
