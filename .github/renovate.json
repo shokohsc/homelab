@@ -22,8 +22,7 @@
       "automerge": true,
       "ignoreTests": true,
       "matchCurrentVersion": "!/^0/",
-      "matchUpdateTypes": ["minor", "patch"],
-      "minimumReleaseAge": "12 hours"
+      "matchUpdateTypes": ["minor", "patch"]
     }
   ],
   "vulnerabilityAlerts": {
