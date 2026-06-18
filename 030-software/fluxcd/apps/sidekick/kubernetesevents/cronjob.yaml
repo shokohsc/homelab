@@ -16,12 +16,12 @@ spec:
           automountServiceAccountToken: false
           containers:
             - name: postgres
-              image: public.ecr.aws/bitnami/postgresql:18.4.0
+              image: postgres:18.4
               command:
                 - psql
               args:
                 - --command
-                - "DELETE FROM events WHERE \"createdAt\" < now() - INTERVAL '1 days'"
+                - 'DELETE FROM events WHERE "createdAt" < now() - INTERVAL ''1 days'''
               env:
                 - name: PGDATABASE
                   value: sidekick
