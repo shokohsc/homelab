@@ -21,7 +21,7 @@ spec:
               type: RuntimeDefault
           containers:
             - name: renovate
-              image: ghcr.io/renovatebot/renovate:43.231.2
+              image: ghcr.io/renovatebot/renovate:43.231.3
               securityContext:
                 allowPrivilegeEscalation: false
                 readOnlyRootFilesystem: true
