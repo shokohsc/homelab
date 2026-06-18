@@ -17,10 +17,10 @@
     "030-software/fluxcd/requirements/**",
     "030-software/talos/**"
   ],
-  "ignoreTests": true,
   "packageRules": [
     {
       "automerge": true,
+      "ignoreTests": true,
       "matchCurrentVersion": "!/^0/",
       "matchUpdateTypes": ["minor", "patch"],
       "minimumReleaseAge": "12 hours"
