@@ -19,9 +19,9 @@ spec:
       automountServiceAccountToken: false
       securityContext:
         runAsNonRoot: true
-        runAsUser: 1000
-        runAsGroup: 1000
-        fsGroup: 1000
+        runAsUser: 1001
+        runAsGroup: 1001
+        fsGroup: 1001
         seccompProfile:
           type: RuntimeDefault
       containers:
@@ -42,9 +42,9 @@ spec:
             - name: S6_VERBOSITY
               value: "2"
             - name: PUID
-              value: "1000"
+              value: "1001"
             - name: PGID
-              value: "1000"
+              value: "1001"
             - name: TZ
               value: ${timezone}
             - name: DISABLE_OWNERSHIP_CHECK
