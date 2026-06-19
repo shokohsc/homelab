@@ -41,6 +41,10 @@ spec:
               value: "1"
             - name: S6_VERBOSITY
               value: "2"
+            - name: PUID
+              value: "1000"
+            - name: PGID
+              value: "1000"
             - name: TZ
               value: ${timezone}
             - name: DISABLE_OWNERSHIP_CHECK
