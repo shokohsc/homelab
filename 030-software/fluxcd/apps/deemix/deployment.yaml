@@ -37,10 +37,6 @@ spec:
           env:
             - name: TZ
               value: ${timezone}
-            - name: PGID
-              value: "1000"
-            - name: PUID
-              value: "1000"
             - name: DISABLE_OWNERSHIP_CHECK
               value: "true"
             - name: DISABLE_OWNERSHIP_CHECK_MUSIC
