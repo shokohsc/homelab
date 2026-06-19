@@ -6,6 +6,7 @@ resources:
   - cert-manager
   - cloudflared
   - crossplane
+  - deemix
   - external-dns
   - gatekeeper
   # - headlamp
