@@ -23,6 +23,20 @@
       "ignoreTests": true,
       "matchCurrentVersion": "!/^0/",
       "matchUpdateTypes": ["minor", "patch"]
+    },
+    {
+      "labels": ["renovate/patch"],
+      "matchCurrentVersion": "!/^0/",
+      "matchUpdateTypes": ["patch"]
+    },
+    {
+      "labels": ["renovate/minor"],
+      "matchCurrentVersion": "!/^0/",
+      "matchUpdateTypes": ["minor"]
+    },
+    {
+      "labels": ["renovate/major"],
+      "matchUpdateTypes": ["major"]
     }
   ],
   "vulnerabilityAlerts": {
