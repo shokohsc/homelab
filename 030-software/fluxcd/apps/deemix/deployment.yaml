@@ -35,6 +35,12 @@ spec:
               drop:
                 - ALL
           env:
+            - name: S6_YES_I_WANT_A_WORLD_WRITABLE_RUN_BECAUSE_KUBERNETES
+              value: "1"
+            - name: S6_READ_ONLY_ROOT
+              value: "1"
+            - name: S6_VERBOSITY
+              value: "2"
             - name: TZ
               value: ${timezone}
             - name: DISABLE_OWNERSHIP_CHECK
@@ -58,6 +64,8 @@ spec:
               path: /
               port: http
           volumeMounts:
+            - name: run
+              mountPath: /run
             - name: config
               mountPath: /config
             - name: downloads
@@ -70,6 +78,8 @@ spec:
               cpu: 100m
               memory: 256M
       volumes:
+        - name: run
+          emptyDir: {}
         - name: config
           emptyDir: {}
           # persistentVolumeClaim:
