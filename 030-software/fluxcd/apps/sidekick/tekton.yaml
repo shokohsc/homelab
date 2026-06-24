@@ -10,7 +10,7 @@ spec:
     Get an openvpn profile from freeopenvpn.org or ipspeed.info via api.sidekick service
   steps:
   - name: get-ovpn-profile
-    image: curlimages/curl:8.20.0
+    image: curlimages/curl:8.21.0
     args:
       - -s
       - -H
