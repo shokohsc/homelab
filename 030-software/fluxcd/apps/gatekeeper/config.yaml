@@ -7,10 +7,8 @@ spec:
   match:
     - excludedNamespaces:
         - cilium
-        - dev-*
         - flux-system
         - gatekeeper-system
-        - kaniko
         - kube-system
         - kube-*
       processes: ["*"]
