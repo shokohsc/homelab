@@ -10,7 +10,6 @@ resources:
   - gatekeeper
   # - headlamp
   - http-echo
-  - kaniko
   # - konflate
   - kube-state-metrics
   - metrics-server
