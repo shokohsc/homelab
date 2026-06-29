@@ -9,6 +9,7 @@ spec:
         - cilium
         - flux-system
         - gatekeeper-system
+        - kaniko
         - kube-system
         - kube-*
       processes: ["*"]
