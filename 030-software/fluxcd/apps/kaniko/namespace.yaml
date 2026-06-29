@@ -4,4 +4,4 @@ kind: Namespace
 metadata:
   name: kaniko
   labels:
-    namespace: kaniko
+    pod-security.kubernetes.io/enforce: privileged
