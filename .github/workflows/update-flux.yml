@@ -21,7 +21,7 @@ jobs:
         id: update
         run: |
           flux install \
-            --export > .030/software/fluxcd/core/flux-system/gotk-components.yaml
+            --export > .030-software/fluxcd/core/flux-system/gotk-components.yaml
 
           VERSION="$(flux -v)"
           flux migrate -v "$VERSION" -f .
