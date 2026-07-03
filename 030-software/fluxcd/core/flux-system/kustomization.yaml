@@ -101,6 +101,7 @@ patches:
         postBuild:
           substitute:
             publicDomain: "shokohsc.com"
+            var: dummy
         decryption:
           provider: sops
           secretRef:
