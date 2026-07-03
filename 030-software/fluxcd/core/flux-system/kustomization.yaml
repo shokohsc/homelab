@@ -110,6 +110,7 @@ patches:
       kind: CustomResourceDefinition
       metadata:
         name: all
+        namespace: flux-system
       spec:
         template:
           metadata:
