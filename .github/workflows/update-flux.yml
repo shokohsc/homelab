@@ -24,7 +24,6 @@ jobs:
             --export > 030-software/fluxcd/core/flux-system/gotk-components.yaml
 
           VERSION="$(flux -v)"
-          flux migrate -v "$VERSION" -f .
           echo "flux_version=$VERSION" >> $GITHUB_OUTPUT          
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v8
