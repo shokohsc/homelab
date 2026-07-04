@@ -12,7 +12,7 @@ spec:
   rules:
     - backendRefs:
         - name: haproxy
-          port: 80
+          port: 443
       matches:
         - path:
             type: PathPrefix

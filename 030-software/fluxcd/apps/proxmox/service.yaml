@@ -8,9 +8,9 @@ spec:
   selector:
     app: haproxy
   ports:
-    - name: http
-      port: 80
-      targetPort: http
+    - name: https
+      port: 443
+      targetPort: https
     - name: metrics
       port: 8080
       targetPort: metrics

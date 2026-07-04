@@ -32,8 +32,8 @@ spec:
               drop:
                 - ALL
           ports:
-            - containerPort: 8000
-              name: http
+            - containerPort: 443
+              name: https
             - containerPort: 8080
               name: metrics
           volumeMounts:
