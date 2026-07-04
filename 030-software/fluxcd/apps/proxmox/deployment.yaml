@@ -33,12 +33,6 @@ spec:
                 - NET_BIND_SERVICE
               drop:
                 - ALL
-          # command:
-          #   - caddy
-          # args:
-          #   - run
-          #   - --config
-          #   - /srv/Caddyfile
           ports:
             - containerPort: 8443
               name: https
