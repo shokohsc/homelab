@@ -435,3 +435,7 @@ This project uses the MikroTik RouterOS Terraform Provider under the appropriate
 ## Contributing
 
 To contribute, please fork this repository and submit pull requests with your improvements.
+
+## References
+
+ - https://search.opentofu.org/provider/terraform-routeros/routeros/latest/docs/resources/system_logging_action

@@ -93,6 +93,11 @@ locals {
       ip   = cidrhost(local.vlan_cidrs["100"], 10)
       vlan = 100
     }
+    camera = {
+      mac  = "EC:71:DB:09:27:32"
+      ip   = cidrhost(local.vlan_cidrs["100"], 20)
+      vlan = 100
+    }
   }
 }
 

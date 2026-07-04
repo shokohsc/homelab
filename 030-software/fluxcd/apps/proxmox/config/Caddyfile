@@ -11,8 +11,8 @@
 		health_status 200
 
 		transport http {
-			# tls_insecure_skip_verify
-            tls_trusted_ca_certs /etc/ssl/certs/ca-certs.pem
+			tls_insecure_skip_verify
+            # tls_trusted_ca_certs /etc/ssl/certs/ca-certs.pem
 		}
 
 		# WebSocket support for noVNC console

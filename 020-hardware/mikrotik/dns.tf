@@ -24,19 +24,19 @@ locals {
       ip       = cidrhost(local.vlan_cidrs["20"], 30)
       hostname = "talos"
     }
-    # Proxmox cluster endpoints
-    control_plane_1 = {
-      ip       = cidrhost(local.vlan_cidrs["30"], 10)
-      hostname = "proxmox"
-    }
-    control_plane_2 = {
-      ip       = cidrhost(local.vlan_cidrs["30"], 20)
-      hostname = "proxmox"
-    }
-    control_plane_3 = {
-      ip       = cidrhost(local.vlan_cidrs["30"], 30)
-      hostname = "proxmox"
-    }
+    # # Proxmox cluster endpoints
+    # control_plane_1 = {
+    #   ip       = cidrhost(local.vlan_cidrs["30"], 10)
+    #   hostname = "proxmox"
+    # }
+    # control_plane_2 = {
+    #   ip       = cidrhost(local.vlan_cidrs["30"], 20)
+    #   hostname = "proxmox"
+    # }
+    # control_plane_3 = {
+    #   ip       = cidrhost(local.vlan_cidrs["30"], 30)
+    #   hostname = "proxmox"
+    # }
   }
 }
 

@@ -54,6 +54,18 @@ resource "routeros_interface_bridge_port" "eth7" {
   comment   = "Raspberry Pi (guest)"
 }
 
+# IoT (camera)
+import {
+  to = routeros_interface_bridge_port.eth6
+  id = "*5"
+}
+resource "routeros_interface_bridge_port" "eth6" {
+  bridge    = routeros_interface_bridge.bridge.name
+  interface = "ether6"
+  pvid      = 100
+  comment   = "IoT (camera)"
+}
+
 # Kubernetes nodes
 import {
   for_each = {
@@ -161,7 +173,7 @@ resource "routeros_interface_bridge_vlan" "vlans" {
     40  = []                                                                    # VMs
     50  = ["ether7"]                                                            # Guest
     60  = []                                                                    # LB
-    100 = []                                                                    # IoT
+    100 = ["ether6"]                                                            # IoT
   }, each.key, [])
 }
 
