@@ -6,11 +6,7 @@ metadata:
   name: flux-system
   namespace: flux-system
 spec:
-  interval: 24h
-  ignore: |
-    .git/
-    .github/
-    .sops.yaml
+  interval: 1m0s
   ref:
     branch: main
   secretRef:
@@ -23,14 +19,7 @@ metadata:
   name: flux-system
   namespace: flux-system
 spec:
-  interval: 24h
-  postBuild:
-    substitute:
-      publicDomain: "shokohsc.com"
-  decryption:
-    provider: sops
-    secretRef:
-      name: sops-gpg
+  interval: 10m0s
   path: ./030-software/fluxcd/core
   prune: true
   sourceRef:
