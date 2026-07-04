@@ -31,18 +31,18 @@ spec:
             capabilities:
               drop:
                 - ALL
-          command:
-            - caddy
-          args:
-            - run
-            - --config
-            - /srv/Caddyfile
+          # command:
+          #   - caddy
+          # args:
+          #   - run
+          #   - --config
+          #   - /srv/Caddyfile
           ports:
             - containerPort: 8443
               name: https
           volumeMounts:
             - name: config
-              mountPath: /srv/Caddyfile
+              mountPath: /etc/caddy/Caddyfile
               subPath: Caddyfile
             - mountPath: /etc/ssl/certs
               name: tls
