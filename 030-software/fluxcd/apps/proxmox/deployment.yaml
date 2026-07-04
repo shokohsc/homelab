@@ -1,18 +1,18 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: haproxy
+  name: caddy
   annotations:
     configmap.reloader.stakater.com/reload: config
 spec:
   revisionHistoryLimit: 0
   selector:
     matchLabels:
-      app: haproxy
+      app: caddy
   template:
     metadata:
       labels:
-        app: haproxy
+        app: caddy
     spec:
       securityContext:
         runAsNonRoot: true
@@ -22,8 +22,8 @@ spec:
         seccompProfile:
           type: RuntimeDefault
       containers:
-        - name: haproxy
-          image: haproxy:3.4
+        - name: caddy
+          image: caddy:2.11.4-alpine
           securityContext:
             allowPrivilegeEscalation: false
             readOnlyRootFilesystem: true
@@ -31,27 +31,31 @@ spec:
             capabilities:
               drop:
                 - ALL
+          command:
+            - caddy
+          args:
+            - run
+            - --config
+            - /srv/Caddyfile
           ports:
-            - containerPort: 443
+            - containerPort: 8443
               name: https
-            - containerPort: 8080
-              name: metrics
           volumeMounts:
             - name: config
-              mountPath: /usr/local/etc/haproxy/haproxy.cfg
-              subPath: haproxy.cfg
+              mountPath: /srv/Caddyfile
+              subPath: Caddyfile
             - mountPath: /etc/ssl/certs
               name: tls
           startupProbe:
             tcpSocket:
-              port: http
+              port: https
           livenessProbe:
             tcpSocket:
-              port: http
+              port: https
           readinessProbe:
             httpGet:
               path: /
-              port: metrics
+              port: https
           resources:
             requests:
               cpu: 10m

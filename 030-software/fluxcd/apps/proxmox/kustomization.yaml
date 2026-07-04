@@ -10,6 +10,6 @@ resources:
 configMapGenerator:
   - name: config
     files:
-      - ./config/haproxy.cfg
+      - ./config/Caddyfile
 generatorOptions:
   disableNameSuffixHash: true

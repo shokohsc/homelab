@@ -1,0 +1,22 @@
+:8443 {
+	reverse_proxy * {
+		to roadhog.${domain}:8006
+		to hanzo.${domain}:8006
+		to genji.${domain}:8006
+
+		lb_policy ip_hash
+		health_uri /
+		health_interval 10s
+		health_timeout 2s
+		health_status 200
+
+		transport http {
+			tls_insecure_skip_verify
+            tls_trusted_ca_certs /etc/ssl/certs/ca-certs.pem
+		}
+
+		# WebSocket support for noVNC console
+		header_up Upgrade {http.request.header.Upgrade}
+		header_up Connection {http.request.header.Connection}
+	}
+}
