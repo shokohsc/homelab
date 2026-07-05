@@ -1,22 +1,44 @@
-:8443 {
-	reverse_proxy * {
-		to roadhog.${domain}:8006
-		to hanzo.${domain}:8006
-		to genji.${domain}:8006
+{
+    servers {
+        protocols h1 h2
+    }
+}
 
-		lb_policy ip_hash
-		health_uri /
-		health_interval 10s
-		health_timeout 2s
-		health_status 200
+(common) {
+    encode gzip zstd
 
-		transport http {
-			tls_insecure_skip_verify
-            # tls_trusted_ca_certs /etc/ssl/certs/ca-certs.pem
-		}
+    header {
+        Strict-Transport-Security "max-age=31536000"
+        X-Content-Type-Options nosniff
+        Referrer-Policy no-referrer
+    }
+
+    reverse_proxy {
+        lb_policy least_conn
+        health_uri /api2/json/version
+        health_interval 10s
+        health_timeout 3s
+
+        transport http {
+            tls
+            tls_server_name proxmox.${domain}
+            tls_trust_pool file {
+                pem_file /etc/ssl/certs/ca-certs.pem
+            }
+        }
 
 		# WebSocket support for noVNC console
 		header_up Upgrade {http.request.header.Upgrade}
 		header_up Connection {http.request.header.Connection}
-	}
+    }
+}
+
+:8443 {
+	import common
+
+    reverse_proxy {
+        to https://roadhog.${domain}:8006
+        to https://hanzo.${domain}:8006
+        to https://genji.${domain}:8006
+    }
 }
