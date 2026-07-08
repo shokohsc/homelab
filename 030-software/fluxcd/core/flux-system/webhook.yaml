@@ -5,7 +5,7 @@ metadata:
   name: receiver
 spec:
   hostnames:
-  - receiver.shokohsc.com
+  - receiver.${publicDomain}
   parentRefs:
   - name: cilium
     namespace: cilium
