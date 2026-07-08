@@ -32,31 +32,6 @@ patches:
       kind: Deployment
       labelSelector: app.kubernetes.io/instance=cert-manager
   - patch: |
-      apiVersion: apps/v1
-      kind: Job
-      metadata:
-        name: all
-      spec:
-        template:
-          spec:
-            affinity:
-              nodeAffinity:
-                preferredDuringSchedulingIgnoredDuringExecution:
-                - weight: 1
-                  preference:
-                    matchExpressions:
-                    - key: topology.kubernetes.io/region
-                      operator: In
-                      values:
-                      - metal
-            tolerations:
-              - effect: NoSchedule
-                key: node.kubernetes.io/nuc
-                operator: Exists
-    target:
-      kind: Job
-      labelSelector: app.kubernetes.io/instance=cert-manager
-  - patch: |
       - op: add
         path: /spec/template/spec/containers/0/resources
         value:
