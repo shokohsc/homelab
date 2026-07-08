@@ -6,7 +6,7 @@ resources:
   - gotk-components.yaml
   - gotk-sync.yaml
   - webhook.yaml
-  - secret.yaml
+  # - secret.yaml
 patches:
   - patch: |
       - op: add
