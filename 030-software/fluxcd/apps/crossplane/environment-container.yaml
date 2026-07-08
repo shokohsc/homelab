@@ -2,20 +2,20 @@
 apiVersion: virtualenvironmentcontainer.proxmoxbpg.crossplane.io/v1alpha1
 kind: EnvironmentContainer
 metadata:
-  name: roadhog-nfs
+  name: genji-nfs
 spec:
   forProvider:
     description: Managed by Crossplane
-    features:
-      - nesting: true
-    mountPoint:
-      - path: /mnt/shared
-        volume: /mnt/bindmounts/shared
+    # mountPoint:
+    #   - path: /mnt/data
+    #     volume: tank/my_dataset
     networkInterface:
       - name: veth0
-    nodeName: roadhog
-    unprivileged: true
+    nodeName: genji
     startup:
       - order: "5"
+    tags:
+      - nfs
+      - crossplane
   providerConfigRef:
     name: proxmox
