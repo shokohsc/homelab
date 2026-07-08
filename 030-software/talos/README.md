@@ -308,3 +308,6 @@ This project is provided for educational and personal use. No license is explici
 ---
 
 *Built with [Talos Linux](https://www.talos.dev/), [talhelper](https://github.com/budimanjojo/talhelper), and [SOPS](https://github.com/getsops/sops).*
+
+## References
+ - https://www.roosmaa.net/blog/2024/setting-up-zfs-on-talos/

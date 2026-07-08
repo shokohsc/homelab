@@ -70,3 +70,58 @@ portSelector:
   protocol: udp
 ingress:
   - subnet: $TALOS_SUBNET.0/24
+---
+apiVersion: v1alpha1
+kind: NetworkRuleConfig
+name: hubble-peer
+portSelector:
+  ports:
+    - 4244
+  protocol: tcp
+ingress:
+  - subnet: 10.244.0.0/16
+{{- if eq .MachineConfig.MachineType "worker" }}
+---
+apiVersion: v1alpha1
+kind: NetworkRuleConfig
+name: http-https
+portSelector:
+  ports:
+    - 80
+    - 443
+  protocol: tcp
+ingress:
+  - subnet: 0.0.0.0/0
+---
+apiVersion: v1alpha1
+kind: NetworkRuleConfig
+name: syslog
+portSelector:
+  ports:
+    - 601
+  protocol: tcp
+ingress:
+  - subnet: 0.0.0.0/0
+---
+apiVersion: v1alpha1
+kind: NetworkRuleConfig
+name: dns-tcp
+portSelector:
+  ports:
+    - 53
+    - 853
+  protocol: tcp
+ingress:
+  - subnet: 0.0.0.0/0
+---
+apiVersion: v1alpha1
+kind: NetworkRuleConfig
+name: dns-udp
+portSelector:
+  ports:
+    - 53
+    - 853
+  protocol: udp
+ingress:
+  - subnet: 0.0.0.0/0
+{{- end -}}

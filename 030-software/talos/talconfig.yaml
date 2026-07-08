@@ -1,7 +1,7 @@
 ---
 clusterName: talos
 talosVersion: v1.13.5
-kubernetesVersion: v1.36.1
+kubernetesVersion: v1.36.2
 endpoint: https://talos.${TALOS_DOMAIN}:6443
 additionalApiServerCertSans:
   - talos.local
@@ -28,7 +28,7 @@ patches:
   - "@./patches/cluster.yaml"
   - "@./patches/machine.yaml"
   - "@./patches/network.yaml"
-  # - "@./patches/firewall.yaml"
+  - "@./patches/firewall.yaml"
 nodes:
   - controlPlane: true
     hostname: sombra
@@ -105,7 +105,7 @@ nodes:
       customization:
         extraKernelArgs:
           - net.ifnames=0
-          - talos.experimental.wipe=system:EPHEMERAL,STATE
+          # - talos.experimental.wipe=system:EPHEMERAL,STATE
           - vlan=enp1s0.30:enp1s0
         systemExtensions:
           officialExtensions:
@@ -131,7 +131,7 @@ nodes:
         extraKernelArgs:
           - net.ifnames=0
           - talos.config=http://tracer.home.arpa:8080/metadata?p=worker-vm
-          - talos.experimental.wipe=system:EPHEMERAL,STATE
+          # - talos.experimental.wipe=system:EPHEMERAL,STATE
           - vlan=eth0.20:eth0
         systemExtensions:
           officialExtensions:
@@ -160,7 +160,7 @@ nodes:
         extraKernelArgs:
           - net.ifnames=0
           - talos.config=http://tracer.home.arpa:8080/metadata?p=worker-vm-gpu
-          - talos.experimental.wipe=system:EPHEMERAL,STATE
+          # - talos.experimental.wipe=system:EPHEMERAL,STATE
           - vlan=eth0.20:eth0
         systemExtensions:
           officialExtensions:
@@ -188,7 +188,7 @@ controlPlane:
   # nameservers:
   #   - ${TALOS_SUBNET}.1
   networkInterfaces:
-    - interface: eth0
+    - interface: eno1
       dhcp: true
   nodeLabels:
     node.kubernetes.io/exclude-from-external-load-balancers: ""
@@ -203,7 +203,7 @@ controlPlane:
       extraKernelArgs:
         - net.ifnames=0
         - talos.config=http://tracer.home.arpa:8080/metadata?h=$${hostname}&m=$${mac}&s=$${serial}&u=$${uuid}
-        - talos.experimental.wipe=system:EPHEMERAL,STATE
+        # - talos.experimental.wipe=system:EPHEMERAL,STATE
       systemExtensions:
         officialExtensions:
           - siderolabs/intel-ucode
@@ -231,4 +231,4 @@ worker:
       extraKernelArgs:
         - net.ifnames=0
         - talos.config=http://tracer.home.arpa:8080/metadata?h=$${hostname}&m=$${mac}&s=$${serial}&u=$${uuid}
-        - talos.experimental.wipe=system:EPHEMERAL,STATE
+        # - talos.experimental.wipe=system:EPHEMERAL,STATE
