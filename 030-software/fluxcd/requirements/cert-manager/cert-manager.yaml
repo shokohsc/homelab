@@ -62,7 +62,7 @@ spec:
           operator: "Exists"
           effect: "NoSchedule"
 
-    startupapichec:
+    startupapicheck:
       tolerations:
         - key: "node.kubernetes.io/nuc"
           operator: "Exists"
