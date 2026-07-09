@@ -23,7 +23,7 @@
         to https://genji.${domain}:8006
 
         lb_policy least_conn
-        health_uri /api2/json/version
+        health_uri /api2/json/access/ticket
         health_interval 10s
         health_timeout 3s
 
