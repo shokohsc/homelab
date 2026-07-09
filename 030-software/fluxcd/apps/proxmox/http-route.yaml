@@ -11,7 +11,7 @@ spec:
       namespace: cilium
   rules:
     - backendRefs:
-        - name: haproxy
+        - name: caddy
           port: 443
       matches:
         - path:

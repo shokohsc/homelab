@@ -12,8 +12,16 @@
         X-Content-Type-Options nosniff
         Referrer-Policy no-referrer
     }
+}
+
+:8443 {
+    import common
 
     reverse_proxy {
+        to https://roadhog.${domain}:8006
+        to https://hanzo.${domain}:8006
+        to https://genji.${domain}:8006
+
         lb_policy least_conn
         health_uri /api2/json/version
         health_interval 10s
@@ -21,24 +29,13 @@
 
         transport http {
             tls
-            tls_server_name proxmox.${domain}
             tls_trust_pool file {
                 pem_file /etc/ssl/certs/ca-certs.pem
             }
         }
 
-		# WebSocket support for noVNC console
-		header_up Upgrade {http.request.header.Upgrade}
-		header_up Connection {http.request.header.Connection}
-    }
-}
-
-:8443 {
-	import common
-
-    reverse_proxy {
-        to https://roadhog.${domain}:8006
-        to https://hanzo.${domain}:8006
-        to https://genji.${domain}:8006
+        # WebSocket support for noVNC console
+        header_up Upgrade {http.request.header.Upgrade}
+        header_up Connection {http.request.header.Connection}
     }
 }
