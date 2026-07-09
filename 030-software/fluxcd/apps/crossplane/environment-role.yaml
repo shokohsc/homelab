@@ -54,6 +54,6 @@ spec:
       - Datastore.Allocate
       - Datastore.AllocateSpace
       - Datastore.Audit
-    roleId: crossplane
+    roleId: csi-proxmox
   providerConfigRef:
     name: proxmox

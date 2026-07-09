@@ -13,7 +13,7 @@ spec:
       key: password
       name: corssplane-credentials
       namespace: crossplane-system
-    userId: crossplane@pve
+    userId: crossplane@pam
   providerConfigRef:
     name: proxmox
 ---
@@ -31,6 +31,6 @@ spec:
       key: password
       name: corssplane-credentials
       namespace: crossplane-system
-    userId: csi-proxmox@pve
+    userId: csi-proxmox@pam
   providerConfigRef:
     name: proxmox
