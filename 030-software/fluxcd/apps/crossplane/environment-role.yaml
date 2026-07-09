@@ -34,3 +34,27 @@ spec:
     roleId: crossplane
   providerConfigRef:
     name: proxmox
+# ---
+# apiVersion: virtualenvironmentrole.proxmoxbpg.crossplane.io/v1alpha1
+# kind: EnvironmentRole
+# metadata:
+#   name: csi-proxmox
+# spec:
+#   forProvider:
+#     privileges:
+#       - VM.Audit
+#       - VM.Allocate
+#       - VM.Clone
+#       - VM.Config.CPU
+#       - VM.Config.Disk
+#       - VM.Config.HWType
+#       - VM.Config.Memory
+#       - VM.Config.Options
+#       - VM.Migrate
+#       - VM.PowerMgmt
+#       - Datastore.Allocate
+#       - Datastore.AllocateSpace
+#       - Datastore.Audit
+#     roleId: crossplane
+#   providerConfigRef:
+#     name: proxmox

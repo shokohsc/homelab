@@ -4,7 +4,7 @@ kind: Provider
 metadata:
   name: valkiriaaquaticamendi-provider-proxmox-bpg
 spec:
-  package: xpkg.upbound.io/valkiriaaquaticamendi/provider-proxmox-bpg:v1.15.0
+  package: xpkg.upbound.io/valkiriaaquaticamendi/provider-proxmox-bpg:v1.18.0
   runtimeConfigRef:
     name: enable-psa
 ---

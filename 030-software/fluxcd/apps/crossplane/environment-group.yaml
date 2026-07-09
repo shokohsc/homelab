@@ -13,3 +13,18 @@ spec:
     groupId: crossplane
   providerConfigRef:
     name: proxmox
+# ---
+# apiVersion: virtualenvironmentgroup.proxmoxbpg.crossplane.io/v1alpha1
+# kind: EnvironmentGroup
+# metadata:
+#   name: csi-proxmox
+# spec:
+#   forProvider:
+#     acl:
+#       - path: /
+#         propagate: true
+#         roleId: csi-proxmox
+#     comment: Managed by Crossplane
+#     groupId: csi-proxmox
+#   providerConfigRef:
+#     name: proxmox
