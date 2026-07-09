@@ -36,15 +36,15 @@ spec:
                   cpu: 1000m
                   memory: 256Mi
               volumeMounts:
-                - mountPath: /usr/local/share/ca-certificates
-                  name: tls
+                # - mountPath: /etc/ssl/certs
+                #   name: tls
                 - mountPath: /tmp
                   name: work
           volumes:
-            - name: tls
-              configMap:
-                name: homelab-ca
-                defaultMode: 0600
+            # - name: tls
+            #   configMap:
+            #     name: homelab-ca
+            #     defaultMode: 0600
             - name: work
               emptyDir:
                 medium: Memory
