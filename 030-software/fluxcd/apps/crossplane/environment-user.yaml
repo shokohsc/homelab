@@ -5,10 +5,6 @@ metadata:
   name: crossplane
 spec:
   forProvider:
-    # acl:
-    #   - path: /
-    #     propagate: true
-    #     roleId: crossplane
     comment: Managed by Crossplane
     enabled: true
     groups:
@@ -20,21 +16,21 @@ spec:
     userId: crossplane@pve
   providerConfigRef:
     name: proxmox
-# ---
-# apiVersion: virtualenvironmentuser.proxmoxbpg.crossplane.io/v1alpha1
-# kind: EnvironmentUser
-# metadata:
-#   name: csi-proxmox
-# spec:
-#   forProvider:
-#     comment: Managed by Crossplane
-#     enabled: true
-#     groups:
-#       - crossplane
-#     passwordSecretRef:
-#       key: password
-#       name: corssplane-credentials
-#       namespace: crossplane-system
-#     userId: csi-proxmox@pve
-#   providerConfigRef:
-#     name: proxmox
+---
+apiVersion: virtualenvironmentuser.proxmoxbpg.crossplane.io/v1alpha1
+kind: EnvironmentUser
+metadata:
+  name: csi-proxmox
+spec:
+  forProvider:
+    comment: Managed by Crossplane
+    enabled: true
+    groups:
+      - crossplane
+    passwordSecretRef:
+      key: password
+      name: corssplane-credentials
+      namespace: crossplane-system
+    userId: csi-proxmox@pve
+  providerConfigRef:
+    name: proxmox
