@@ -3,7 +3,6 @@ kind: Kustomization
 namespace: metrics-server
 resources:
   - namespace.yaml
-  - rbac.yaml
   - https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml
 patches:
   - patch: |

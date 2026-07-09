@@ -12,6 +12,7 @@ resources:
   - http-echo
   # - konflate
   - kube-state-metrics
+  - kube-system
   - metrics-server
   # - nats
   # - pod-gateway
