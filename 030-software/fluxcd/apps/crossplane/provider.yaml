@@ -34,7 +34,7 @@ spec:
                   memory: 64Mi
                 limits:
                   cpu: 1000m
-                  memory: 256Mi
+                  memory: 512Mi
               volumeMounts:
                 # - mountPath: /etc/ssl/certs
                 #   name: tls
