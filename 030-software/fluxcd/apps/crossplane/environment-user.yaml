@@ -16,21 +16,21 @@ spec:
     userId: crossplane@pam
   providerConfigRef:
     name: proxmox
-# ---
-# apiVersion: virtualenvironmentuser.proxmoxbpg.crossplane.io/v1alpha1
-# kind: EnvironmentUser
-# metadata:
-#   name: csi-proxmox
-# spec:
-#   forProvider:
-#     comment: Managed by Crossplane
-#     enabled: true
-#     groups:
-#       - crossplane
-#     passwordSecretRef:
-#       key: password
-#       name: corssplane-credentials
-#       namespace: crossplane-system
-#     userId: csi-proxmox@pam
-#   providerConfigRef:
-#     name: proxmox
+---
+apiVersion: virtualenvironmentuser.proxmoxbpg.crossplane.io/v1alpha1
+kind: EnvironmentUser
+metadata:
+  name: csi-proxmox
+spec:
+  forProvider:
+    comment: Managed by Crossplane
+    enabled: true
+    groups:
+      - crossplane
+    passwordSecretRef:
+      key: password
+      name: corssplane-credentials
+      namespace: crossplane-system
+    userId: csi-proxmox@pam
+  providerConfigRef:
+    name: proxmox
