@@ -51,7 +51,7 @@ spec:
             - name: tls
               configMap:
                 name: homelab-ca
-                defaultMode: 0600
+                defaultMode: 0644
             - name: temp
               emptyDir:
                 medium: Memory
