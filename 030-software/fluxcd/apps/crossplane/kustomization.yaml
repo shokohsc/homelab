@@ -3,10 +3,10 @@ kind: Kustomization
 namespace: crossplane-system
 resources:
   - secret.yaml
+  - deployment-runtime-config.yaml
   - provider.yaml
   - provider-config.yaml
   - functions.yaml
-  - configuration.yaml
 
   - xrds/proxmoxrole.yaml
   - xrds/proxmoxgroup.yaml

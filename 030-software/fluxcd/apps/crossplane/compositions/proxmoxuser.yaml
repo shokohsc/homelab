@@ -22,7 +22,7 @@ spec:
               kind: Workspace
               spec:
                 forProvider:
-                  enableTofuCLILogging: true
+                  # enableTofuCLILogging: true
                   source: Inline
                   module: |
                     variable "user" {
