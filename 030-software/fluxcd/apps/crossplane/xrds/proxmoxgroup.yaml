@@ -29,3 +29,9 @@ spec:
                   description: Proxmox role names to assign
               required:
                 - group
+            status:
+              type: object
+              properties:
+                groupId:
+                  type: string
+                  description: The Proxmox group ID

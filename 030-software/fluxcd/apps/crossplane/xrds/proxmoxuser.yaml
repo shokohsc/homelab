@@ -47,3 +47,9 @@ spec:
               required:
                 - user
                 - passwordSecretRef
+            status:
+              type: object
+              properties:
+                userId:
+                  type: string
+                  description: The Proxmox user ID

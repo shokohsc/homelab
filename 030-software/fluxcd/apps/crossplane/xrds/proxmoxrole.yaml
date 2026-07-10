@@ -30,3 +30,9 @@ spec:
               required:
                 - role
                 - privileges
+            status:
+              type: object
+              properties:
+                roleId:
+                  type: string
+                  description: The Proxmox role ID
