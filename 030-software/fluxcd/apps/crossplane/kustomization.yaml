@@ -15,5 +15,5 @@ resources:
   - compositions/proxmoxgroup.yaml
   - compositions/proxmoxuser.yaml
 
-  - identities/crossplane.yaml
-  # - identities/csi-proxmox.yaml
+  - resources/crossplane.yaml
+  # - resources/csi-proxmox.yaml

@@ -4,7 +4,6 @@ metadata:
   name: proxmox
 spec:
   # Auth is via PROXMOX_VE_USERNAME/PROXMOX_VE_PASSWORD env vars set on the controller
-  # (see configuration.yaml DeploymentRuntimeConfig)
   pluginCache: false
   configuration: |
     terraform {
