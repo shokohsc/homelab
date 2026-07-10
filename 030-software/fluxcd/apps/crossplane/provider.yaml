@@ -49,7 +49,7 @@ spec:
                   cpu: 1000m
                   memory: 512Mi
               volumeMounts:
-                - mountPath: /etc/ssl/cert.pem
+                - mountPath: /etc/ssl/certs/ca-certificates.crt
                   subPath: ca-certs.pem
                   name: tls
                 - mountPath: /tmp
