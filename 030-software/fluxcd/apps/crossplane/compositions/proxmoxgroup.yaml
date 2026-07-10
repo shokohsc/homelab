@@ -31,19 +31,19 @@ spec:
                       type = string
                     }
 
-                    resource "proxmox_group" "this" {
+                    resource "proxmox_virtual_environment_group" "this" {
                       group_id = var.group
                     }
 
                     resource "proxmox_acl" "this" {
                       for_each = toset(split(",", var.roles))
                       path     = "/"
-                      group_id = proxmox_group.this.group_id
+                      group_id = proxmox_virtual_environment_group.this.group_id
                       role_id  = each.key
                     }
 
                     output "group_id" {
-                      value = proxmox_group.this.group_id
+                      value = proxmox_virtual_environment_group.this.group_id
                     }
                   vars:
                     - key: group

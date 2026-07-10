@@ -31,13 +31,13 @@ spec:
                       type = string
                     }
 
-                    resource "proxmox_role" "this" {
+                    resource "proxmox_virtual_environment_role" "this" {
                       role_id    = var.role
                       privileges = split(",", var.privileges)
                     }
 
                     output "role_id" {
-                      value = proxmox_role.this.role_id
+                      value = proxmox_virtual_environment_role.this.role_id
                     }
                   vars:
                     - key: role
