@@ -5,6 +5,7 @@ metadata:
 spec:
   # Auth is via PROXMOX_VE_USERNAME/PROXMOX_VE_PASSWORD env vars set on the controller
   # (see configuration.yaml DeploymentRuntimeConfig)
+  pluginCache: false
   configuration: |
     terraform {
       required_providers {
@@ -14,7 +15,7 @@ spec:
         }
       }
       backend "kubernetes" {
-        secret_suffix     = "ProviderConfig"
+        secret_suffix     = "providerconfig"
         namespace         = "crossplane-system"
         in_cluster_config = true
       }
