@@ -28,6 +28,17 @@ spec:
                 capabilities:
                   drop:
                     - ALL
+              env:
+                - name: TF_VAR_proxmox_ve_username
+                  valueFrom:
+                    secretKeyRef:
+                      name: creds
+                      key: username
+                - name: TF_VAR_proxmox_ve_password
+                  valueFrom:
+                    secretKeyRef:
+                      name: creds
+                      key: password
               resources:
                 requests:
                   cpu: 10m
@@ -36,7 +47,7 @@ spec:
                   cpu: 1000m
                   memory: 512Mi
               volumeMounts:
-                - mountPath: /etc/ssl/certs/cert.pem
+                - mountPath: /etc/ssl/cert.pem
                   subPath: ca-certs.pem
                   name: tls
                 - mountPath: /tmp
