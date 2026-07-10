@@ -1,15 +1,13 @@
-apiVersion: apiextensions.crossplane.io/v1
+apiVersion: apiextensions.crossplane.io/v2
 kind: CompositeResourceDefinition
 metadata:
   name: proxmoxusers.platform.shokohsc.com
 spec:
+  scope: Cluster
   group: platform.shokohsc.com
   names:
     kind: ProxmoxUser
     plural: proxmoxusers
-  claimNames:
-    kind: ProxmoxUserClaim
-    plural: proxmoxuserclaims
   versions:
     - name: v1alpha1
       served: true
