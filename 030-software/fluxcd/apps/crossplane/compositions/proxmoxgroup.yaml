@@ -28,7 +28,7 @@ spec:
                       type = string
                     }
                     variable "roles" {
-                      type = list(string)
+                      type = string
                     }
 
                     resource "proxmox_group" "this" {
@@ -36,9 +36,10 @@ spec:
                     }
 
                     resource "proxmox_acl" "this" {
+                      for_each = toset(split(",", var.roles))
                       path     = "/"
                       group_id = proxmox_group.this.group_id
-                      role_id  = var.roles[0]
+                      role_id  = each.key
                     }
 
                     output "group_id" {
@@ -56,6 +57,12 @@ spec:
               - type: FromCompositeFieldPath
                 fromFieldPath: spec.roles
                 toFieldPath: spec.forProvider.vars[1].value
+                transforms:
+                  - type: string
+                    string:
+                      type: Join
+                      join:
+                        separator: ","
               - type: ToCompositeFieldPath
                 fromFieldPath: status.atProvider.outputs.group_id
                 toFieldPath: status.groupId

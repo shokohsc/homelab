@@ -28,12 +28,12 @@ spec:
                       type = string
                     }
                     variable "privileges" {
-                      type = list(string)
+                      type = string
                     }
 
                     resource "proxmox_role" "this" {
                       role_id    = var.role
-                      privileges = var.privileges
+                      privileges = split(",", var.privileges)
                     }
 
                     output "role_id" {
@@ -51,6 +51,12 @@ spec:
               - type: FromCompositeFieldPath
                 fromFieldPath: spec.privileges
                 toFieldPath: spec.forProvider.vars[1].value
+                transforms:
+                  - type: string
+                    string:
+                      type: Join
+                      join:
+                        separator: ","
               - type: ToCompositeFieldPath
                 fromFieldPath: status.atProvider.outputs.role_id
                 toFieldPath: status.roleId
