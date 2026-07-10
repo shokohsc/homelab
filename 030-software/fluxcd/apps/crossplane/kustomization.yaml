@@ -3,8 +3,8 @@ kind: Kustomization
 namespace: crossplane-system
 resources:
   - provider.yaml
-  - provider-config.yaml
-  - secret.yaml
+  # - provider-config.yaml
+  # - secret.yaml
 
   # - environment-role.yaml
   # - environment-group.yaml
