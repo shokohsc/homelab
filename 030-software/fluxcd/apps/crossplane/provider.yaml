@@ -2,9 +2,9 @@
 apiVersion: pkg.crossplane.io/v1
 kind: Provider
 metadata:
-  name: valkiriaaquaticamendi-provider-proxmox-bpg
+  name: provider-opentofu
 spec:
-  package: xpkg.upbound.io/valkiriaaquaticamendi/provider-proxmox-bpg:v1.18.0
+  package: xpkg.upbound.io/upbound/provider-opentofu:v1.1.4
   runtimeConfigRef:
     name: enable-psa
 ---
@@ -36,15 +36,15 @@ spec:
                   cpu: 1000m
                   memory: 512Mi
               volumeMounts:
-                # - mountPath: /etc/ssl/certs
-                #   name: tls
+                - mountPath: /etc/ssl/certs
+                  name: tls
                 - mountPath: /tmp
                   name: work
           volumes:
-            # - name: tls
-            #   configMap:
-            #     name: homelab-ca
-            #     defaultMode: 0600
+            - name: tls
+              configMap:
+                name: homelab-ca
+                defaultMode: 0600
             - name: work
               emptyDir:
                 medium: Memory
