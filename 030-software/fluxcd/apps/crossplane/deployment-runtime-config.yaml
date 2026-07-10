@@ -40,11 +40,10 @@ spec:
                   cpu: 1000m
                   memory: 512Mi
               volumeMounts:
-                - mountPath: /etc/ssl/certs/ca-certificates.crt
-                  subPath: ca-certs.pem
+                - mountPath: /etc/ssl/certs
                   name: tls
                 - mountPath: /tmp
-                  name: work
+                  name: temp
                 - mountPath: /tofu
                   name: work
           volumes:
@@ -52,6 +51,9 @@ spec:
               configMap:
                 name: homelab-ca
                 defaultMode: 0600
+            - name: temp
+              emptyDir:
+                medium: Memory
             - name: work
               emptyDir:
                 medium: Memory
