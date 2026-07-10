@@ -36,7 +36,8 @@ spec:
                   cpu: 1000m
                   memory: 512Mi
               volumeMounts:
-                - mountPath: /etc/ssl/certs
+                - mountPath: /etc/ssl/certs/cert.pem
+                  subPath: ca-certs.pem
                   name: tls
                 - mountPath: /tmp
                   name: work
