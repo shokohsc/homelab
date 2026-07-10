@@ -42,6 +42,8 @@ spec:
                   vars:
                     - key: role
                     - key: privileges
+                providerConfigRef:
+                  name: proxmox
                 writeConnectionSecretToRef:
                   namespace: crossplane-system
             patches:

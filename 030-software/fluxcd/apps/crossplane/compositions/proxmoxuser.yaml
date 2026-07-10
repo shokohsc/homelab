@@ -54,6 +54,8 @@ spec:
                         name: ""
                         namespace: ""
                         key: ""
+                providerConfigRef:
+                  name: proxmox
                 writeConnectionSecretToRef:
                   namespace: crossplane-system
             patches:
