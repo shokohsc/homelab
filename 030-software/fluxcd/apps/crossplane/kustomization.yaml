@@ -4,7 +4,7 @@ namespace: crossplane-system
 resources:
   - provider.yaml
   - secret.yaml
-  # - provider-config.yaml
+  - provider-config.yaml
 
   # - environment-role.yaml
   # - environment-group.yaml
