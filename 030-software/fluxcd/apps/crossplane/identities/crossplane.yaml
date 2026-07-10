@@ -1,0 +1,47 @@
+apiVersion: platform.shokohsc.com/v1alpha1
+kind: ProxmoxRole
+metadata:
+  name: crossplane-role
+spec:
+  role: CrossplaneRole
+  privileges:
+    - Datastore.Allocate
+    - Datastore.AllocateSpace
+    - Pool.Allocate
+    - VM.Allocate
+    - VM.Clone
+    - VM.Config.CDROM
+    - VM.Config.CPU
+    - VM.Config.Cloudinit
+    - VM.Config.Disk
+    - VM.Config.Memory
+    - VM.Config.Network
+    - VM.Config.Options
+    - VM.Config.HWType
+    - VM.PowerMgmt
+    - VM.Console
+    - SDN.Use
+    - Sys.Audit
+---
+apiVersion: platform.shokohsc.com/v1alpha1
+kind: ProxmoxGroup
+metadata:
+  name: crossplane-group
+spec:
+  group: crossplane
+  roles:
+    - CrossplaneRole
+---
+apiVersion: platform.shokohsc.com/v1alpha1
+kind: ProxmoxUser
+metadata:
+  name: crossplane-user
+spec:
+  user: crossplane@pve
+  passwordSecretRef:
+    namespace: crossplane-system
+    name: crossplane-credentials
+    key: crossplane-password
+  groups:
+    - crossplane
+  aclPath: /

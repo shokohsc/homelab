@@ -1,0 +1,43 @@
+apiVersion: platform.shokohsc.com/v1alpha1
+kind: ProxmoxRole
+metadata:
+  name: csi-storage-role
+spec:
+  role: CSIStorageRole
+  privileges:
+    - VM.Audit
+    - VM.Allocate
+    - VM.Clone
+    - VM.Config.CPU
+    - VM.Config.Disk
+    - VM.Config.HWType
+    - VM.Config.Memory
+    - VM.Config.Options
+    - VM.Migrate
+    - VM.PowerMgmt
+    - Datastore.Allocate
+    - Datastore.AllocateSpace
+    - Datastore.Audit
+---
+apiVersion: platform.shokohsc.com/v1alpha1
+kind: ProxmoxGroup
+metadata:
+  name: csi-proxmox-group
+spec:
+  group: csi-proxmox
+  roles:
+    - CSIStorageRole
+---
+apiVersion: platform.shokohsc.com/v1alpha1
+kind: ProxmoxUser
+metadata:
+  name: csi-proxmox-user
+spec:
+  user: csi-proxmox@pve
+  passwordSecretRef:
+    namespace: crossplane-system
+    name: csi-proxmox-credentials
+    key: password
+  groups:
+    - csi-proxmox
+  aclPath: /

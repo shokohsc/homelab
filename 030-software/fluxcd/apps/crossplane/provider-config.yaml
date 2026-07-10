@@ -1,13 +1,8 @@
----
 apiVersion: opentofu.upbound.io/v1beta1
 kind: ProviderConfig
 metadata:
   name: proxmox
 spec:
-  # Note that unlike most provider configs this one supports an array of
-  # credentials. This is because each tofu workspace uses a single
-  # Crossplane provider config, but could use multiple Terraform providers each
-  # with their own credentials.
   credentials:
     - filename: config.json
       source: Secret
@@ -20,7 +15,7 @@ spec:
   # providers.
   configuration: |
     provider "proxmox" {
-      endpoint = "https://proxmox.${domain}/"
+      endpoint = "https://proxmox.home.arpa/"
       # TODO: use terraform variable or remove the line, and use PROXMOX_VE_USERNAME environment variable
       #username = var.proxmox_ve_username
       # TODO: use terraform variable or remove the line, and use PROXMOX_VE_PASSWORD environment variable

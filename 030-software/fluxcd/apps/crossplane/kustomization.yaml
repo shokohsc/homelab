@@ -2,14 +2,18 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 namespace: crossplane-system
 resources:
-  - platform/configuration
-  # - provider.yaml
-  # - secret.yaml
-  # - provider-config.yaml
+  - secret.yaml
+  - provider.yaml
+  - provider-config.yaml
+  - functions.yaml
+  - configuration.yaml
 
-  # - environment-role.yaml
-  # - environment-group.yaml
-  # - environment-user.yaml
+  - xrds/proxmoxrole.yaml
+  - xrds/proxmoxgroup.yaml
+  - xrds/proxmoxuser.yaml
+  - compositions/proxmoxrole.yaml
+  - compositions/proxmoxgroup.yaml
+  - compositions/proxmoxuser.yaml
 
-  # - environment-container.yaml
-  # - environment-vm.yaml
+  - identities/crossplane.yaml
+  - identities/csi-proxmox.yaml
