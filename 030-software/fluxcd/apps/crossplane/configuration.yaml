@@ -1,16 +1,4 @@
 ---
-apiVersion: meta.pkg.crossplane.io/v1
-kind: Configuration
-metadata:
-  name: platform-proxmox
-  annotations:
-    meta.crossplane.io/maintainer: Platform Team
-    meta.crossplane.io/description: Proxmox RBAC management via Crossplane and OpenTofu
-spec:
-  dependsOn:
-    - provider: xpkg.upbound.io/upbound/provider-opentofu
-      version: ">=v1.1.4"
----
 apiVersion: pkg.crossplane.io/v1beta1
 kind: DeploymentRuntimeConfig
 metadata:
