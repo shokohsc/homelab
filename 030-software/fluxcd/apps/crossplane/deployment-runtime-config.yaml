@@ -43,8 +43,8 @@ spec:
                 - mountPath: /etc/ssl/certs/ca-certificates.crt
                   subPath: ca-certs.pem
                   name: tls
-                # - mountPath: /tmp
-                #   name: work
+                - mountPath: /tmp
+                  name: work
                 - mountPath: /tofu
                   name: work
           volumes:
