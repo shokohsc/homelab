@@ -1,0 +1,66 @@
+apiVersion: apiextensions.crossplane.io/v1
+kind: Composition
+metadata:
+  name: proxmoxusers.platform.example.io
+  labels:
+    provider: opentofu
+spec:
+  compositeTypeRef:
+    apiVersion: platform.example.io/v1alpha1
+    kind: ProxmoxUser
+  pipeline:
+    - step: patch-and-transform
+      functionRef:
+        name: function-patch-and-transform
+      input:
+        apiVersion: pt.fn.crossplane.io/v1beta1
+        kind: Resources
+        resources:
+          - name: user-workspace
+            base:
+              apiVersion: opentofu.upbound.io/v1beta1
+              kind: Workspace
+              spec:
+                forProvider:
+                  source: Inline
+                  module: |
+                    variable "user" {
+                      type = string
+                    }
+                    variable "password" {
+                      type      = string
+                      sensitive = true
+                    }
+                    variable "groups" {
+                      type    = list(string)
+                      default = []
+                    }
+
+                    resource "proxmox_user" "this" {
+                      user_id  = var.user
+                      password = var.password
+                      groups   = var.groups
+                    }
+
+                    output "user_id" {
+                      value = proxmox_user.this.user_id
+                    }
+                  vars:
+                    - key: user
+                    - key: password
+                    - key: groups
+                writeConnectionSecretToRef:
+                  namespace: crossplane-system
+            patches:
+              - type: FromCompositeFieldPath
+                fromFieldPath: spec.user
+                toFieldPath: spec.forProvider.vars[0].value
+              - type: FromCompositeFieldPath
+                fromFieldPath: spec.passwordSecretRef
+                toFieldPath: spec.forProvider.vars[1].value
+              - type: FromCompositeFieldPath
+                fromFieldPath: spec.groups
+                toFieldPath: spec.forProvider.vars[2].value
+              - type: ToCompositeFieldPath
+                fromFieldPath: status.atProvider.outputs.user_id
+                toFieldPath: status.userId

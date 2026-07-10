@@ -1,0 +1,51 @@
+apiVersion: apiextensions.crossplane.io/v1
+kind: CompositeResourceDefinition
+metadata:
+  name: proxmoxusers.platform.example.io
+spec:
+  group: platform.example.io
+  names:
+    kind: ProxmoxUser
+    plural: proxmoxusers
+  claimNames:
+    kind: ProxmoxUserClaim
+    plural: proxmoxuserclaims
+  versions:
+    - name: v1alpha1
+      served: true
+      referenceable: true
+      schema:
+        openAPIV3Schema:
+          type: object
+          properties:
+            spec:
+              type: object
+              properties:
+                user:
+                  type: string
+                  description: Proxmox user ID (e.g. crosslane@pve)
+                passwordSecretRef:
+                  type: object
+                  properties:
+                    namespace:
+                      type: string
+                    name:
+                      type: string
+                    key:
+                      type: string
+                  required:
+                    - namespace
+                    - name
+                    - key
+                  description: Reference to a Kubernetes Secret containing the password
+                groups:
+                  type: array
+                  items:
+                    type: string
+                  description: Proxmox groups to assign the user to
+                aclPath:
+                  type: string
+                  description: ACL path for the user (default /)
+              required:
+                - user
+                - passwordSecretRef

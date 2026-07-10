@@ -1,0 +1,56 @@
+apiVersion: apiextensions.crossplane.io/v1
+kind: Composition
+metadata:
+  name: proxmoxroles.platform.example.io
+  labels:
+    provider: opentofu
+spec:
+  compositeTypeRef:
+    apiVersion: platform.example.io/v1alpha1
+    kind: ProxmoxRole
+  pipeline:
+    - step: patch-and-transform
+      functionRef:
+        name: function-patch-and-transform
+      input:
+        apiVersion: pt.fn.crossplane.io/v1beta1
+        kind: Resources
+        resources:
+          - name: role-workspace
+            base:
+              apiVersion: opentofu.upbound.io/v1beta1
+              kind: Workspace
+              spec:
+                forProvider:
+                  source: Inline
+                  module: |
+                    variable "role" {
+                      type = string
+                    }
+                    variable "privileges" {
+                      type = list(string)
+                    }
+
+                    resource "proxmox_role" "this" {
+                      role_id    = var.role
+                      privileges = var.privileges
+                    }
+
+                    output "role_id" {
+                      value = proxmox_role.this.role_id
+                    }
+                  vars:
+                    - key: role
+                    - key: privileges
+                writeConnectionSecretToRef:
+                  namespace: crossplane-system
+            patches:
+              - type: FromCompositeFieldPath
+                fromFieldPath: spec.role
+                toFieldPath: spec.forProvider.vars[0].value
+              - type: FromCompositeFieldPath
+                fromFieldPath: spec.privileges
+                toFieldPath: spec.forProvider.vars[1].value
+              - type: ToCompositeFieldPath
+                fromFieldPath: status.atProvider.outputs.role_id
+                toFieldPath: status.roleId

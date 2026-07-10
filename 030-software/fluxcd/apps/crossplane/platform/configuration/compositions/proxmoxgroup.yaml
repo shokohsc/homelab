@@ -1,0 +1,61 @@
+apiVersion: apiextensions.crossplane.io/v1
+kind: Composition
+metadata:
+  name: proxmoxgroups.platform.example.io
+  labels:
+    provider: opentofu
+spec:
+  compositeTypeRef:
+    apiVersion: platform.example.io/v1alpha1
+    kind: ProxmoxGroup
+  pipeline:
+    - step: patch-and-transform
+      functionRef:
+        name: function-patch-and-transform
+      input:
+        apiVersion: pt.fn.crossplane.io/v1beta1
+        kind: Resources
+        resources:
+          - name: group-workspace
+            base:
+              apiVersion: opentofu.upbound.io/v1beta1
+              kind: Workspace
+              spec:
+                forProvider:
+                  source: Inline
+                  module: |
+                    variable "group" {
+                      type = string
+                    }
+                    variable "roles" {
+                      type = list(string)
+                    }
+
+                    resource "proxmox_group" "this" {
+                      group_id = var.group
+                    }
+
+                    resource "proxmox_acl" "this" {
+                      path     = "/"
+                      group_id = proxmox_group.this.group_id
+                      role_id  = var.roles[0]
+                    }
+
+                    output "group_id" {
+                      value = proxmox_group.this.group_id
+                    }
+                  vars:
+                    - key: group
+                    - key: roles
+                writeConnectionSecretToRef:
+                  namespace: crossplane-system
+            patches:
+              - type: FromCompositeFieldPath
+                fromFieldPath: spec.group
+                toFieldPath: spec.forProvider.vars[0].value
+              - type: FromCompositeFieldPath
+                fromFieldPath: spec.roles
+                toFieldPath: spec.forProvider.vars[1].value
+              - type: ToCompositeFieldPath
+                fromFieldPath: status.atProvider.outputs.group_id
+                toFieldPath: status.groupId
