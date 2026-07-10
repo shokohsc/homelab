@@ -41,7 +41,7 @@ spec:
   passwordSecretRef:
     namespace: crossplane-system
     name: crossplane-credentials
-    key: crossplane-password
+    key: password
   groups:
     - crossplane
   aclPath: /
