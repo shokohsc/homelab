@@ -1,9 +1,9 @@
 apiVersion: apiextensions.crossplane.io/v1
 kind: CompositeResourceDefinition
 metadata:
-  name: proxmoxusers.platform.example.io
+  name: proxmoxusers.platform.shokohsc.com
 spec:
-  group: platform.example.io
+  group: platform.shokohsc.com
   names:
     kind: ProxmoxUser
     plural: proxmoxusers

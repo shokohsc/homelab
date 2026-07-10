@@ -1,12 +1,12 @@
 apiVersion: apiextensions.crossplane.io/v1
 kind: Composition
 metadata:
-  name: proxmoxroles.platform.example.io
+  name: proxmoxroles.platform.shokohsc.com
   labels:
     provider: opentofu
 spec:
   compositeTypeRef:
-    apiVersion: platform.example.io/v1alpha1
+    apiVersion: platform.shokohsc.com/v1alpha1
     kind: ProxmoxRole
   pipeline:
     - step: patch-and-transform

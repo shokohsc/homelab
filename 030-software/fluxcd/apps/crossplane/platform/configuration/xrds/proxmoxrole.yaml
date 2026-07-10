@@ -1,9 +1,9 @@
 apiVersion: apiextensions.crossplane.io/v1
 kind: CompositeResourceDefinition
 metadata:
-  name: proxmoxroles.platform.example.io
+  name: proxmoxroles.platform.shokohsc.com
 spec:
-  group: platform.example.io
+  group: platform.shokohsc.com
   names:
     kind: ProxmoxRole
     plural: proxmoxroles
