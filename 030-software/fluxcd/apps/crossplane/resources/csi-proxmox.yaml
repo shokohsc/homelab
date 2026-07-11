@@ -41,3 +41,11 @@ spec:
   groups:
     - csi-proxmox
   aclPath: /
+---
+apiVersion: platform.shokohsc.com/v1alpha1
+kind: ProxmoxToken
+metadata:
+  name: csi-proxmox
+spec:
+  name: csi-proxmox
+  user: csi-proxmox@pve

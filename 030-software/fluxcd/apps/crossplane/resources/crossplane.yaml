@@ -45,3 +45,11 @@ spec:
   groups:
     - crossplane
   aclPath: /
+---
+apiVersion: platform.shokohsc.com/v1alpha1
+kind: ProxmoxToken
+metadata:
+  name: crossplane
+spec:
+  name: crossplane
+  user: crossplane@pve

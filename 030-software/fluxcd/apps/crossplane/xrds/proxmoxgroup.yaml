@@ -19,9 +19,15 @@ spec:
             spec:
               type: object
               properties:
+                comment:
+                  type: string
+                  description: Proxmox group comment
                 group:
                   type: string
                   description: Proxmox group name
+                propagate:
+                  type: bool
+                  description: Proxmox propagate property
                 roles:
                   type: array
                   items:

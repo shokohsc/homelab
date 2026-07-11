@@ -25,29 +25,41 @@ spec:
                   enableTofuCLILogging: true
                   source: Inline
                   module: |
+                    variable "comment" {
+                      type = string
+                      default = "Managed by Crossplane"
+                    }
                     variable "group" {
                       type = string
+                    }
+                    variable "propagate" {
+                      type = bool
+                      default = true
                     }
                     variable "roles" {
                       type = string
                     }
 
                     resource "proxmox_virtual_environment_group" "this" {
+                      comment = var.comment
                       group_id = var.group
                     }
 
                     resource "proxmox_acl" "this" {
-                      for_each = toset(split(",", var.roles))
-                      path     = "/"
-                      group_id = proxmox_virtual_environment_group.this.group_id
-                      role_id  = each.key
+                      for_each  = toset(split(",", var.roles))
+                      path      = "/"
+                      group_id  = proxmox_virtual_environment_group.this.group_id
+                      propagate = var.propagate
+                      role_id   = each.key
                     }
 
                     output "group_id" {
                       value = proxmox_virtual_environment_group.this.group_id
                     }
                   vars:
+                    - key: comment
                     - key: group
+                    - key: propagate
                     - key: roles
                 providerConfigRef:
                   name: proxmox
@@ -56,11 +68,17 @@ spec:
                   name: opentofu-group-workspace
             patches:
               - type: FromCompositeFieldPath
-                fromFieldPath: spec.group
+                fromFieldPath: spec.comment
                 toFieldPath: spec.forProvider.vars[0].value
               - type: FromCompositeFieldPath
-                fromFieldPath: spec.roles
+                fromFieldPath: spec.group
                 toFieldPath: spec.forProvider.vars[1].value
+              - type: FromCompositeFieldPath
+                fromFieldPath: spec.propagate
+                toFieldPath: spec.forProvider.vars[2].value
+              - type: FromCompositeFieldPath
+                fromFieldPath: spec.roles
+                toFieldPath: spec.forProvider.vars[3].value
                 transforms:
                   - type: string
                     string:

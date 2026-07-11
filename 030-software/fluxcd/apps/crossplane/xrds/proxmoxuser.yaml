@@ -19,9 +19,12 @@ spec:
             spec:
               type: object
               properties:
+                comment:
+                  type: string
+                  description: Proxmox user comment
                 user:
                   type: string
-                  description: Proxmox user ID (e.g. crosslane@pve)
+                  description: Proxmox user ID (e.g. crossplane@pve)
                 passwordSecretRef:
                   type: object
                   properties:

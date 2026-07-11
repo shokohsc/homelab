@@ -7,7 +7,7 @@ metadata:
 spec:
   compositeTypeRef:
     apiVersion: platform.shokohsc.com/v1alpha1
-    kind: ProxmoxUser
+    kind: ProxmoxToken
   pipeline:
     - step: patch-and-transform
       functionRef:
@@ -16,7 +16,7 @@ spec:
         apiVersion: pt.fn.crossplane.io/v1beta1
         kind: Resources
         resources:
-          - name: user-workspace
+          - name: user-token-workspace
             base:
               apiVersion: opentofu.upbound.io/v1beta1
               kind: Workspace
@@ -32,36 +32,23 @@ spec:
                     variable "user" {
                       type = string
                     }
-                    variable "password" {
-                      type      = string
-                      sensitive = true
-                    }
-                    variable "groups" {
+                    variable "name" {
                       type    = string
-                      default = ""
                     }
 
-                    resource "proxmox_virtual_environment_user" "this" {
+                    resource "proxmox_user_token" "this" {
                       comment = var.comment
                       user_id  = var.user
-                      enabled = true
-                      password = var.password
-                      groups   = var.groups != "" ? split(",", var.groups) : null
+                      token_name = var.name
                     }
 
                     output "user_id" {
-                      value = proxmox_virtual_environment_user.this.user_id
+                      value = proxmox_user_token.this.token_name
                     }
                   vars:
                     - key: comment
+                    - key: name
                     - key: user
-                    - key: groups
-                  env:
-                    - name: TF_VAR_password
-                      secretKeyRef:
-                        name: ""
-                        namespace: ""
-                        key: ""
                 providerConfigRef:
                   name: proxmox
                 writeConnectionSecretToRef:
@@ -75,23 +62,8 @@ spec:
                 fromFieldPath: spec.user
                 toFieldPath: spec.forProvider.vars[1].value
               - type: FromCompositeFieldPath
-                fromFieldPath: spec.groups
+                fromFieldPath: spec.name
                 toFieldPath: spec.forProvider.vars[2].value
-                transforms:
-                  - type: string
-                    string:
-                      type: Join
-                      join:
-                        separator: ","
-              - type: FromCompositeFieldPath
-                fromFieldPath: spec.passwordSecretRef.name
-                toFieldPath: spec.forProvider.env[0].secretKeyRef.name
-              - type: FromCompositeFieldPath
-                fromFieldPath: spec.passwordSecretRef.namespace
-                toFieldPath: spec.forProvider.env[0].secretKeyRef.namespace
-              - type: FromCompositeFieldPath
-                fromFieldPath: spec.passwordSecretRef.key
-                toFieldPath: spec.forProvider.env[0].secretKeyRef.key
               - type: ToCompositeFieldPath
                 fromFieldPath: status.atProvider.outputs.user_id
                 toFieldPath: status.userId
