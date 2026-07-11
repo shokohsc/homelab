@@ -22,15 +22,15 @@ spec:
     - VM.Console
     - SDN.Use
     - Sys.Audit
-# ---
-# apiVersion: platform.shokohsc.com/v1alpha1
-# kind: ProxmoxGroup
-# metadata:
-#   name: crossplane
-# spec:
-#   group: crossplane
-#   roles:
-#     - crossplane
+---
+apiVersion: platform.shokohsc.com/v1alpha1
+kind: ProxmoxGroup
+metadata:
+  name: crossplane
+spec:
+  group: crossplane
+  roles:
+    - crossplane
 ---
 apiVersion: platform.shokohsc.com/v1alpha1
 kind: ProxmoxUser

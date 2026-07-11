@@ -3,7 +3,7 @@ kind: CompositeResourceDefinition
 metadata:
   name: proxmoxroles.platform.shokohsc.com
 spec:
-  scope: Namespaced
+  scope: Cluster
   group: platform.shokohsc.com
   names:
     kind: ProxmoxRole
