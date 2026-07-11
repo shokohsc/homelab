@@ -3,3 +3,4 @@ kind: Kustomization
 namespace: crossplane-system
 resources:
   - crossplane.yaml
+  # - csi-proxmox.yaml

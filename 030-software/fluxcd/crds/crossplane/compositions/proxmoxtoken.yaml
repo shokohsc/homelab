@@ -54,7 +54,7 @@ spec:
                   name: proxmox
                 writeConnectionSecretToRef:
                   namespace: crossplane-system
-                  name: opentofu-user-workspace
+                  name: opentofu-token-workspace
             patches:
               - type: FromCompositeFieldPath
                 fromFieldPath: spec.comment
@@ -67,6 +67,17 @@ spec:
               - type: FromCompositeFieldPath
                 fromFieldPath: spec.name
                 toFieldPath: spec.forProvider.vars[2].value
+              - type: FromCompositeFieldPath
+                fromFieldPath: metadata.name
+                toFieldPath: spec.writeConnectionSecretToRef.name
+                transforms:
+                  - type: string
+                    string:
+                      type: Format
+                      fmt: "%s-token-workspace"
+              - type: FromCompositeFieldPath
+                fromFieldPath: metadata.namespace
+                toFieldPath: spec.writeConnectionSecretToRef.namespace
               - type: ToCompositeFieldPath
                 fromFieldPath: status.atProvider.outputs.user_id
                 toFieldPath: status.userId

@@ -62,6 +62,17 @@ spec:
                       type: Join
                       join:
                         separator: ","
+              - type: FromCompositeFieldPath
+                fromFieldPath: metadata.name
+                toFieldPath: spec.writeConnectionSecretToRef.name
+                transforms:
+                  - type: string
+                    string:
+                      type: Format
+                      fmt: "%s-role-workspace"
+              - type: FromCompositeFieldPath
+                fromFieldPath: metadata.namespace
+                toFieldPath: spec.writeConnectionSecretToRef.namespace
               - type: ToCompositeFieldPath
                 fromFieldPath: status.atProvider.outputs.role_id
                 toFieldPath: status.roleId
