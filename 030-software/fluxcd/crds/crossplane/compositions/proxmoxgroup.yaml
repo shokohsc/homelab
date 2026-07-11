@@ -65,7 +65,6 @@ spec:
                 providerConfigRef:
                   name: proxmox
                 writeConnectionSecretToRef:
-                  namespace: crossplane-system
                   name: opentofu-group-workspace
             patches:
               - type: FromCompositeFieldPath
