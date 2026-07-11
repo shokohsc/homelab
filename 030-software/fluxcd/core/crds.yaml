@@ -1,17 +1,16 @@
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: apps
+  name: crds
   namespace: flux-system
 spec:
   interval: 1m0s
   dependsOn:
-    - name: crds
     - name: requirements
   sourceRef:
     kind: GitRepository
     name: flux-system
-  path: ./030-software/fluxcd/apps
+  path: ./030-software/fluxcd/crds
   wait: true
   prune: true
   postBuild:
