@@ -16,7 +16,7 @@ spec:
           restartPolicy: OnFailure
           containers:
           - name: curl
-            image: linuxserver/yq:4.1.1
+            image: linuxserver/yq:4.1.2
             env:
             - name: ITEMS_YAML_PATH
               value: /mnt/items.yaml
