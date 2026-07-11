@@ -99,9 +99,6 @@ spec:
                     string:
                       type: Format
                       fmt: "%s-group-workspace"
-              - type: FromCompositeFieldPath
-                fromFieldPath: metadata.namespace
-                toFieldPath: spec.writeConnectionSecretToRef.namespace
               - type: ToCompositeFieldPath
                 fromFieldPath: status.atProvider.outputs.group_id
                 toFieldPath: status.groupId

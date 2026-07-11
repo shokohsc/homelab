@@ -104,9 +104,6 @@ spec:
                     string:
                       type: Format
                       fmt: "%s-user-workspace"
-              - type: FromCompositeFieldPath
-                fromFieldPath: metadata.namespace
-                toFieldPath: spec.writeConnectionSecretToRef.namespace
               - type: ToCompositeFieldPath
                 fromFieldPath: status.atProvider.outputs.user_id
                 toFieldPath: status.userId
