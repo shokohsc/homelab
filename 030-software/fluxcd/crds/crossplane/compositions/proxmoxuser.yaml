@@ -28,7 +28,6 @@ spec:
                   module: |
                     variable "comment" {
                       type = string
-                      default = "Managed by Crossplane"
                     }
                     variable "user" {
                       type = string
@@ -55,16 +54,19 @@ spec:
                     }
                   vars:
                     - key: comment
+                      value: "Managed by Crossplane"
                     - key: user
+                      value: ""
                     - key: groups
+                      value: ""
                   env:
                     - name: TF_VAR_password
                       secretKeyRef:
                         name: ""
-                        namespace: ""
                         key: ""
                 providerConfigRef:
                   name: proxmox
+                  kind: ProviderConfig
                 writeConnectionSecretToRef:
                   name: opentofu-user-workspace
             patches:
@@ -90,9 +92,6 @@ spec:
               - type: FromCompositeFieldPath
                 fromFieldPath: spec.passwordSecretRef.name
                 toFieldPath: spec.forProvider.env[0].secretKeyRef.name
-              - type: FromCompositeFieldPath
-                fromFieldPath: spec.passwordSecretRef.namespace
-                toFieldPath: spec.forProvider.env[0].secretKeyRef.namespace
               - type: FromCompositeFieldPath
                 fromFieldPath: spec.passwordSecretRef.key
                 toFieldPath: spec.forProvider.env[0].secretKeyRef.key

@@ -43,9 +43,12 @@ spec:
                     }
                   vars:
                     - key: role
+                      value: ""
                     - key: privileges
+                      value: ""
                 providerConfigRef:
                   name: proxmox
+                  kind: ProviderConfig
                 writeConnectionSecretToRef:
                   name: opentofu-role-workspace
             patches:

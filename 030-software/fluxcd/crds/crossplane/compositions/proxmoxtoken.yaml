@@ -28,7 +28,6 @@ spec:
                   module: |
                     variable "comment" {
                       type = string
-                      default = "Managed by Crossplane"
                     }
                     variable "user" {
                       type = string
@@ -48,10 +47,14 @@ spec:
                     }
                   vars:
                     - key: comment
+                      value: "Managed by Crossplane"
                     - key: name
+                      value: ""
                     - key: user
+                      value: ""
                 providerConfigRef:
                   name: proxmox
+                  kind: ProviderConfig
                 writeConnectionSecretToRef:
                   name: opentofu-token-workspace
             patches:

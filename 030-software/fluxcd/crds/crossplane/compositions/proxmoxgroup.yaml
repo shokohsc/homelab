@@ -28,7 +28,6 @@ spec:
                   module: |
                     variable "comment" {
                       type = string
-                      default = "Managed by Crossplane"
                     }
                     variable "group" {
                       type = string
@@ -59,11 +58,16 @@ spec:
                     }
                   vars:
                     - key: comment
+                      value: "Managed by Crossplane"
                     - key: group
+                      value: ""
                     - key: propagate
+                      value: "true"
                     - key: roles
+                      value: ""
                 providerConfigRef:
                   name: proxmox
+                  kind: ProviderConfig
                 writeConnectionSecretToRef:
                   name: opentofu-group-workspace
             patches:
