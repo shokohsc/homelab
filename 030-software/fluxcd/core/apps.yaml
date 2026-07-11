@@ -6,7 +6,7 @@ metadata:
 spec:
   interval: 1m0s
   dependsOn:
-    - name: crds
+    - name: crossplane-definitions
     - name: requirements
   sourceRef:
     kind: GitRepository

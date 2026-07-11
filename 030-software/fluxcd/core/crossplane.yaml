@@ -1,0 +1,39 @@
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: crossplane-provider
+  namespace: flux-system
+spec:
+  interval: 1m0s
+  dependsOn:
+    - name: requirements
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+  path: ./030-software/fluxcd/crossplane-provider
+  wait: true
+  prune: true
+  decryption:
+    provider: sops
+    secretRef:
+      name: sops-gpg
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: crossplane-definitions
+  namespace: flux-system
+spec:
+  interval: 1m0s
+  dependsOn:
+    - name: crossplane-provider
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+  path: ./030-software/fluxcd/crossplane-definitions
+  wait: true
+  prune: true
+  decryption:
+    provider: sops
+    secretRef:
+      name: sops-gpg
