@@ -19,7 +19,7 @@ spec:
         resources:
           - name: group-workspace
             base:
-              apiVersion: opentofu.upbound.io/v1beta1
+              apiVersion: opentofu.m.upbound.io/v1beta1
               kind: Workspace
               spec:
                 forProvider:
@@ -71,15 +71,21 @@ spec:
               - type: FromCompositeFieldPath
                 fromFieldPath: spec.comment
                 toFieldPath: spec.forProvider.vars[0].value
+                policy:
+                  fromFieldPath: Optional
               - type: FromCompositeFieldPath
                 fromFieldPath: spec.group
                 toFieldPath: spec.forProvider.vars[1].value
               - type: FromCompositeFieldPath
                 fromFieldPath: spec.propagate
                 toFieldPath: spec.forProvider.vars[2].value
+                policy:
+                  fromFieldPath: Optional
               - type: FromCompositeFieldPath
                 fromFieldPath: spec.roles
                 toFieldPath: spec.forProvider.vars[3].value
+                policy:
+                  fromFieldPath: Optional
                 transforms:
                   - type: string
                     string:

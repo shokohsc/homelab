@@ -19,7 +19,7 @@ spec:
         resources:
           - name: role-workspace
             base:
-              apiVersion: opentofu.upbound.io/v1beta1
+              apiVersion: opentofu.m.upbound.io/v1beta1
               kind: Workspace
               spec:
                 forProvider:

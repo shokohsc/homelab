@@ -3,7 +3,7 @@ kind: CompositeResourceDefinition
 metadata:
   name: proxmoxtokens.platform.shokohsc.com
 spec:
-  scope: Cluster
+  scope: Namespaced
   group: platform.shokohsc.com
   names:
     kind: ProxmoxToken
@@ -19,6 +19,9 @@ spec:
             spec:
               type: object
               properties:
+                comment:
+                  type: string
+                  description: Proxmox token comment
                 user:
                   type: string
                   description: Proxmox user ID (e.g. crossplane@pve)
