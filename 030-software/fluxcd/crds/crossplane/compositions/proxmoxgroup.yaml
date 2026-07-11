@@ -5,6 +5,7 @@ metadata:
   labels:
     provider: opentofu
 spec:
+  mode: Pipeline
   compositeTypeRef:
     apiVersion: platform.shokohsc.com/v1alpha1
     kind: ProxmoxGroup
