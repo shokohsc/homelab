@@ -48,9 +48,9 @@ spec:
                   vars:
                     - key: comment
                       value: "Managed by Crossplane"
-                    - key: name
-                      value: ""
                     - key: user
+                      value: ""
+                    - key: name
                       value: ""
                 providerConfigRef:
                   name: proxmox
