@@ -1,13 +1,13 @@
 apiVersion: apiextensions.crossplane.io/v1
 kind: Composition
 metadata:
-  name: proxmoxgroups.platform.shokohsc.com
+  name: proxmoxgroups.platform.${publicDomain}
   labels:
     provider: opentofu
 spec:
   mode: Pipeline
   compositeTypeRef:
-    apiVersion: platform.shokohsc.com/v1alpha1
+    apiVersion: platform.${publicDomain}/v1alpha1
     kind: ProxmoxGroup
   pipeline:
     - step: patch-and-transform

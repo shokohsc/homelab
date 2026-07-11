@@ -21,6 +21,6 @@ spec:
     }
 
     provider "proxmox" {
-      endpoint = "https://proxmox.home.arpa/"
+      endpoint = "https://proxmox.${domain}/"
       insecure = false
     }

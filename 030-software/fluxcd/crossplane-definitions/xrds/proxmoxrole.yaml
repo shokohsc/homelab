@@ -1,10 +1,10 @@
 apiVersion: apiextensions.crossplane.io/v2
 kind: CompositeResourceDefinition
 metadata:
-  name: proxmoxroles.platform.shokohsc.com
+  name: proxmoxroles.platform.${publicDomain}
 spec:
   scope: Namespaced
-  group: platform.shokohsc.com
+  group: platform.${publicDomain}
   names:
     kind: ProxmoxRole
     plural: proxmoxroles
