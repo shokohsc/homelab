@@ -13,19 +13,6 @@ spec:
   path: ./030-software/fluxcd/crds
   wait: true
   prune: true
-  healthChecks:
-    - apiVersion: apiextensions.k8s.io/v1
-      kind: CustomResourceDefinition
-      name: proxmoxgroups.platform.shokohsc.com
-    - apiVersion: apiextensions.k8s.io/v1
-      kind: CustomResourceDefinition
-      name: proxmoxusers.platform.shokohsc.com
-    - apiVersion: apiextensions.k8s.io/v1
-      kind: CustomResourceDefinition
-      name: proxmoxtokens.platform.shokohsc.com
-    - apiVersion: apiextensions.k8s.io/v1
-      kind: CustomResourceDefinition
-      name: proxmoxroles.platform.shokohsc.com
   postBuild:
     substitute:
       domain: "home.arpa"
