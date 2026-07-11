@@ -7,6 +7,6 @@ resources:
   - provider.yaml
   - provider-config.yaml
   - functions.yaml
-  - xrds/
-  - compositions/
-  - resources/
+  - xrds
+  - compositions
+  - xrs
