@@ -7,13 +7,6 @@ resources:
   - provider.yaml
   - provider-config.yaml
   - functions.yaml
-
-  - xrds/proxmoxrole.yaml
-  - xrds/proxmoxgroup.yaml
-  - xrds/proxmoxuser.yaml
-  - compositions/proxmoxrole.yaml
-  - compositions/proxmoxgroup.yaml
-  - compositions/proxmoxuser.yaml
-
-  - resources/crossplane.yaml
-  # - resources/csi-proxmox.yaml
+  - xrds/
+  - compositions/
+  - resources/
