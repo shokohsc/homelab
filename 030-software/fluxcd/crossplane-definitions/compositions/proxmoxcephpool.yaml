@@ -80,15 +80,15 @@ spec:
                     - key: application
                       value: "rbd"
                     - key: size
-                      value: 3
+                      value: "3"
                     - key: min_size
-                      value: 2
+                      value: "2"
                     - key: pg_num
-                      value: 128
+                      value: "128"
                     - key: pg_autoscale_mode
                       value: "warn"
                     - key: add_storages
-                      value: false
+                      value: "false"
                 providerConfigRef:
                   name: proxmox
                   kind: ProviderConfig
@@ -146,7 +146,7 @@ spec:
                 transforms:
                   - type: convert
                     convert:
-                      toType: bool
+                      toType: string
               - type: FromCompositeFieldPath
                 fromFieldPath: metadata.name
                 toFieldPath: spec.writeConnectionSecretToRef.name

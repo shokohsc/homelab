@@ -123,7 +123,7 @@ spec:
                 transforms:
                   - type: convert
                     convert:
-                      toType: bool
+                      toType: string
               - type: FromCompositeFieldPath
                 fromFieldPath: spec.vids
                 toFieldPath: spec.forProvider.vars[6].value
