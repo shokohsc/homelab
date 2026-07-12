@@ -5,7 +5,7 @@ metadata:
 spec:
   user: karpenter-proxmox@pve
   passwordSecretRef:
-    namespace: crossplane-system
+    namespace: karpenter-proxmox
     name: karpenter-proxmox-credentials
     key: password
   userGroups:

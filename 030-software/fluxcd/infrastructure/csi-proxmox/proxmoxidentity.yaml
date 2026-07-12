@@ -5,7 +5,7 @@ metadata:
 spec:
   user: csi-proxmox@pve
   passwordSecretRef:
-    namespace: crossplane-system
+    namespace: csi-proxmox
     name: csi-proxmox-credentials
     key: password
   userGroups:

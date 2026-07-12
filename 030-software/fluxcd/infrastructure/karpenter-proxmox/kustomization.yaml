@@ -3,5 +3,6 @@ kind: Kustomization
 namespace: karpenter-proxmox
 resources:
   - namespace.yaml
+  - provider-config.yaml
   - proxmoxidentity.yaml
   - secret.yaml

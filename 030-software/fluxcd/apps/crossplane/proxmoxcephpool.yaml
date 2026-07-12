@@ -5,3 +5,4 @@ metadata:
 spec:
   name: ceph
   nodeName: genji
+  pgNum: 32

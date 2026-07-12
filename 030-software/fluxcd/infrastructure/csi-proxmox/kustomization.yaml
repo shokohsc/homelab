@@ -3,6 +3,7 @@ kind: Kustomization
 namespace: csi-proxmox
 resources:
   - namespace.yaml
+  - provider-config.yaml
   - proxmoxidentity.yaml
   - proxmoxpool.yaml
   - secret.yaml
