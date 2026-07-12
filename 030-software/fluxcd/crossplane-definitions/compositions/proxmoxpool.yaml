@@ -1,0 +1,81 @@
+apiVersion: apiextensions.crossplane.io/v1
+kind: Composition
+metadata:
+  name: proxmoxpools.platform.${publicDomain}
+  labels:
+    provider: opentofu
+spec:
+  mode: Pipeline
+  compositeTypeRef:
+    apiVersion: platform.${publicDomain}/v1alpha1
+    kind: ProxmoxPool
+  pipeline:
+    - step: patch-and-transform
+      functionRef:
+        name: function-patch-and-transform
+      input:
+        apiVersion: pt.fn.crossplane.io/v1beta1
+        kind: Resources
+        resources:
+          - name: pool-workspace
+            base:
+              apiVersion: opentofu.m.upbound.io/v1beta1
+              kind: Workspace
+              spec:
+                forProvider:
+                  enableTofuCLILogging: true
+                  source: Inline
+                  module: |
+                    variable "pool" {
+                      type = string
+                    }
+                    variable "comment" {
+                      type    = string
+                      default = ""
+                    }
+
+                    resource "proxmox_virtual_environment_pool" "this" {
+                      pool_id = var.pool
+                      comment = var.comment
+                    }
+
+                    output "pool_id" {
+                      value = proxmox_virtual_environment_pool.this.pool_id
+                    }
+                    output "members" {
+                      value = jsonencode(proxmox_virtual_environment_pool.this.members)
+                    }
+                  vars:
+                    - key: comment
+                      value: "Managed by Crossplane"
+                    - key: pool
+                      value: ""
+                  env: []
+                providerConfigRef:
+                  name: proxmox
+                  kind: ProviderConfig
+                writeConnectionSecretToRef:
+                  name: opentofu-pool-workspace
+            patches:
+              - type: FromCompositeFieldPath
+                fromFieldPath: spec.comment
+                toFieldPath: spec.forProvider.vars[0].value
+                policy:
+                  fromFieldPath: Optional
+              - type: FromCompositeFieldPath
+                fromFieldPath: spec.poolId
+                toFieldPath: spec.forProvider.vars[1].value
+              - type: FromCompositeFieldPath
+                fromFieldPath: metadata.name
+                toFieldPath: spec.writeConnectionSecretToRef.name
+                transforms:
+                  - type: string
+                    string:
+                      type: Format
+                      fmt: "%s-pool-workspace"
+              - type: ToCompositeFieldPath
+                fromFieldPath: status.atProvider.outputs.pool_id
+                toFieldPath: status.poolId
+              - type: ToCompositeFieldPath
+                fromFieldPath: status.atProvider.outputs.members
+                toFieldPath: status.members

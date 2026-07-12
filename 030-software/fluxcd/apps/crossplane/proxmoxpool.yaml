@@ -1,0 +1,6 @@
+apiVersion: platform.${publicDomain}/v1alpha1
+kind: ProxmoxPool
+metadata:
+  name: ceph
+spec:
+  pool: ceph

@@ -5,3 +5,4 @@ resources:
   - crossplane.yaml
   - csi-proxmox.yaml
   - karpenter-proxmox.yaml
+  - proxmoxpool.yaml
