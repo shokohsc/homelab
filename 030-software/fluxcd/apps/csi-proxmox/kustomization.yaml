@@ -5,6 +5,7 @@ resources:
   - https://raw.githubusercontent.com/sergelogvinov/proxmox-csi-plugin/main/docs/deploy/proxmox-csi-plugin.yml
 patches:
   - patch: |
+      $patch: delete
       apiVersion: v1
       kind: Namespace
       metadata:
