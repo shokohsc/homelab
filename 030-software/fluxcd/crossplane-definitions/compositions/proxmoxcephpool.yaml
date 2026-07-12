@@ -80,11 +80,11 @@ spec:
                     - key: application
                       value: "rbd"
                     - key: size
-                      value: 3
+                      value: "3"
                     - key: min_size
-                      value: 2
+                      value: "2"
                     - key: pg_num
-                      value: 128
+                      value: "128"
                     - key: pg_autoscale_mode
                       value: "warn"
                     - key: add_storages
@@ -111,16 +111,28 @@ spec:
                 toFieldPath: spec.forProvider.vars[3].value
                 policy:
                   fromFieldPath: Optional
+                transforms:
+                  - type: convert
+                    convert:
+                      toType: string
               - type: FromCompositeFieldPath
                 fromFieldPath: spec.minSize
                 toFieldPath: spec.forProvider.vars[4].value
                 policy:
                   fromFieldPath: Optional
+                transforms:
+                  - type: convert
+                    convert:
+                      toType: string
               - type: FromCompositeFieldPath
                 fromFieldPath: spec.pgNum
                 toFieldPath: spec.forProvider.vars[5].value
                 policy:
                   fromFieldPath: Optional
+                transforms:
+                  - type: convert
+                    convert:
+                      toType: string
               - type: FromCompositeFieldPath
                 fromFieldPath: spec.pgAutoscaleMode
                 toFieldPath: spec.forProvider.vars[6].value
