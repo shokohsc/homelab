@@ -28,6 +28,9 @@ spec:
                 address:
                   type: string
                   description: The interface IPv4/CIDR address
+                gateway:
+                  type: string
+                  description: The gateway IPv4 address
                 comment:
                   type: string
                   description: Comment for the interface

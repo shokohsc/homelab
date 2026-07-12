@@ -36,9 +36,13 @@ spec:
                       type    = string
                       default = ""
                     }
+                    variable "gateway" {
+                      type    = string
+                      default = ""
+                    }
                     variable "comment" {
                       type    = string
-                      default = "Managed by Crossplane"
+                      default = ""
                     }
                     variable "ports" {
                       type    = string
@@ -58,6 +62,7 @@ spec:
                       name      = var.name
 
                       address    = var.address != "" ? var.address : null
+                      gateway    = var.gateway != "" ? var.gateway : null
                       comment    = var.comment != "" ? var.comment : null
                       ports      = var.ports != "" ? split(",", var.ports) : null
                       vlan_aware = var.vlan_aware
@@ -74,8 +79,10 @@ spec:
                       value: ""
                     - key: address
                       value: ""
-                    - key: comment
+                    - key: gateway
                       value: ""
+                    - key: comment
+                      value: "Managed by Crossplane"
                     - key: ports
                       value: ""
                     - key: vlan_aware
@@ -100,13 +107,18 @@ spec:
                 policy:
                   fromFieldPath: Optional
               - type: FromCompositeFieldPath
-                fromFieldPath: spec.comment
+                fromFieldPath: spec.gateway
                 toFieldPath: spec.forProvider.vars[3].value
                 policy:
                   fromFieldPath: Optional
               - type: FromCompositeFieldPath
-                fromFieldPath: spec.ports
+                fromFieldPath: spec.comment
                 toFieldPath: spec.forProvider.vars[4].value
+                policy:
+                  fromFieldPath: Optional
+              - type: FromCompositeFieldPath
+                fromFieldPath: spec.ports
+                toFieldPath: spec.forProvider.vars[5].value
                 policy:
                   fromFieldPath: Optional
                 transforms:
@@ -117,7 +129,7 @@ spec:
                         separator: ","
               - type: FromCompositeFieldPath
                 fromFieldPath: spec.vlanAware
-                toFieldPath: spec.forProvider.vars[5].value
+                toFieldPath: spec.forProvider.vars[6].value
                 policy:
                   fromFieldPath: Optional
                 transforms:
@@ -126,7 +138,7 @@ spec:
                       toType: string
               - type: FromCompositeFieldPath
                 fromFieldPath: spec.vids
-                toFieldPath: spec.forProvider.vars[6].value
+                toFieldPath: spec.forProvider.vars[7].value
                 policy:
                   fromFieldPath: Optional
               - type: FromCompositeFieldPath

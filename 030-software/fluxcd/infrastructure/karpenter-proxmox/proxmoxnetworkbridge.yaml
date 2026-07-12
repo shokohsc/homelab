@@ -1,7 +1,7 @@
 apiVersion: platform.${publicDomain}/v1alpha1
 kind: ProxmoxNetworkBridge
 metadata:
-  name: karpenter-proxmox
+  name: genji-sfpplus
 spec:
   name: vmbr1
   nodeName: genji
@@ -9,3 +9,33 @@ spec:
     - nic1
   vids: "10 20 40 50 100"
   vlanAware: true
+  address: 10.42.10.31/24
+  gateway: 10.42.10.1
+---
+apiVersion: platform.${publicDomain}/v1alpha1
+kind: ProxmoxNetworkBridge
+metadata:
+  name: hanzo-sfpplus
+spec:
+  name: vmbr1
+  nodeName: hanzo
+  ports:
+    - nic1
+  vids: "10 20 40 50 100"
+  vlanAware: true
+  address: 10.42.10.21/24
+  gateway: 10.42.10.1
+---
+apiVersion: platform.${publicDomain}/v1alpha1
+kind: ProxmoxNetworkBridge
+metadata:
+  name: roadhog-sfpplus
+spec:
+  name: vmbr1
+  nodeName: roadhog
+  ports:
+    - nic2
+  vids: "10 20 40 50 100"
+  vlanAware: true
+  address: 10.42.10.11/24
+  gateway: 10.42.10.1
