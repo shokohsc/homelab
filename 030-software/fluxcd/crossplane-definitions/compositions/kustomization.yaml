@@ -3,3 +3,5 @@ kind: Kustomization
 resources:
   - proxmoxidentity.yaml
   - proxmoxcephpool.yaml
+  - proxmoxnetworkbridge.yaml
+  # - talostemplate.yaml

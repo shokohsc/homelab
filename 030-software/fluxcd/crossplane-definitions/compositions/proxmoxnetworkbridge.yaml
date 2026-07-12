@@ -1,0 +1,138 @@
+apiVersion: apiextensions.crossplane.io/v1
+kind: Composition
+metadata:
+  name: proxmoxnetworkbridges.platform.${publicDomain}
+  labels:
+    provider: opentofu
+spec:
+  mode: Pipeline
+  compositeTypeRef:
+    apiVersion: platform.${publicDomain}/v1alpha1
+    kind: ProxmoxNetworkBridge
+  pipeline:
+    - step: patch-and-transform
+      functionRef:
+        name: function-patch-and-transform
+      input:
+        apiVersion: pt.fn.crossplane.io/v1beta1
+        kind: Resources
+        resources:
+          - name: network-bridge-workspace
+            base:
+              apiVersion: opentofu.m.upbound.io/v1beta1
+              kind: Workspace
+              spec:
+                forProvider:
+                  enableTofuCLILogging: true
+                  source: Inline
+                  module: |
+                    variable "name" {
+                      type = string
+                    }
+                    variable "node_name" {
+                      type = string
+                    }
+                    variable "address" {
+                      type    = string
+                      default = ""
+                    }
+                    variable "comment" {
+                      type    = string
+                      default = "Managed by Crossplane"
+                    }
+                    variable "ports" {
+                      type    = string
+                      default = ""
+                    }
+                    variable "vlan_aware" {
+                      type    = bool
+                      default = false
+                    }
+                    variable "vids" {
+                      type    = string
+                      default = ""
+                    }
+
+                    resource "proxmox_network_linux_bridge" "this" {
+                      node_name = var.node_name
+                      name      = var.name
+
+                      address    = var.address != "" ? var.address : null
+                      comment    = var.comment != "" ? var.comment : null
+                      ports      = var.ports != "" ? split(",", var.ports) : null
+                      vlan_aware = var.vlan_aware
+                      vids       = var.vlan_aware && var.vids != "" ? var.vids : null
+                    }
+
+                    output "id" {
+                      value = proxmox_network_linux_bridge.this.id
+                    }
+                  vars:
+                    - key: name
+                      value: ""
+                    - key: node_name
+                      value: ""
+                    - key: address
+                      value: ""
+                    - key: comment
+                      value: ""
+                    - key: ports
+                      value: ""
+                    - key: vlan_aware
+                      value: "false"
+                    - key: vids
+                      value: ""
+                providerConfigRef:
+                  name: proxmox
+                  kind: ProviderConfig
+                writeConnectionSecretToRef:
+                  name: opentofu-network-bridge-workspace
+            patches:
+              - type: FromCompositeFieldPath
+                fromFieldPath: spec.name
+                toFieldPath: spec.forProvider.vars[0].value
+              - type: FromCompositeFieldPath
+                fromFieldPath: spec.nodeName
+                toFieldPath: spec.forProvider.vars[1].value
+              - type: FromCompositeFieldPath
+                fromFieldPath: spec.address
+                toFieldPath: spec.forProvider.vars[2].value
+                policy:
+                  fromFieldPath: Optional
+              - type: FromCompositeFieldPath
+                fromFieldPath: spec.comment
+                toFieldPath: spec.forProvider.vars[3].value
+                policy:
+                  fromFieldPath: Optional
+              - type: FromCompositeFieldPath
+                fromFieldPath: spec.ports
+                toFieldPath: spec.forProvider.vars[4].value
+                policy:
+                  fromFieldPath: Optional
+                transforms:
+                  - type: string
+                    string:
+                      type: Join
+                      join:
+                        separator: ","
+              - type: FromCompositeFieldPath
+                fromFieldPath: spec.vlanAware
+                toFieldPath: spec.forProvider.vars[5].value
+                policy:
+                  fromFieldPath: Optional
+              - type: FromCompositeFieldPath
+                fromFieldPath: spec.vids
+                toFieldPath: spec.forProvider.vars[6].value
+                policy:
+                  fromFieldPath: Optional
+              - type: FromCompositeFieldPath
+                fromFieldPath: metadata.name
+                toFieldPath: spec.writeConnectionSecretToRef.name
+                transforms:
+                  - type: string
+                    string:
+                      type: Format
+                      fmt: "%s-network-bridge-workspace"
+              - type: ToCompositeFieldPath
+                fromFieldPath: status.atProvider.outputs.id
+                toFieldPath: status.id

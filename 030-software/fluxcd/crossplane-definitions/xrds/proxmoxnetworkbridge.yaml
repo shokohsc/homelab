@@ -1,0 +1,53 @@
+apiVersion: apiextensions.crossplane.io/v2
+kind: CompositeResourceDefinition
+metadata:
+  name: proxmoxnetworkbridges.platform.${publicDomain}
+spec:
+  scope: Namespaced
+  group: platform.${publicDomain}
+  names:
+    kind: ProxmoxNetworkBridge
+    plural: proxmoxnetworkbridges
+  versions:
+    - name: v1alpha1
+      served: true
+      referenceable: true
+      schema:
+        openAPIV3Schema:
+          type: object
+          properties:
+            spec:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: The interface name (e.g. vmbr0)
+                nodeName:
+                  type: string
+                  description: The name of the Proxmox node
+                address:
+                  type: string
+                  description: The interface IPv4/CIDR address
+                comment:
+                  type: string
+                  description: Comment for the interface
+                ports:
+                  type: array
+                  items:
+                    type: string
+                  description: The interface bridge ports
+                vlanAware:
+                  type: boolean
+                  description: Whether the bridge is VLAN aware
+                vids:
+                  type: string
+                  description: VLAN IDs allowed on the bridge (requires vlanAware)
+              required:
+                - name
+                - nodeName
+            status:
+              type: object
+              properties:
+                id:
+                  type: string
+                  description: The unique identifier (node_name:iface)
