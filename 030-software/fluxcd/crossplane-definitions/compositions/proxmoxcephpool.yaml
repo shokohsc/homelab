@@ -1,0 +1,145 @@
+apiVersion: apiextensions.crossplane.io/v1
+kind: Composition
+metadata:
+  name: proxmoxcephpools.platform.${publicDomain}
+  labels:
+    provider: opentofu
+spec:
+  mode: Pipeline
+  compositeTypeRef:
+    apiVersion: platform.${publicDomain}/v1alpha1
+    kind: ProxmoxCephPool
+  pipeline:
+    - step: patch-and-transform
+      functionRef:
+        name: function-patch-and-transform
+      input:
+        apiVersion: pt.fn.crossplane.io/v1beta1
+        kind: Resources
+        resources:
+          - name: ceph-pool-workspace
+            base:
+              apiVersion: opentofu.m.upbound.io/v1beta1
+              kind: Workspace
+              spec:
+                forProvider:
+                  enableTofuCLILogging: true
+                  source: Inline
+                  module: |
+                    variable "name" {
+                      type = string
+                    }
+                    variable "node_name" {
+                      type = string
+                    }
+                    variable "application" {
+                      type    = string
+                      default = "rbd"
+                    }
+                    variable "size" {
+                      type    = number
+                      default = 3
+                    }
+                    variable "min_size" {
+                      type    = number
+                      default = 2
+                    }
+                    variable "pg_num" {
+                      type    = number
+                      default = 128
+                    }
+                    variable "pg_autoscale_mode" {
+                      type    = string
+                      default = "warn"
+                    }
+                    variable "add_storages" {
+                      type    = bool
+                      default = false
+                    }
+
+                    resource "proxmox_ceph_pool" "this" {
+                      name      = var.name
+                      node_name = var.node_name
+
+                      application       = var.application
+                      size              = var.size
+                      min_size          = var.min_size
+                      pg_num            = var.pg_num
+                      pg_autoscale_mode = var.pg_autoscale_mode
+                      add_storages      = var.add_storages
+                    }
+
+                    output "id" {
+                      value = proxmox_ceph_pool.this.id
+                    }
+                  vars:
+                    - key: name
+                      value: ""
+                    - key: node_name
+                      value: ""
+                    - key: application
+                      value: "rbd"
+                    - key: size
+                      value: "3"
+                    - key: min_size
+                      value: "2"
+                    - key: pg_num
+                      value: "128"
+                    - key: pg_autoscale_mode
+                      value: "warn"
+                    - key: add_storages
+                      value: "false"
+                  env: []
+                providerConfigRef:
+                  name: proxmox
+                  kind: ProviderConfig
+                writeConnectionSecretToRef:
+                  name: opentofu-ceph-pool-workspace
+            patches:
+              - type: FromCompositeFieldPath
+                fromFieldPath: spec.name
+                toFieldPath: spec.forProvider.vars[0].value
+              - type: FromCompositeFieldPath
+                fromFieldPath: spec.nodeName
+                toFieldPath: spec.forProvider.vars[1].value
+              - type: FromCompositeFieldPath
+                fromFieldPath: spec.application
+                toFieldPath: spec.forProvider.vars[2].value
+                policy:
+                  fromFieldPath: Optional
+              - type: FromCompositeFieldPath
+                fromFieldPath: spec.size
+                toFieldPath: spec.forProvider.vars[3].value
+                policy:
+                  fromFieldPath: Optional
+              - type: FromCompositeFieldPath
+                fromFieldPath: spec.minSize
+                toFieldPath: spec.forProvider.vars[4].value
+                policy:
+                  fromFieldPath: Optional
+              - type: FromCompositeFieldPath
+                fromFieldPath: spec.pgNum
+                toFieldPath: spec.forProvider.vars[5].value
+                policy:
+                  fromFieldPath: Optional
+              - type: FromCompositeFieldPath
+                fromFieldPath: spec.pgAutoscaleMode
+                toFieldPath: spec.forProvider.vars[6].value
+                policy:
+                  fromFieldPath: Optional
+              - type: FromCompositeFieldPath
+                fromFieldPath: spec.addStorages
+                toFieldPath: spec.forProvider.vars[7].value
+                policy:
+                  fromFieldPath: Optional
+              - type: FromCompositeFieldPath
+                fromFieldPath: metadata.name
+                toFieldPath: spec.writeConnectionSecretToRef.name
+                transforms:
+                  - type: string
+                    string:
+                      type: Format
+                      fmt: "%s-ceph-pool-workspace"
+              - type: ToCompositeFieldPath
+                fromFieldPath: status.atProvider.outputs.id
+                toFieldPath: status.id

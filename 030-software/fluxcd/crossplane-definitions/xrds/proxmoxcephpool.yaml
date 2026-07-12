@@ -1,0 +1,54 @@
+apiVersion: apiextensions.crossplane.io/v2
+kind: CompositeResourceDefinition
+metadata:
+  name: proxmoxcephpools.platform.${publicDomain}
+spec:
+  scope: Namespaced
+  group: platform.${publicDomain}
+  names:
+    kind: ProxmoxCephPool
+    plural: proxmoxcephpools
+  versions:
+    - name: v1alpha1
+      served: true
+      referenceable: true
+      schema:
+        openAPIV3Schema:
+          type: object
+          properties:
+            spec:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: The pool name, must be unique within the Ceph cluster
+                nodeName:
+                  type: string
+                  description: The cluster node used to dispatch the API call
+                application:
+                  type: string
+                  description: "The application using the pool: rbd, cephfs, or rgw"
+                size:
+                  type: integer
+                  description: Number of replicas per object
+                minSize:
+                  type: integer
+                  description: Minimum number of replicas per object
+                pgNum:
+                  type: integer
+                  description: Number of placement groups
+                pgAutoscaleMode:
+                  type: string
+                  description: "PG autoscaler mode: on, off, or warn"
+                addStorages:
+                  type: boolean
+                  description: Configure VM and CT storage entries using the new pool
+              required:
+                - name
+                - nodeName
+            status:
+              type: object
+              properties:
+                id:
+                  type: string
+                  description: The unique identifier of the Ceph pool

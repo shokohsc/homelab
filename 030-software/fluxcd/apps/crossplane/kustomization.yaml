@@ -3,3 +3,4 @@ kind: Kustomization
 namespace: crossplane-system
 resources:
   - proxmoxidentity.yaml
+  - proxmoxcephpool.yaml
