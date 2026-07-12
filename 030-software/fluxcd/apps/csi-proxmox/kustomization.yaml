@@ -4,3 +4,54 @@ namespace: csi-proxmox
 resources:
   - https://raw.githubusercontent.com/sergelogvinov/proxmox-csi-plugin/main/docs/deploy/proxmox-csi-plugin.yml
   - secret.yaml
+patches:
+  - patch: |
+      apiVersion: apps/v1
+      kind: Deployment
+      metadata:
+        name: all
+      spec:
+        template:
+          spec:
+            affinity:
+              nodeAffinity:
+                preferredDuringSchedulingIgnoredDuringExecution:
+                - weight: 1
+                  preference:
+                    matchExpressions:
+                    - key: topology.kubernetes.io/region
+                      operator: In
+                      values:
+                      - metal
+            tolerations:
+              - effect: NoSchedule
+                key: node.kubernetes.io/nuc
+                operator: Exists
+    target:
+      kind: Deployment
+      labelSelector: app.kubernetes.io/name=proxmox-csi-plugin
+  - patch: |
+      apiVersion: apps/v1
+      kind: DaemonSet
+      metadata:
+        name: all
+      spec:
+        template:
+          spec:
+            affinity:
+              nodeAffinity:
+                preferredDuringSchedulingIgnoredDuringExecution:
+                - weight: 1
+                  preference:
+                    matchExpressions:
+                    - key: topology.kubernetes.io/region
+                      operator: In
+                      values:
+                      - metal
+            tolerations:
+              - effect: NoSchedule
+                key: node.kubernetes.io/nuc
+                operator: Exists
+    target:
+      kind: DaemonSet
+      labelSelector: app.kubernetes.io/name=proxmox-csi-plugin
