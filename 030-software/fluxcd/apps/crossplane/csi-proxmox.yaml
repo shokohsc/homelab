@@ -1,9 +1,19 @@
 apiVersion: platform.${publicDomain}/v1alpha1
-kind: ProxmoxRole
+kind: ProxmoxIdentity
 metadata:
   name: csi-proxmox
 spec:
-  role: csi-proxmox
+  user: csi-proxmox@pve
+  passwordSecretRef:
+    namespace: crossplane-system
+    name: csi-proxmox-credentials
+    key: password
+  userGroups:
+    - csi-proxmox
+  aclPath: /
+  tokenName: csi-proxmox
+  groupName: csi-proxmox
+  roleName: csi-proxmox
   privileges:
     - VM.Audit
     - VM.Allocate
@@ -18,34 +28,5 @@ spec:
     - Datastore.Allocate
     - Datastore.AllocateSpace
     - Datastore.Audit
----
-apiVersion: platform.${publicDomain}/v1alpha1
-kind: ProxmoxGroup
-metadata:
-  name: csi-proxmox
-spec:
-  group: csi-proxmox
-  roles:
+  groupRoles:
     - csi-proxmox
----
-apiVersion: platform.${publicDomain}/v1alpha1
-kind: ProxmoxUser
-metadata:
-  name: csi-proxmox
-spec:
-  user: csi-proxmox@pve
-  passwordSecretRef:
-    namespace: crossplane-system
-    name: csi-proxmox-credentials
-    key: password
-  groups:
-    - csi-proxmox
-  aclPath: /
----
-apiVersion: platform.${publicDomain}/v1alpha1
-kind: ProxmoxToken
-metadata:
-  name: csi-proxmox
-spec:
-  name: csi-proxmox
-  user: csi-proxmox@pve

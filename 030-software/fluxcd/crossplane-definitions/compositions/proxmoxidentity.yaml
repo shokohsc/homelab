@@ -1,0 +1,242 @@
+apiVersion: apiextensions.crossplane.io/v1
+kind: Composition
+metadata:
+  name: proxmoxidentities.platform.${publicDomain}
+  labels:
+    provider: opentofu
+spec:
+  mode: Pipeline
+  compositeTypeRef:
+    apiVersion: platform.${publicDomain}/v1alpha1
+    kind: ProxmoxIdentity
+  pipeline:
+    - step: patch-and-transform
+      functionRef:
+        name: function-patch-and-transform
+      input:
+        apiVersion: pt.fn.crossplane.io/v1beta1
+        kind: Resources
+        resources:
+          - name: identity-workspace
+            base:
+              apiVersion: opentofu.m.upbound.io/v1beta1
+              kind: Workspace
+              spec:
+                forProvider:
+                  enableTofuCLILogging: true
+                  source: Inline
+                  module: |
+                    variable "comment" {
+                      type    = string
+                      default = ""
+                    }
+                    variable "user" {
+                      type = string
+                    }
+                    variable "password" {
+                      type      = string
+                      sensitive = true
+                    }
+                    variable "user_groups" {
+                      type    = string
+                      default = ""
+                    }
+                    variable "acl_path" {
+                      type    = string
+                      default = "/"
+                    }
+                    variable "token_name" {
+                      type    = string
+                      default = ""
+                    }
+                    variable "group_name" {
+                      type    = string
+                      default = ""
+                    }
+                    variable "group_propagate" {
+                      type    = bool
+                      default = true
+                    }
+                    variable "role_name" {
+                      type    = string
+                      default = ""
+                    }
+                    variable "privileges" {
+                      type    = string
+                      default = ""
+                    }
+                    variable "group_roles" {
+                      type    = string
+                      default = ""
+                    }
+
+                    resource "proxmox_virtual_environment_role" "this" {
+                      count      = var.role_name != "" ? 1 : 0
+                      role_id    = var.role_name
+                      privileges = var.privileges != "" ? split(",", var.privileges) : []
+                    }
+
+                    resource "proxmox_virtual_environment_group" "this" {
+                      count    = var.group_name != "" ? 1 : 0
+                      group_id = var.group_name
+                    }
+
+                    resource "proxmox_acl" "this" {
+                      for_each  = var.group_name != "" && var.group_roles != "" ? toset(split(",", var.group_roles)) : toset([])
+                      path      = var.acl_path
+                      group_id  = proxmox_virtual_environment_group.this[0].group_id
+                      propagate = var.group_propagate
+                      role_id   = each.key
+                    }
+
+                    resource "proxmox_virtual_environment_user" "this" {
+                      comment  = var.comment
+                      user_id  = var.user
+                      enabled  = true
+                      password = var.password
+                      groups   = var.user_groups != "" ? split(",", var.user_groups) : null
+                    }
+
+                    resource "proxmox_user_token" "this" {
+                      count      = var.token_name != "" ? 1 : 0
+                      comment    = var.comment
+                      user_id    = proxmox_virtual_environment_user.this.user_id
+                      token_name = var.token_name
+                    }
+
+                    output "user_id" {
+                      value = proxmox_virtual_environment_user.this.user_id
+                    }
+                    output "token_name" {
+                      value = var.token_name != "" ? proxmox_user_token.this[0].token_name : ""
+                    }
+                    output "group_id" {
+                      value = var.group_name != "" ? proxmox_virtual_environment_group.this[0].group_id : ""
+                    }
+                    output "role_id" {
+                      value = var.role_name != "" ? proxmox_virtual_environment_role.this[0].role_id : ""
+                    }
+                  vars:
+                    - key: comment
+                      value: "Managed by Crossplane"
+                    - key: user
+                      value: ""
+                    - key: user_groups
+                      value: ""
+                    - key: acl_path
+                      value: "/"
+                    - key: token_name
+                      value: ""
+                    - key: group_name
+                      value: ""
+                    - key: group_propagate
+                      value: "true"
+                    - key: role_name
+                      value: ""
+                    - key: privileges
+                      value: ""
+                    - key: group_roles
+                      value: ""
+                  env:
+                    - name: TF_VAR_password
+                      secretKeyRef:
+                        name: ""
+                        key: ""
+                providerConfigRef:
+                  name: proxmox
+                  kind: ProviderConfig
+                writeConnectionSecretToRef:
+                  name: opentofu-identity-workspace
+            patches:
+              - type: FromCompositeFieldPath
+                fromFieldPath: spec.comment
+                toFieldPath: spec.forProvider.vars[0].value
+                policy:
+                  fromFieldPath: Optional
+              - type: FromCompositeFieldPath
+                fromFieldPath: spec.user
+                toFieldPath: spec.forProvider.vars[1].value
+              - type: FromCompositeFieldPath
+                fromFieldPath: spec.userGroups
+                toFieldPath: spec.forProvider.vars[2].value
+                policy:
+                  fromFieldPath: Optional
+                transforms:
+                  - type: string
+                    string:
+                      type: Join
+                      join:
+                        separator: ","
+              - type: FromCompositeFieldPath
+                fromFieldPath: spec.aclPath
+                toFieldPath: spec.forProvider.vars[3].value
+                policy:
+                  fromFieldPath: Optional
+              - type: FromCompositeFieldPath
+                fromFieldPath: spec.tokenName
+                toFieldPath: spec.forProvider.vars[4].value
+                policy:
+                  fromFieldPath: Optional
+              - type: FromCompositeFieldPath
+                fromFieldPath: spec.groupName
+                toFieldPath: spec.forProvider.vars[5].value
+                policy:
+                  fromFieldPath: Optional
+              - type: FromCompositeFieldPath
+                fromFieldPath: spec.groupPropagate
+                toFieldPath: spec.forProvider.vars[6].value
+                policy:
+                  fromFieldPath: Optional
+              - type: FromCompositeFieldPath
+                fromFieldPath: spec.roleName
+                toFieldPath: spec.forProvider.vars[7].value
+                policy:
+                  fromFieldPath: Optional
+              - type: FromCompositeFieldPath
+                fromFieldPath: spec.privileges
+                toFieldPath: spec.forProvider.vars[8].value
+                policy:
+                  fromFieldPath: Optional
+                transforms:
+                  - type: string
+                    string:
+                      type: Join
+                      join:
+                        separator: ","
+              - type: FromCompositeFieldPath
+                fromFieldPath: spec.groupRoles
+                toFieldPath: spec.forProvider.vars[9].value
+                policy:
+                  fromFieldPath: Optional
+                transforms:
+                  - type: string
+                    string:
+                      type: Join
+                      join:
+                        separator: ","
+              - type: FromCompositeFieldPath
+                fromFieldPath: spec.passwordSecretRef.name
+                toFieldPath: spec.forProvider.env[0].secretKeyRef.name
+              - type: FromCompositeFieldPath
+                fromFieldPath: spec.passwordSecretRef.key
+                toFieldPath: spec.forProvider.env[0].secretKeyRef.key
+              - type: FromCompositeFieldPath
+                fromFieldPath: metadata.name
+                toFieldPath: spec.writeConnectionSecretToRef.name
+                transforms:
+                  - type: string
+                    string:
+                      type: Format
+                      fmt: "%s-identity-workspace"
+              - type: ToCompositeFieldPath
+                fromFieldPath: status.atProvider.outputs.user_id
+                toFieldPath: status.userId
+              - type: ToCompositeFieldPath
+                fromFieldPath: status.atProvider.outputs.token_name
+                toFieldPath: status.tokenName
+              - type: ToCompositeFieldPath
+                fromFieldPath: status.atProvider.outputs.group_id
+                toFieldPath: status.groupId
+              - type: ToCompositeFieldPath
+                fromFieldPath: status.atProvider.outputs.role_id
+                toFieldPath: status.roleId

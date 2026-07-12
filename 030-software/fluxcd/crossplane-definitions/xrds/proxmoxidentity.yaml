@@ -1,13 +1,13 @@
 apiVersion: apiextensions.crossplane.io/v2
 kind: CompositeResourceDefinition
 metadata:
-  name: proxmoxusers.platform.${publicDomain}
+  name: proxmoxidentities.platform.${publicDomain}
 spec:
   scope: Namespaced
   group: platform.${publicDomain}
   names:
-    kind: ProxmoxUser
-    plural: proxmoxusers
+    kind: ProxmoxIdentity
+    plural: proxmoxidentities
   versions:
     - name: v1alpha1
       served: true
@@ -21,7 +21,7 @@ spec:
               properties:
                 comment:
                   type: string
-                  description: Proxmox user comment
+                  description: Comment for all Proxmox resources
                 user:
                   type: string
                   description: Proxmox user ID (e.g. crossplane@pve)
@@ -39,7 +39,7 @@ spec:
                     - name
                     - key
                   description: Reference to a Kubernetes Secret containing the password
-                groups:
+                userGroups:
                   type: array
                   items:
                     type: string
@@ -47,6 +47,28 @@ spec:
                 aclPath:
                   type: string
                   description: ACL path for the user (default /)
+                tokenName:
+                  type: string
+                  description: Proxmox token name (creates token if set)
+                groupName:
+                  type: string
+                  description: Proxmox group name (creates group if set)
+                groupPropagate:
+                  type: boolean
+                  description: Proxmox group propagate property
+                roleName:
+                  type: string
+                  description: Proxmox role name (creates role if set)
+                privileges:
+                  type: array
+                  items:
+                    type: string
+                  description: List of Proxmox privileges for the role
+                groupRoles:
+                  type: array
+                  items:
+                    type: string
+                  description: Role names to assign to the group
               required:
                 - user
                 - passwordSecretRef
@@ -56,3 +78,12 @@ spec:
                 userId:
                   type: string
                   description: The Proxmox user ID
+                tokenName:
+                  type: string
+                  description: The Proxmox token name
+                groupId:
+                  type: string
+                  description: The Proxmox group ID
+                roleId:
+                  type: string
+                  description: The Proxmox role ID

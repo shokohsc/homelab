@@ -1,9 +1,19 @@
 apiVersion: platform.${publicDomain}/v1alpha1
-kind: ProxmoxRole
+kind: ProxmoxIdentity
 metadata:
   name: crossplane
 spec:
-  role: crossplane
+  user: crossplane@pve
+  passwordSecretRef:
+    namespace: crossplane-system
+    name: crossplane-credentials
+    key: password
+  userGroups:
+    - crossplane
+  aclPath: /
+  tokenName: crossplane
+  groupName: crossplane
+  roleName: crossplane
   privileges:
     - Datastore.Allocate
     - Datastore.AllocateSpace
@@ -22,35 +32,5 @@ spec:
     - VM.Console
     - SDN.Use
     - Sys.Audit
----
-apiVersion: platform.${publicDomain}/v1alpha1
-kind: ProxmoxGroup
-metadata:
-  name: crossplane
-  namespace: default
-spec:
-  group: crossplane
-  roles:
+  groupRoles:
     - crossplane
----
-apiVersion: platform.${publicDomain}/v1alpha1
-kind: ProxmoxUser
-metadata:
-  name: crossplane
-spec:
-  user: crossplane@pve
-  passwordSecretRef:
-    namespace: crossplane-system
-    name: crossplane-credentials
-    key: password
-  groups:
-    - crossplane
-  aclPath: /
----
-apiVersion: platform.${publicDomain}/v1alpha1
-kind: ProxmoxToken
-metadata:
-  name: crossplane
-spec:
-  name: crossplane
-  user: crossplane@pve
