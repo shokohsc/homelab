@@ -29,6 +29,7 @@ patches:
                 volumeMounts:
                   - mountPath: /etc/ssl/certs/ca-certs.pem
                     subPath: ca-certs.pem
+                    name: tls
             affinity:
               nodeAffinity:
                 preferredDuringSchedulingIgnoredDuringExecution:
