@@ -5,4 +5,7 @@ metadata:
 spec:
   name: vmbr1
   nodeName: roadhog
-  ports: nic1
+  ports:
+    - nic1
+  vids: "10 20 40 50 100"
+  vlanAware: true
