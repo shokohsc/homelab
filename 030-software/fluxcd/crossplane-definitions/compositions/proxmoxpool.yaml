@@ -50,7 +50,6 @@ spec:
                       value: "Managed by Crossplane"
                     - key: pool
                       value: ""
-                  env: []
                 providerConfigRef:
                   name: proxmox
                   kind: ProviderConfig
@@ -63,7 +62,7 @@ spec:
                 policy:
                   fromFieldPath: Optional
               - type: FromCompositeFieldPath
-                fromFieldPath: spec.poolId
+                fromFieldPath: spec.pool
                 toFieldPath: spec.forProvider.vars[1].value
               - type: FromCompositeFieldPath
                 fromFieldPath: metadata.name
