@@ -22,12 +22,12 @@ spec:
                 - name: PROXMOX_VE_USERNAME
                   valueFrom:
                     secretKeyRef:
-                      name: root-credentials
+                      name: crossplane-credentials
                       key: username
                 - name: PROXMOX_VE_PASSWORD
                   valueFrom:
                     secretKeyRef:
-                      name: root-credentials
+                      name: crossplane-credentials
                       key: password
               resources:
                 requests:
