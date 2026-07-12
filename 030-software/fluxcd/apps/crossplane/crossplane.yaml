@@ -15,25 +15,10 @@ spec:
   groupName: crossplane
   roleName: crossplane
   privileges:
-    - Datastore.Allocate
-    - Datastore.AllocateSpace
-    - Pool.Allocate
-    - VM.Allocate
-    - VM.Clone
-    - VM.Config.CDROM
-    - VM.Config.CPU
-    - VM.Config.Cloudinit
-    - VM.Config.Disk
-    - VM.Config.Memory
-    - VM.Config.Network
-    - VM.Config.Options
-    - VM.Config.HWType
-    - VM.PowerMgmt
-    - VM.Console
-    - SDN.Use
     - Sys.Audit
     - Sys.Modify
     - Group.Allocate
     - Realm.AllocateUser
+    - Permissions.Modify
   groupRoles:
     - crossplane
