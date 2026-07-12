@@ -21,5 +21,6 @@ spec:
     - Realm.AllocateUser
     - Permissions.Modify
     - User.Modify
+    - Pool.Allocate
   groupRoles:
     - crossplane
