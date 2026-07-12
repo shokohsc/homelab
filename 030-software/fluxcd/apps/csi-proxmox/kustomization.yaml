@@ -13,6 +13,7 @@ patches:
       spec:
         template:
           spec:
+            nodeSelector: null
             affinity:
               nodeAffinity:
                 preferredDuringSchedulingIgnoredDuringExecution:
@@ -54,10 +55,4 @@ patches:
                 operator: Exists
     target:
       kind: DaemonSet
-      labelSelector: app.kubernetes.io/name=proxmox-csi-plugin
-  - patch: |
-      - op: delete
-        path: /spec/template/spec/nodeSelector
-    target:
-      kind: Deployment
       labelSelector: app.kubernetes.io/name=proxmox-csi-plugin
