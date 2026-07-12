@@ -6,7 +6,7 @@ resources:
   - cert-manager
   - cloudflared
   - crossplane
-  # - csi-proxmox
+  - csi-proxmox
   - external-dns
   - gatekeeper
   # - headlamp
