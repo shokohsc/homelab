@@ -4,7 +4,7 @@ metadata:
   name: karpenter-proxmox
 spec:
   name: vmbr1
-  nodeName: roadhog
+  nodeName: genji
   ports:
     - nic1
   vids: "10 20 40 50 100"
