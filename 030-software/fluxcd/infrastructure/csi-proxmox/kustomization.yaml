@@ -5,5 +5,5 @@ resources:
   - namespace.yaml
   - provider-config.yaml
   - proxmoxidentity.yaml
-  - proxmoxpool.yaml
+  - proxmoxcephpool.yaml
   - secret.yaml
