@@ -98,10 +98,11 @@ spec:
                     }
 
                     resource "proxmox_user_token" "this" {
-                      count      = var.token_name != "" ? 1 : 0
-                      comment    = var.comment
-                      user_id    = proxmox_virtual_environment_user.this.user_id
-                      token_name = var.token_name
+                      count                 = var.token_name != "" ? 1 : 0
+                      comment               = var.comment
+                      user_id               = proxmox_virtual_environment_user.this.user_id
+                      token_name            = var.token_name
+                      privileges_separation = false
                     }
 
                     output "user_id" {
