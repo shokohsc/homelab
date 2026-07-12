@@ -20,5 +20,6 @@ spec:
     - Group.Allocate
     - Realm.AllocateUser
     - Permissions.Modify
+    - User.Modify
   groupRoles:
     - crossplane
