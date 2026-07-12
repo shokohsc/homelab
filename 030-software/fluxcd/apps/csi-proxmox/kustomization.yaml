@@ -55,3 +55,6 @@ patches:
     target:
       kind: DaemonSet
       labelSelector: app.kubernetes.io/name=proxmox-csi-plugin
+  - patch: |
+      - op: delete
+        path: /spec/template/spec/nodeSelector
