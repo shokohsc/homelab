@@ -32,5 +32,8 @@ spec:
     - VM.Console
     - SDN.Use
     - Sys.Audit
+    - Sys.Modify
+    - Group.Allocate
+    - Realm.AllocateUser
   groupRoles:
     - crossplane
