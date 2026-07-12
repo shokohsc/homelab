@@ -75,7 +75,7 @@ spec:
                       fmt: "%s-pool-workspace"
               - type: ToCompositeFieldPath
                 fromFieldPath: status.atProvider.outputs.pool_id
-                toFieldPath: status.poolId
+                toFieldPath: status.pool
               - type: ToCompositeFieldPath
                 fromFieldPath: status.atProvider.outputs.members
                 toFieldPath: status.members
