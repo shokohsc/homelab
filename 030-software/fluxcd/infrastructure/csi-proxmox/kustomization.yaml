@@ -1,5 +1,8 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
-namespace: crossplane-system
+namespace: csi-proxmox
 resources:
+  - namespace.yaml
   - proxmoxidentity.yaml
+  - proxmoxpool.yaml
+  - secret.yaml

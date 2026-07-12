@@ -3,15 +3,12 @@ kind: Kustomization
 namespace: csi-proxmox
 resources:
   - https://raw.githubusercontent.com/sergelogvinov/proxmox-csi-plugin/main/docs/deploy/proxmox-csi-plugin.yml
-  - secret.yaml
 patches:
   - patch: |
       apiVersion: v1
       kind: Namespace
       metadata:
         name: csi-proxmox
-        labels:
-           bundle.cert-manager.io/inject: enabled
     target:
       kind: Namespace
       name: csi-proxmox
