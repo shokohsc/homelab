@@ -2,6 +2,7 @@ apiVersion: platform.${publicDomain}/v1alpha1
 kind: ProxmoxRole
 metadata:
   name: crossplane
+  namespace: crossplane-system
 spec:
   role: crossplane
   privileges:
@@ -27,6 +28,7 @@ apiVersion: platform.${publicDomain}/v1alpha1
 kind: ProxmoxGroup
 metadata:
   name: crossplane
+  namespace: crossplane-system
 spec:
   group: crossplane
   roles:
@@ -36,6 +38,7 @@ apiVersion: platform.${publicDomain}/v1alpha1
 kind: ProxmoxUser
 metadata:
   name: crossplane
+  namespace: crossplane-system
 spec:
   user: crossplane@pve
   passwordSecretRef:
@@ -50,6 +53,7 @@ apiVersion: platform.${publicDomain}/v1alpha1
 kind: ProxmoxToken
 metadata:
   name: crossplane
+  namespace: crossplane-system
 spec:
   name: crossplane
   user: crossplane@pve
