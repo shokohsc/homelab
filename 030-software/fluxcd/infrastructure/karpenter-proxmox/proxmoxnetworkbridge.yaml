@@ -9,7 +9,7 @@ spec:
     - nic1
   vids: "10 20 40 50 100"
   vlanAware: true
-  address: 10.42.10.31/24
+  address: 10.42.10.11/24
   gateway: 10.42.10.1
 ---
 apiVersion: platform.${publicDomain}/v1alpha1
@@ -23,7 +23,7 @@ spec:
     - nic1
   vids: "10 20 40 50 100"
   vlanAware: true
-  address: 10.42.10.21/24
+  address: 10.42.10.11/24
   gateway: 10.42.10.1
 ---
 apiVersion: platform.${publicDomain}/v1alpha1
