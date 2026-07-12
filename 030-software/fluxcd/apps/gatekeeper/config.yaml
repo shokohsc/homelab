@@ -7,8 +7,12 @@ spec:
   match:
     - excludedNamespaces:
         - cilium
+        - csi-proxmox
         - flux-system
         - gatekeeper-system
+        - karpenter-proxmox
+        - kube-node-lease
+        - kube-public
+        - kube-state-metrics
         - kube-system
-        - kube-*
       processes: ["*"]
