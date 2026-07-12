@@ -6,6 +6,16 @@ resources:
   - secret.yaml
 patches:
   - patch: |
+      apiVersion: v1
+      kind: Namespace
+      metadata:
+        name: csi-proxmox
+        labels:
+           bundle.cert-manager.io/inject: enabled
+    target:
+      kind: Namespace
+      name: csi-proxmox
+  - patch: |
       apiVersion: apps/v1
       kind: Deployment
       metadata:
@@ -14,6 +24,11 @@ patches:
         template:
           spec:
             nodeSelector: null
+            containers:
+              - name: proxmox-csi-plugin-controller
+                volumeMounts:
+                  - mountPath: /etc/ssl/certs/ca-certs.pem
+                    subPath: ca-certs.pem
             affinity:
               nodeAffinity:
                 preferredDuringSchedulingIgnoredDuringExecution:
@@ -24,6 +39,11 @@ patches:
                       operator: In
                       values:
                       - metal
+            volumes:
+              - name: tls
+                configMap:
+                  name: homelab-ca
+                  defaultMode: 0644
             tolerations:
               - effect: NoSchedule
                 key: node.kubernetes.io/nuc

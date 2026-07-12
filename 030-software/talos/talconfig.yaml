@@ -51,7 +51,7 @@ nodes:
       - interface: eno1
         dhcp: true
     nodeLabels:
-      topology.kubernetes.io/region: "metal"
+      topology.kubernetes.io/region: "homelab"
       topology.kubernetes.io/zone: "nuc"
     patches:
       - |-
@@ -84,7 +84,7 @@ nodes:
       - interface: eth0
         dhcp: true
     nodeLabels:
-      topology.kubernetes.io/region: "metal"
+      topology.kubernetes.io/region: "homelab"
       topology.kubernetes.io/zone: "ryzen"
     patches:
       - |-
@@ -125,7 +125,8 @@ nodes:
       mode: nocloud
       bootMethod: pxe
     nodeLabels:
-      topology.kubernetes.io/region: "vm"
+      topology.kubernetes.io/region: "homelab"
+      topology.kubernetes.io/zone: "vm"
     schematic:
       customization:
         extraKernelArgs:
@@ -153,7 +154,8 @@ nodes:
       mode: nocloud
       bootMethod: pxe
     nodeLabels:
-      topology.kubernetes.io/region: "vm"
+      topology.kubernetes.io/region: "homelab"
+      topology.kubernetes.io/zone: "vm-gpu"
       node.kubernetes.io/gpu: "nvidia"
     schematic:
       customization:
