@@ -3,6 +3,8 @@ kind: Kustomization
 namespace: karpenter-proxmox
 resources:
   - https://github.com/sergelogvinov/karpenter-provider-proxmox/raw/refs/heads/main/docs/deploy/karpenter-provider-proxmox.yml
+  - proxmox-template.yaml
+  - proxmox-node-class.yaml
 patches:
   - patch: |
       apiVersion: apps/v1

@@ -1,0 +1,112 @@
+apiVersion: karpenter.proxmox.sinextra.dev/v1alpha1
+kind: ProxmoxTemplate
+metadata:
+  name: default
+spec:
+  # Source image parameters
+  # Proxmox will download it and store in the import directory.
+  sourceImage:
+    # Http(s) url of the image, qcow2/raw images are supported,
+    # Required value.
+    url: https://cloud-images.ubuntu.com/noble/current/noble-server-cloudimg-amd64.img
+    # The name of destination image, karpenter will add checksum to the name later.
+    # Required value.
+    imageName: ubuntu-amd64.qcow2
+    # After downloading, Proxmox can verify the image integrity by checking its checksum. (Optional)
+    checksum: <checksum>
+    # The checksum type (Optional)
+    # Can be one of md5, sha1, sha224, sha256, sha384, sha512
+    checksumType: md5
+
+  # Proxmox storage IDs where the downloaded image and template will be created.
+  # You can provide a list of storages, and the plugin will automatically select the most suitable one.
+  # The selected storages must support import and image content types, either separately or combined.
+  # Required value.
+  storageIDs:
+    - local
+    - system
+
+  #
+  # Proxmox common Virtual Machine parameters.
+  #
+
+  # Type of virtual machine (Optional)
+  # Can be one of pc, q35
+  machine: q35
+
+  agent:
+    # Enable/disable QEMU Guest Agent (Optional)
+    enabled: true
+    # Type of the guest agent (Optional)
+    # Can be one of virtio, isa
+    type: virtio
+    # Enable/disable freeze the filesystem on backup (Optional)
+    fsFreezeOnBackup: true
+    # Enable/disable fstrim for cloned disks (Optional)
+    fsTrimClonedDisks: false
+
+  # CPU configuration.
+  cpu:
+    # CPU type (Optional)
+    # Can be one of host kvm64, x86-64-v2, x86-64-v2-AES, x86-64-v3, x86-64-v4
+    # Default value is x86-64-v2-AES
+    type: x86-64-v2-AES
+    # CPU flags (Optional)
+    # See official documentation https://pve.proxmox.com/wiki/Manual:_qm.conf
+    flags: +pdpe1gb
+
+  # VGA configuration.
+  vga:
+    # Type of the VGA device (Optional)
+    # Can be one of none, serial0, std, vmware
+    type: serial0
+    # Memory of the device (Optional)
+    memory: 16
+
+  # List of network interfaces (Required)
+  # At least one network interface must be defined.
+  network:
+    - # Name of Proxmox interface netX, e.g. net0 (Optional)
+      name: net0
+      # Model of network hardware (Optional)
+      # Can be e1000, e1000e, rtl8139, virtio, vmxnet3
+      # Default is virtio
+      model: virtio
+      # Bridge to attach the network device to (Required)
+      bridge: vmbr0
+      # MTU of the interface (Optional)
+      mtu: 1500
+      # VLAN tag to apply to packets on this interface (Optional)
+      vlan: 15
+      # Interface should be protected by the firewall (Optional)
+      firewall: true
+
+      # IP configuration for this interface (Optional)
+      # If not specified, DHCP for IPv4 and Auto for IPv6 will be used.
+      # Address4 and Address6 must include the prefix length.
+      address4: 192.168.0.0/24
+      address6: fd00::/64
+      # Default gateway for IPv4 and IPv6 (Optional)
+      gateway4: 192.168.0.1
+      gateway6: fd00::1
+      # DNS servers for this interface (Optional)
+      dnsServers:
+        - 1.1.1.1
+        - 2001:4860:4860::8888
+
+  # List of PCI devices to attach to the VM template
+  # Supported Resource Mapping devices only.
+  pciDevices:
+    - # Mapping is the group
+      mapping: nvidia
+      # MDev Type (Optional)
+      mdev: nvidia-660
+      # Enable/disable PCIe (Optional)
+      pcie: true
+      # Use as default VGA (Optional)
+      xvga: false
+
+  # Tags to apply to the template (Optional)
+  tags:
+    - talos-k8s-proxmox
+    - karpenter

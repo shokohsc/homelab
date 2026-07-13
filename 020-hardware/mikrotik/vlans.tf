@@ -74,14 +74,14 @@ import {
     "ether11"      = { id = "*A", name = "k8s_ports" }
     "ether13"      = { id = "*C", name = "k8s_ports" }
     "ether23"      = { id = "*16", name = "k8s_ports" }
-    "sfp-sfpplus4" = { id = "*1B" }
+    "sfp-sfpplus3" = { id = "*1A" }
   }
   to = routeros_interface_bridge_port.k8s_ports[each.key]
   id = each.value.id
 }
 resource "routeros_interface_bridge_port" "k8s_ports" {
   for_each = toset([
-    "ether8", "ether9", "ether11", "ether13", "ether23", "sfp-sfpplus4"
+    "ether8", "ether9", "ether11", "ether13", "ether23", "sfp-sfpplus3"
   ])
   bridge    = routeros_interface_bridge.bridge.name
   interface = each.key
@@ -133,14 +133,14 @@ import {
   for_each = {
     "sfp-sfpplus1" = { id = "*18", name = "sfp_admin" }
     "sfp-sfpplus2" = { id = "*19", name = "sfp_admin" }
-    "sfp-sfpplus3" = { id = "*1A", name = "sfp_admin" }
+    "sfp-sfpplus4" = { id = "*1B", name = "sfp_admin" }
   }
   to = routeros_interface_bridge_port.sfp_admin[each.key]
   id = each.value.id
 }
 resource "routeros_interface_bridge_port" "sfp_admin" {
   for_each = toset([
-    "sfp-sfpplus1", "sfp-sfpplus2", "sfp-sfpplus3"
+    "sfp-sfpplus1", "sfp-sfpplus2", "sfp-sfpplus4"
   ])
   bridge    = routeros_interface_bridge.bridge.name
   interface = each.key
@@ -163,12 +163,12 @@ resource "routeros_interface_bridge_vlan" "vlans" {
     "ether5",       # AP trunk
     "sfp-sfpplus1", # Proxmox trunk
     "sfp-sfpplus2", # Proxmox trunk
-    "sfp-sfpplus3"  # Proxmox trunk
+    "sfp-sfpplus4"  # Proxmox trunk
   ]
 
   untagged = lookup({
     10  = ["ether3", "ether15", "ether17"]                                      # Mgmt
-    20  = ["ether8", "ether9", "ether11", "ether13", "ether23", "sfp-sfpplus4"] # K8s
+    20  = ["ether8", "ether9", "ether11", "ether13", "ether23", "sfp-sfpplus3"] # K8s
     30  = ["ether19", "ether21", "ether22"]                                     # Proxmox
     40  = []                                                                    # VMs
     50  = ["ether7"]                                                            # Guest
@@ -181,11 +181,11 @@ resource "routeros_interface_bridge_vlan" "vlans" {
 ##      Interfaces Bonding (Winston)      ##
 ############################################
 
-resource "routeros_interface_bonding" "winston" {
-  name   = "bond.int"
-  slaves = ["ether23", "sfpplus4"]
-  mode   = "802.3ad"
-}
+# resource "routeros_interface_bonding" "winston" {
+#   name   = "bond.int"
+#   slaves = ["ether23", "sfpplus3"]
+#   mode   = "802.3ad"
+# }
 
 ############################################
 ##      VLAN Interfaces (L3 gateways)     ##

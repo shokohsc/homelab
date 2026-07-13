@@ -6,12 +6,12 @@ resources:
   - cert-manager
   - cloudflared
   - crossplane
-  - csi-proxmox
+  # - csi-proxmox
   - external-dns
   - gatekeeper
   # - headlamp
   - http-echo
-  - karpenter-proxmox
+  # - karpenter-proxmox
   # - konflate
   - kube-state-metrics
   - kube-system

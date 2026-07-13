@@ -7,4 +7,3 @@ resources:
   - proxmoxidentity.yaml
   - proxmoxnetworkbridge.yaml
   - secret.yaml
-# - talostemplate.yaml
