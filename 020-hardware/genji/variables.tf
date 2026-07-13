@@ -69,15 +69,3 @@ variable "proxmox_linux_bridge_ports" {
   default     = ["eth0"]
   description = "Proxmox linux bridge ports"
 }
-
-variable "proxmox_linux_bridge_address" {
-  type        = string
-  default     = "192.168.1.254/24"
-  description = "Proxmox linux bridge address"
-}
-
-variable "proxmox_linux_bridge_gateway" {
-  type        = string
-  default     = "192.168.1.1"
-  description = "Proxmox linux bridge gateway"
-}

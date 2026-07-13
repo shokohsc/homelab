@@ -1,47 +1,49 @@
-resource "proxmox_oci_image" "itsthenetwork_nfs_server_alpine_latest_oci_image" {
+resource "proxmox_oci_image" "nfs_server" {
   node_name    = var.node_name
   datastore_id = "local"
-  reference    = "docker.io/itsthenetwork/nfs-server-alpine:latest"
+  reference    = "docker.io/izdock/nfs-ganesha:4.0.12-3"
 }
 
-resource "proxmox_virtual_environment_container" "itsthenetwork_nfs_server_alpine_container" {
-  description = "Managed by OpenTofu"
-  node_name   = var.node_name
-  unprivileged = false
+resource "proxmox_virtual_environment_container" "nfs_server" {
+  description  = "Managed by OpenTofu"
+  node_name    = var.node_name
+  unprivileged = true
   cpu {
     cores = 1
   }
   memory {
-    dedicated = 512
-  }
-  disk {
-    datastore_id = "tank"
-    size = 4
-  }
-  operating_system {
-    template_file_id = proxmox_oci_image.itsthenetwork_nfs_server_alpine_latest_oci_image.id
-    type             = "alpine"
-  }
-  features {
-    nesting = true
-    mount   = ["nfs"]
-  }
-  initialization {
-    hostname = "nfs-server"
-  }
-  environment_variables = {
-    SHARED_DIRECTORY = "/mnt/data"
+    dedicated = 64
   }
   mount_point {
-    path   = "/mnt/data"
+    path   = "/data"
     volume = "/mnt/tank"
   }
-  network_interface {
-    name    = "veth0"
-    bridge  = proxmox_network_linux_bridge.sfpplus.name
-    vlan_id = "50"
+  disk {
+    datastore_id = "local-lvm"
+    size         = 1
   }
-  started     = true
+  operating_system {
+    template_file_id = proxmox_oci_image.nfs_server.id
+    type             = "debian"
+  }
+  initialization {
+    # entrypoint = "/entrypoint.sh /usr/bin/ganesha.nfsd -F -L /dev/stdout -f /etc/ganesha/ganesha.conf"
+    hostname = "${var.node_name}-nfs"
+    dns {
+      servers = ["10.42.60.1"]
+    }
+    ip_config {
+      ipv4 {
+        address = "10.42.60.100/24"
+        gateway = "10.42.60.1"
+      }
+    }
+  }
+  network_interface {
+    name    = "eth0"
+    bridge  = proxmox_network_linux_bridge.sfpplus.name
+    vlan_id = "60"
+  }
   startup {
     order = "5"
   }
