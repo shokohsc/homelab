@@ -14,6 +14,6 @@
 
 terraform {
   backend "local" {
-    path = "./roadhog.tfstate"
+    path = "./hanzo.tfstate"
   }
 }

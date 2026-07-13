@@ -1,5 +1,5 @@
 ## Storage (create zfs pool from ubuntu beforehand)
-    zpool create -f -o ashift=12 -o autotrim=on \
+    zpool create -o ashift=12 -o autotrim=on -m /mnt/tank \
       -O compression=lz4 -O atime=off -O xattr=sa -O acltype=posixacl \
       tank \
       raidz2 \
@@ -13,13 +13,20 @@
         /dev/disk/by-id/scsi-35000cca2559e28e8 \
         /dev/disk/by-id/scsi-35000c500843cdf9b
     
-    sudo zfs create -o mountpoint=/mnt/tank tank/tank
+    zpool scrub tank
 
-    sudo mkdir /mnt/nvme && sudo mount -t exfat /dev/disk/by-uuid/C551-E0A6 /mnt/nvme
+dd if=/dev/zero of=/dev/sda  bs=512  count=1
 
-    sudo $(which rsyncy) -av /mnt/nvme/ /mnt/tank/
-    
-    sudo zpool scrub tank
+scsi-35000c500843cdf9b -> sdh
+scsi-35000cca2553f3b7c -> sdg
+scsi-35000cca255429d78 -> sdc
+scsi-35000cca255455440 -> sda
+scsi-35000cca2554557f0 -> sdf
+scsi-35000cca2554699a4 -> sdb
+scsi-35000cca255489568 -> sde
+scsi-35000cca2559e28e8 -> sdd
+
+docker run --rm -it --network=host nicolaka/netshoot sh
 
 https://github.com/laktak/rsyncy?tab=readme-ov-file#installation
 
@@ -38,23 +45,3 @@ https://forum.level1techs.com/t/zfs-guide-for-starters-and-advanced-users-concep
 https://merox.dev/blog/proxmox-gpu-passthrough/
 
 https://mirceanton.com/posts/setting-up-ceph-in-my-proxmox-cluster/#ceph-in-30-seconds-whats-the-big-deal
-
-sudo dd if=/dev/zero of=/dev/sda  bs=512  count=1
-sudo dd if=/dev/zero of=/dev/sdb  bs=512  count=1
-sudo dd if=/dev/zero of=/dev/sdc  bs=512  count=1
-sudo dd if=/dev/zero of=/dev/sdd  bs=512  count=1
-sudo dd if=/dev/zero of=/dev/sde  bs=512  count=1
-sudo dd if=/dev/zero of=/dev/sdf  bs=512  count=1
-sudo dd if=/dev/zero of=/dev/sdg  bs=512  count=1
-sudo dd if=/dev/zero of=/dev/sdh  bs=512  count=1
-
-scsi-35000cca255455440 sda
-scsi-35000cca2554699a4 sdb
-scsi-35000cca255429d78 sdc
-scsi-35000cca2559e28e8 sdd
-scsi-35000cca255489568 sde
-scsi-35000cca2554557f0 sdf
-scsi-35000cca2553f3b7c sdg
-scsi-35000c500843cdf9b sdh
-
-docker run --rm -it --network=host nicolaka/netshoot sh

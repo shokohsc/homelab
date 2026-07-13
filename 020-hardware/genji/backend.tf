@@ -14,6 +14,6 @@
 
 terraform {
   backend "local" {
-    path = "./tplink.tfstate"
+    path = "./genji.tfstate"
   }
 }

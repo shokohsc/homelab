@@ -51,3 +51,33 @@ variable "random_vm_ids" {
   default     = true
   description = "Random VM IDs to prevent conflicts"
 }
+
+variable "proxmox_linux_bridge_vids" {
+  type        = string
+  default     = "1"
+  description = "Proxmox linux bridge vlan ids"
+}
+
+variable "proxmox_linux_bridge_vlan_aware" {
+  type        = bool
+  default     = true
+  description = "Proxmox linux bridge vlan aware"
+}
+
+variable "proxmox_linux_bridge_ports" {
+  type        = list(string)
+  default     = ["eth0"]
+  description = "Proxmox linux bridge ports"
+}
+
+variable "proxmox_linux_bridge_address" {
+  type        = string
+  default     = "192.168.1.254/24"
+  description = "Proxmox linux bridge address"
+}
+
+variable "proxmox_linux_bridge_gateway" {
+  type        = string
+  default     = "192.168.1.1"
+  description = "Proxmox linux bridge gateway"
+}
