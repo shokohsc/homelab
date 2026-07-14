@@ -5,7 +5,7 @@ metadata:
 spec:
   # Region where this NodeClass is applied
   # Optional: if not set, all regions will be used
-  # region: homelab
+  region: homelab
   instanceTemplateRef:
     kind: ProxmoxTemplate
     name: vm
