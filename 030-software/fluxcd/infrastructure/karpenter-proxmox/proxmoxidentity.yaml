@@ -39,5 +39,6 @@ spec:
     - VM.PowerMgmt
     - Pool.Audit
     - Pool.Allocate
+    - Cluster.Audit
   groupRoles:
     - karpenter-proxmox
