@@ -14,10 +14,10 @@ resource "proxmox_virtual_environment_container" "nfs_server" {
   memory {
     dedicated = 64
   }
-  # mount_point {
-  #   path   = "/data"
-  #   volume = "/mnt/tank"
-  # }
+  mount_point {
+    path   = "/exports"
+    volume = "/mnt/tank"
+  }
   disk {
     datastore_id = "local-lvm"
     size         = 1
@@ -27,7 +27,6 @@ resource "proxmox_virtual_environment_container" "nfs_server" {
     type             = "debian"
   }
   initialization {
-    # entrypoint = "/entrypoint.sh /usr/bin/ganesha.nfsd -F -L /dev/stdout -f /etc/ganesha/ganesha.conf"
     hostname = "${var.node_name}-nfs"
     dns {
       servers = ["10.42.60.1"]
@@ -40,9 +39,10 @@ resource "proxmox_virtual_environment_container" "nfs_server" {
     }
   }
   network_interface {
-    name    = "eth0"
-    bridge  = proxmox_network_linux_bridge.sfpplus.name
-    vlan_id = "60"
+    name         = "eth0"
+    bridge       = proxmox_network_linux_bridge.sfpplus.name
+    host_managed = true
+    vlan_id      = "60"
   }
   startup {
     order = "5"
@@ -51,4 +51,12 @@ resource "proxmox_virtual_environment_container" "nfs_server" {
     "nfs",
     "opentofu"
   ]
+
+  lifecycle {
+    ignore_changes = [
+      initialization[0].entrypoint,
+      console,
+      environment_variables
+    ]
+  }
 }
