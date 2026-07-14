@@ -11,7 +11,7 @@ resources:
   - gatekeeper
   # - headlamp
   - http-echo
-  # - karpenter-proxmox
+  - karpenter-proxmox
   # - konflate
   - kube-state-metrics
   - kube-system
