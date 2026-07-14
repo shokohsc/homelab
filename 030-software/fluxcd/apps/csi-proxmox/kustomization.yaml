@@ -55,16 +55,12 @@ patches:
                     - key: topology.kubernetes.io/region
                       operator: In
                       values:
-                      - metal
+                      - homelab
             volumes:
               - name: tls
                 configMap:
                   name: homelab-ca
                   defaultMode: 0644
-            tolerations:
-              - effect: NoSchedule
-                key: node.kubernetes.io/nuc
-                operator: Exists
     target:
       kind: Deployment
       labelSelector: app.kubernetes.io/name=proxmox-csi-plugin
@@ -85,11 +81,7 @@ patches:
                     - key: topology.kubernetes.io/region
                       operator: In
                       values:
-                      - metal
-            tolerations:
-              - effect: NoSchedule
-                key: node.kubernetes.io/nuc
-                operator: Exists
+                      - homelab
     target:
       kind: DaemonSet
       labelSelector: app.kubernetes.io/name=proxmox-csi-plugin

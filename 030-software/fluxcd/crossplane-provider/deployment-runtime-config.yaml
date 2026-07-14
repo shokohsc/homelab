@@ -55,3 +55,7 @@ spec:
             - name: work
               emptyDir:
                 medium: Memory
+          tolerations:
+            - effect: NoSchedule
+              key: node.kubernetes.io/nuc
+              operator: Exists
