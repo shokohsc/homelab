@@ -9,8 +9,6 @@ spec:
   instanceTemplateRef:
     kind: ProxmoxTemplate
     name: vm
-    # Storage specifies the storage device where the boot disk for the virtual machine will be created.
-    storage: lvm
 
   # # MetadataOptions contains parameters for specifying the cloud-init metadata
   # # Optional, defaults type is `none`

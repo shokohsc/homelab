@@ -55,7 +55,3 @@ spec:
             - name: work
               emptyDir:
                 medium: Memory
-          tolerations:
-            - key: "node.kubernetes.io/nuc"
-              operator: "Exists"
-              effect: "NoSchedule"

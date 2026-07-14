@@ -28,7 +28,5 @@ spec:
     - Datastore.Allocate
     - Datastore.AllocateSpace
     - Datastore.Audit
-    # - Sys.Audit
-    # - Sys.Modify
   groupRoles:
     - csi-proxmox
