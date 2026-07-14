@@ -8,6 +8,7 @@ spec:
     imageName: talos-vm.qcow2
   storageIDs:
     - local
+    - system
   # # Type of virtual machine (Optional)
   # # Can be one of pc, q35
   machine: q35
