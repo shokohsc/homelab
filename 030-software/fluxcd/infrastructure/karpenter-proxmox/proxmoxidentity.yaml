@@ -40,5 +40,4 @@ spec:
     - Pool.Audit
     - Pool.Allocate
   groupRoles:
-    # - karpenter-proxmox
-    - Administrator
+    - karpenter-proxmox

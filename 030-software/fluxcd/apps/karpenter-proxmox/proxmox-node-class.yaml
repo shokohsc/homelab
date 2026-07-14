@@ -3,12 +3,36 @@ kind: ProxmoxNodeClass
 metadata:
   name: vm
 spec:
-  # Region where this NodeClass is applied
-  # Optional: if not set, all regions will be used
-  region: homelab
+  # # Region where this NodeClass is applied
+  # # Optional: if not set, all regions will be used
+  # region: cluster-1
+
+  # # PlacementStrategy defines how VM should be placed across zones.
+  # # Optional: if not set, Balanced strategy will be used
+  # placementStrategy:
+  #   zoneBalance: Balanced|AvailabilityFirst
+
+  # InstanceTemplateRef is a reference to a Kubernetes Custom Resource
+  # that defines the virtual machine template used for creating instances.
+  # Required
   instanceTemplateRef:
+    # Kind specifies the type of the instance template resource.
+    # Valid values: ProxmoxTemplate, ProxmoxUnmanagedTemplate
     kind: ProxmoxTemplate
+    # Name of resource
     name: vm
+
+  # BootDevice defines the root device for the VM
+  # Optional: If not specified, the system will use the storage device on which the template is stored.
+  bootDevice:
+    # Size of the boot device
+    # Valid formats: 50G, 50Gi
+    size: 50G
+
+  # # Tags to apply to the VMs after creation
+  # # Optional, in place update supported
+  # tags:
+  #   - karpenter
 
   # # MetadataOptions contains parameters for specifying the cloud-init metadata
   # # Optional, defaults type is `none`

@@ -10,7 +10,7 @@ spec:
     - local
   # # Type of virtual machine (Optional)
   # # Can be one of pc, q35
-  # machine: q35
+  machine: q35
 
   # agent:
   #   # Enable/disable QEMU Guest Agent (Optional)
@@ -46,14 +46,14 @@ spec:
   network:
     - # Name of Proxmox interface netX, e.g. net0 (Optional)
       name: eth0
-      # Model of network hardware (Optional)
-      # Can be e1000, e1000e, rtl8139, virtio, vmxnet3
-      # Default is virtio
-      model: virtio
+      # # Model of network hardware (Optional)
+      # # Can be e1000, e1000e, rtl8139, virtio, vmxnet3
+      # # Default is virtio
+      # model: virtio
       # Bridge to attach the network device to (Required)
       bridge: vmbr1
-      # MTU of the interface (Optional)
-      mtu: 1500
+      # # MTU of the interface (Optional)
+      # mtu: 1500
       # VLAN tag to apply to packets on this interface (Optional)
       vlan: 20
       # Interface should be protected by the firewall (Optional)
