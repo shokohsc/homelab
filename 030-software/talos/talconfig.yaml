@@ -52,7 +52,7 @@ nodes:
         dhcp: true
     nodeLabels:
       topology.kubernetes.io/region: "homelab"
-      topology.kubernetes.io/zone: "nuc"
+      topology.kubernetes.io/zone: "metal"
     patches:
       - |-
           machine:
@@ -85,7 +85,7 @@ nodes:
         dhcp: true
     nodeLabels:
       topology.kubernetes.io/region: "homelab"
-      topology.kubernetes.io/zone: "ryzen"
+      topology.kubernetes.io/zone: "metal"
     patches:
       - |-
           machine:
@@ -105,7 +105,6 @@ nodes:
       customization:
         extraKernelArgs:
           - net.ifnames=0
-          # - talos.experimental.wipe=system:EPHEMERAL,STATE
           - vlan=enp1s0.30:enp1s0
         systemExtensions:
           officialExtensions:
@@ -132,7 +131,6 @@ nodes:
         extraKernelArgs:
           - net.ifnames=0
           - talos.config=http://tracer.home.arpa:8080/metadata?p=worker-vm
-          # - talos.experimental.wipe=system:EPHEMERAL,STATE
           - vlan=eth0.20:eth0
         systemExtensions:
           officialExtensions:
@@ -155,7 +153,7 @@ nodes:
       bootMethod: pxe
     nodeLabels:
       topology.kubernetes.io/region: "homelab"
-      topology.kubernetes.io/zone: "vm-gpu"
+      topology.kubernetes.io/zone: "vm"
       node.kubernetes.io/gpu: "nvidia"
     schematic:
       customization:
@@ -205,7 +203,6 @@ controlPlane:
       extraKernelArgs:
         - net.ifnames=0
         - talos.config=http://tracer.home.arpa:8080/metadata?h=$${hostname}&m=$${mac}&s=$${serial}&u=$${uuid}
-        # - talos.experimental.wipe=system:EPHEMERAL,STATE
       systemExtensions:
         officialExtensions:
           - siderolabs/intel-ucode
@@ -233,4 +230,3 @@ worker:
       extraKernelArgs:
         - net.ifnames=0
         - talos.config=http://tracer.home.arpa:8080/metadata?h=$${hostname}&m=$${mac}&s=$${serial}&u=$${uuid}
-        # - talos.experimental.wipe=system:EPHEMERAL,STATE
