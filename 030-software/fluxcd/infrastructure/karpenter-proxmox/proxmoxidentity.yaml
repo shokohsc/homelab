@@ -37,8 +37,5 @@ spec:
     - VM.Config.Cloudinit
     - VM.Config.Options
     - VM.PowerMgmt
-    - Pool.Audit
-    - Pool.Allocate
-    - Cluster.Audit
   groupRoles:
     - karpenter-proxmox
