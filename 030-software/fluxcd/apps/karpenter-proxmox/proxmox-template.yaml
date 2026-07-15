@@ -4,8 +4,8 @@ metadata:
   name: vm
 spec:
   sourceImage:
-    url: https://factory.talos.dev/image/3ace32a67f3d1aa0303abb3f05db1715da1129b400e99aaadb8c32f87130e97b/v1.13.6/nocloud-amd64.raw.xz
-    imageName: talos-vm.qcow2
+    url: https://factory.talos.dev/image/3ace32a67f3d1aa0303abb3f05db1715da1129b400e99aaadb8c32f87130e97b/v1.13.6/nocloud-amd64.iso
+    imageName: nocloud-amd64.iso
   storageIDs:
     - local
     - system
