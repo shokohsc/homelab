@@ -29,10 +29,11 @@ spec:
     # Valid formats: 50G, 50Gi
     size: 50G
 
-  # # Tags to apply to the VMs after creation
-  # # Optional, in place update supported
-  # tags:
-  #   - karpenter
+  # Tags to apply to the VMs after creation
+  # Optional, in place update supported
+  tags:
+    - talos
+    - karpenter
 
   # # MetadataOptions contains parameters for specifying the cloud-init metadata
   # # Optional, defaults type is `none`

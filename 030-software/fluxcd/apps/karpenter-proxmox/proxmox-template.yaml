@@ -4,11 +4,10 @@ metadata:
   name: vm
 spec:
   sourceImage:
-    url: https://factory.talos.dev/image/3ace32a67f3d1aa0303abb3f05db1715da1129b400e99aaadb8c32f87130e97b/v1.13.6/nocloud-amd64.iso
-    imageName: nocloud-amd64.iso
+    url: https://factory.talos.dev/image/3ace32a67f3d1aa0303abb3f05db1715da1129b400e99aaadb8c32f87130e97b/v1.13.6/nocloud-amd64.raw
+    imageName: nocloud-amd64.raw
   storageIDs:
     - local
-    - system
   # # Type of virtual machine (Optional)
   # # Can be one of pc, q35
   machine: q35
@@ -38,9 +37,9 @@ spec:
   vga:
     # Type of the VGA device (Optional)
     # Can be one of none, serial0, std, vmware
-    type: none
+    type: serial0
     # # Memory of the device (Optional)
-    # memory: 16
+    memory: 16
 
   # List of network interfaces (Required)
   # At least one network interface must be defined.

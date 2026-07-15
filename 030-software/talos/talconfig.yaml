@@ -117,7 +117,7 @@ nodes:
 
   - controlPlane: false
     hostname: worker-vm
-    installDisk: /dev/nvme0n1
+    installDisk: /dev/sda
     ignoreHostname: true
     ipAddress: ${TALOS_SUBNET}.255
     machineSpec:
@@ -145,7 +145,7 @@ nodes:
             - siderolabs/uinput
   - controlPlane: false
     hostname: worker-vm-gpu
-    installDisk: /dev/nvme0n1
+    installDisk: /dev/sda
     ignoreHostname: true
     ipAddress: ${TALOS_SUBNET}.255
     machineSpec:
