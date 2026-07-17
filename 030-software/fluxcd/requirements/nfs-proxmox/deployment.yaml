@@ -16,6 +16,8 @@ spec:
         app: nfs-proxmox
         policy.gatekeeper.sh/ignore: "true"
     spec:
+      securityContext:
+        fsGroup: 1000
       automountServiceAccountToken: false
       containers:
         - name: nfs-proxmox
@@ -26,9 +28,12 @@ spec:
             - name: nfs
               containerPort: 2049
               protocol: TCP
-            - name: portmapper
+            - name: rpc-tcp
               containerPort: 111
               protocol: TCP
+            - name: rpc-udp
+              containerPort: 111
+              protocol: UDP
           env:
             - name: SHARED_DIRECTORY
               value: /shared
