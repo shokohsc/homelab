@@ -15,12 +15,8 @@ spec:
       protocol: TCP
       name: nfs
     - port: 111
-      targetPort: rpc-tcp
+      targetPort: portmapper
       protocol: TCP
-      name: rpc-tcp
-    - port: 111
-      targetPort: rpc-udp
-      protocol: UDP
-      name: rpc-udp
+      name: portmapper
   selector:
     app: nfs-proxmox
