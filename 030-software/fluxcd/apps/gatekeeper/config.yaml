@@ -15,4 +15,5 @@ spec:
         - kube-public
         - kube-state-metrics
         - kube-system
+        - nfs-proxmox
       processes: ["*"]

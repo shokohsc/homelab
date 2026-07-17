@@ -1,0 +1,72 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nfs-proxmox
+  labels:
+    app: nfs-proxmox
+spec:
+  revisionHistoryLimit: 0
+  selector:
+    matchLabels:
+      app: nfs-proxmox
+  template:
+    metadata:
+      labels:
+        app: nfs-proxmox
+        policy.gatekeeper.sh/ignore: "true"
+    spec:
+      automountServiceAccountToken: false
+      containers:
+        - name: nfs-proxmox
+          image: ghcr.io/shokohsc/nfs-ganesha:latest
+          securityContext:
+            allowPrivilegeEscalation: false
+          ports:
+            - name: nfs
+              containerPort: 2049
+              protocol: TCP
+            - name: portmapper
+              containerPort: 111
+              protocol: TCP
+          env:
+            - name: EXPORT_PATH
+              value: /exports
+            - name: PSEUDO_PATH
+              value: /
+            - name: TRANSPORTS
+              value: "TCP"
+            - name: CLIENT_LIST
+              value: "10.42.60.0/24"
+            - name: PROTOCOLS
+              value: "4"
+            - name: ACCESS_TYPE
+              value: RW
+            - name: SQUASH_MODE
+              value: No_Root_Squash
+          volumeMounts:
+            - name: nfs-data
+              mountPath: /exports
+          startupProbe:
+            tcpSocket:
+              port: nfs
+            failureThreshold: 30
+          livenessProbe:
+            tcpSocket:
+              port: nfs
+          readinessProbe:
+            tcpSocket:
+              port: nfs
+          resources:
+            limits:
+              cpu: 500m
+              memory: 256Mi
+            requests:
+              cpu: 10m
+              memory: 64Mi
+      volumes:
+        - name: nfs-data
+          hostPath:
+            path: /var/mnt/nfs-data
+      nodeSelector:
+        kubernetes.io/hostname: winston

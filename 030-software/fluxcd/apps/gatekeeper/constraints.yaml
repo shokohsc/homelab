@@ -174,7 +174,7 @@ spec:
         values: ["true"]
   parameters:
     disallowAuthenticated: true
-    allowedRoles: 
+    allowedRoles:
       - cluster-role-1
 ---
 apiVersion: constraints.gatekeeper.sh/v1beta1
@@ -199,6 +199,7 @@ spec:
     - downwardAPI
     - emptyDir
     - ephemeral
+    - image
     - persistentVolumeClaim
     - projected
     - secret
