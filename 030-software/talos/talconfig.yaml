@@ -69,19 +69,17 @@ nodes:
             - siderolabs/intel-ucode
             - siderolabs/i915
             - siderolabs/gvisor
-            # - siderolabs/kata-containers
             - siderolabs/nfs-utils
             - siderolabs/nfsd
             - siderolabs/stargz-snapshotter
 
   - controlPlane: false
     hostname: winston
-    installDisk: /dev/nvme0n1
+    installDiskSelector:
+      wwid: naa.5f8db4c152400459
     ipAddress: ${TALOS_SUBNET}.50
     networkInterfaces:
-      - interface: eno1
-        dhcp: true
-      - interface: eth0
+      - interface: bond0
         dhcp: true
     nodeLabels:
       topology.kubernetes.io/region: "homelab"
@@ -96,21 +94,31 @@ nodes:
       - |-
           apiVersion: v1alpha1
           kind: BondConfig
-          name: bond.int
+          name: bond0
           links:
-              - eno1
               - eth0
+              - eth1
           bondMode: 802.3ad
+          # Time in milliseconds between link checks
+          miimon: 100
+          # Time to wait before enabling a link after it comes up
+          updelay: 200
+          # Time to wait before disabling a link after it goes down
+          downdelay: 200
+          # addresses:
+          #   - address: ${TALOS_SUBNET}.50/24
+          # routes:
+          #   - destination: "0.0.0.0/0"
+          #     gateway: ${TALOS_SUBNET}.1
+          xmitHashPolicy: "layer2+3"
     schematic:
       customization:
         extraKernelArgs:
           - net.ifnames=0
-          - vlan=enp1s0.30:enp1s0
         systemExtensions:
           officialExtensions:
             - siderolabs/amd-ucode
             - siderolabs/gvisor
-            # - siderolabs/kata-containers
             - siderolabs/nfs-utils
             - siderolabs/nfsd
             - siderolabs/stargz-snapshotter
@@ -118,6 +126,9 @@ nodes:
   - controlPlane: false
     hostname: worker-vm
     installDisk: /dev/sda
+    networkInterfaces:
+      - interface: eth0
+        dhcp: true
     ignoreHostname: true
     ipAddress: ${TALOS_SUBNET}.255
     machineSpec:
@@ -136,7 +147,6 @@ nodes:
           officialExtensions:
             - siderolabs/amd-ucode
             - siderolabs/gvisor
-            # - siderolabs/kata-containers
             - siderolabs/nfs-utils
             - siderolabs/nfsd
             - siderolabs/qemu-guest-agent
@@ -146,6 +156,9 @@ nodes:
   - controlPlane: false
     hostname: worker-vm-gpu
     installDisk: /dev/sda
+    networkInterfaces:
+      - interface: eth0
+        dhcp: true
     ignoreHostname: true
     ipAddress: ${TALOS_SUBNET}.255
     machineSpec:
@@ -160,7 +173,6 @@ nodes:
         extraKernelArgs:
           - net.ifnames=0
           - talos.config=http://tracer.home.arpa:8080/metadata?p=worker-vm-gpu
-          # - talos.experimental.wipe=system:EPHEMERAL,STATE
           - vlan=eth0.20:eth0
         systemExtensions:
           officialExtensions:
@@ -171,7 +183,6 @@ nodes:
             # - siderolabs/nvidia-open-gpu-kernel-modules-production
             # - siderolabs/nonfree-kmod-nvidia-production
             - siderolabs/gvisor
-            # - siderolabs/kata-containers
             - siderolabs/nfs-utils
             - siderolabs/nfsd
             - siderolabs/qemu-guest-agent
@@ -180,13 +191,10 @@ nodes:
             - siderolabs/uinput
 
 controlPlane:
-  # disableSearchDomain: true
   kernelModules:
     - name: br_netfilter
       parameters:
         - nf_conntrack_max=131072
-  # nameservers:
-  #   - ${TALOS_SUBNET}.1
   networkInterfaces:
     - interface: eno1
       dhcp: true
@@ -207,7 +215,6 @@ controlPlane:
         officialExtensions:
           - siderolabs/intel-ucode
           - siderolabs/gvisor
-          # - siderolabs/kata-containers
           - siderolabs/stargz-snapshotter
 
 worker:
@@ -215,11 +222,6 @@ worker:
     - name: br_netfilter
       parameters:
         - nf_conntrack_max=131072
-  # nameservers:
-  #   - ${TALOS_SUBNET}.1
-  networkInterfaces:
-    - interface: eth0
-      dhcp: true
   patches:
     - |-
       machine:

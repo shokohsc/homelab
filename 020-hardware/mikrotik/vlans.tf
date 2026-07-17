@@ -69,22 +69,27 @@ resource "routeros_interface_bridge_port" "eth6" {
 # Kubernetes nodes
 import {
   for_each = {
-    "ether8"       = { id = "*7", name = "k8s_ports" }
-    "ether9"       = { id = "*8", name = "k8s_ports" }
-    "ether11"      = { id = "*A", name = "k8s_ports" }
-    "ether13"      = { id = "*C", name = "k8s_ports" }
-    "ether23"      = { id = "*16", name = "k8s_ports" }
-    "sfp-sfpplus3" = { id = "*1A" }
+    "ether8"  = { id = "*7", name = "k8s_ports" }
+    "ether9"  = { id = "*8", name = "k8s_ports" }
+    "ether11" = { id = "*A", name = "k8s_ports" }
+    "ether13" = { id = "*C", name = "k8s_ports" }
   }
   to = routeros_interface_bridge_port.k8s_ports[each.key]
   id = each.value.id
 }
 resource "routeros_interface_bridge_port" "k8s_ports" {
   for_each = toset([
-    "ether8", "ether9", "ether11", "ether13", "ether23", "sfp-sfpplus3"
+    "ether8", "ether9", "ether11", "ether13"
   ])
   bridge    = routeros_interface_bridge.bridge.name
   interface = each.key
+  pvid      = 20
+  comment   = "Kubernetes nodes"
+}
+
+resource "routeros_interface_bridge_port" "bond_int" {
+  bridge    = routeros_interface_bridge.bridge.name
+  interface = "bond.int"
   pvid      = 20
   comment   = "Kubernetes nodes"
 }
@@ -167,13 +172,13 @@ resource "routeros_interface_bridge_vlan" "vlans" {
   ]
 
   untagged = lookup({
-    10  = ["ether3", "ether15", "ether17"]                                      # Mgmt
-    20  = ["ether8", "ether9", "ether11", "ether13", "ether23", "sfp-sfpplus3"] # K8s
-    30  = ["ether19", "ether21", "ether22"]                                     # Proxmox
-    40  = []                                                                    # VMs
-    50  = ["ether7"]                                                            # Guest
-    60  = []                                                                    # LB
-    100 = ["ether6"]                                                            # IoT
+    10  = ["ether3", "ether15", "ether17"]                       # Mgmt
+    20  = ["ether8", "ether9", "ether11", "ether13", "bond.int"] # K8s
+    30  = ["ether19", "ether21", "ether22"]                      # Proxmox
+    40  = []                                                     # VMs
+    50  = ["ether7"]                                             # Guest
+    60  = []                                                     # LB
+    100 = ["ether6"]                                             # IoT
   }, each.key, [])
 }
 
@@ -181,11 +186,14 @@ resource "routeros_interface_bridge_vlan" "vlans" {
 ##      Interfaces Bonding (Winston)      ##
 ############################################
 
-# resource "routeros_interface_bonding" "winston" {
-#   name   = "bond.int"
-#   slaves = ["ether23", "sfpplus3"]
-#   mode   = "802.3ad"
-# }
+resource "routeros_interface_bonding" "winston" {
+  name                 = "bond.int"
+  slaves               = ["ether23", "sfp-sfpplus3"]
+  mode                 = "802.3ad"
+  lacp_rate            = "1sec"
+  lacp_mode            = "active"
+  transmit_hash_policy = "layer-2-and-3"
+}
 
 ############################################
 ##      VLAN Interfaces (L3 gateways)     ##
