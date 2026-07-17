@@ -6,7 +6,7 @@ metadata:
   labels:
     vlan: lb
   annotations:
-    lbipam.cilium.io/ips: ${subnet}.100
+    lbipam.cilium.io/ips: ${subnet}.50
 spec:
   type: LoadBalancer
   ports:
