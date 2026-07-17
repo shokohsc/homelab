@@ -21,6 +21,8 @@ spec:
         - name: nfs-proxmox
           image: ghcr.io/shokohsc/nfs-ganesha:ganesha-4.4.1-ntirpc-4.3
           securityContext:
+            runAsUser: 1000
+            runAsGroup: 1000
             allowPrivilegeEscalation: false
           ports:
             - name: nfs
