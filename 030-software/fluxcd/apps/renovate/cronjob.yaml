@@ -62,8 +62,3 @@ spec:
                 defaultMode: 0644
             - name: work
               emptyDir: {}
-
-          tolerations:
-            - key: "node.kubernetes.io/nuc"
-              operator: "Exists"
-              effect: "NoSchedule"

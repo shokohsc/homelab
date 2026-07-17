@@ -2,14 +2,14 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
   - blocky
-  # - browserless
+  - browserless
   - cert-manager
   - cloudflared
   - crossplane
   - csi-proxmox
   - external-dns
   - gatekeeper
-  # - headlamp
+  - headlamp
   - http-echo
   - karpenter-proxmox
   # - konflate
@@ -24,4 +24,4 @@ resources:
   # - sidekick
   - syslog
   - tailscale
-  # - whoami
+  - whoami
