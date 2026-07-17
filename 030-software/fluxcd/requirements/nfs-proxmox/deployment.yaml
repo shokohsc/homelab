@@ -45,7 +45,7 @@ spec:
             - name: SQUASH_MODE
               value: No_Root_Squash
           volumeMounts:
-            - name: nfs-data
+            - name: data
               mountPath: /exports
           startupProbe:
             tcpSocket:
@@ -65,8 +65,8 @@ spec:
               cpu: 10m
               memory: 64Mi
       volumes:
-        - name: nfs-data
+        - name: data
           hostPath:
-            path: /var/mnt/nfs-data
+            path: /var/mnt/nfs-proxmox
       nodeSelector:
         kubernetes.io/hostname: winston
