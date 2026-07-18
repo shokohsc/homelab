@@ -6,7 +6,7 @@ metadata:
   labels:
     vlan: lb
   annotations:
-    lbipam.cilium.io/ips: ${subnet}.50
+    lbipam.cilium.io/ips: 10.42.60.50
 spec:
   type: LoadBalancer
   ports:
@@ -14,9 +14,5 @@ spec:
       targetPort: nfs
       protocol: TCP
       name: nfs
-    - port: 111
-      targetPort: portmapper
-      protocol: TCP
-      name: portmapper
   selector:
     app: nfs-proxmox

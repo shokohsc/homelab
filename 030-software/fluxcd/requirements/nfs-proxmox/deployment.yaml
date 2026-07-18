@@ -5,6 +5,8 @@ metadata:
   name: nfs-proxmox
   labels:
     app: nfs-proxmox
+  annotations:
+    configmap.reloader.stakater.com/reload: config
 spec:
   revisionHistoryLimit: 0
   selector:
@@ -17,42 +19,36 @@ spec:
         policy.gatekeeper.sh/ignore: "true"
     spec:
       automountServiceAccountToken: false
+      securityContext:
+        seccompProfile:
+          type: RuntimeDefault
       containers:
         - name: nfs-proxmox
-          image: ghcr.io/shokohsc/nfs-ganesha:ganesha-4.4.1-ntirpc-4.3
+          image: erichough/nfs-server:latest
           securityContext:
-            runAsUser: 1000
-            runAsGroup: 1000
-            allowPrivilegeEscalation: false
+            privileged: true
+            capabilities:
+              drop:
+                - ALL
           ports:
             - name: nfs
               containerPort: 2049
               protocol: TCP
-            - name: portmapper
-              containerPort: 111
-              protocol: TCP
-          env:
-            - name: EXPORT_PATH
-              value: /exports
-            - name: PSEUDO_PATH
-              value: /
-            - name: TRANSPORTS
-              value: "TCP"
-            - name: CLIENT_LIST
-              value: "10.42.0.0/24"
-            - name: PROTOCOLS
-              value: "4"
-            - name: ACCESS_TYPE
-              value: RW
-            - name: SQUASH_MODE
-              value: No_Root_Squash
           volumeMounts:
             - name: data
-              mountPath: /exports
+              mountPath: /mnt/shared
+            - name: config
+              mountPath: /etc/exports
+              subPath: exports
+            - name: nfsdcld
+              mountPath: /var/lib/nfs/nfsdcld
+          lifecycle:
+            postStart:
+              exec:
+                command: ["/bin/sh", "-c", "nfsdcld −−foreground"]
           startupProbe:
             tcpSocket:
               port: nfs
-            failureThreshold: 30
           livenessProbe:
             tcpSocket:
               port: nfs
@@ -61,14 +57,21 @@ spec:
               port: nfs
           resources:
             limits:
-              cpu: 500m
-              memory: 256Mi
+              cpu: 1000m
+              memory: 1024Mi
             requests:
               cpu: 10m
-              memory: 64Mi
+              memory: 512Mi
       volumes:
         - name: data
           hostPath:
             path: /var/mnt/nfs-proxmox
+        - name: config
+          configMap:
+            name: config
+            defaultMode: 0644
+        - name: nfsdcld
+          emptyDir:
+            medium: Memory
       nodeSelector:
         kubernetes.io/hostname: winston
