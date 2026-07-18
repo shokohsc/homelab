@@ -35,8 +35,10 @@ spec:
               containerPort: 2049
               protocol: TCP
           volumeMounts:
-            - name: data
-              mountPath: /mnt/shared
+            - name: backups
+              mountPath: /mnt/shared/backups
+            - name: content
+              mountPath: /mnt/shared/content
             - name: config
               mountPath: /etc/exports
               subPath: exports
@@ -45,7 +47,7 @@ spec:
           lifecycle:
             postStart:
               exec:
-                command: ["/bin/sh", "-c", "nfsdcld −−foreground"]
+                command: ["/bin/sh", "-c", "nfsdcld --foreground"]
           startupProbe:
             tcpSocket:
               port: nfs
@@ -63,9 +65,12 @@ spec:
               cpu: 10m
               memory: 512Mi
       volumes:
-        - name: data
+        - name: backups
           hostPath:
-            path: /var/mnt/nfs-proxmox
+            path: /var/mnt/nfs-proxmox-backups
+        - name: content
+          hostPath:
+            path: /var/mnt/nfs-proxmox-content
         - name: config
           configMap:
             name: config
