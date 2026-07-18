@@ -24,12 +24,16 @@ spec:
           type: RuntimeDefault
       containers:
         - name: nfs-proxmox
-          image: erichough/nfs-server:latest
+          # image: erichough/nfs-server:latest
+          image: itsthenetwork/nfs-server-alpine:latest
           securityContext:
             privileged: true
             capabilities:
               drop:
                 - ALL
+          env:
+            - name: SHARED_DIRECTORY
+              value: /mnt/shared
           ports:
             - name: nfs
               containerPort: 2049
@@ -75,8 +79,8 @@ spec:
           configMap:
             name: config
             defaultMode: 0644
-        - name: nfsdcld
-          emptyDir:
-            medium: Memory
+        # - name: nfsdcld
+        #   emptyDir:
+        #     medium: Memory
       nodeSelector:
         kubernetes.io/hostname: winston
