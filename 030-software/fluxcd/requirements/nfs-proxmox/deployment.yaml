@@ -33,7 +33,9 @@ spec:
             #     - ALL
           env:
             - name: SHARED_DIRECTORY
-              value: /mnt/shared
+              value: /mnt/shared/backups
+            - name: SHARED_DIRECTORY_2
+              value: /mnt/shared/content
           ports:
             - name: nfs
               containerPort: 2049
