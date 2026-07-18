@@ -1,27 +1,39 @@
-## Storage (create zfs pool from ubuntu beforehand)
+# Storage (create zfs pool from ubuntu beforehand)
+
     zpool create -o ashift=12 -o autotrim=on -m /mnt/tank \
       -O compression=lz4 -O atime=off -O xattr=sa -O acltype=posixacl \
       tank \
       raidz2 \
-        /dev/disk/by-id/scsi-35000cca2559ee368 \
-        /dev/disk/by-id/scsi-35000cca255456054 \
-        /dev/disk/by-id/scsi-35000cca255480ce4 \
-        /dev/disk/by-id/scsi-35000cca255449f70 \
         /dev/disk/by-id/scsi-35000c500843cd9bf \
         /dev/disk/by-id/scsi-35000c50084480e57 \
+        /dev/disk/by-id/scsi-35000cca255429d78 \
+        /dev/disk/by-id/scsi-35000cca255455440 \
+        /dev/disk/by-id/scsi-35000cca255456054 \
+        /dev/disk/by-id/scsi-35000cca255480ce4 \
       spare \
-        /dev/disk/by-id/scsi-35000c500843cdf9b \
-        /dev/disk/by-id/scsi-35000c500843d5717
+        /dev/disk/by-id/scsi-35000cca255489568 \
+        /dev/disk/by-id/scsi-35000cca2559ee368
     
     zpool scrub tank
 
-dd if=/dev/zero of=/dev/sda  bs=512  count=1
+## Exports Zfs pool over nfs
 
-scsi-35000c500843cd9bf -> ../../sde
-scsi-35000c500843cdf9b -> ../../sdg
-scsi-35000c500843d5717 -> ../../sdh
-scsi-35000c50084480e57 -> ../../sdf
-scsi-35000cca255449f70 -> ../../sdd
-scsi-35000cca255456054 -> ../../sdb
-scsi-35000cca255480ce4 -> ../../sdc
-scsi-35000cca2559ee368 -> ../../sda
+    echo '/mnt/tank *(rw,fsid=0,async,no_subtree_check,no_auth_nlm,insecure,no_root_squash)' > /etc/exports
+    exportfs -ra
+    exportfs -v
+    systemctl enable --now nfs-kernel-server
+
+## Zap disks
+
+    dd if=/dev/zero of=/dev/sda  bs=512  count=1
+
+## Disk mapping
+
+    scsi-35000c500843cd9bf -> sde
+scsi-35000c50084480e57 -> sda
+scsi-35000cca255429d78 -> sdh
+scsi-35000cca255455440 -> sdg
+scsi-35000cca255456054 -> sdf
+scsi-35000cca255480ce4 -> sdb
+scsi-35000cca255489568 -> sdd
+scsi-35000cca2559ee368 -> sdc

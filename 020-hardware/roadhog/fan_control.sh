@@ -1,10 +1,13 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+# Run in alpine container
+# docker run -ti --rm -v $(pwd):/app -w /app --entrypoint=/bin/sh node:alpine
+
 apk add ipmitool --no-cache
 
 # IPMI IP address
-: "${IPMIHOST:=127.0.0.1}"
+: "${IPMIHOST:=192.168.1.1}"
 # IPMI Username
 : "${IPMIUSER:=XXXX}"
 # IPMI Password
@@ -41,18 +44,18 @@ SPEEDHEX=$( printf "%x" $FANSPEED )
 # Check if any processor temperature exceeds or equals the maximum temperature
 if [[ $PROC_TEMP1 -ge $MAXTEMP_PROC || $PROC_TEMP2 -ge $MAXTEMP_PROC ]];
   then
-    printf "Warning: Processor temperature is too high! Activating dynamic fan control! (Proc1: $PROC_TEMP1 C, Proc2: $PROC_TEMP2 C)" | systemd-cat -t R730XD-IPMI-TEMP
+    printf "Warning: Processor temperature is too high! Activating dynamic fan control! (Proc1: $PROC_TEMP1 C, Proc2: $PROC_TEMP2 C)" #| systemd-cat -t R730XD-IPMI-TEMP
     echo "Warning: Processor temperature is too high! Activating dynamic fan control! (Proc1: $PROC_TEMP1 C, Proc2: $PROC_TEMP2 C)"
     # This sets the fans to auto mode, so the motherboard will set it to a speed that it will need to cool the server down
     ipmitool -I lanplus -H ${IPMIHOST} -U ${IPMIUSER} -P ${IPMIPW} -y ${IPMIEK} raw 0x30 0x30 0x01 0x01
 elif [[ $INLET_TEMP -ge $MAXTEMP_AMBIENT ]];
   then
-    printf "Warning: Ambient temperature is too high! Activating dynamic fan control! (Inlet: $INLET_TEMP C)" | systemd-cat -t R730XD-IPMI-TEMP
+    printf "Warning: Ambient temperature is too high! Activating dynamic fan control! (Inlet: $INLET_TEMP C)" #| systemd-cat -t R730XD-IPMI-TEMP
     echo "Warning: Ambient temperature is too high! Activating dynamic fan control! (Inlet: $INLET_TEMP C)"
     # This sets the fans to auto mode, so the motherboard will set it to a speed that it will need to cool the server down
     ipmitool -I lanplus -H ${IPMIHOST} -U ${IPMIUSER} -P ${IPMIPW} -y ${IPMIEK} raw 0x30 0x30 0x01 0x01
 else
-    printf "Temperature is OK (Inlet: $INLET_TEMP C, Proc1: $PROC_TEMP1 C, Proc2: $PROC_TEMP2 C)" | systemd-cat -t R730XD-IPMI-TEMP
+    printf "Temperature is OK (Inlet: $INLET_TEMP C, Proc1: $PROC_TEMP1 C, Proc2: $PROC_TEMP2 C)" #| systemd-cat -t R730XD-IPMI-TEMP
     echo "Activating manual fan speeds! ($FANSPEED%)"
     # This sets the fans to manual mode
     ipmitool -I lanplus -H ${IPMIHOST} -U ${IPMIUSER} -P ${IPMIPW} -y ${IPMIEK} raw 0x30 0x30 0x01 0x00

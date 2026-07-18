@@ -1,90 +1,81 @@
-resource "proxmox_oci_image" "nfs_server" {
-  node_name    = var.node_name
-  datastore_id = "local"
-  reference    = "ghcr.io/shokohsc/nfs-ganesha:4.4.1"
-  # reference    = "docker.io/izdock/nfs-ganesha:4.0.12"
-  # reference    = "docker.io/izdock/nfs-ganesha:3.4"
-}
+# data "proxmox_file" "nfs_cloud_config" {
+#   node_name    = var.node_name
+#   datastore_id = "nfs-proxmox-content"
+#   content_type = "snippets"
+#   file_name    = "nfs-cloud-config.yaml"
+# }
 
-resource "proxmox_virtual_environment_container" "nfs_server" {
-  description  = "Managed by OpenTofu"
-  node_name    = var.node_name
-  unprivileged = true
-  environment_variables = {
-    EXPORT_PATH = "/data"
-    PSEUDO_PATH = "/"
-    EXPORT_ID = "1"
-    PROTOCOLS = "4"
-    TRANSPORTS = "TCP"
-    SEC_TYPE = "sys"
-    SQUASH_MODE = "No_Root_Squash"
-    GRACELESS = "true"
-    GRACE_PERIOD = "90"
-    ACCESS_TYPE = "RW"
-    CLIENT_LIST = "10.42.0.0/16"
-    DISABLE_ACL = "true"
-    ANON_USER = "nobody"
-    ANON_GROUP = "nogroup"
-    GANESHA_CONFIG = "/etc/ganesha/ganesha.conf"
-    GANESHA_LOGFILE = "/dev/stdout"
-    LOG_LEVEL = "INFO"
-    LOG_COMPONENT = "ALL=INFO;"
-  }
-  # idmap {
-  #   type = "uid"
-  #   container_id = "0"
-  #   host_id = "1000"
-  #   size = "65534"
-  # }
-  cpu {
-    cores = 1
-  }
-  memory {
-    dedicated = 64
-  }
-  mount_point {
-    path   = "/data"
-    volume = "/mnt/tank"
-  }
-  disk {
-    datastore_id = "local-lvm"
-    size         = 1
-  }
-  operating_system {
-    template_file_id = proxmox_oci_image.nfs_server.id
-    type             = "debian"
-  }
-  initialization {
-    hostname = "${var.node_name}-nfs"
-    dns {
-      servers = ["10.42.60.1"]
-    }
-    ip_config {
-      ipv4 {
-        address = "10.42.60.102/24"
-        gateway = "10.42.60.1"
-      }
-    }
-  }
-  network_interface {
-    name         = "eth0"
-    bridge       = proxmox_network_linux_bridge.sfpplus.name
-    host_managed = true
-    vlan_id      = "60"
-  }
-  startup {
-    order = "5"
-  }
-  tags = [
-    "nfs",
-    "opentofu"
-  ]
+# data "proxmox_file" "debian_cloud" {
+#   node_name    = var.node_name
+#   datastore_id = "nfs-proxmox-content"
+#   content_type = "import"
+#   file_name    = "debian-12-genericcloud-amd64.qcow2"
+# }
 
-  lifecycle {
-    ignore_changes = [
-      initialization[0].entrypoint,
-      console
-      # environment_variables
-    ]
-  }
-}
+# resource "proxmox_virtual_environment_vm" "nfs_server" {
+#   description = "Managed by OpenTofu"
+#   name        = "${var.node_name}-nfs"
+#   node_name   = var.node_name
+
+#   agent {
+#     enabled = false
+#   }
+
+#   cpu {
+#     cores = 1
+#   }
+
+#   memory {
+#     dedicated = 256
+#   }
+
+#   disk {
+#     datastore_id = "local-lvm"
+#     import_from  = data.proxmox_file.debian_cloud.id
+#     interface    = "scsi0"
+#     size         = 8
+#   }
+
+#   virtiofs {
+#     mapping   = "tank"
+#     cache     = "always"
+#     direct_io = true
+#   }
+
+#   initialization {
+#     datastore_id = "local-lvm"
+#     ip_config {
+#       ipv4 {
+#         address = "10.42.60.130/24"
+#         gateway = "10.42.60.1"
+#       }
+#     }
+#     user_data_file_id = data.proxmox_file.nfs_cloud_config.id
+#   }
+
+#   network_device {
+#     bridge  = proxmox_network_linux_bridge.sfpplus.name
+#     vlan_id = "60"
+#   }
+
+#   operating_system {
+#     type = "l26"
+#   }
+
+#   started = true
+
+#   startup {
+#     order = "5"
+#   }
+
+#   tags = [
+#     "nfs",
+#     "opentofu"
+#   ]
+
+#   lifecycle {
+#     ignore_changes = [
+#       initialization
+#     ]
+#   }
+# }

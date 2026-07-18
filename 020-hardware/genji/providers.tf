@@ -18,4 +18,9 @@ provider "proxmox" {
   password      = var.proxmox_password
   insecure      = var.ssl_insecure
   random_vm_ids = var.random_vm_ids
+
+  ssh {
+    username = var.proxmox_username
+    password = var.proxmox_password
+  }
 }

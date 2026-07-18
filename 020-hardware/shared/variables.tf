@@ -40,6 +40,12 @@ variable "ssl_insecure" {
   description = "Proxmox ssl connection insecure"
 }
 
+variable "node_name" {
+  type        = string
+  default     = "" # genji|hanzo|roadhog
+  description = "Proxmox node name"
+}
+
 variable "random_vm_ids" {
   type        = bool
   default     = true

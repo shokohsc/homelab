@@ -1,4 +1,5 @@
-## Storage (create zfs pool from ubuntu beforehand)
+# Storage (create zfs pool from ubuntu beforehand)
+
     zpool create -o ashift=12 -o autotrim=on -m /mnt/tank \
       -O compression=lz4 -O atime=off -O xattr=sa -O acltype=posixacl \
       tank \
@@ -15,18 +16,33 @@
     
     zpool scrub tank
 
-dd if=/dev/zero of=/dev/sda  bs=512  count=1
+## Exports Zfs pool over nfs
 
-scsi-35000c500843cdf9b -> sdh
-scsi-35000cca2553f3b7c -> sdg
-scsi-35000cca255429d78 -> sdc
-scsi-35000cca255455440 -> sda
-scsi-35000cca2554557f0 -> sdf
-scsi-35000cca2554699a4 -> sdb
-scsi-35000cca255489568 -> sde
-scsi-35000cca2559e28e8 -> sdd
+    echo '/mnt/tank *(rw,fsid=0,async,no_subtree_check,no_auth_nlm,insecure,no_root_squash)' > /etc/exports
+    exportfs -ra
+    exportfs -v
+    systemctl enable --now nfs-kernel-server
 
-docker run --rm -it --network=host nicolaka/netshoot sh
+## Zap disks
+
+    dd if=/dev/zero of=/dev/sda  bs=512  count=1
+
+## Disk mapping
+
+    scsi-35000c500843cdf9b -> sdh
+    scsi-35000cca2553f3b7c -> sdg
+    scsi-35000cca255429d78 -> sdc
+    scsi-35000cca255455440 -> sda
+    scsi-35000cca2554557f0 -> sdf
+    scsi-35000cca2554699a4 -> sdb
+    scsi-35000cca255489568 -> sde
+    scsi-35000cca2559e28e8 -> sdd
+
+## Refs
+
+    docker run --rm -it --network=host nicolaka/netshoot sh
+
+---
 
 https://github.com/laktak/rsyncy?tab=readme-ov-file#installation
 
