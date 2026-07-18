@@ -53,10 +53,11 @@ spec:
             #   subPath: exports
             # - name: nfsdcld
             #   mountPath: /var/lib/nfs/nfsdcld
-          # lifecycle:
-          #   postStart:
-          #     exec:
-          #       command: ["/bin/sh", "-c", "nfsdcld --foreground"]
+          lifecycle:
+            postStart:
+              exec:
+                command: ["/bin/sh", "-c", "nfsdcld --foreground"]
+                command: ["/bin/sh", "-c", "chmod 755 /mnt/shared/*"]
           startupProbe:
             tcpSocket:
               port: nfs
