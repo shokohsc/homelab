@@ -114,11 +114,21 @@ nodes:
       - |-
           apiVersion: v1alpha1
           kind: UserVolumeConfig
-          name: nfs-proxmox
+          name: nfs-proxmox-backups
           volumeType: disk
           provisioning:
             diskSelector:
               match: disk.wwid == "naa.5000cca270def81c"
+          filesystem:
+            type: xfs
+      - |-
+          apiVersion: v1alpha1
+          kind: UserVolumeConfig
+          name: nfs-proxmox-content
+          volumeType: disk
+          provisioning:
+            diskSelector:
+              match: disk.wwid == "eui.6479a798ea3027ce"
           filesystem:
             type: xfs
     schematic:
