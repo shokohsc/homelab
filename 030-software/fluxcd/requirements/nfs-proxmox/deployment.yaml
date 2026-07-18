@@ -57,7 +57,7 @@ spec:
             postStart:
               exec:
                 # command: ["/bin/sh", "-c", "nfsdcld --foreground"]
-                command: ["/bin/sh", "-c", "chmod 755 /mnt/shared/*"]
+                command: ["/bin/sh", "-c", "chmod 755 /mnt/shared/backups && chmod 755 /mnt/shared/content"]
           startupProbe:
             tcpSocket:
               port: nfs
