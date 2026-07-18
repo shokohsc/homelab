@@ -111,6 +111,7 @@ nodes:
             udev:
               rules:
                 - KERNEL=="sd[a-z]", MODE="0666"
+                - KERNEL=="nvme0n1", MODE="0666"
       - |-
           apiVersion: v1alpha1
           kind: UserVolumeConfig
