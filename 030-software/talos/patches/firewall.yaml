@@ -124,4 +124,17 @@ portSelector:
   protocol: udp
 ingress:
   - subnet: 0.0.0.0/0
+{{- if eq .Hostname "winston" }}
+---
+apiVersion: v1alpha1
+kind: NetworkRuleConfig
+name: nfs
+portSelector:
+  ports:
+    - 2049
+  protocol: tcp
+ingress:
+  - subnet: 10.42.0.0/16
+  - subnet: 10.244.0.0/16
+{{- end }}
 {{- end -}}

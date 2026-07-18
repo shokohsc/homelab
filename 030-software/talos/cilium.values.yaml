@@ -68,6 +68,23 @@ hubble:
       requests:
         cpu: 10m
         memory: 64Mi
+    affinity:
+      nodeAffinity:
+        preferredDuringSchedulingIgnoredDuringExecution:
+        - weight: 1
+          preference:
+            matchExpressions:
+            - key: kubernetes.io/hostname
+              operator: NotIn
+              values:
+              - mercy
+        - weight: 1
+          preference:
+            matchExpressions:
+            - key: topology.kubernetes.io/region
+              operator: In
+              values:
+              - metal
     tolerations:
       - key: "node.kubernetes.io/nuc"
         operator: "Exists"
@@ -90,6 +107,23 @@ hubble:
         limits:
           cpu: 100m
           memory: 64Mi
+    affinity:
+      nodeAffinity:
+        preferredDuringSchedulingIgnoredDuringExecution:
+        - weight: 1
+          preference:
+            matchExpressions:
+            - key: kubernetes.io/hostname
+              operator: NotIn
+              values:
+              - mercy
+        - weight: 1
+          preference:
+            matchExpressions:
+            - key: topology.kubernetes.io/region
+              operator: In
+              values:
+              - metal
     tolerations:
       - key: "node.kubernetes.io/nuc"
         operator: "Exists"

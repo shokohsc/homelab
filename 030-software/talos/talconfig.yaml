@@ -105,12 +105,22 @@ nodes:
           updelay: 200
           # Time to wait before disabling a link after it goes down
           downdelay: 200
-          # addresses:
-          #   - address: ${TALOS_SUBNET}.50/24
-          # routes:
-          #   - destination: "0.0.0.0/0"
-          #     gateway: ${TALOS_SUBNET}.1
           xmitHashPolicy: "layer2+3"
+      - |-
+          machine:
+            udev:
+              rules:
+                - KERNEL=="sd[a-z]", MODE="0666"
+      - |-
+          apiVersion: v1alpha1
+          kind: UserVolumeConfig
+          name: nfs-proxmox
+          volumeType: disk
+          provisioning:
+            diskSelector:
+              match: disk.wwid == "naa.5000cca270def81c"
+          filesystem:
+            type: xfs
     schematic:
       customization:
         extraKernelArgs:
