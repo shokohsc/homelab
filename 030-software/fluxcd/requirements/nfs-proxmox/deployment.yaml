@@ -46,8 +46,8 @@ spec:
             - name: config
               mountPath: /etc/exports
               subPath: exports
-            - name: nfsdcld
-              mountPath: /var/lib/nfs/nfsdcld
+            # - name: nfsdcld
+            #   mountPath: /var/lib/nfs/nfsdcld
           lifecycle:
             postStart:
               exec:
