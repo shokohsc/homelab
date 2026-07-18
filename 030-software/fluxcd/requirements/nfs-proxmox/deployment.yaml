@@ -24,18 +24,12 @@ spec:
           type: RuntimeDefault
       containers:
         - name: nfs-proxmox
-          # image: erichough/nfs-server:latest
-          image: itsthenetwork/nfs-server-alpine:latest
+          image: erichough/nfs-server:latest
           securityContext:
             privileged: true
             # capabilities:
             #   drop:
             #     - ALL
-          env:
-            - name: SHARED_DIRECTORY
-              value: /mnt/shared/backups
-            - name: SHARED_DIRECTORY_2
-              value: /mnt/shared/content
           ports:
             - name: nfs
               containerPort: 2049
@@ -48,16 +42,15 @@ spec:
               mountPath: /mnt/shared/backups
             - name: content
               mountPath: /mnt/shared/content
-            # - name: config
-            #   mountPath: /etc/exports
-            #   subPath: exports
-            # - name: nfsdcld
-            #   mountPath: /var/lib/nfs/nfsdcld
+            - name: config
+              mountPath: /etc/exports
+              subPath: exports
+            - name: nfsdcld
+              mountPath: /var/lib/nfs/nfsdcld
           lifecycle:
             postStart:
               exec:
-                # command: ["/bin/sh", "-c", "nfsdcld --foreground"]
-                command: ["/bin/sh", "-c", "chmod 755 /mnt/shared/backups && chmod 755 /mnt/shared/content"]
+                command: ["/bin/sh", "-c", "nfsdcld --foreground"]
           startupProbe:
             tcpSocket:
               port: nfs
@@ -81,12 +74,12 @@ spec:
         - name: content
           hostPath:
             path: /var/mnt/nfs-proxmox-content
-        # - name: config
-        #   configMap:
-        #     name: config
-        #     defaultMode: 0644
-        # - name: nfsdcld
-        #   emptyDir:
-        #     medium: Memory
+        - name: config
+          configMap:
+            name: config
+            defaultMode: 0644
+        - name: nfsdcld
+          emptyDir:
+            medium: Memory
       nodeSelector:
         kubernetes.io/hostname: winston

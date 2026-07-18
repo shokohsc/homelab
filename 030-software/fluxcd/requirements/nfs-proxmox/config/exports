@@ -1,2 +1,2 @@
-/mnt/shared/backups *(rw,fsid=0,async,no_subtree_check,no_auth_nlm,insecure,no_root_squash,crossmnt)
-/mnt/shared/content *(rw,fsid=0,async,no_subtree_check,no_auth_nlm,insecure,no_root_squash,crossmnt)
+/mnt/shared/backups *(rw,async,no_subtree_check,no_auth_nlm,insecure,no_root_squash,crossmnt)
+/mnt/shared/content *(rw,async,no_subtree_check,no_auth_nlm,insecure,no_root_squash,crossmnt)
