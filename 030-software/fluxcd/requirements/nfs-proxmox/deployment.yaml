@@ -43,9 +43,9 @@ spec:
               mountPath: /mnt/shared/backups
             - name: content
               mountPath: /mnt/shared/content
-            - name: config
-              mountPath: /etc/exports
-              subPath: exports
+            # - name: config
+            #   mountPath: /etc/exports
+            #   subPath: exports
             # - name: nfsdcld
             #   mountPath: /var/lib/nfs/nfsdcld
           lifecycle:
@@ -75,10 +75,10 @@ spec:
         - name: content
           hostPath:
             path: /var/mnt/nfs-proxmox-content
-        - name: config
-          configMap:
-            name: config
-            defaultMode: 0644
+        # - name: config
+        #   configMap:
+        #     name: config
+        #     defaultMode: 0644
         # - name: nfsdcld
         #   emptyDir:
         #     medium: Memory
