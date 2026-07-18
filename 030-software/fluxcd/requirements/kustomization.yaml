@@ -5,4 +5,4 @@ resources:
   - cilium
   - crossplane
   - gatekeeper
-  # - nfs-proxmox
+  - nfs-proxmox

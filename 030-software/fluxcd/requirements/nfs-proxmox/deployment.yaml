@@ -2,20 +2,18 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: nfs-proxmox
+  name: nfs-proxmox-backups
   labels:
-    app: nfs-proxmox
-  annotations:
-    configmap.reloader.stakater.com/reload: config
+    app: nfs-proxmox-backups
 spec:
   revisionHistoryLimit: 0
   selector:
     matchLabels:
-      app: nfs-proxmox
+      app: nfs-proxmox-backups
   template:
     metadata:
       labels:
-        app: nfs-proxmox
+        app: nfs-proxmox-backups
         policy.gatekeeper.sh/ignore: "true"
     spec:
       automountServiceAccountToken: false
@@ -23,13 +21,13 @@ spec:
         seccompProfile:
           type: RuntimeDefault
       containers:
-        - name: nfs-proxmox
-          image: erichough/nfs-server:latest
+        - name: nfs-server-alpine
+          image: itsthenetwork/nfs-server-alpine:latest # Find an alpine image that has nfsdcld
           securityContext:
             privileged: true
-            # capabilities:
-            #   drop:
-            #     - ALL
+          env:
+            - name: SHARED_DIRECTORY
+              value: /exports
           ports:
             - name: nfs
               containerPort: 2049
@@ -39,18 +37,14 @@ spec:
               protocol: TCP
           volumeMounts:
             - name: backups
-              mountPath: /mnt/shared/backups
-            - name: content
-              mountPath: /mnt/shared/content
-            - name: config
-              mountPath: /etc/exports
-              subPath: exports
-            - name: nfsdcld
-              mountPath: /var/lib/nfs/nfsdcld
+              mountPath: /exports
+            # - name: nfsdcld
+            #   mountPath: /var/lib/nfs/nfsdcld
           lifecycle:
             postStart:
               exec:
-                command: ["/bin/sh", "-c", "nfsdcld --foreground"]
+                # command: ["/bin/sh", "-c", "chmod 777 /exports && nfsdcld"]
+                command: ["/bin/sh", "-c", "chmod 777 /exports"]
           startupProbe:
             tcpSocket:
               port: nfs
@@ -71,15 +65,80 @@ spec:
         - name: backups
           hostPath:
             path: /var/mnt/nfs-proxmox-backups
+        # - name: nfsdcld
+        #   emptyDir:
+        #     medium: Memory
+      nodeSelector:
+        kubernetes.io/hostname: winston
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nfs-proxmox-content
+  labels:
+    app: nfs-proxmox-content
+spec:
+  revisionHistoryLimit: 0
+  selector:
+    matchLabels:
+      app: nfs-proxmox-content
+  template:
+    metadata:
+      labels:
+        app: nfs-proxmox-content
+        policy.gatekeeper.sh/ignore: "true"
+    spec:
+      automountServiceAccountToken: false
+      securityContext:
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: nfs-server-alpine
+          image: itsthenetwork/nfs-server-alpine:latest
+          securityContext:
+            privileged: true
+          env:
+            - name: SHARED_DIRECTORY
+              value: /exports
+          ports:
+            - name: nfs
+              containerPort: 2049
+              protocol: TCP
+            - name: rpc
+              containerPort: 111
+              protocol: TCP
+          volumeMounts:
+            - name: content
+              mountPath: /exports
+            # - name: nfsdcld
+            #   mountPath: /var/lib/nfs/nfsdcld
+          lifecycle:
+            postStart:
+              exec:
+                # command: ["/bin/sh", "-c", "chmod 777 /exports && nfsdcld"]
+                command: ["/bin/sh", "-c", "chmod 777 /exports"]
+          startupProbe:
+            tcpSocket:
+              port: nfs
+          livenessProbe:
+            tcpSocket:
+              port: nfs
+          readinessProbe:
+            tcpSocket:
+              port: nfs
+          resources:
+            limits:
+              cpu: 1000m
+              memory: 1024Mi
+            requests:
+              cpu: 100m
+              memory: 512Mi
+      volumes:
         - name: content
           hostPath:
             path: /var/mnt/nfs-proxmox-content
-        - name: config
-          configMap:
-            name: config
-            defaultMode: 0644
-        - name: nfsdcld
-          emptyDir:
-            medium: Memory
+        # - name: nfsdcld
+        #   emptyDir:
+        #     medium: Memory
       nodeSelector:
         kubernetes.io/hostname: winston
