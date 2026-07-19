@@ -22,12 +22,12 @@ spec:
     # Name of resource
     name: vm-genji
 
-  # # BootDevice defines the root device for the VM
-  # # Optional: If not specified, the system will use the storage device on which the template is stored.
-  # bootDevice:
-  #   # Size of the boot device
-  #   # Valid formats: 50G, 50Gi
-  #   size: 50G
+  # BootDevice defines the root device for the VM
+  # Optional: If not specified, the system will use the storage device on which the template is stored.
+  bootDevice:
+    # Size of the boot device
+    # Valid formats: 50G, 50Gi
+    size: 50G
 
   # Tags to apply to the VMs after creation
   # Optional, in place update supported
