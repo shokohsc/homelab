@@ -1,4 +1,4 @@
-apiVersion: platform.{publicDomain}/v1alpha1
+apiVersion: platform.${publicDomain}/v1alpha1
 kind: ProxmoxVmTemplate
 metadata:
   name: vm-genji
