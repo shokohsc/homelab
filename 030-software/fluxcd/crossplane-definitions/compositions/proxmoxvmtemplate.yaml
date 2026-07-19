@@ -1241,3 +1241,7 @@ spec:
               - type: ToCompositeFieldPath
                 fromFieldPath: status.atProvider.outputs.vm_id
                 toFieldPath: status.vmId
+                transforms:
+                  - type: convert
+                    convert:
+                      toType: string
