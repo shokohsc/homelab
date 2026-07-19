@@ -5,13 +5,13 @@ resources:
   - browserless
   - cert-manager
   - cloudflared
-  - crossplane
-  # - csi-proxmox
+  # - crossplane
+  - csi-proxmox
   - external-dns
   - gatekeeper
   - headlamp
   - http-echo
-  # - karpenter-proxmox
+  - karpenter-proxmox
   # - konflate
   - kube-state-metrics
   - kube-system

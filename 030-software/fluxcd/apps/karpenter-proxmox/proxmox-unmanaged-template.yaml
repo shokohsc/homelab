@@ -1,0 +1,9 @@
+apiVersion: karpenter.proxmox.sinextra.dev/v1alpha1
+kind: ProxmoxUnmanagedTemplate
+metadata:
+  name: vm-genji
+spec:
+  templateName: vm-genji
+  tags:
+    - karpenter
+    - talos

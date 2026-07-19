@@ -1,0 +1,1175 @@
+apiVersion: apiextensions.crossplane.io/v1
+kind: Composition
+metadata:
+  name: proxmoxvmtemplates.platform.${publicDomain}
+  labels:
+    provider: opentofu
+spec:
+  mode: Pipeline
+  compositeTypeRef:
+    apiVersion: platform.${publicDomain}/v1alpha1
+    kind: ProxmoxVmTemplate
+  pipeline:
+    - step: patch-and-transform
+      functionRef:
+        name: function-patch-and-transform
+      input:
+        apiVersion: pt.fn.crossplane.io/v1beta1
+        kind: Resources
+        resources:
+          - name: vm-workspace
+            base:
+              apiVersion: opentofu.m.upbound.io/v1beta1
+              kind: Workspace
+              spec:
+                forProvider:
+                  enableTofuCLILogging: true
+                  source: Inline
+                  module: |
+                    variable "node_name" {
+                      type = string
+                    }
+                    variable "vm_id" {
+                      type    = string
+                      default = ""
+                    }
+                    variable "name" {
+                      type    = string
+                      default = ""
+                    }
+                    variable "description" {
+                      type    = string
+                      default = ""
+                    }
+                    variable "template" {
+                      type    = bool
+                      default = false
+                    }
+                    variable "tags" {
+                      type    = string
+                      default = ""
+                    }
+                    variable "pool_id" {
+                      type    = string
+                      default = ""
+                    }
+                    variable "started" {
+                      type    = bool
+                      default = true
+                    }
+                    variable "on_boot" {
+                      type    = bool
+                      default = true
+                    }
+                    variable "protection" {
+                      type    = bool
+                      default = false
+                    }
+                    variable "reboot" {
+                      type    = bool
+                      default = false
+                    }
+                    variable "reboot_after_update" {
+                      type    = bool
+                      default = true
+                    }
+                    variable "acpi" {
+                      type    = bool
+                      default = true
+                    }
+                    variable "bios" {
+                      type    = string
+                      default = ""
+                    }
+                    variable "machine" {
+                      type    = string
+                      default = ""
+                    }
+                    variable "keyboard_layout" {
+                      type    = string
+                      default = ""
+                    }
+                    variable "tablet_device" {
+                      type    = bool
+                      default = true
+                    }
+                    variable "scsi_hardware" {
+                      type    = string
+                      default = ""
+                    }
+                    variable "hotplug" {
+                      type    = string
+                      default = ""
+                    }
+                    variable "cpu_cores" {
+                      type    = number
+                      default = 1
+                    }
+                    variable "cpu_sockets" {
+                      type    = number
+                      default = 1
+                    }
+                    variable "cpu_type" {
+                      type    = string
+                      default = ""
+                    }
+                    variable "cpu_architecture" {
+                      type    = string
+                      default = ""
+                    }
+                    variable "cpu_limit" {
+                      type    = number
+                      default = 0
+                    }
+                    variable "cpu_numa" {
+                      type    = bool
+                      default = false
+                    }
+                    variable "cpu_flags" {
+                      type    = string
+                      default = ""
+                    }
+                    variable "memory_dedicated" {
+                      type    = number
+                      default = 512
+                    }
+                    variable "memory_floating" {
+                      type    = number
+                      default = 0
+                    }
+                    variable "memory_shared" {
+                      type    = number
+                      default = 0
+                    }
+                    variable "memory_hugepages" {
+                      type    = string
+                      default = ""
+                    }
+                    variable "disks" {
+                      type    = string
+                      default = "[]"
+                    }
+                    variable "network_devices" {
+                      type    = string
+                      default = "[]"
+                    }
+                    variable "os_type" {
+                      type    = string
+                      default = ""
+                    }
+                    variable "clone_vm_id" {
+                      type    = string
+                      default = ""
+                    }
+                    variable "clone_datastore_id" {
+                      type    = string
+                      default = ""
+                    }
+                    variable "clone_node_name" {
+                      type    = string
+                      default = ""
+                    }
+                    variable "clone_full" {
+                      type    = bool
+                      default = true
+                    }
+                    variable "init_datastore_id" {
+                      type    = string
+                      default = ""
+                    }
+                    variable "init_interface" {
+                      type    = string
+                      default = ""
+                    }
+                    variable "init_dns" {
+                      type    = string
+                      default = ""
+                    }
+                    variable "init_ip_config" {
+                      type    = string
+                      default = "[]"
+                    }
+                    variable "init_user_account" {
+                      type    = string
+                      default = ""
+                    }
+                    variable "init_user_data_file_id" {
+                      type    = string
+                      default = ""
+                    }
+                    variable "init_network_data_file_id" {
+                      type    = string
+                      default = ""
+                    }
+                    variable "agent_enabled" {
+                      type    = bool
+                      default = false
+                    }
+                    variable "agent_trim" {
+                      type    = bool
+                      default = false
+                    }
+                    variable "agent_type" {
+                      type    = string
+                      default = ""
+                    }
+                    variable "agent_timeout" {
+                      type    = string
+                      default = ""
+                    }
+                    variable "agent_wait_for_ip" {
+                      type    = string
+                      default = ""
+                    }
+                    variable "efi_disk" {
+                      type    = string
+                      default = ""
+                    }
+                    variable "tpm_state" {
+                      type    = string
+                      default = ""
+                    }
+                    variable "vga" {
+                      type    = string
+                      default = ""
+                    }
+                    variable "serial_devices" {
+                      type    = string
+                      default = "[]"
+                    }
+                    variable "usb_devices" {
+                      type    = string
+                      default = "[]"
+                    }
+                    variable "audio_device" {
+                      type    = string
+                      default = ""
+                    }
+                    variable "hostpci_devices" {
+                      type    = string
+                      default = "[]"
+                    }
+                    variable "numa_configs" {
+                      type    = string
+                      default = "[]"
+                    }
+                    variable "rng" {
+                      type    = string
+                      default = ""
+                    }
+                    variable "smbios" {
+                      type    = string
+                      default = ""
+                    }
+                    variable "watchdog" {
+                      type    = string
+                      default = ""
+                    }
+                    variable "virtiofs_mounts" {
+                      type    = string
+                      default = "[]"
+                    }
+
+                    locals {
+                      disks         = jsondecode(var.disks)
+                      network_devices = jsondecode(var.network_devices)
+                      clone_cfg     = var.clone_vm_id != "" ? jsondecode("{\"vm_id\":\"${var.clone_vm_id}\",\"datastore_id\":\"${var.clone_datastore_id}\",\"node_name\":\"${var.clone_node_name}\",\"full\":${var.clone_full}}") : null
+                      init_dns      = var.init_dns != "" ? jsondecode(var.init_dns) : null
+                      init_ip_cfg   = jsondecode(var.init_ip_config)
+                      init_user     = var.init_user_account != "" ? jsondecode(var.init_user_account) : null
+                      agent_wait    = var.agent_wait_for_ip != "" ? jsondecode(var.agent_wait_for_ip) : null
+                      efi_disk      = var.efi_disk != "" ? jsondecode(var.efi_disk) : null
+                      tpm_state     = var.tpm_state != "" ? jsondecode(var.tpm_state) : null
+                      vga_cfg       = var.vga != "" ? jsondecode(var.vga) : null
+                      serial_devs   = jsondecode(var.serial_devices)
+                      usb_devs      = jsondecode(var.usb_devices)
+                      audio_cfg     = var.audio_device != "" ? jsondecode(var.audio_device) : null
+                      hostpci_devs  = jsondecode(var.hostpci_devices)
+                      numa_cfgs     = jsondecode(var.numa_configs)
+                      rng_cfg       = var.rng != "" ? jsondecode(var.rng) : null
+                      smbios_cfg    = var.smbios != "" ? jsondecode(var.smbios) : null
+                      watchdog_cfg  = var.watchdog != "" ? jsondecode(var.watchdog) : null
+                      virtiofs_mnts = jsondecode(var.virtiofs_mounts)
+                    }
+
+                    resource "proxmox_virtual_environment_vm" "this" {
+                      node_name = var.node_name
+                      vm_id     = var.vm_id != "" ? var.vm_id : null
+                      name      = var.name != "" ? var.name : null
+                      description = var.description != "" ? var.description : null
+                      template    = var.template
+                      tags        = var.tags != "" ? split(",", var.tags) : null
+                      pool_id     = var.pool_id != "" ? var.pool_id : null
+                      started     = var.started
+                      on_boot     = var.on_boot
+                      protection  = var.protection
+                      reboot      = var.reboot
+                      reboot_after_update = var.reboot_after_update
+                      acpi        = var.acpi
+                      bios        = var.bios != "" ? var.bios : null
+                      machine     = var.machine != "" ? var.machine : null
+                      keyboard_layout = var.keyboard_layout != "" ? var.keyboard_layout : null
+                      tablet_device   = var.tablet_device
+                      scsi_hardware   = var.scsi_hardware != "" ? var.scsi_hardware : null
+                      hotplug         = var.hotplug != "" ? var.hotplug : null
+
+                      cpu {
+                        cores        = var.cpu_cores
+                        sockets      = var.cpu_sockets
+                        type         = var.cpu_type != "" ? var.cpu_type : null
+                        architecture = var.cpu_architecture != "" ? var.cpu_architecture : null
+                        limit        = var.cpu_limit
+                        numa         = var.cpu_numa
+                        flags        = var.cpu_flags != "" ? var.cpu_flags : null
+                      }
+
+                      memory {
+                        dedicated  = var.memory_dedicated
+                        floating   = var.memory_floating
+                        shared     = var.memory_shared
+                        hugepages  = var.memory_hugepages != "" ? var.memory_hugepages : null
+                      }
+
+                      dynamic "disk" {
+                        for_each = local.disks
+                        content {
+                          interface    = disk.value.interface
+                          datastore_id = lookup(disk.value, "datastore_id", null)
+                          size         = lookup(disk.value, "size", null)
+                          file_format  = lookup(disk.value, "file_format", null)
+                          file_id      = lookup(disk.value, "file_id", null)
+                          cache        = lookup(disk.value, "cache", null)
+                          aio          = lookup(disk.value, "aio", null)
+                          discard      = lookup(disk.value, "discard", null)
+                          iothread     = lookup(disk.value, "iothread", null)
+                          ssd          = lookup(disk.value, "ssd", null)
+                          replicate    = lookup(disk.value, "replicate", null)
+                          backup       = lookup(disk.value, "backup", null)
+                          serial       = lookup(disk.value, "serial", null)
+                          queues       = lookup(disk.value, "queues", null)
+                        }
+                      }
+
+                      dynamic "network_device" {
+                        for_each = local.network_devices
+                        content {
+                          bridge     = lookup(network_device.value, "bridge", "vmbr0")
+                          model      = lookup(network_device.value, "model", null)
+                          firewall   = lookup(network_device.value, "firewall", null)
+                          mac_address = lookup(network_device.value, "mac_address", null)
+                          vlan_id    = lookup(network_device.value, "vlan_id", null)
+                          trunks    = lookup(network_device.value, "trunks", null)
+                          rate_limit = lookup(network_device.value, "rate_limit", null)
+                          queues    = lookup(network_device.value, "queues", null)
+                          mtu       = lookup(network_device.value, "mtu", null)
+                        }
+                      }
+
+                      operating_system {
+                        type = var.os_type != "" ? var.os_type : "other"
+                      }
+
+                      dynamic "clone" {
+                        for_each = local.clone_cfg != null ? [local.clone_cfg] : []
+                        content {
+                          vm_id       = clone.value.vm_id
+                          datastore_id = clone.value.datastore_id != "" ? clone.value.datastore_id : null
+                          node_name   = clone.value.node_name != "" ? clone.value.node_name : null
+                          full        = clone.value.full
+                        }
+                      }
+
+                      initialization {
+                        datastore_id         = var.init_datastore_id != "" ? var.init_datastore_id : null
+                        interface            = var.init_interface != "" ? var.init_interface : null
+                        user_data_file_id    = var.init_user_data_file_id != "" ? var.init_user_data_file_id : null
+                        network_data_file_id = var.init_network_data_file_id != "" ? var.init_network_data_file_id : null
+
+                        dynamic "dns" {
+                          for_each = local.init_dns != null ? [local.init_dns] : []
+                          content {
+                            domain  = lookup(dns.value, "domain", null)
+                            servers = lookup(dns.value, "servers", null)
+                          }
+                        }
+
+                        dynamic "ip_config" {
+                          for_each = local.init_ip_cfg
+                          content {
+                            dynamic "ipv4" {
+                              for_each = lookup(ip_config.value, "ipv4", null) != null ? [ip_config.value.ipv4] : []
+                              content {
+                                address = lookup(ip_config.value, "address", null)
+                                gateway = lookup(ip_config.value, "gateway", null)
+                              }
+                            }
+                            dynamic "ipv6" {
+                              for_each = lookup(ip_config.value, "ipv6", null) != null ? [ip_config.value.ipv6] : []
+                              content {
+                                address = lookup(ip_config.value, "address", null)
+                                gateway = lookup(ip_config.value, "gateway", null)
+                              }
+                            }
+                          }
+                        }
+
+                        dynamic "user_account" {
+                          for_each = local.init_user != null ? [local.init_user] : []
+                          content {
+                            username = lookup(user_account.value, "username", null)
+                            password = lookup(user_account.value, "password", null)
+                            keys     = lookup(user_account.value, "keys", null)
+                          }
+                        }
+                      }
+
+                      agent {
+                        enabled = var.agent_enabled
+                        trim    = var.agent_trim
+                        type    = var.agent_type != "" ? var.agent_type : null
+                        timeout = var.agent_timeout != "" ? var.agent_timeout : null
+
+                        dynamic "wait_for_ip" {
+                          for_each = local.agent_wait != null ? [local.agent_wait] : []
+                          content {
+                            disabled = lookup(wait_for_ip.value, "disabled", null)
+                            ipv4     = lookup(wait_for_ip.value, "ipv4", null)
+                            ipv6     = lookup(wait_for_ip.value, "ipv6", null)
+                          }
+                        }
+                      }
+
+                      dynamic "efi_disk" {
+                        for_each = local.efi_disk != null ? [local.efi_disk] : []
+                        content {
+                          datastore_id      = lookup(efi_disk.value, "datastore_id", null)
+                          file_format       = lookup(efi_disk.value, "file_format", null)
+                          type              = lookup(efi_disk.value, "type", null)
+                          pre_enrolled_keys = lookup(efi_disk.value, "pre_enrolled_keys", null)
+                        }
+                      }
+
+                      dynamic "tpm_state" {
+                        for_each = local.tpm_state != null ? [local.tpm_state] : []
+                        content {
+                          datastore_id = lookup(tpm_state.value, "datastore_id", null)
+                          version      = lookup(tpm_state.value, "version", null)
+                        }
+                      }
+
+                      dynamic "vga" {
+                        for_each = local.vga_cfg != null ? [local.vga_cfg] : []
+                        content {
+                          memory   = lookup(vga.value, "memory", null)
+                          type     = lookup(vga.value, "type", null)
+                          clipboard = lookup(vga.value, "clipboard", null)
+                        }
+                      }
+
+                      dynamic "serial_device" {
+                        for_each = local.serial_devs
+                        content {
+                          device = lookup(serial_device.value, "device", null)
+                        }
+                      }
+
+                      dynamic "usb" {
+                        for_each = local.usb_devs
+                        content {
+                          host    = lookup(usb.value, "host", null)
+                          mapping = lookup(usb.value, "mapping", null)
+                          usb3    = lookup(usb.value, "usb3", null)
+                        }
+                      }
+
+                      dynamic "audio_device" {
+                        for_each = local.audio_cfg != null ? [local.audio_cfg] : []
+                        content {
+                          device  = lookup(audio_device.value, "device", null)
+                          driver  = lookup(audio_device.value, "driver", null)
+                          enabled = lookup(audio_device.value, "enabled", null)
+                        }
+                      }
+
+                      dynamic "hostpci" {
+                        for_each = local.hostpci_devs
+                        content {
+                          device   = hostpci.value.device
+                          id       = lookup(hostpci.value, "id", null)
+                          mapping  = lookup(hostpci.value, "mapping", null)
+                          mdev     = lookup(hostpci.value, "mdev", null)
+                          pcie     = lookup(hostpci.value, "pcie", null)
+                          rombar   = lookup(hostpci.value, "rombar", null)
+                          rom_file = lookup(hostpci.value, "rom_file", null)
+                          xvga     = lookup(hostpci.value, "xvga", null)
+                        }
+                      }
+
+                      dynamic "numa" {
+                        for_each = local.numa_cfgs
+                        content {
+                          device    = numa.value.device
+                          cpus      = numa.value.cpus
+                          memory    = numa.value.memory
+                          hostnodes = lookup(numa.value, "hostnodes", null)
+                          policy    = lookup(numa.value, "policy", null)
+                        }
+                      }
+
+                      dynamic "rng" {
+                        for_each = local.rng_cfg != null ? [local.rng_cfg] : []
+                        content {
+                          source     = rng.value.source
+                          max_bytes  = lookup(rng.value, "max_bytes", null)
+                          period     = lookup(rng.value, "period", null)
+                        }
+                      }
+
+                      dynamic "smbios" {
+                        for_each = local.smbios_cfg != null ? [local.smbios_cfg] : []
+                        content {
+                          family        = lookup(smbios.value, "family", null)
+                          manufacturer  = lookup(smbios.value, "manufacturer", null)
+                          product       = lookup(smbios.value, "product", null)
+                          serial        = lookup(smbios.value, "serial", null)
+                          sku           = lookup(smbios.value, "sku", null)
+                          uuid          = lookup(smbios.value, "uuid", null)
+                          version       = lookup(smbios.value, "version", null)
+                        }
+                      }
+
+                      dynamic "watchdog" {
+                        for_each = local.watchdog_cfg != null ? [local.watchdog_cfg] : []
+                        content {
+                          enabled = lookup(watchdog.value, "enabled", null)
+                          model   = lookup(watchdog.value, "model", null)
+                          action  = lookup(watchdog.value, "action", null)
+                        }
+                      }
+
+                      dynamic "virtiofs" {
+                        for_each = local.virtiofs_mnts
+                        content {
+                          mapping    = virtiofs.value.mapping
+                          cache      = lookup(virtiofs.value, "cache", null)
+                          direct_io = lookup(virtiofs.value, "direct_io", null)
+                          expose_acl   = lookup(virtiofs.value, "expose_acl", null)
+                          expose_xattr = lookup(virtiofs.value, "expose_xattr", null)
+                        }
+                      }
+                    }
+
+                    output "vm_id" {
+                      value = proxmox_virtual_environment_vm.this.vm_id
+                    }
+                  vars:
+                    - key: node_name
+                      value: ""
+                    - key: vm_id
+                      value: ""
+                    - key: name
+                      value: ""
+                    - key: description
+                      value: ""
+                    - key: template
+                      value: "false"
+                    - key: tags
+                      value: ""
+                    - key: pool_id
+                      value: ""
+                    - key: started
+                      value: "true"
+                    - key: on_boot
+                      value: "true"
+                    - key: protection
+                      value: "false"
+                    - key: reboot
+                      value: "false"
+                    - key: reboot_after_update
+                      value: "true"
+                    - key: acpi
+                      value: "true"
+                    - key: bios
+                      value: ""
+                    - key: machine
+                      value: ""
+                    - key: keyboard_layout
+                      value: ""
+                    - key: tablet_device
+                      value: "true"
+                    - key: scsi_hardware
+                      value: ""
+                    - key: hotplug
+                      value: ""
+                    - key: cpu_cores
+                      value: "1"
+                    - key: cpu_sockets
+                      value: "1"
+                    - key: cpu_type
+                      value: ""
+                    - key: cpu_architecture
+                      value: ""
+                    - key: cpu_limit
+                      value: "0"
+                    - key: cpu_numa
+                      value: "false"
+                    - key: cpu_flags
+                      value: ""
+                    - key: memory_dedicated
+                      value: "512"
+                    - key: memory_floating
+                      value: "0"
+                    - key: memory_shared
+                      value: "0"
+                    - key: memory_hugepages
+                      value: ""
+                    - key: disks
+                      value: "[]"
+                    - key: network_devices
+                      value: "[]"
+                    - key: os_type
+                      value: ""
+                    - key: clone_vm_id
+                      value: ""
+                    - key: clone_datastore_id
+                      value: ""
+                    - key: clone_node_name
+                      value: ""
+                    - key: clone_full
+                      value: "true"
+                    - key: init_datastore_id
+                      value: ""
+                    - key: init_interface
+                      value: ""
+                    - key: init_dns
+                      value: ""
+                    - key: init_ip_config
+                      value: "[]"
+                    - key: init_user_account
+                      value: ""
+                    - key: init_user_data_file_id
+                      value: ""
+                    - key: init_network_data_file_id
+                      value: ""
+                    - key: agent_enabled
+                      value: "false"
+                    - key: agent_trim
+                      value: "false"
+                    - key: agent_type
+                      value: ""
+                    - key: agent_timeout
+                      value: ""
+                    - key: agent_wait_for_ip
+                      value: ""
+                    - key: efi_disk
+                      value: ""
+                    - key: tpm_state
+                      value: ""
+                    - key: vga
+                      value: ""
+                    - key: serial_devices
+                      value: "[]"
+                    - key: usb_devices
+                      value: "[]"
+                    - key: audio_device
+                      value: ""
+                    - key: hostpci_devices
+                      value: "[]"
+                    - key: numa_configs
+                      value: "[]"
+                    - key: rng
+                      value: ""
+                    - key: smbios
+                      value: ""
+                    - key: watchdog
+                      value: ""
+                    - key: virtiofs_mounts
+                      value: "[]"
+                providerConfigRef:
+                  name: proxmox
+                  kind: ProviderConfig
+                writeConnectionSecretToRef:
+                  name: opentofu-vm-workspace
+            patches:
+              - type: FromCompositeFieldPath
+                fromFieldPath: spec.nodeName
+                toFieldPath: spec.forProvider.vars[0].value
+              - type: FromCompositeFieldPath
+                fromFieldPath: spec.vmId
+                toFieldPath: spec.forProvider.vars[1].value
+                policy:
+                  fromFieldPath: Optional
+              - type: FromCompositeFieldPath
+                fromFieldPath: spec.name
+                toFieldPath: spec.forProvider.vars[2].value
+                policy:
+                  fromFieldPath: Optional
+              - type: FromCompositeFieldPath
+                fromFieldPath: spec.description
+                toFieldPath: spec.forProvider.vars[3].value
+                policy:
+                  fromFieldPath: Optional
+              - type: FromCompositeFieldPath
+                fromFieldPath: spec.template
+                toFieldPath: spec.forProvider.vars[4].value
+                policy:
+                  fromFieldPath: Optional
+                transforms:
+                  - type: convert
+                    convert:
+                      toType: string
+              - type: FromCompositeFieldPath
+                fromFieldPath: spec.tags
+                toFieldPath: spec.forProvider.vars[5].value
+                policy:
+                  fromFieldPath: Optional
+                transforms:
+                  - type: string
+                    string:
+                      type: Join
+                      join:
+                        separator: ","
+              - type: FromCompositeFieldPath
+                fromFieldPath: spec.poolId
+                toFieldPath: spec.forProvider.vars[6].value
+                policy:
+                  fromFieldPath: Optional
+              - type: FromCompositeFieldPath
+                fromFieldPath: spec.started
+                toFieldPath: spec.forProvider.vars[7].value
+                policy:
+                  fromFieldPath: Optional
+                transforms:
+                  - type: convert
+                    convert:
+                      toType: string
+              - type: FromCompositeFieldPath
+                fromFieldPath: spec.onBoot
+                toFieldPath: spec.forProvider.vars[8].value
+                policy:
+                  fromFieldPath: Optional
+                transforms:
+                  - type: convert
+                    convert:
+                      toType: string
+              - type: FromCompositeFieldPath
+                fromFieldPath: spec.protection
+                toFieldPath: spec.forProvider.vars[9].value
+                policy:
+                  fromFieldPath: Optional
+                transforms:
+                  - type: convert
+                    convert:
+                      toType: string
+              - type: FromCompositeFieldPath
+                fromFieldPath: spec.reboot
+                toFieldPath: spec.forProvider.vars[10].value
+                policy:
+                  fromFieldPath: Optional
+                transforms:
+                  - type: convert
+                    convert:
+                      toType: string
+              - type: FromCompositeFieldPath
+                fromFieldPath: spec.rebootAfterUpdate
+                toFieldPath: spec.forProvider.vars[11].value
+                policy:
+                  fromFieldPath: Optional
+                transforms:
+                  - type: convert
+                    convert:
+                      toType: string
+              - type: FromCompositeFieldPath
+                fromFieldPath: spec.acpi
+                toFieldPath: spec.forProvider.vars[12].value
+                policy:
+                  fromFieldPath: Optional
+                transforms:
+                  - type: convert
+                    convert:
+                      toType: string
+              - type: FromCompositeFieldPath
+                fromFieldPath: spec.bios
+                toFieldPath: spec.forProvider.vars[13].value
+                policy:
+                  fromFieldPath: Optional
+              - type: FromCompositeFieldPath
+                fromFieldPath: spec.machine
+                toFieldPath: spec.forProvider.vars[14].value
+                policy:
+                  fromFieldPath: Optional
+              - type: FromCompositeFieldPath
+                fromFieldPath: spec.keyboardLayout
+                toFieldPath: spec.forProvider.vars[15].value
+                policy:
+                  fromFieldPath: Optional
+              - type: FromCompositeFieldPath
+                fromFieldPath: spec.tabletDevice
+                toFieldPath: spec.forProvider.vars[16].value
+                policy:
+                  fromFieldPath: Optional
+                transforms:
+                  - type: convert
+                    convert:
+                      toType: string
+              - type: FromCompositeFieldPath
+                fromFieldPath: spec.scsiHardware
+                toFieldPath: spec.forProvider.vars[17].value
+                policy:
+                  fromFieldPath: Optional
+              - type: FromCompositeFieldPath
+                fromFieldPath: spec.hotplug
+                toFieldPath: spec.forProvider.vars[18].value
+                policy:
+                  fromFieldPath: Optional
+              - type: FromCompositeFieldPath
+                fromFieldPath: spec.cpu.cores
+                toFieldPath: spec.forProvider.vars[19].value
+                policy:
+                  fromFieldPath: Optional
+                transforms:
+                  - type: convert
+                    convert:
+                      toType: string
+              - type: FromCompositeFieldPath
+                fromFieldPath: spec.cpu.sockets
+                toFieldPath: spec.forProvider.vars[20].value
+                policy:
+                  fromFieldPath: Optional
+                transforms:
+                  - type: convert
+                    convert:
+                      toType: string
+              - type: FromCompositeFieldPath
+                fromFieldPath: spec.cpu.type
+                toFieldPath: spec.forProvider.vars[21].value
+                policy:
+                  fromFieldPath: Optional
+              - type: FromCompositeFieldPath
+                fromFieldPath: spec.cpu.architecture
+                toFieldPath: spec.forProvider.vars[22].value
+                policy:
+                  fromFieldPath: Optional
+              - type: FromCompositeFieldPath
+                fromFieldPath: spec.cpu.limit
+                toFieldPath: spec.forProvider.vars[23].value
+                policy:
+                  fromFieldPath: Optional
+                transforms:
+                  - type: convert
+                    convert:
+                      toType: string
+              - type: FromCompositeFieldPath
+                fromFieldPath: spec.cpu.numa
+                toFieldPath: spec.forProvider.vars[24].value
+                policy:
+                  fromFieldPath: Optional
+                transforms:
+                  - type: convert
+                    convert:
+                      toType: string
+              - type: FromCompositeFieldPath
+                fromFieldPath: spec.cpu.flags
+                toFieldPath: spec.forProvider.vars[25].value
+                policy:
+                  fromFieldPath: Optional
+              - type: FromCompositeFieldPath
+                fromFieldPath: spec.memory.dedicated
+                toFieldPath: spec.forProvider.vars[26].value
+                policy:
+                  fromFieldPath: Optional
+                transforms:
+                  - type: convert
+                    convert:
+                      toType: string
+              - type: FromCompositeFieldPath
+                fromFieldPath: spec.memory.floating
+                toFieldPath: spec.forProvider.vars[27].value
+                policy:
+                  fromFieldPath: Optional
+                transforms:
+                  - type: convert
+                    convert:
+                      toType: string
+              - type: FromCompositeFieldPath
+                fromFieldPath: spec.memory.shared
+                toFieldPath: spec.forProvider.vars[28].value
+                policy:
+                  fromFieldPath: Optional
+                transforms:
+                  - type: convert
+                    convert:
+                      toType: string
+              - type: FromCompositeFieldPath
+                fromFieldPath: spec.memory.hugepages
+                toFieldPath: spec.forProvider.vars[29].value
+                policy:
+                  fromFieldPath: Optional
+              - type: FromCompositeFieldPath
+                fromFieldPath: spec.disk
+                toFieldPath: spec.forProvider.vars[30].value
+                policy:
+                  fromFieldPath: Optional
+                transforms:
+                  - type: string
+                    string:
+                      type: Format
+                      fmt: "%s"
+              - type: FromCompositeFieldPath
+                fromFieldPath: spec.networkDevice
+                toFieldPath: spec.forProvider.vars[31].value
+                policy:
+                  fromFieldPath: Optional
+                transforms:
+                  - type: string
+                    string:
+                      type: Format
+                      fmt: "%s"
+              - type: FromCompositeFieldPath
+                fromFieldPath: spec.operatingSystem.type
+                toFieldPath: spec.forProvider.vars[32].value
+                policy:
+                  fromFieldPath: Optional
+              - type: FromCompositeFieldPath
+                fromFieldPath: spec.clone.vmId
+                toFieldPath: spec.forProvider.vars[33].value
+                policy:
+                  fromFieldPath: Optional
+              - type: FromCompositeFieldPath
+                fromFieldPath: spec.clone.datastoreId
+                toFieldPath: spec.forProvider.vars[34].value
+                policy:
+                  fromFieldPath: Optional
+              - type: FromCompositeFieldPath
+                fromFieldPath: spec.clone.nodeName
+                toFieldPath: spec.forProvider.vars[35].value
+                policy:
+                  fromFieldPath: Optional
+              - type: FromCompositeFieldPath
+                fromFieldPath: spec.clone.full
+                toFieldPath: spec.forProvider.vars[36].value
+                policy:
+                  fromFieldPath: Optional
+                transforms:
+                  - type: convert
+                    convert:
+                      toType: string
+              - type: FromCompositeFieldPath
+                fromFieldPath: spec.initialization.datastoreId
+                toFieldPath: spec.forProvider.vars[37].value
+                policy:
+                  fromFieldPath: Optional
+              - type: FromCompositeFieldPath
+                fromFieldPath: spec.initialization.interface
+                toFieldPath: spec.forProvider.vars[38].value
+                policy:
+                  fromFieldPath: Optional
+              - type: FromCompositeFieldPath
+                fromFieldPath: spec.initialization.dns
+                toFieldPath: spec.forProvider.vars[39].value
+                policy:
+                  fromFieldPath: Optional
+                transforms:
+                  - type: string
+                    string:
+                      type: Format
+                      fmt: "%s"
+              - type: FromCompositeFieldPath
+                fromFieldPath: spec.initialization.ipConfig
+                toFieldPath: spec.forProvider.vars[40].value
+                policy:
+                  fromFieldPath: Optional
+                transforms:
+                  - type: string
+                    string:
+                      type: Format
+                      fmt: "%s"
+              - type: FromCompositeFieldPath
+                fromFieldPath: spec.initialization.userAccount
+                toFieldPath: spec.forProvider.vars[41].value
+                policy:
+                  fromFieldPath: Optional
+                transforms:
+                  - type: string
+                    string:
+                      type: Format
+                      fmt: "%s"
+              - type: FromCompositeFieldPath
+                fromFieldPath: spec.initialization.userDataFileId
+                toFieldPath: spec.forProvider.vars[42].value
+                policy:
+                  fromFieldPath: Optional
+              - type: FromCompositeFieldPath
+                fromFieldPath: spec.initialization.networkDataFileId
+                toFieldPath: spec.forProvider.vars[43].value
+                policy:
+                  fromFieldPath: Optional
+              - type: FromCompositeFieldPath
+                fromFieldPath: spec.agent.enabled
+                toFieldPath: spec.forProvider.vars[44].value
+                policy:
+                  fromFieldPath: Optional
+                transforms:
+                  - type: convert
+                    convert:
+                      toType: string
+              - type: FromCompositeFieldPath
+                fromFieldPath: spec.agent.trim
+                toFieldPath: spec.forProvider.vars[45].value
+                policy:
+                  fromFieldPath: Optional
+                transforms:
+                  - type: convert
+                    convert:
+                      toType: string
+              - type: FromCompositeFieldPath
+                fromFieldPath: spec.agent.type
+                toFieldPath: spec.forProvider.vars[46].value
+                policy:
+                  fromFieldPath: Optional
+              - type: FromCompositeFieldPath
+                fromFieldPath: spec.agent.timeout
+                toFieldPath: spec.forProvider.vars[47].value
+                policy:
+                  fromFieldPath: Optional
+              - type: FromCompositeFieldPath
+                fromFieldPath: spec.agent.waitForIp
+                toFieldPath: spec.forProvider.vars[48].value
+                policy:
+                  fromFieldPath: Optional
+                transforms:
+                  - type: string
+                    string:
+                      type: Format
+                      fmt: "%s"
+              - type: FromCompositeFieldPath
+                fromFieldPath: spec.efiDisk
+                toFieldPath: spec.forProvider.vars[49].value
+                policy:
+                  fromFieldPath: Optional
+                transforms:
+                  - type: string
+                    string:
+                      type: Format
+                      fmt: "%s"
+              - type: FromCompositeFieldPath
+                fromFieldPath: spec.tpmState
+                toFieldPath: spec.forProvider.vars[50].value
+                policy:
+                  fromFieldPath: Optional
+                transforms:
+                  - type: string
+                    string:
+                      type: Format
+                      fmt: "%s"
+              - type: FromCompositeFieldPath
+                fromFieldPath: spec.vga
+                toFieldPath: spec.forProvider.vars[51].value
+                policy:
+                  fromFieldPath: Optional
+                transforms:
+                  - type: string
+                    string:
+                      type: Format
+                      fmt: "%s"
+              - type: FromCompositeFieldPath
+                fromFieldPath: spec.serialDevice
+                toFieldPath: spec.forProvider.vars[52].value
+                policy:
+                  fromFieldPath: Optional
+                transforms:
+                  - type: string
+                    string:
+                      type: Format
+                      fmt: "%s"
+              - type: FromCompositeFieldPath
+                fromFieldPath: spec.usb
+                toFieldPath: spec.forProvider.vars[53].value
+                policy:
+                  fromFieldPath: Optional
+                transforms:
+                  - type: string
+                    string:
+                      type: Format
+                      fmt: "%s"
+              - type: FromCompositeFieldPath
+                fromFieldPath: spec.audioDevice
+                toFieldPath: spec.forProvider.vars[54].value
+                policy:
+                  fromFieldPath: Optional
+                transforms:
+                  - type: string
+                    string:
+                      type: Format
+                      fmt: "%s"
+              - type: FromCompositeFieldPath
+                fromFieldPath: spec.hostpci
+                toFieldPath: spec.forProvider.vars[55].value
+                policy:
+                  fromFieldPath: Optional
+                transforms:
+                  - type: string
+                    string:
+                      type: Format
+                      fmt: "%s"
+              - type: FromCompositeFieldPath
+                fromFieldPath: spec.numa
+                toFieldPath: spec.forProvider.vars[56].value
+                policy:
+                  fromFieldPath: Optional
+                transforms:
+                  - type: string
+                    string:
+                      type: Format
+                      fmt: "%s"
+              - type: FromCompositeFieldPath
+                fromFieldPath: spec.rng
+                toFieldPath: spec.forProvider.vars[57].value
+                policy:
+                  fromFieldPath: Optional
+                transforms:
+                  - type: string
+                    string:
+                      type: Format
+                      fmt: "%s"
+              - type: FromCompositeFieldPath
+                fromFieldPath: spec.smbios
+                toFieldPath: spec.forProvider.vars[58].value
+                policy:
+                  fromFieldPath: Optional
+                transforms:
+                  - type: string
+                    string:
+                      type: Format
+                      fmt: "%s"
+              - type: FromCompositeFieldPath
+                fromFieldPath: spec.watchdog
+                toFieldPath: spec.forProvider.vars[59].value
+                policy:
+                  fromFieldPath: Optional
+                transforms:
+                  - type: string
+                    string:
+                      type: Format
+                      fmt: "%s"
+              - type: FromCompositeFieldPath
+                fromFieldPath: spec.virtiofs
+                toFieldPath: spec.forProvider.vars[60].value
+                policy:
+                  fromFieldPath: Optional
+                transforms:
+                  - type: string
+                    string:
+                      type: Format
+                      fmt: "%s"
+              - type: FromCompositeFieldPath
+                fromFieldPath: metadata.name
+                toFieldPath: spec.writeConnectionSecretToRef.name
+                transforms:
+                  - type: string
+                    string:
+                      type: Format
+                      fmt: "%s-vm-workspace"
+              - type: ToCompositeFieldPath
+                fromFieldPath: status.atProvider.outputs.vm_id
+                toFieldPath: status.vmId

@@ -2,7 +2,46 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 namespace: karpenter-proxmox
 resources:
+  - https://github.com/sergelogvinov/karpenter-provider-proxmox/raw/refs/heads/main/docs/deploy/karpenter-provider-proxmox.yml
   - namespace.yaml
   - provider-config.yaml
   - proxmoxidentity.yaml
   - secret.yaml
+patches:
+  - patch: |
+      apiVersion: apps/v1
+      kind: Deployment
+      metadata:
+        name: all
+      spec:
+        template:
+          spec:
+            nodeSelector: null
+            containers:
+              - name: karpenter-provider-proxmox
+                volumeMounts:
+                  - mountPath: /etc/ssl/certs/ca-certs.pem
+                    subPath: ca-certs.pem
+                    name: tls
+            affinity:
+              nodeAffinity:
+                preferredDuringSchedulingIgnoredDuringExecution:
+                - weight: 1
+                  preference:
+                    matchExpressions:
+                    - key: topology.kubernetes.io/region
+                      operator: In
+                      values:
+                      - metal
+            volumes:
+              - name: tls
+                configMap:
+                  name: homelab-ca
+                  defaultMode: 0644
+            tolerations:
+              - effect: NoSchedule
+                key: node.kubernetes.io/nuc
+                operator: Exists
+    target:
+      kind: Deployment
+      labelSelector: app.kubernetes.io/name=karpenter-provider-proxmox

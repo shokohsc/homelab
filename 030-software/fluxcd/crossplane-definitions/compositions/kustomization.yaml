@@ -3,3 +3,4 @@ kind: Kustomization
 resources:
   - proxmoxidentity.yaml
   - proxmoxcephpool.yaml
+  - proxmoxvmtemplate.yaml

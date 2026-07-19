@@ -1,0 +1,495 @@
+apiVersion: apiextensions.crossplane.io/v2
+kind: CompositeResourceDefinition
+metadata:
+  name: proxmoxvmtemplates.platform.${publicDomain}
+spec:
+  scope: Namespaced
+  group: platform.${publicDomain}
+  names:
+    kind: ProxmoxVmTemplate
+    plural: proxmoxvmtemplates
+  versions:
+    - name: v1alpha1
+      served: true
+      referenceable: true
+      schema:
+        openAPIV3Schema:
+          type: object
+          properties:
+            spec:
+              type: object
+              properties:
+                nodeName:
+                  type: string
+                  description: Target Proxmox node name
+                vmId:
+                  type: string
+                  description: VM identifier (auto-assigned if empty)
+                name:
+                  type: string
+                  description: VM name (must be valid DNS name)
+                description:
+                  type: string
+                  description: VM description
+                template:
+                  type: boolean
+                  description: Convert VM to template after creation
+                tags:
+                  type: array
+                  items:
+                    type: string
+                  description: Tags applied to the VM
+                poolId:
+                  type: string
+                  description: Proxmox resource pool assignment
+                started:
+                  type: boolean
+                  description: Start VM after creation
+                onBoot:
+                  type: boolean
+                  description: Start VM during host boot
+                protection:
+                  type: boolean
+                  description: Disable remove/delete operations
+                reboot:
+                  type: boolean
+                  description: Reboot after initial creation
+                rebootAfterUpdate:
+                  type: boolean
+                  description: Auto-reboot to apply changes
+                acpi:
+                  type: boolean
+                  description: Enable ACPI
+                bios:
+                  type: string
+                  description: "BIOS type: seabios or ovmf"
+                machine:
+                  type: string
+                  description: "VM machine type: pc or q35"
+                keyboardLayout:
+                  type: string
+                  description: Keyboard layout
+                tabletDevice:
+                  type: boolean
+                  description: USB tablet device
+                scsiHardware:
+                  type: string
+                  description: SCSI controller type
+                hotplug:
+                  type: string
+                  description: "Hotplug capabilities: disk,network,usb,memory,cpu"
+                cpu:
+                  type: object
+                  description: CPU configuration
+                  properties:
+                    cores:
+                      type: number
+                      description: Number of CPU cores
+                    sockets:
+                      type: number
+                      description: Number of CPU sockets
+                    type:
+                      type: string
+                      description: "CPU type: host, qemu64, x86-64-v2-AES, etc."
+                    architecture:
+                      type: string
+                      description: "CPU architecture: x86_64 or aarch64"
+                    limit:
+                      type: number
+                      description: CPU limit (0-128, supports fractional)
+                    numa:
+                      type: boolean
+                      description: Enable NUMA
+                    flags:
+                      type: string
+                      description: "CPU flags, e.g. +aes,+pcid"
+                memory:
+                  type: object
+                  description: Memory configuration
+                  properties:
+                    dedicated:
+                      type: number
+                      description: Dedicated memory in MB
+                    floating:
+                      type: number
+                      description: Floating memory in MB (enables ballooning)
+                    shared:
+                      type: number
+                      description: Shared memory in MB
+                    hugepages:
+                      type: string
+                      description: "Hugepages: 2, 1024, or any"
+                disk:
+                  type: array
+                  description: Disk devices
+                  items:
+                    type: object
+                    properties:
+                      interface:
+                        type: string
+                        description: "Disk interface, e.g. scsi0, virtio0"
+                      datastoreId:
+                        type: string
+                        description: Datastore ID
+                      size:
+                        type: number
+                        description: Disk size in GB
+                      fileFormat:
+                        type: string
+                        description: "File format: qcow2, raw, vmdk"
+                      fileId:
+                        type: string
+                        description: File ID for cloud images
+                      cache:
+                        type: string
+                        description: "Cache mode: none, writethrough, writeback, etc."
+                      aio:
+                        type: string
+                        description: "AIO mode: io_uring, native, threads"
+                      discard:
+                        type: string
+                        description: "Discard mode: on or ignore"
+                      iothread:
+                        type: boolean
+                        description: Enable IOthread
+                      ssd:
+                        type: boolean
+                        description: Enable SSD emulation
+                      replicate:
+                        type: boolean
+                        description: Enable replication
+                      backup:
+                        type: boolean
+                        description: Include in backups
+                      serial:
+                        type: string
+                        description: Disk serial number
+                      queues:
+                        type: number
+                        description: Number of IO queues
+                networkDevice:
+                  type: array
+                  description: Network devices
+                  items:
+                    type: object
+                    properties:
+                      bridge:
+                        type: string
+                        description: Network bridge
+                      model:
+                        type: string
+                        description: "Network model: e1000, virtio, vmxnet3, etc."
+                      firewall:
+                        type: boolean
+                        description: Enable firewall
+                      macAddress:
+                        type: string
+                        description: MAC address
+                      vlanId:
+                        type: number
+                        description: VLAN tag
+                      trunks:
+                        type: string
+                        description: Trunk VLANs (semicolon-separated)
+                      rateLimit:
+                        type: number
+                        description: Rate limit in MB/s
+                      queues:
+                        type: number
+                        description: Number of queues (VirtIO: 1-64)
+                      mtu:
+                        type: number
+                        description: MTU (VirtIO only)
+                operatingSystem:
+                  type: object
+                  description: Operating system type
+                  properties:
+                    type:
+                      type: string
+                      description: "OS type: l24, l26, other, win10, etc."
+                clone:
+                  type: object
+                  description: Clone from existing VM
+                  properties:
+                    vmId:
+                      type: string
+                      description: Source VM ID to clone
+                    datastoreId:
+                      type: string
+                      description: Target datastore for clone
+                    nodeName:
+                      type: string
+                      description: Source node name
+                    full:
+                      type: boolean
+                      description: Full clone (true) or linked clone (false)
+                initialization:
+                  type: object
+                  description: Cloud-init configuration
+                  properties:
+                    datastoreId:
+                      type: string
+                      description: Cloud-init datastore
+                    interface:
+                      type: string
+                      description: Cloud-init interface
+                    dns:
+                      type: object
+                      properties:
+                        domain:
+                          type: string
+                        servers:
+                          type: array
+                          items:
+                            type: string
+                    ipConfig:
+                      type: array
+                      description: IP configuration per NIC
+                      items:
+                        type: object
+                        properties:
+                          ipv4:
+                            type: object
+                            properties:
+                              address:
+                                type: string
+                              gateway:
+                                type: string
+                          ipv6:
+                            type: object
+                            properties:
+                              address:
+                                type: string
+                              gateway:
+                                type: string
+                    userAccount:
+                      type: object
+                      properties:
+                        username:
+                          type: string
+                        password:
+                          type: string
+                        keys:
+                          type: array
+                          items:
+                            type: string
+                    userDataFileId:
+                      type: string
+                    networkDataFileId:
+                      type: string
+                agent:
+                  type: object
+                  description: QEMU Guest Agent configuration
+                  properties:
+                    enabled:
+                      type: boolean
+                      description: Enable QEMU Guest Agent
+                    trim:
+                      type: boolean
+                      description: Enable FSTRIM
+                    type:
+                      type: string
+                      description: "Agent type: virtio or isa"
+                    timeout:
+                      type: string
+                      description: Agent timeout
+                    waitForIp:
+                      type: object
+                      properties:
+                        disabled:
+                          type: boolean
+                        ipv4:
+                          type: boolean
+                        ipv6:
+                          type: boolean
+                efiDisk:
+                  type: object
+                  description: EFI disk (required if bios=ovmf)
+                  properties:
+                    datastoreId:
+                      type: string
+                    fileFormat:
+                      type: string
+                    type:
+                      type: string
+                      description: "EFI type: 2m or 4m"
+                    preEnrolledKeys:
+                      type: boolean
+                tpmState:
+                  type: object
+                  description: TPM state device
+                  properties:
+                    datastoreId:
+                      type: string
+                    version:
+                      type: string
+                      description: "TPM version: v1.2 or v2.0"
+                vga:
+                  type: object
+                  description: VGA display device
+                  properties:
+                    memory:
+                      type: number
+                      description: VGA memory in MB
+                    type:
+                      type: string
+                      description: "VGA type: std, cirrus, none, qxl, serial0-3, vmware, etc."
+                    clipboard:
+                      type: string
+                      description: "Clipboard type, e.g. vnc"
+                serialDevice:
+                  type: array
+                  description: Serial devices
+                  items:
+                    type: object
+                    properties:
+                      device:
+                        type: string
+                        description: "Serial device: socket or /dev/* path"
+                usb:
+                  type: array
+                  description: USB devices
+                  items:
+                    type: object
+                    properties:
+                      host:
+                        type: string
+                        description: USB device/port or spice
+                      mapping:
+                        type: string
+                        description: USB resource mapping name
+                      usb3:
+                        type: boolean
+                        description: Enable USB 3.0
+                audioDevice:
+                  type: object
+                  description: Audio device
+                  properties:
+                    device:
+                      type: string
+                      description: "Audio device: intel-hda, ac97, etc."
+                    driver:
+                      type: string
+                      description: "Audio driver: spice"
+                    enabled:
+                      type: boolean
+                hostpci:
+                  type: array
+                  description: PCI passthrough devices
+                  items:
+                    type: object
+                    properties:
+                      device:
+                        type: string
+                        description: "PCI device, e.g. hostpci0"
+                      id:
+                        type: string
+                        description: PCI device ID
+                      mapping:
+                        type: string
+                        description: Cluster resource mapping name
+                      mdev:
+                        type: string
+                        description: MDev type
+                      pcie:
+                        type: boolean
+                        description: Enable PCIe
+                      rombar:
+                        type: boolean
+                        description: Enable ROM bar
+                      romFile:
+                        type: string
+                        description: ROM file path
+                      xvga:
+                        type: boolean
+                        description: Use as default VGA
+                numa:
+                  type: array
+                  description: NUMA configuration
+                  items:
+                    type: object
+                    properties:
+                      device:
+                        type: string
+                        description: "NUMA device, e.g. numa0"
+                      cpus:
+                        type: string
+                        description: "CPU IDs, e.g. 0-7;16-31"
+                      memory:
+                        type: number
+                        description: Memory in MB
+                      hostnodes:
+                        type: string
+                        description: Host nodes
+                      policy:
+                        type: string
+                        description: "NUMA policy: interleave, preferred, bind"
+                rng:
+                  type: object
+                  description: Random number generator
+                  properties:
+                    source:
+                      type: string
+                      description: RNG source
+                    maxBytes:
+                      type: number
+                      description: Max bytes per period
+                    period:
+                      type: number
+                      description: Period in ms
+                smbios:
+                  type: object
+                  description: SMBIOS system information
+                  properties:
+                    family:
+                      type: string
+                    manufacturer:
+                      type: string
+                    product:
+                      type: string
+                    serial:
+                      type: string
+                    sku:
+                      type: string
+                    uuid:
+                      type: string
+                    version:
+                      type: string
+                watchdog:
+                  type: object
+                  description: Watchdog device
+                  properties:
+                    enabled:
+                      type: boolean
+                    model:
+                      type: string
+                      description: "Watchdog model: i6300esb or ib700"
+                    action:
+                      type: string
+                      description: "Watchdog action: none, reset, shutdown, etc."
+                virtiofs:
+                  type: array
+                  description: VirtioFS filesystem shares
+                  items:
+                    type: object
+                    properties:
+                      mapping:
+                        type: string
+                        description: Resource mapping name
+                      cache:
+                        type: string
+                        description: "Cache mode: auto, always, metadata, never"
+                      directIo:
+                        type: boolean
+                      exposeAcl:
+                        type: boolean
+                      exposeXattr:
+                        type: boolean
+              required:
+                - nodeName
+            status:
+              type: object
+              properties:
+                vmId:
+                  type: string
+                  description: The Proxmox VM ID
