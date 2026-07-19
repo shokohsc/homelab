@@ -103,6 +103,10 @@ spec:
                       type    = string
                       default = ""
                     }
+                    variable "boot_order" {
+                      type    = string
+                      default = "[]"
+                    }
                     variable "cpu_cores" {
                       type    = number
                       default = 1
@@ -147,6 +151,10 @@ spec:
                       type    = string
                       default = ""
                     }
+                    variable "memory_keep_hugepages" {
+                      type    = bool
+                      default = false
+                    }
                     variable "disks" {
                       type    = string
                       default = "[]"
@@ -174,6 +182,10 @@ spec:
                     variable "clone_full" {
                       type    = bool
                       default = true
+                    }
+                    variable "clone_retries" {
+                      type    = number
+                      default = 0
                     }
                     variable "init_datastore_id" {
                       type    = string
@@ -275,7 +287,7 @@ spec:
                     locals {
                       disks         = jsondecode(var.disks)
                       network_devices = jsondecode(var.network_devices)
-                      clone_cfg     = var.clone_vm_id != "" ? jsondecode("{\"vm_id\":\"${var.clone_vm_id}\",\"datastore_id\":\"${var.clone_datastore_id}\",\"node_name\":\"${var.clone_node_name}\",\"full\":${var.clone_full}}") : null
+                      clone_cfg     = var.clone_vm_id != "" ? jsondecode("{\"vm_id\":\"${var.clone_vm_id}\",\"datastore_id\":\"${var.clone_datastore_id}\",\"node_name\":\"${var.clone_node_name}\",\"full\":${var.clone_full},\"retries\":${var.clone_retries}}") : null
                       init_dns      = var.init_dns != "" ? jsondecode(var.init_dns) : null
                       init_ip_cfg   = jsondecode(var.init_ip_config)
                       init_user     = var.init_user_account != "" ? jsondecode(var.init_user_account) : null
@@ -314,6 +326,7 @@ spec:
                       tablet_device   = var.tablet_device
                       scsi_hardware   = var.scsi_hardware != "" ? var.scsi_hardware : null
                       hotplug         = var.hotplug != "" ? var.hotplug : null
+                      boot_order      = jsondecode(var.boot_order)
 
                       cpu {
                         cores        = var.cpu_cores
@@ -330,6 +343,7 @@ spec:
                         floating   = var.memory_floating
                         shared     = var.memory_shared
                         hugepages  = var.memory_hugepages != "" ? var.memory_hugepages : null
+                        keep_hugepages = var.memory_keep_hugepages
                       }
 
                       dynamic "disk" {
@@ -349,6 +363,22 @@ spec:
                           backup       = lookup(disk.value, "backup", null)
                           serial       = lookup(disk.value, "serial", null)
                           queues       = lookup(disk.value, "queues", null)
+                          import_from  = lookup(disk.value, "import_from", null)
+                          path_in_datastore = lookup(disk.value, "path_in_datastore", null)
+
+                          dynamic "speed" {
+                            for_each = lookup(disk.value, "speed", null) != null ? [disk.value.speed] : []
+                            content {
+                              iops_read          = lookup(speed.value, "iops_read", null)
+                              iops_read_burstable = lookup(speed.value, "iops_read_burstable", null)
+                              iops_write         = lookup(speed.value, "iops_write", null)
+                              iops_write_burstable = lookup(speed.value, "iops_write_burstable", null)
+                              read               = lookup(speed.value, "read", null)
+                              read_burstable     = lookup(speed.value, "read_burstable", null)
+                              write              = lookup(speed.value, "write", null)
+                              write_burstable    = lookup(speed.value, "write_burstable", null)
+                            }
+                          }
                         }
                       }
 
@@ -364,6 +394,7 @@ spec:
                           rate_limit = lookup(network_device.value, "rate_limit", null)
                           queues    = lookup(network_device.value, "queues", null)
                           mtu       = lookup(network_device.value, "mtu", null)
+                          disconnected = lookup(network_device.value, "disconnected", null)
                         }
                       }
 
@@ -378,6 +409,7 @@ spec:
                           datastore_id = clone.value.datastore_id != "" ? clone.value.datastore_id : null
                           node_name   = clone.value.node_name != "" ? clone.value.node_name : null
                           full        = clone.value.full
+                          retries     = lookup(clone.value, "retries", null)
                         }
                       }
 
@@ -687,6 +719,12 @@ spec:
                       value: ""
                     - key: virtiofs_mounts
                       value: "[]"
+                    - key: boot_order
+                      value: "[]"
+                    - key: clone_retries
+                      value: "0"
+                    - key: memory_keep_hugepages
+                      value: "false"
                 providerConfigRef:
                   name: proxmox
                   kind: ProviderConfig
@@ -1164,6 +1202,34 @@ spec:
                     string:
                       type: Format
                       fmt: "%s"
+              - type: FromCompositeFieldPath
+                fromFieldPath: spec.bootOrder
+                toFieldPath: spec.forProvider.vars[61].value
+                policy:
+                  fromFieldPath: Optional
+                transforms:
+                  - type: string
+                    string:
+                      type: Format
+                      fmt: "%s"
+              - type: FromCompositeFieldPath
+                fromFieldPath: spec.clone.retries
+                toFieldPath: spec.forProvider.vars[62].value
+                policy:
+                  fromFieldPath: Optional
+                transforms:
+                  - type: convert
+                    convert:
+                      toType: string
+              - type: FromCompositeFieldPath
+                fromFieldPath: spec.memory.keepHugepages
+                toFieldPath: spec.forProvider.vars[63].value
+                policy:
+                  fromFieldPath: Optional
+                transforms:
+                  - type: convert
+                    convert:
+                      toType: string
               - type: FromCompositeFieldPath
                 fromFieldPath: metadata.name
                 toFieldPath: spec.writeConnectionSecretToRef.name

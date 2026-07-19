@@ -78,6 +78,11 @@ spec:
                 hotplug:
                   type: string
                   description: "Hotplug capabilities: disk,network,usb,memory,cpu"
+                bootOrder:
+                  type: array
+                  description: Devices to boot from in order
+                  items:
+                    type: string
                 cpu:
                   type: object
                   description: CPU configuration
@@ -119,6 +124,9 @@ spec:
                     hugepages:
                       type: string
                       description: "Hugepages: 2, 1024, or any"
+                    keepHugepages:
+                      type: boolean
+                      description: Keep hugepages after VM is stopped
                 disk:
                   type: array
                   description: Disk devices
@@ -167,6 +175,40 @@ spec:
                       queues:
                         type: number
                         description: Number of IO queues
+                      speed:
+                        type: object
+                        description: Disk speed limits
+                        properties:
+                          iopsRead:
+                            type: number
+                            description: Max read IOPS
+                          iopsReadBurstable:
+                            type: number
+                            description: Max burstable read IOPS
+                          iopsWrite:
+                            type: number
+                            description: Max write IOPS
+                          iopsWriteBurstable:
+                            type: number
+                            description: Max burstable write IOPS
+                          read:
+                            type: number
+                            description: Max read speed in MB/s
+                          readBurstable:
+                            type: number
+                            description: Max burstable read speed in MB/s
+                          write:
+                            type: number
+                            description: Max write speed in MB/s
+                          writeBurstable:
+                            type: number
+                            description: Max burstable write speed in MB/s
+                      importFrom:
+                        type: string
+                        description: File ID for disk image import (uncompressed)
+                      pathInDatastore:
+                        type: string
+                        description: In-datastore path to disk image (experimental)
                 networkDevice:
                   type: array
                   description: Network devices
@@ -200,6 +242,9 @@ spec:
                       mtu:
                         type: number
                         description: MTU (VirtIO only)
+                      disconnected:
+                        type: boolean
+                        description: Whether the network device is disconnected
                 operatingSystem:
                   type: object
                   description: Operating system type
@@ -223,6 +268,9 @@ spec:
                     full:
                       type: boolean
                       description: Full clone (true) or linked clone (false)
+                    retries:
+                      type: number
+                      description: Number of retries for clone operations
                 initialization:
                   type: object
                   description: Cloud-init configuration
