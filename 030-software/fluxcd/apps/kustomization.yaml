@@ -5,6 +5,7 @@ resources:
   - browserless
   - cert-manager
   - cloudflared
+  # - commander
   # - crossplane
   - csi-proxmox
   - external-dns

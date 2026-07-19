@@ -1,13 +1,15 @@
 apiVersion: apiextensions.crossplane.io/v1
 kind: Composition
 metadata:
-  name: proxmoxvmtemplates.platform.${publicDomain}
+  name: proxmoxvmtemplates.platform.shokohsc.com
   labels:
     provider: opentofu
+  annotations:
+    kustomize.toolkit.fluxcd.io/substitute: disabled
 spec:
   mode: Pipeline
   compositeTypeRef:
-    apiVersion: platform.${publicDomain}/v1alpha1
+    apiVersion: platform.shokohsc.com/v1alpha1
     kind: ProxmoxVmTemplate
   pipeline:
     - step: patch-and-transform
