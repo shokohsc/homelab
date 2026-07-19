@@ -12,7 +12,7 @@ spec:
         group: karpenter.proxmox.sinextra.dev
         kind: ProxmoxNodeClass
         name: vm-genji
-      requirements:
-        - key: "topology.kubernetes.io/zone"
-          operator: In
-          values: ["vm"]
+      # requirements:
+      #   - key: "topology.kubernetes.io/zone"
+      #     operator: In
+      #     values: ["homelab/genji"]

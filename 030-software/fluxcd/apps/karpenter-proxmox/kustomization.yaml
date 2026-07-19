@@ -2,7 +2,7 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 namespace: karpenter-proxmox
 resources:
-  - 00-proxmoxvmtemplate.yaml
-  - 01-proxmox-unmanaged-template.yaml
-  - 02-proxmox-node-class.yaml
-  - 03-node-pool.yaml
+  - proxmoxvmtemplate.yaml
+  - proxmox-unmanaged-template.yaml
+  - proxmox-node-class.yaml
+  - node-pool.yaml
