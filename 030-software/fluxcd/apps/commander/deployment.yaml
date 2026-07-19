@@ -1,0 +1,102 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: commander
+  labels:
+    app: commander
+spec:
+  selector:
+    matchLabels:
+      app: commander
+  template:
+    metadata:
+      labels:
+        app: commander
+    spec:
+      automountServiceAccountToken: false
+      securityContext:
+        runAsNonRoot: true
+        fsGroup: 1000
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: commander
+          image: ghcr.io/coderaiser/cloudcmd:19.19.1-alpine
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+            runAsUser: 1000
+            runAsGroup: 1000
+            capabilities:
+              drop:
+                - ALL
+          args:
+            - --theme
+            - dark
+            - --menu
+            - supermenu
+          ports:
+            - name: http
+              containerPort: 8000
+              protocol: TCP
+          startupProbe:
+            tcpSocket:
+              port: http
+          livenessProbe:
+            tcpSocket:
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+          volumeMounts:
+            - name: backups
+              mountPath: /mnt/proxmox/backups
+            - name: content
+              mountPath: /mnt/proxmox/content
+            - name: hanzo
+              mountPath: /mnt/hanzo
+            - name: genji
+              mountPath: /mnt/genji
+          resources:
+            requests:
+              cpu: 10m
+              memory: 128M
+            limits:
+              cpu: 1000m
+              memory: 1024M
+      volumes:
+        - name: backups
+          nfs:
+            server: 10.42.60.50
+            path: /backups
+        - name: content
+          nfs:
+            server: 10.42.60.51
+            path: /content
+        - name: hanzo
+          nfs:
+            server: 10.42.30.20
+            path: /
+        - name: genji
+          nfs:
+            server: 10.42.30.30
+            path: /
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 1
+            podAffinityTerm:
+              labelSelector:
+                matchExpressions:
+                - key: app
+                  operator: In
+                  values:
+                  - commander
+              topologyKey: topology.kubernetes.io/region
+      tolerations:
+        - key: "node.kubernetes.io/nuc"
+          operator: "Exists"
+          effect: "NoSchedule"

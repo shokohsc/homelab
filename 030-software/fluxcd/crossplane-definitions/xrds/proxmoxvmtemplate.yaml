@@ -196,7 +196,7 @@ spec:
                         description: Rate limit in MB/s
                       queues:
                         type: number
-                        description: Number of queues (VirtIO: 1-64)
+                        description: "Number of queues (VirtIO: 1-64)"
                       mtu:
                         type: number
                         description: MTU (VirtIO only)

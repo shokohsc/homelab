@@ -1,0 +1,26 @@
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: egress-default-deny
+spec:
+  endpointSelector: {} # all pods in the namespace
+  egress:
+    - toEntities:
+        - kube-apiserver # API server access
+    - toEndpoints:
+        - matchLabels:
+            io.kubernetes.pod.namespace: kube-system
+            k8s-app: kube-dns
+      toPorts:
+        - ports:
+            - port: "53"
+              protocol: UDP
+            - port: "53"
+              protocol: TCP
+          rules:
+            dns:
+              - matchPattern: "*"
+    - toCIDR:
+        - 10.42.0.0/16 # cluster pod CIDR
+    - toEntities:
+        - cluster # in-cluster (services, endpoints)
