@@ -4,5 +4,5 @@ namespace: karpenter-proxmox
 resources:
   - proxmoxvmtemplate.yaml
   - proxmox-unmanaged-template.yaml
-  # - proxmox-node-class.yaml
-  # - node-pool.yaml
+  - proxmox-node-class.yaml
+  - node-pool.yaml

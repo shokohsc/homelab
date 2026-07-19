@@ -1,0 +1,124 @@
+---
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: radio-server
+spec:
+  revisionHistoryLimit: 0
+  selector:
+    matchLabels:
+      app: radio-server
+  template:
+    metadata:
+      labels:
+        app: radio-server
+    spec:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: radio-server
+          image: shokohsc/radio-server:989d4b4
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+            capabilities:
+              drop:
+                - ALL
+          env:
+            - name: ENV
+              value: production
+            - name: MUSIC_DIR
+              value: /music
+            - name: NODE_OPTIONS
+              value: "--trace-warnings"
+          ports:
+            - name: http
+              containerPort: 8000
+              protocol: TCP
+          startupProbe:
+            tcpSocket:
+              port: http
+          livenessProbe:
+            tcpSocket:
+              port: http
+          readinessProbe:
+            httpGet:
+              port: http
+              path: /health
+          resources:
+            requests:
+              cpu: 100m
+              memory: 64M
+            limits:
+              cpu: 1000m
+              memory: 128M
+          volumeMounts:
+            - name: genji
+              mountPath: /music
+      volumes:
+        - name: genji
+          nfs:
+            server: 10.42.30.30
+            path: /music/tracks
+---
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: radio-ui
+spec:
+  revisionHistoryLimit: 0
+  selector:
+    matchLabels:
+      app: radio-ui
+  template:
+    metadata:
+      labels:
+        app: radio-ui
+    spec:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: radio-ui
+          image: shokohsc/radio-ui:989d4b4
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+            capabilities:
+              drop:
+                - ALL
+          env:
+            - name: NGINX_PORT
+              value: "8080"
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+          startupProbe:
+            tcpSocket:
+              port: http
+          livenessProbe:
+            tcpSocket:
+              port: http
+          readinessProbe:
+            httpGet:
+              port: http
+              path: /
+          resources:
+            requests:
+              cpu: 10m
+              memory: 64M
+            limits:
+              cpu: 100m
+              memory: 64M
