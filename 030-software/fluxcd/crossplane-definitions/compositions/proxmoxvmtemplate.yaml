@@ -335,7 +335,7 @@ spec:
                         architecture = var.cpu_architecture != "" ? var.cpu_architecture : null
                         limit        = var.cpu_limit
                         numa         = var.cpu_numa
-                        flags        = var.cpu_flags != "" ? var.cpu_flags : null
+                        flags        = var.cpu_flags != "" ? split(",", var.cpu_flags) : null
                       }
 
                       memory {
@@ -545,7 +545,7 @@ spec:
                           device    = numa.value.device
                           cpus      = numa.value.cpus
                           memory    = numa.value.memory
-                          hostnodes = lookup(numa.value, "hostnodes", null)
+                          hostnodes = lookup(numa.value, "hostnodes", null) != null ? split(",", lookup(numa.value, "hostnodes", "")) : null
                           policy    = lookup(numa.value, "policy", null)
                         }
                       }

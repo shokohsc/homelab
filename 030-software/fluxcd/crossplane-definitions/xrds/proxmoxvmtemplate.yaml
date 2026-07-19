@@ -107,7 +107,7 @@ spec:
                       description: Enable NUMA
                     flags:
                       type: string
-                      description: "CPU flags, e.g. +aes,+pcid"
+                      description: "Comma-separated CPU flags, e.g. +aes,+pcid"
                 memory:
                   type: object
                   description: Memory configuration
@@ -468,7 +468,7 @@ spec:
                         description: Memory in MB
                       hostnodes:
                         type: string
-                        description: Host nodes
+                        description: "Comma-separated host node IDs, e.g. 0,1"
                       policy:
                         type: string
                         description: "NUMA policy: interleave, preferred, bind"
