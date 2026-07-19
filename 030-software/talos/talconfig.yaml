@@ -114,6 +114,11 @@ nodes:
                 - KERNEL=="nvme0n1", MODE="0666"
       - |-
           apiVersion: v1alpha1
+          kind: EnvironmentConfig
+          variables:
+              CONFIG_NFSD_LEGACY_CLIENT_TRACKING: true
+      - |-
+          apiVersion: v1alpha1
           kind: UserVolumeConfig
           name: nfs-proxmox-backups
           volumeType: disk
