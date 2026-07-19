@@ -5,7 +5,7 @@ metadata:
 spec:
   # # Region where this NodeClass is applied
   # # Optional: if not set, all regions will be used
-  # region: cluster-1
+  region: homelab
 
   # # PlacementStrategy defines how VM should be placed across zones.
   # # Optional: if not set, Balanced strategy will be used
