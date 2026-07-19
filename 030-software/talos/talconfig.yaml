@@ -148,7 +148,7 @@ nodes:
     hostname: worker-vm
     installDisk: /dev/sda
     networkInterfaces:
-      - interface: eth0
+      - interface: ens18
         dhcp: true
     ignoreHostname: true
     ipAddress: ${TALOS_SUBNET}.255
@@ -162,8 +162,8 @@ nodes:
       customization:
         extraKernelArgs:
           - net.ifnames=0
-          - talos.config=http://tracer.home.arpa:8080/metadata?p=worker-vm
-          - vlan=eth0.20:eth0
+          - talos.config=http://tracer.home.arpa:8080/metadata?s=worker-vm
+          - vlan=ens18.20:ens18
         systemExtensions:
           officialExtensions:
             - siderolabs/amd-ucode
