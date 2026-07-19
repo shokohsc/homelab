@@ -953,8 +953,8 @@ spec:
                 transforms:
                   - type: string
                     string:
-                      type: Format
-                      fmt: "%s"
+                      type: Convert
+                      convert: ToJson
               - type: FromCompositeFieldPath
                 fromFieldPath: spec.networkDevice
                 toFieldPath: spec.forProvider.vars[31].value
@@ -963,8 +963,8 @@ spec:
                 transforms:
                   - type: string
                     string:
-                      type: Format
-                      fmt: "%s"
+                      type: Convert
+                      convert: ToJson
               - type: FromCompositeFieldPath
                 fromFieldPath: spec.operatingSystem.type
                 toFieldPath: spec.forProvider.vars[32].value
@@ -1012,8 +1012,8 @@ spec:
                 transforms:
                   - type: string
                     string:
-                      type: Format
-                      fmt: "%s"
+                      type: Convert
+                      convert: ToJson
               - type: FromCompositeFieldPath
                 fromFieldPath: spec.initialization.ipConfig
                 toFieldPath: spec.forProvider.vars[40].value
@@ -1022,8 +1022,8 @@ spec:
                 transforms:
                   - type: string
                     string:
-                      type: Format
-                      fmt: "%s"
+                      type: Convert
+                      convert: ToJson
               - type: FromCompositeFieldPath
                 fromFieldPath: spec.initialization.userAccount
                 toFieldPath: spec.forProvider.vars[41].value
@@ -1032,8 +1032,8 @@ spec:
                 transforms:
                   - type: string
                     string:
-                      type: Format
-                      fmt: "%s"
+                      type: Convert
+                      convert: ToJson
               - type: FromCompositeFieldPath
                 fromFieldPath: spec.initialization.userDataFileId
                 toFieldPath: spec.forProvider.vars[42].value
@@ -1080,8 +1080,8 @@ spec:
                 transforms:
                   - type: string
                     string:
-                      type: Format
-                      fmt: "%s"
+                      type: Convert
+                      convert: ToJson
               - type: FromCompositeFieldPath
                 fromFieldPath: spec.efiDisk
                 toFieldPath: spec.forProvider.vars[49].value
@@ -1090,8 +1090,8 @@ spec:
                 transforms:
                   - type: string
                     string:
-                      type: Format
-                      fmt: "%s"
+                      type: Convert
+                      convert: ToJson
               - type: FromCompositeFieldPath
                 fromFieldPath: spec.tpmState
                 toFieldPath: spec.forProvider.vars[50].value
@@ -1100,8 +1100,8 @@ spec:
                 transforms:
                   - type: string
                     string:
-                      type: Format
-                      fmt: "%s"
+                      type: Convert
+                      convert: ToJson
               - type: FromCompositeFieldPath
                 fromFieldPath: spec.vga
                 toFieldPath: spec.forProvider.vars[51].value
@@ -1110,8 +1110,8 @@ spec:
                 transforms:
                   - type: string
                     string:
-                      type: Format
-                      fmt: "%s"
+                      type: Convert
+                      convert: ToJson
               - type: FromCompositeFieldPath
                 fromFieldPath: spec.serialDevice
                 toFieldPath: spec.forProvider.vars[52].value
@@ -1120,8 +1120,8 @@ spec:
                 transforms:
                   - type: string
                     string:
-                      type: Format
-                      fmt: "%s"
+                      type: Convert
+                      convert: ToJson
               - type: FromCompositeFieldPath
                 fromFieldPath: spec.usb
                 toFieldPath: spec.forProvider.vars[53].value
@@ -1130,8 +1130,8 @@ spec:
                 transforms:
                   - type: string
                     string:
-                      type: Format
-                      fmt: "%s"
+                      type: Convert
+                      convert: ToJson
               - type: FromCompositeFieldPath
                 fromFieldPath: spec.audioDevice
                 toFieldPath: spec.forProvider.vars[54].value
@@ -1140,8 +1140,8 @@ spec:
                 transforms:
                   - type: string
                     string:
-                      type: Format
-                      fmt: "%s"
+                      type: Convert
+                      convert: ToJson
               - type: FromCompositeFieldPath
                 fromFieldPath: spec.hostpci
                 toFieldPath: spec.forProvider.vars[55].value
@@ -1150,8 +1150,8 @@ spec:
                 transforms:
                   - type: string
                     string:
-                      type: Format
-                      fmt: "%s"
+                      type: Convert
+                      convert: ToJson
               - type: FromCompositeFieldPath
                 fromFieldPath: spec.numa
                 toFieldPath: spec.forProvider.vars[56].value
@@ -1160,8 +1160,8 @@ spec:
                 transforms:
                   - type: string
                     string:
-                      type: Format
-                      fmt: "%s"
+                      type: Convert
+                      convert: ToJson
               - type: FromCompositeFieldPath
                 fromFieldPath: spec.rng
                 toFieldPath: spec.forProvider.vars[57].value
@@ -1170,8 +1170,8 @@ spec:
                 transforms:
                   - type: string
                     string:
-                      type: Format
-                      fmt: "%s"
+                      type: Convert
+                      convert: ToJson
               - type: FromCompositeFieldPath
                 fromFieldPath: spec.smbios
                 toFieldPath: spec.forProvider.vars[58].value
@@ -1180,8 +1180,8 @@ spec:
                 transforms:
                   - type: string
                     string:
-                      type: Format
-                      fmt: "%s"
+                      type: Convert
+                      convert: ToJson
               - type: FromCompositeFieldPath
                 fromFieldPath: spec.watchdog
                 toFieldPath: spec.forProvider.vars[59].value
@@ -1190,8 +1190,8 @@ spec:
                 transforms:
                   - type: string
                     string:
-                      type: Format
-                      fmt: "%s"
+                      type: Convert
+                      convert: ToJson
               - type: FromCompositeFieldPath
                 fromFieldPath: spec.virtiofs
                 toFieldPath: spec.forProvider.vars[60].value
@@ -1200,8 +1200,8 @@ spec:
                 transforms:
                   - type: string
                     string:
-                      type: Format
-                      fmt: "%s"
+                      type: Convert
+                      convert: ToJson
               - type: FromCompositeFieldPath
                 fromFieldPath: spec.bootOrder
                 toFieldPath: spec.forProvider.vars[61].value
@@ -1210,8 +1210,8 @@ spec:
                 transforms:
                   - type: string
                     string:
-                      type: Format
-                      fmt: "%s"
+                      type: Convert
+                      convert: ToJson
               - type: FromCompositeFieldPath
                 fromFieldPath: spec.clone.retries
                 toFieldPath: spec.forProvider.vars[62].value
