@@ -3,7 +3,7 @@ kind: Kustomization
 namespace: csi-proxmox
 resources:
   - https://raw.githubusercontent.com/sergelogvinov/proxmox-csi-plugin/main/docs/deploy/proxmox-csi-plugin.yml
-  - namespace.yaml
+  # - namespace.yaml
   - provider-config.yaml
   - proxmoxidentity.yaml
   - secret.yaml
@@ -14,6 +14,9 @@ patches:
       kind: Namespace
       metadata:
         name: csi-proxmox
+        labels:
+          pod-security.kubernetes.io/enforce: privileged
+          bundle.cert-manager.io/inject: enabled
     target:
       kind: Namespace
       name: csi-proxmox
