@@ -3,4 +3,4 @@ kind: Kustomization
 resources:
   - crossplane
   - csi-proxmox
-  - karpenter-proxmox
+  # - karpenter-proxmox
