@@ -96,9 +96,9 @@ spec:
             allowPrivilegeEscalation: false
             # readOnlyRootFilesystem: true
             # runAsNonRoot: true
-            capabilities:
-              drop:
-                - ALL
+            # capabilities:
+            #   drop:
+            #     - ALL
           env:
             - name: NGINX_PORT
               value: "8080"
