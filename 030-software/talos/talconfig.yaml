@@ -163,6 +163,8 @@ nodes:
     nodeLabels:
       topology.kubernetes.io/region: "homelab"
       topology.kubernetes.io/zone: "vm"
+    patches:
+      - "@./patches/proxmox-cloud-controller-manager.yaml"
     schematic:
       customization:
         extraKernelArgs:
@@ -194,6 +196,8 @@ nodes:
       topology.kubernetes.io/region: "homelab"
       topology.kubernetes.io/zone: "vm"
       node.kubernetes.io/gpu: "nvidia"
+    patches:
+      - "@./patches/proxmox-cloud-controller-manager.yaml"
     schematic:
       customization:
         extraKernelArgs:

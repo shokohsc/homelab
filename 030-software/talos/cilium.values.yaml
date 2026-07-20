@@ -84,7 +84,7 @@ hubble:
             - key: topology.kubernetes.io/region
               operator: In
               values:
-              - metal
+              - homelab
     tolerations:
       - key: "node.kubernetes.io/nuc"
         operator: "Exists"
@@ -123,7 +123,7 @@ hubble:
             - key: topology.kubernetes.io/region
               operator: In
               values:
-              - metal
+              - homelab
     tolerations:
       - key: "node.kubernetes.io/nuc"
         operator: "Exists"
