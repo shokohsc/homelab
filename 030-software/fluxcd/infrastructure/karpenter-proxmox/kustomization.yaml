@@ -3,6 +3,7 @@ kind: Kustomization
 namespace: karpenter-proxmox
 resources:
   - https://github.com/sergelogvinov/karpenter-provider-proxmox/raw/refs/heads/main/docs/deploy/karpenter-provider-proxmox.yml
+  - https://raw.githubusercontent.com/sergelogvinov/proxmox-cloud-controller-manager/main/docs/deploy/cloud-controller-manager-talos.yml
   - namespace.yaml
   - provider-config.yaml
   - proxmoxidentity.yaml
@@ -45,3 +46,17 @@ patches:
     target:
       kind: Deployment
       labelSelector: app.kubernetes.io/name=karpenter-provider-proxmox
+  - patch: |
+      apiVersion: apps/v1
+      kind: Deployment
+      metadata:
+        name: proxmox-cloud-controller-manager
+      spec:
+        template:
+            volumes:
+              - name: cloud-config
+                secret:
+            secretName: karpenter-provider-proxmox
+    target:
+      kind: Deployment
+      labelSelector: app.kubernetes.io/name=proxmox-cloud-controller-manager

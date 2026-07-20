@@ -93,7 +93,7 @@ spec:
           image: shokohsc/radio-ui:989d4b4
           securityContext:
             allowPrivilegeEscalation: false
-            readOnlyRootFilesystem: true
+            # readOnlyRootFilesystem: true
             runAsNonRoot: true
             capabilities:
               drop:
@@ -122,3 +122,10 @@ spec:
             limits:
               cpu: 100m
               memory: 64M
+          volumeMounts:
+            - name: cache
+              mountPath: /var/cache/nginx
+      volumes:
+        - name: cache
+          emptyDir:
+            medium: Memory
