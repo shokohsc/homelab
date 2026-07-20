@@ -50,13 +50,14 @@ patches:
       apiVersion: apps/v1
       kind: Deployment
       metadata:
-        name: proxmox-cloud-controller-manager
+        name: all
       spec:
         template:
+          spec:
             volumes:
               - name: cloud-config
                 secret:
-            secretName: karpenter-provider-proxmox
+                  secretName: karpenter-provider-proxmox
     target:
       kind: Deployment
       labelSelector: app.kubernetes.io/name=proxmox-cloud-controller-manager
