@@ -80,7 +80,7 @@ spec:
     metadata:
       labels:
         app: radio-ui
-        policy.gatekeeper.sh/ignore: true
+        policy.gatekeeper.sh/ignore: "true"
     spec:
       securityContext:
         # runAsNonRoot: true
