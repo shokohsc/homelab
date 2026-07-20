@@ -54,10 +54,34 @@ patches:
       spec:
         template:
           spec:
+            containers:
+              - name: proxmox-cloud-controller-manager
+                volumeMounts:
+                  - mountPath: /etc/ssl/certs/ca-certs.pem
+                    subPath: ca-certs.pem
+                    name: tls
+            affinity:
+              nodeAffinity:
+                preferredDuringSchedulingIgnoredDuringExecution:
+                - weight: 1
+                  preference:
+                    matchExpressions:
+                    - key: topology.kubernetes.io/region
+                      operator: In
+                      values:
+                      - metal
             volumes:
               - name: cloud-config
                 secret:
                   secretName: karpenter-provider-proxmox
+              - name: tls
+                configMap:
+                  name: homelab-ca
+                  defaultMode: 0644
+            tolerations:
+              - effect: NoSchedule
+                key: node.kubernetes.io/nuc
+                operator: Exists
     target:
       kind: Deployment
       labelSelector: app.kubernetes.io/name=proxmox-cloud-controller-manager
