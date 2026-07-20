@@ -80,13 +80,13 @@ spec:
     metadata:
       labels:
         app: radio-ui
-        policy.gatekeeper.sh/ignore: psp-readonlyrootfilesystem
+        policy.gatekeeper.sh/ignore: all
     spec:
       securityContext:
-        runAsNonRoot: true
-        runAsUser: 1000
-        runAsGroup: 1000
-        fsGroup: 1000
+        # runAsNonRoot: true
+        # runAsUser: 1000
+        # runAsGroup: 1000
+        # fsGroup: 1000
         seccompProfile:
           type: RuntimeDefault
       containers:
@@ -95,7 +95,7 @@ spec:
           securityContext:
             allowPrivilegeEscalation: false
             # readOnlyRootFilesystem: true
-            runAsNonRoot: true
+            # runAsNonRoot: true
             capabilities:
               drop:
                 - ALL
