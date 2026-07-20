@@ -35,6 +35,7 @@ spec:
       model: virtio
       firewall: false
       vlanId: 20
+      macAddress: "00:00:00:01"
   # operatingSystem:
   #   type: l26
   # agent:
@@ -51,5 +52,6 @@ spec:
   #   type: std
   #   clipboard: vnc
   # hostpci: []
-  smbios:
-    serial: "worker-vm"
+
+  # smbios:
+  #   serial: "worker-vm"
