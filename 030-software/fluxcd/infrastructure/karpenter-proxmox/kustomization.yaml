@@ -62,7 +62,7 @@ patches:
                     name: tls
             affinity:
               nodeAffinity:
-                requiredDuringSchedulingIgnoredDuringExecution null
+                requiredDuringSchedulingIgnoredDuringExecution: null
                 preferredDuringSchedulingIgnoredDuringExecution:
                   - weight: 1
                     preference:
