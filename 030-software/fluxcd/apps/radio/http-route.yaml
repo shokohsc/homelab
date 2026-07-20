@@ -11,7 +11,7 @@ spec:
     namespace: cilium
   rules:
   - backendRefs:
-    - name: radio
+    - name: radio-ui
       port: 80
     matches:
     - path:
