@@ -16,7 +16,7 @@ spec:
     metadata:
       labels:
         app: pod-gateway
-        policy.gatekeeper.sh/ignore: "true"
+        # policy.gatekeeper.sh/ignore: "true"
       annotations:
         descheduler.alpha.kubernetes.io/evict: "true"
     spec:

@@ -14,7 +14,7 @@ spec:
     metadata:
       labels:
         app: browserless
-        policy.gatekeeper.sh/ignore: "true"
+        # policy.gatekeeper.sh/ignore: "true"
     spec:
       automountServiceAccountToken: false
       securityContext:

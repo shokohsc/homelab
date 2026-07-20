@@ -12,7 +12,10 @@ spec:
       matchExpressions:
       - key: policy.gatekeeper.sh/ignore
         operator: NotIn
-        values: ["all", "container-must-have-limits"]
+        values: ["true"]
+      - key: policy.gatekeeper.sh/ignore-container-must-have-limits
+        operator: NotIn
+        values: ["true"]
   parameters:
     cpu: "2000m"
     memory: "4096Gi"
@@ -30,7 +33,10 @@ spec:
       matchExpressions:
       - key: policy.gatekeeper.sh/ignore
         operator: NotIn
-        values: ["all", "no-host-paths"]
+        values: ["true"]
+      - key: policy.gatekeeper.sh/ignore-no-host-paths
+        operator: NotIn
+        values: ["true"]
 ---
 apiVersion: constraints.gatekeeper.sh/v1beta1
 kind: K8sPSPHostNamespace
@@ -45,7 +51,10 @@ spec:
       matchExpressions:
       - key: policy.gatekeeper.sh/ignore
         operator: NotIn
-        values: ["all", psp-host-namespace]
+        values: ["true"]
+      - key: policy.gatekeeper.sh/ignore-psp-host-namespace
+        operator: NotIn
+        values: ["true"]
 ---
 apiVersion: constraints.gatekeeper.sh/v1beta1
 kind: K8sPSPPrivilegedContainer
@@ -60,7 +69,10 @@ spec:
       matchExpressions:
       - key: policy.gatekeeper.sh/ignore
         operator: NotIn
-        values: ["all", "psp-privileged-container"]
+        values: ["true"]
+      - key: policy.gatekeeper.sh/ignore-psp-privileged-container
+        operator: NotIn
+        values: ["true"]
     excludedNamespaces: ["kube-system"]
   # parameters:
   #   exemptImages:
@@ -79,7 +91,10 @@ spec:
       matchExpressions:
       - key: policy.gatekeeper.sh/ignore
         operator: NotIn
-        values: ["all", "psp-allow-privilege-escalation-container"]
+        values: ["true"]
+      - key: policy.gatekeeper.sh/ignore-psp-allow-privilege-escalation-container
+        operator: NotIn
+        values: ["true"]
   # parameters:
   #   exemptImages: ["safeimages.com/*"]
 ---
@@ -96,7 +111,10 @@ spec:
       matchExpressions:
       - key: policy.gatekeeper.sh/ignore
         operator: NotIn
-        values: ["all", "psp-readonlyrootfilesystem"]
+        values: ["true"]
+      - key: policy.gatekeeper.sh/ignore-psp-readonlyrootfilesystem
+        operator: NotIn
+        values: ["true"]
   # parameters:
   #   exemptImages:
   #   - "specialprogram"
@@ -114,7 +132,10 @@ spec:
       matchExpressions:
       - key: policy.gatekeeper.sh/ignore
         operator: NotIn
-        values: ["all", "psp-capabilities-baseline"]
+        values: ["true"]
+      - key: policy.gatekeeper.sh/ignore-psp-capabilities-baseline
+        operator: NotIn
+        values: ["true"]
   parameters:
     allowedCapabilities:
     - AUDIT_WRITE
@@ -145,7 +166,10 @@ spec:
       matchExpressions:
       - key: policy.gatekeeper.sh/ignore
         operator: NotIn
-        values: ["all", "psp-pods-allowed-user-ranges"]
+        values: ["true"]
+      - key: policy.gatekeeper.sh/ignore-psp-pods-allowed-user-ranges
+        operator: NotIn
+        values: ["true"]
   parameters:
     runAsUser:
       rule: MustRunAsNonRoot
@@ -171,7 +195,10 @@ spec:
       matchExpressions:
       - key: policy.gatekeeper.sh/ignore
         operator: NotIn
-        values: ["all", "no-anonymous"]
+        values: ["true"]
+      - key: policy.gatekeeper.sh/ignore-no-anonymous
+        operator: NotIn
+        values: ["true"]
   parameters:
     disallowAuthenticated: true
     allowedRoles:
@@ -190,7 +217,10 @@ spec:
       matchExpressions:
       - key: policy.gatekeeper.sh/ignore
         operator: NotIn
-        values: ["all", "psp-volume-types"]
+        values: ["true"]
+      - key: policy.gatekeeper.sh/ignore-psp-volume-types
+        operator: NotIn
+        values: ["true"]
   parameters:
     volumes:
     # - "*" # * may be used to allow all volume types
@@ -218,7 +248,10 @@ spec:
       matchExpressions:
       - key: policy.gatekeeper.sh/ignore
         operator: NotIn
-        values: ["all", "psp-seccomp-baseline"]
+        values: ["true"]
+      - key: policy.gatekeeper.sh/ignore-psp-seccomp-baseline
+        operator: NotIn
+        values: ["true"]
   parameters:
     exemptImages:
     - nginx-exempt

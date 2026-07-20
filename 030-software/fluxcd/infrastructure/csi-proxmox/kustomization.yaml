@@ -45,7 +45,8 @@ patches:
       spec:
         template:
           spec:
-            nodeSelector: null
+            nodeSelector:
+              topology.kubernetes.io/zone: vm
             containers:
               - name: proxmox-csi-plugin-controller
                 volumeMounts:
