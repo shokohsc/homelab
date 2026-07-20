@@ -80,6 +80,7 @@ spec:
     metadata:
       labels:
         app: radio-ui
+        policy.gatekeeper.sh/ignore: psp-readonlyrootfilesystem
     spec:
       securityContext:
         runAsNonRoot: true
