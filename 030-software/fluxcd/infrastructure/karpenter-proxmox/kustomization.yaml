@@ -27,13 +27,13 @@ patches:
             affinity:
               nodeAffinity:
                 preferredDuringSchedulingIgnoredDuringExecution:
-                - weight: 1
-                  preference:
-                    matchExpressions:
-                    - key: topology.kubernetes.io/zone
-                      operator: In
-                      values:
-                      - metal
+                  - weight: 1
+                    preference:
+                      matchExpressions:
+                        - key: topology.kubernetes.io/zone
+                          operator: In
+                          values:
+                            - metal
             volumes:
               - name: tls
                 configMap:
@@ -64,13 +64,13 @@ patches:
               nodeAffinity:
                 requiredDuringSchedulingIgnoredDuringExecution null
                 preferredDuringSchedulingIgnoredDuringExecution:
-                - weight: 1
-                  preference:
-                    matchExpressions:
-                    - key: topology.kubernetes.io/zone
-                      operator: In
-                      values:
-                      - metal
+                  - weight: 1
+                    preference:
+                      matchExpressions:
+                        - key: topology.kubernetes.io/zone
+                          operator: In
+                          values:
+                            - metal
             volumes:
               - name: cloud-config
                 secret:
