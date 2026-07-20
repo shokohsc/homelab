@@ -2,93 +2,92 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 namespace: csi-proxmox
 resources:
-  - https://raw.githubusercontent.com/sergelogvinov/proxmox-csi-plugin/main/docs/deploy/proxmox-csi-plugin.yml
-  # - namespace.yaml
+  # - https://raw.githubusercontent.com/sergelogvinov/proxmox-csi-plugin/main/docs/deploy/proxmox-csi-plugin.yml
   - provider-config.yaml
   - proxmoxidentity.yaml
   - secret.yaml
-patches:
-  - patch: |
-      apiVersion: v1
-      kind: Namespace
-      metadata:
-        name: csi-proxmox
-        labels:
-          pod-security.kubernetes.io/enforce: privileged
-          bundle.cert-manager.io/inject: enabled
-    target:
-      kind: Namespace
-      name: csi-proxmox
-  - patch: |
-      $patch: delete
-      apiVersion: v1
-      kind: StorageClass
-      metadata:
-        name: proxmox-data
-    target:
-      kind: StorageClass
-      name: proxmox-data
-  - patch: |
-      $patch: delete
-      apiVersion: v1
-      kind: StorageClass
-      metadata:
-        name: proxmox-data-xfs
-    target:
-      kind: StorageClass
-      name: proxmox-data-xfs
-  - patch: |
-      apiVersion: apps/v1
-      kind: Deployment
-      metadata:
-        name: all
-      spec:
-        template:
-          spec:
-            nodeSelector:
-              topology.kubernetes.io/zone: vm
-            containers:
-              - name: proxmox-csi-plugin-controller
-                volumeMounts:
-                  - mountPath: /etc/ssl/certs/ca-certs.pem
-                    subPath: ca-certs.pem
-                    name: tls
-            affinity:
-              nodeAffinity:
-                preferredDuringSchedulingIgnoredDuringExecution:
-                - weight: 1
-                  preference:
-                    matchExpressions:
-                    - key: topology.kubernetes.io/region
-                      operator: In
-                      values:
-                      - homelab
-            volumes:
-              - name: tls
-                configMap:
-                  name: homelab-ca
-                  defaultMode: 0644
-    target:
-      kind: Deployment
-      labelSelector: app.kubernetes.io/name=proxmox-csi-plugin
-  - patch: |
-      apiVersion: apps/v1
-      kind: DaemonSet
-      metadata:
-        name: all
-      spec:
-        template:
-          spec:
-            affinity:
-              nodeAffinity:
-                preferredDuringSchedulingIgnoredDuringExecution:
-                - weight: 1
-                  preference:
-                    matchExpressions:
-                    - key: topology.kubernetes.io/region
-                      operator: In
-                      values:
-                      - homelab
-    target:
-      kind: DaemonSet
-      labelSelector: app.kubernetes.io/name=proxmox-csi-plugin
+# patches:
+#   - patch: |
+#       apiVersion: v1
+#       kind: Namespace
+#       metadata:
+#         name: csi-proxmox
+#         labels:
+#           pod-security.kubernetes.io/enforce: privileged
+#           bundle.cert-manager.io/inject: enabled
+#     target:
+#       kind: Namespace
+#       name: csi-proxmox
+#   - patch: |
+#       $patch: delete
+#       apiVersion: v1
+#       kind: StorageClass
+#       metadata:
+#         name: proxmox-data
+#     target:
+#       kind: StorageClass
+#       name: proxmox-data
+#   - patch: |
+#       $patch: delete
+#       apiVersion: v1
+#       kind: StorageClass
+#       metadata:
+#         name: proxmox-data-xfs
+#     target:
+#       kind: StorageClass
+#       name: proxmox-data-xfs
+#   - patch: |
+#       apiVersion: apps/v1
+#       kind: Deployment
+#       metadata:
+#         name: all
+#       spec:
+#         template:
+#           spec:
+#             nodeSelector:
+#               topology.kubernetes.io/zone: vm
+#             containers:
+#               - name: proxmox-csi-plugin-controller
+#                 volumeMounts:
+#                   - mountPath: /etc/ssl/certs/ca-certs.pem
+#                     subPath: ca-certs.pem
+#                     name: tls
+#             affinity:
+#               nodeAffinity:
+#                 preferredDuringSchedulingIgnoredDuringExecution:
+#                 - weight: 1
+#                   preference:
+#                     matchExpressions:
+#                     - key: topology.kubernetes.io/region
+#                       operator: In
+#                       values:
+#                       - homelab
+#             volumes:
+#               - name: tls
+#                 configMap:
+#                   name: homelab-ca
+#                   defaultMode: 0644
+#     target:
+#       kind: Deployment
+#       labelSelector: app.kubernetes.io/name=proxmox-csi-plugin
+#   - patch: |
+#       apiVersion: apps/v1
+#       kind: DaemonSet
+#       metadata:
+#         name: all
+#       spec:
+#         template:
+#           spec:
+#             affinity:
+#               nodeAffinity:
+#                 preferredDuringSchedulingIgnoredDuringExecution:
+#                 - weight: 1
+#                   preference:
+#                     matchExpressions:
+#                     - key: topology.kubernetes.io/region
+#                       operator: In
+#                       values:
+#                       - homelab
+#     target:
+#       kind: DaemonSet
+#       labelSelector: app.kubernetes.io/name=proxmox-csi-plugin
