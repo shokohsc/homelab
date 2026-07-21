@@ -1,6 +1,6 @@
 ---
 clusterName: talos
-talosVersion: v1.13.6
+talosVersion: v1.13.7
 kubernetesVersion: v1.36.2
 endpoint: https://talos.${TALOS_DOMAIN}:6443
 additionalApiServerCertSans:
