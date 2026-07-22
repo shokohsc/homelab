@@ -20,7 +20,7 @@ resources:
   # - nats
   # - pod-gateway
   - proxmox
-  # - radio
+  - radio
   - reloader
   - renovate
   # - sidekick
