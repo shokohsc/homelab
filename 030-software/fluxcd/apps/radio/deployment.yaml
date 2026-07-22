@@ -22,7 +22,7 @@ spec:
           type: RuntimeDefault
       containers:
         - name: radio-server
-          image: shokohsc/radio-server:latest
+          image: ghcr.io/shokohsc/radio-server:latest
           securityContext:
             allowPrivilegeEscalation: false
             readOnlyRootFilesystem: true
@@ -91,7 +91,7 @@ spec:
           type: RuntimeDefault
       containers:
         - name: radio-ui
-          image: shokohsc/radio-ui:latest
+          image: ghcr.io/shokohsc/radio-ui:latest
           securityContext:
             allowPrivilegeEscalation: false
             readOnlyRootFilesystem: true
