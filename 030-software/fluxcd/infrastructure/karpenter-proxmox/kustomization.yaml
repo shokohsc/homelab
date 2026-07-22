@@ -20,7 +20,7 @@ patches:
             nodeSelector: null
             containers:
               - name: karpenter-provider-proxmox
-                image: ghcr.io/shokohsc/karpenter-provider-proxmox:sha256-d6058ef2d7618629d8572f284fe647681dda75a28cc2d934c880010526d3d81c
+                image: ghcr.io/shokohsc/karpenter-provider-proxmox@sha256-d6058ef2d7618629d8572f284fe647681dda75a28cc2d934c880010526d3d81c
                 volumeMounts:
                   - mountPath: /etc/ssl/certs/ca-certs.pem
                     subPath: ca-certs.pem
