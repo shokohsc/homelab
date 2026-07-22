@@ -22,7 +22,7 @@ spec:
           type: RuntimeDefault
       containers:
         - name: radio-server
-          image: shokohsc/radio-server:989d4b4
+          image: shokohsc/radio-server:latest
           securityContext:
             allowPrivilegeEscalation: false
             readOnlyRootFilesystem: true
@@ -83,28 +83,28 @@ spec:
         policy.gatekeeper.sh/ignore: "true"
     spec:
       securityContext:
-        # runAsNonRoot: true
-        # runAsUser: 1000
-        # runAsGroup: 1000
-        # fsGroup: 1000
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
         seccompProfile:
           type: RuntimeDefault
       containers:
         - name: radio-ui
-          image: shokohsc/radio-ui:989d4b4
+          image: shokohsc/radio-ui:latest
           securityContext:
             allowPrivilegeEscalation: false
-            # readOnlyRootFilesystem: true
-            # runAsNonRoot: true
-            # capabilities:
-            #   drop:
-            #     - ALL
-          # env:
-          #   - name: NGINX_PORT
-          #     value: "8080"
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+            capabilities:
+              drop:
+                - ALL
+          env:
+            - name: NGINX_PORT
+              value: "8080"
           ports:
             - name: http
-              containerPort: 80
+              containerPort: 8080
               protocol: TCP
           startupProbe:
             tcpSocket:
@@ -123,10 +123,10 @@ spec:
             limits:
               cpu: 100m
               memory: 64M
-      #     volumeMounts:
-      #       - name: cache
-      #         mountPath: /var/cache/nginx
-      # volumes:
-      #   - name: cache
-      #     emptyDir:
-      #       medium: Memory
+          volumeMounts:
+            - name: cache
+              mountPath: /var/cache/nginx
+      volumes:
+        - name: cache
+          emptyDir:
+            medium: Memory
