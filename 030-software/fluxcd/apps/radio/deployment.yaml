@@ -93,7 +93,7 @@ spec:
         - name: radio-ui
           image: ghcr.io/shokohsc/radio-ui:latest
           securityContext:
-            allowPrivilegeEscalation: false
+            # allowPrivilegeEscalation: false
             # readOnlyRootFilesystem: true
             # runAsNonRoot: true
             capabilities:
