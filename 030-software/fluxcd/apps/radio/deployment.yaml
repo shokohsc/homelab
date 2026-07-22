@@ -82,29 +82,29 @@ spec:
         app: radio-ui
         policy.gatekeeper.sh/ignore: "true"
     spec:
-      # securityContext:
-        # runAsNonRoot: true
-        # runAsUser: 1000
-        # runAsGroup: 1000
-        # fsGroup: 1000
-        # seccompProfile:
-        #   type: RuntimeDefault
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        seccompProfile:
+          type: RuntimeDefault
       containers:
         - name: radio-ui
           image: ghcr.io/shokohsc/radio-ui:latest
-          # securityContext:
-            # allowPrivilegeEscalation: false
-            # readOnlyRootFilesystem: true
-            # runAsNonRoot: true
-            # capabilities:
-            #   drop:
-            #     - ALL
-          # env:
-          #   - name: NGINX_PORT
-          #     value: "8080"
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+            capabilities:
+              drop:
+                - ALL
+          env:
+            - name: NGINX_PORT
+              value: "8080"
           ports:
             - name: http
-              containerPort: 80
+              containerPort: 8080
               protocol: TCP
           startupProbe:
             tcpSocket:
