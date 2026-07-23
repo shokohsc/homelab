@@ -5,7 +5,7 @@ metadata:
 spec:
   # # Region where this NodeClass is applied
   # # Optional: if not set, all regions will be used
-  region: homelab
+  # region: homelab
 
   # # PlacementStrategy defines how VM should be placed across zones.
   # # Optional: if not set, Balanced strategy will be used
@@ -27,7 +27,7 @@ spec:
   bootDevice:
     # Size of the boot device
     # Valid formats: 50G, 50Gi
-    size: 50G
+    size: 50Gi
 
   # Tags to apply to the VMs after creation
   # Optional, in place update supported

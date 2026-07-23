@@ -8,8 +8,8 @@ spec:
   description: Managed by Crossplane
   template: true
   tags:
-    - karpenter
     - talos
+    - karpenter
   # started: true
   # onBoot: true
   bios: seabios

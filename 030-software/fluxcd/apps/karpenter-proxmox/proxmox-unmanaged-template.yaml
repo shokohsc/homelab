@@ -5,5 +5,5 @@ metadata:
 spec:
   templateName: vm-genji
   tags:
-    - karpenter
     - talos
+    - karpenter
