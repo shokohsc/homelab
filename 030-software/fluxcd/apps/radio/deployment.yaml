@@ -94,7 +94,7 @@ spec:
           image: ghcr.io/shokohsc/radio-ui:latest
           securityContext:
             allowPrivilegeEscalation: false
-            readOnlyRootFilesystem: true
+            # readOnlyRootFilesystem: true
             runAsNonRoot: true
             capabilities:
               drop:
