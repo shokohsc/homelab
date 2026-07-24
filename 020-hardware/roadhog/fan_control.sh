@@ -4,7 +4,7 @@ set -euo pipefail
 # Run in alpine container
 # docker run -ti --rm -v $(pwd):/app -w /app --entrypoint=/bin/sh node:alpine
 
-apk add ipmitool --no-cache
+which ipmitool || apk add ipmitool --no-cache
 
 # IPMI IP address
 : "${IPMIHOST:=192.168.1.1}"
