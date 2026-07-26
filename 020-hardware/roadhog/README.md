@@ -4,15 +4,15 @@
       -O compression=lz4 -O atime=off -O xattr=sa -O acltype=posixacl \
       tank \
       raidz2 \
-        /dev/disk/by-id/scsi-35000cca255455440 \
-        /dev/disk/by-id/scsi-35000cca2554699a4 \
-        /dev/disk/by-id/scsi-35000cca255429d78 \
-        /dev/disk/by-id/scsi-35000cca255489568 \
-        /dev/disk/by-id/scsi-35000cca2554557f0 \
         /dev/disk/by-id/scsi-35000cca2553f3b7c \
+        /dev/disk/by-id/scsi-35000cca2554262f0 \
+        /dev/disk/by-id/scsi-35000cca255429d78 \
+        /dev/disk/by-id/scsi-35000cca25544326c \
+        /dev/disk/by-id/scsi-35000cca255449f70 \
+        /dev/disk/by-id/scsi-35000cca2554699a4 \
       spare \
-        /dev/disk/by-id/scsi-35000cca2559e28e8 \
-        /dev/disk/by-id/scsi-35000c500843cdf9b
+        /dev/disk/by-id/scsi-35000cca255480ce4 \
+        /dev/disk/by-id/scsi-35000cca2559edb8c
     
     zpool scrub tank
 
@@ -29,14 +29,14 @@
 
 ## Disk mapping
 
-    scsi-35000c500843cdf9b -> sdh
-    scsi-35000cca2553f3b7c -> sdg
-    scsi-35000cca255429d78 -> sdc
-    scsi-35000cca255455440 -> sda
-    scsi-35000cca2554557f0 -> sdf
+    scsi-35000cca2553f3b7c -> sdh
+    scsi-35000cca2554262f0 -> sdf
+    scsi-35000cca255429d78 -> sdd
+    scsi-35000cca25544326c -> sda
+    scsi-35000cca255449f70 -> sdc
     scsi-35000cca2554699a4 -> sdb
-    scsi-35000cca255489568 -> sde
-    scsi-35000cca2559e28e8 -> sdd
+    scsi-35000cca255480ce4 -> sdg
+    scsi-35000cca2559edb8c -> sde
 
 ## Refs
 
