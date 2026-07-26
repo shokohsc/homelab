@@ -10,7 +10,7 @@ spec:
         - csi-proxmox
         - flux-system
         - gatekeeper-system
-        - karpenter-proxmox
+        # - karpenter-proxmox
         - kube-node-lease
         - kube-public
         - kube-state-metrics

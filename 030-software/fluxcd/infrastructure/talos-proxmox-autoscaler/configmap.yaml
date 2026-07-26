@@ -16,7 +16,7 @@ data:
   min_memory_gib: "4"
   max_memory_gib: "16"
   # mac_address: ""
-  serial: "worker-vm"
+  serial: "worker-vm" # SMBios key=value
   proxmox_insecure: "false"
   tags: "talos"
   vlan_id: "20"
