@@ -4,3 +4,4 @@ resources:
   - crossplane
   - csi-proxmox
   - karpenter-proxmox
+  - talos-proxmox-autoscaler

@@ -1,0 +1,82 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: talos-proxmox-autoscaler
+  labels:
+    app: talos-proxmox-autoscaler
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: talos-proxmox-autoscaler
+  template:
+    metadata:
+      labels:
+        app: talos-proxmox-autoscaler
+    spec:
+      serviceAccountName: talos-proxmox-autoscaler
+      terminationGracePeriodSeconds: 30
+      # securityContext:
+      #   runAsNonRoot: true
+      #   runAsUser: 65534
+      #   runAsGroup: 65534
+      #   fsGroup: 65534
+      #   seccompProfile:
+      #     type: RuntimeDefault
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: talos-proxmox-autoscaler
+          image: ghcr.io/shokohsc/talos-proxmox-autoscaler:latest
+          env:
+            - name: PROXMOX_API_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: autoscaler-config
+                  key: proxmox_api_url
+            - name: PROXMOX_INSECURE
+              valueFrom:
+                configMapKeyRef:
+                  name: autoscaler-config
+                  key: proxmox_insecure
+                  optional: true
+            - name: BASE_VMID
+              valueFrom:
+                configMapKeyRef:
+                  name: autoscaler-config
+                  key: base_vmid
+                  optional: true
+          # securityContext:
+          #   allowPrivilegeEscalation: false
+          #   readOnlyRootFilesystem: true
+          #   capabilities:
+          #     drop:
+          #       - ALL
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+            capabilities:
+              drop:
+                - ALL
+          resources:
+            requests:
+              cpu: 50m
+              memory: 64Mi
+            limits:
+              cpu: 200m
+              memory: 128Mi
+      # nodeSelector:
+      #   kubernetes.io/os: linux
+      # topologySpreadConstraints:
+      #   - maxSkew: 1
+      #     topologyKey: kubernetes.io/hostname
+      #     whenUnsatisfiable: ScheduleAnyway
+      #     labelSelector:
+      #       matchLabels:
+      #         app: talos-proxmox-autoscaler

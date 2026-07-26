@@ -1,0 +1,41 @@
+apiVersion: platform.${publicDomain}/v1alpha1
+kind: ProxmoxIdentity
+metadata:
+  name: talos-proxmox-autoscaler
+spec:
+  user: talos-proxmox-autoscaler@pve
+  passwordSecretRef:
+    namespace: talos-proxmox-autoscaler
+    name: talos-proxmox-autoscaler-credentials
+    key: password
+  userGroups:
+    - talos-proxmox-autoscaler
+  aclPath: /
+  tokenName: talos-proxmox-autoscaler
+  groupName: talos-proxmox-autoscaler
+  roleName: talos-proxmox-autoscaler
+  privileges:
+    - Datastore.Allocate
+    - Datastore.AllocateSpace
+    - Datastore.AllocateTemplate
+    - Datastore.Audit
+    - Mapping.Audit
+    - Mapping.Use
+    - Sys.Audit
+    - Sys.AccessNetwork
+    - SDN.Audit
+    - SDN.Use
+    - VM.Audit
+    - VM.Allocate
+    - VM.Clone
+    - VM.Config.CDROM
+    - VM.Config.CPU
+    - VM.Config.Memory
+    - VM.Config.Disk
+    - VM.Config.Network
+    - VM.Config.HWType
+    - VM.Config.Cloudinit
+    - VM.Config.Options
+    - VM.PowerMgmt
+  groupRoles:
+    - talos-proxmox-autoscaler

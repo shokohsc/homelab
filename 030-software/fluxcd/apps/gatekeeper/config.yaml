@@ -16,4 +16,5 @@ spec:
         - kube-state-metrics
         - kube-system
         - nfs-proxmox
+        - talos-proxmox-autoscaler
       processes: ["*"]

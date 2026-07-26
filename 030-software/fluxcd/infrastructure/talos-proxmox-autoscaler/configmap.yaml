@@ -1,0 +1,23 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: autoscaler-config
+data:
+  cluster_name: "talos"          # Talos cluster name
+  min_workers: "1"               # Minimum worker nodes
+  max_workers: "20"              # Maximum worker nodes
+  disk_gib: "50"                # Disk per worker VM (GiB)
+  storage_pool: "local-lvm"      # Proxmox storage for VM disks
+  network_bridge: "vmbr1"        # Proxmox bridge for VM NICs
+  proxmox_api_url: "https://proxmox.home.arpa"  # Proxmox API endpoint
+  base_vmid: "9000"              # Starting VMID for new workers
+  min_cpu: "2"
+  max_cpu: "8"
+  min_memory_gib: "4"
+  max_memory_gib: "16"
+  # mac_address: ""
+  serial: "worker-vm"
+  proxmox_insecure: "false"
+  tags: "talos"
+  vlan_id: "20"
+  # pci_devices: '[{"id":"0000:01:00.0","pcie":true,"gpu":true}]'
