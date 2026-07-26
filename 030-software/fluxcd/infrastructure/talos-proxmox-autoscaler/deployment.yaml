@@ -32,7 +32,7 @@ spec:
           type: RuntimeDefault
       containers:
         - name: talos-proxmox-autoscaler
-          image: ghcr.io/shokohsc/talos-proxmox-autoscaler:main
+          image: ghcr.io/shokohsc/talos-proxmox-autoscaler:2851e95
           env:
             - name: NAMESPACE
               valueFrom:
