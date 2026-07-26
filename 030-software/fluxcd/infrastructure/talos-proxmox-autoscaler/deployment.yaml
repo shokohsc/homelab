@@ -51,6 +51,14 @@ spec:
                   name: autoscaler-config
                   key: base_vmid
                   optional: true
+            - name: PROXMOX_USERNAME_FILE
+              value: "/etc/secrets/username"
+            - name: PROXMOX_PASSWORD_FILE
+              value: "/etc/secrets/password"
+          volumeMounts:
+            - name: secrets
+              mountPath: /etc/secrets
+              readOnly: true
           # securityContext:
           #   allowPrivilegeEscalation: false
           #   readOnlyRootFilesystem: true
@@ -71,6 +79,10 @@ spec:
             limits:
               cpu: 200m
               memory: 128Mi
+      volumes:
+        - name: secrets
+          secret:
+            secretName: talos-proxmox-autoscaler-credentials
       # nodeSelector:
       #   kubernetes.io/os: linux
       # topologySpreadConstraints:
