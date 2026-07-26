@@ -2,11 +2,11 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 namespace: karpenter-proxmox
 resources:
-  - https://github.com/sergelogvinov/karpenter-provider-proxmox/raw/refs/heads/main/docs/deploy/karpenter-provider-proxmox.yml
-  - https://raw.githubusercontent.com/sergelogvinov/proxmox-cloud-controller-manager/main/docs/deploy/cloud-controller-manager-talos.yml
+  # - https://github.com/sergelogvinov/karpenter-provider-proxmox/raw/refs/heads/main/docs/deploy/karpenter-provider-proxmox.yml
+  # - https://raw.githubusercontent.com/sergelogvinov/proxmox-cloud-controller-manager/main/docs/deploy/cloud-controller-manager-talos.yml
   - namespace.yaml
   - provider-config.yaml
-  - proxmoxidentity.yaml
+  # - proxmoxidentity.yaml
   - secret.yaml
 patches:
   - patch: |
