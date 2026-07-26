@@ -34,6 +34,10 @@ spec:
         - name: talos-proxmox-autoscaler
           image: ghcr.io/shokohsc/talos-proxmox-autoscaler:main
           env:
+            - name: NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
             - name: PROXMOX_API_URL
               valueFrom:
                 configMapKeyRef:
