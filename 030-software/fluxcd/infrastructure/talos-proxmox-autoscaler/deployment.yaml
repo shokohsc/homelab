@@ -38,17 +38,19 @@ spec:
               valueFrom:
                 fieldRef:
                   fieldPath: metadata.namespace
+            - name: LOG_LEVEL
+              value: debug
             - name: PROXMOX_API_URL
               valueFrom:
                 configMapKeyRef:
                   name: autoscaler-config
                   key: proxmox_api_url
-            - name: PROXMOX_INSECURE
-              valueFrom:
-                configMapKeyRef:
-                  name: autoscaler-config
-                  key: proxmox_insecure
-                  optional: true
+            # - name: PROXMOX_INSECURE
+            #   valueFrom:
+            #     configMapKeyRef:
+            #       name: autoscaler-config
+            #       key: proxmox_insecure
+            #       optional: true
             - name: BASE_VMID
               valueFrom:
                 configMapKeyRef:
