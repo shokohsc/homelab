@@ -15,7 +15,7 @@ spec:
       }
       backend "kubernetes" {
         secret_suffix     = "providerconfig"
-        namespace         = "proxmox-cloud-controller-manager"
+        namespace         = "kube-system"
         in_cluster_config = true
       }
     }
