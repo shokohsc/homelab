@@ -7,12 +7,11 @@ resources:
   - cloudflared
   # - commander
   # - crossplane
-  # - csi-proxmox
+  - csi-proxmox
   - external-dns
   - gatekeeper
   - headlamp
   - http-echo
-  # - karpenter-proxmox
   # - konflate
   - kube-state-metrics
   - kube-system
