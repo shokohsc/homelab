@@ -8,21 +8,12 @@ resources:
   - https://raw.githubusercontent.com/sergelogvinov/proxmox-cloud-controller-manager/main/docs/deploy/cloud-controller-manager-talos.yml
 patches:
   - patch: |
-      apiVersion: v1
-      kind: Namespace
-      metadata:
-        name: kube-system
-        labels:
-          bundle.cert-manager.io/inject: enabled
-    target:
-      kind: Namespace
-      name: kube-system
-  - patch: |
       apiVersion: apps/v1
       kind: Deployment
       metadata:
         name: all
       spec:
+        replicas: null
         template:
           spec:
             securityContext:
