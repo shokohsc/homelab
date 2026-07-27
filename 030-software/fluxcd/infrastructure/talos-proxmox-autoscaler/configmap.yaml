@@ -3,21 +3,25 @@ kind: ConfigMap
 metadata:
   name: autoscaler-config
 data:
-  cluster_name: "talos"          # Talos cluster name
-  min_workers: "0"               # Minimum worker nodes
-  max_workers: "20"              # Maximum worker nodes
-  disk_gib: "50"                # Disk per worker VM (GiB)
-  storage_pool: "local-lvm"      # Proxmox storage for VM disks
-  network_bridge: "vmbr1"        # Proxmox bridge for VM NICs
-  proxmox_api_url: "https://proxmox.home.arpa"  # Proxmox API endpoint
-  base_vmid: "9000"              # Starting VMID for new workers
+  cluster_name: "talos"
+  min_workers: "0"
+  max_workers: "20"
+  disk_gib: "50"
+  storage_pool: "local-lvm"
+  network_bridge: "vmbr1"
+  proxmox_api_url: "https://proxmox.home.arpa"
+  base_vmid: "8000"
+  base_gpu_vmid: "9000"
   min_cpu: "2"
   max_cpu: "8"
   min_memory_gib: "4"
   max_memory_gib: "16"
   # mac_address: ""
-  serial: "worker-vm" # SMBios key=value
+  serial: "worker-vm"
   proxmox_insecure: "false"
   tags: "talos"
   vlan_id: "20"
-  # pci_devices: '[{"id":"0000:01:00.0","pcie":true,"gpu":true}]'
+  worker_prefix: "worker-vm"
+  gpu_prefix: "worker-vm-gpu"
+  worker_nodes: '[{"name":"worker-vm"}]'
+  worker_gpu_nodes: '[{"type":"tesla-p4","nodes":["genji","hanzo"],"pci_devices":[{"id":"0000:0c:00.0","pcie":true,"gpu":true}]},{"type":"tesla-p40","nodes":["roadhog"],"pci_devices":[{"id":"0000:83:00.0","pcie":true,"gpu":true}]}]'
