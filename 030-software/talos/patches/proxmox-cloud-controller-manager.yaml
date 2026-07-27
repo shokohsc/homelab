@@ -1,6 +1,0 @@
-machine:
-  kubelet:
-    extraArgs:
-      cloud-provider: external
-      provider-id: $${ID}
-      hostname-override: $${NODENAME}
