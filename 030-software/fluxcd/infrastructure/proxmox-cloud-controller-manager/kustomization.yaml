@@ -13,8 +13,22 @@ patches:
       spec:
         template:
           spec:
+            securityContext:
+              runAsNonRoot: true
+              runAsUser: 1000
+              runAsGroup: 1000
+              fsGroup: 1000
+              seccompProfile:
+                type: RuntimeDefault
             containers:
               - name: proxmox-cloud-controller-manager
+                securityContext:
+                  allowPrivilegeEscalation: false
+                  readOnlyRootFilesystem: true
+                  runAsNonRoot: true
+                  capabilities:
+                    drop:
+                      - ALL
                 volumeMounts:
                   - mountPath: /etc/ssl/certs/ca-certs.pem
                     subPath: ca-certs.pem
