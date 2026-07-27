@@ -6,3 +6,45 @@ resources:
   - configmap.yaml
   - secret.yaml
   - ceph-csi.yaml
+patches:
+  - patch: |
+      apiVersion: apps/v1
+      kind: Deployment
+      metadata:
+        name: all
+      spec:
+        replicas: null
+        template:
+          spec:
+            affinity:
+              nodeAffinity:
+                preferredDuringSchedulingIgnoredDuringExecution:
+                - weight: 1
+                  preference:
+                    matchExpressions:
+                    - key: topology.kubernetes.io/region
+                      operator: In
+                      values:
+                      - homelab
+            tolerations:
+              - key: "node.kubernetes.io/nuc"
+                operator: "Exists"
+                effect: "NoSchedule"
+    target:
+      kind: Deployment
+      labelSelector: app=ceph-csi-rbd
+  - patch: |
+      apiVersion: apps/v1
+      kind: DaemonSet
+      metadata:
+        name: all
+      spec:
+        template:
+          spec:
+            tolerations:
+              - key: "node.kubernetes.io/nuc"
+                operator: "Exists"
+                effect: "NoSchedule"
+    target:
+      kind: DaemonSet
+      labelSelector: app=ceph-csi-rbd
