@@ -35,19 +35,10 @@ spec:
       name: ceph-rbd
       clusterID: b6e1f4cf-3e62-40f2-95aa-b403d469a097
       pool: ceph-rbd
-      reclaimPolicy: Delete
-      allowVolumeExpansion: true
       volumeBindingMode: WaitForFirstConsumer
-      mountOptions:
-        - discard
-      imageFeatures:
-        layering
-      csi.storage.k8s.io/provisioner-secret-name: ceph-secret
-      csi.storage.k8s.io/provisioner-secret-namespace: ceph-csi
-      csi.storage.k8s.io/controller-expand-secret-name: ceph-secret
-      csi.storage.k8s.io/controller-expand-secret-namespace: ceph-csi
-      csi.storage.k8s.io/node-stage-secret-name: ceph-secret
-      csi.storage.k8s.io/node-stage-secret-namespace: ceph-csi
+      controllerExpandSecret: csi-secret
+      controllerPublishSecret: csi-secret
+      nodeStageSecret: csi-secret
     secret:
       create: false
     provisioner:

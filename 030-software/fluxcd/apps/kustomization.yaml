@@ -6,7 +6,6 @@ resources:
   - cert-manager
   - cloudflared
   # - commander
-  # - crossplane
   - external-dns
   - gatekeeper
   # - headlamp
@@ -24,5 +23,5 @@ resources:
   # - sidekick
   - syslog
   - tailscale
-  - victoria-metrics
+  # - victoria-metrics
   # - whoami
