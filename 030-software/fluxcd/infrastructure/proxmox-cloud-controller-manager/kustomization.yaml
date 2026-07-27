@@ -29,6 +29,13 @@ patches:
                   capabilities:
                     drop:
                       - ALL
+                resources:
+                  requests:
+                    cpu: 50m
+                    memory: 64Mi
+                  limits:
+                    cpu: 200m
+                    memory: 128Mi
                 volumeMounts:
                   - mountPath: /etc/ssl/certs/ca-certs.pem
                     subPath: ca-certs.pem
