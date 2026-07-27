@@ -46,6 +46,7 @@ patches:
         template:
           spec:
             nodeSelector:
+              node-role.kubernetes.io/control-plane: null
               topology.kubernetes.io/zone: vm
             containers:
               - name: proxmox-csi-plugin-controller
