@@ -1,14 +1,11 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
-namespace: talos-proxmox-autoscaler
+namespace: kube-system
 resources:
-  - namespace.yaml
   - provider-config.yaml
   - proxmoxidentity.yaml
-  - deployment.yaml
-  - configmap.yaml
-  - rbac.yaml
   - secret.yaml
+  - https://raw.githubusercontent.com/sergelogvinov/proxmox-cloud-controller-manager/main/docs/deploy/cloud-controller-manager-talos.yml
 patches:
   - patch: |
       apiVersion: apps/v1
@@ -18,15 +15,36 @@ patches:
       spec:
         template:
           spec:
-            nodeSelector: null
+            securityContext:
+              runAsNonRoot: true
+              runAsUser: 1000
+              runAsGroup: 1000
+              fsGroup: 1000
+              seccompProfile:
+                type: RuntimeDefault
             containers:
-              - name: talos-proxmox-autoscaler
+              - name: proxmox-cloud-controller-manager
+                securityContext:
+                  allowPrivilegeEscalation: false
+                  readOnlyRootFilesystem: true
+                  runAsNonRoot: true
+                  capabilities:
+                    drop:
+                      - ALL
+                resources:
+                  requests:
+                    cpu: 50m
+                    memory: 64Mi
+                  limits:
+                    cpu: 200m
+                    memory: 128Mi
                 volumeMounts:
                   - mountPath: /etc/ssl/certs/ca-certs.pem
                     subPath: ca-certs.pem
                     name: tls
             affinity:
               nodeAffinity:
+                requiredDuringSchedulingIgnoredDuringExecution: null
                 preferredDuringSchedulingIgnoredDuringExecution:
                   - weight: 1
                     preference:
@@ -36,6 +54,9 @@ patches:
                           values:
                             - metal
             volumes:
+              - name: cloud-config
+                secret:
+                  secretName: proxmox-cloud-controller-manager
               - name: tls
                 configMap:
                   name: homelab-ca
@@ -46,4 +67,4 @@ patches:
                 operator: Exists
     target:
       kind: Deployment
-      labelSelector: app=talos-proxmox-autoscaler
+      labelSelector: app.kubernetes.io/name=proxmox-cloud-controller-manager

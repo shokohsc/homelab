@@ -3,4 +3,5 @@ kind: Kustomization
 resources:
   - crossplane
   - csi-proxmox
+  - proxmox-cloud-controller-manager
   - talos-proxmox-autoscaler
