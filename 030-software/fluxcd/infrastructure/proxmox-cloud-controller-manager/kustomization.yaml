@@ -1,0 +1,47 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: proxmox-cloud-controller-manager
+resources:
+  - namespace.yaml
+  - https://raw.githubusercontent.com/sergelogvinov/proxmox-cloud-controller-manager/main/docs/deploy/cloud-controller-manager-talos.yml
+patches:
+  - patch: |
+      apiVersion: apps/v1
+      kind: Deployment
+      metadata:
+        name: all
+      spec:
+        template:
+          spec:
+            containers:
+              - name: proxmox-cloud-controller-manager
+                volumeMounts:
+                  - mountPath: /etc/ssl/certs/ca-certs.pem
+                    subPath: ca-certs.pem
+                    name: tls
+            affinity:
+              nodeAffinity:
+                requiredDuringSchedulingIgnoredDuringExecution: null
+                preferredDuringSchedulingIgnoredDuringExecution:
+                  - weight: 1
+                    preference:
+                      matchExpressions:
+                        - key: topology.kubernetes.io/zone
+                          operator: In
+                          values:
+                            - metal
+            volumes:
+              - name: cloud-config
+                secret:
+                  secretName: karpenter-provider-proxmox
+              - name: tls
+                configMap:
+                  name: homelab-ca
+                  defaultMode: 0644
+            tolerations:
+              - effect: NoSchedule
+                key: node.kubernetes.io/nuc
+                operator: Exists
+    target:
+      kind: Deployment
+      labelSelector: app.kubernetes.io/name=proxmox-cloud-controller-manager

@@ -4,4 +4,5 @@ resources:
   - crossplane
   - csi-proxmox
   # - karpenter-proxmox
+  - proxmox-cloud-controller-manager
   - talos-proxmox-autoscaler
