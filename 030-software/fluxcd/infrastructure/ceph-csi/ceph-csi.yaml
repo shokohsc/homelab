@@ -1,0 +1,55 @@
+---
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: HelmRepository
+metadata:
+  name: ceph-csi
+spec:
+  interval: ${interval}
+  url: https://ceph.github.io/csi-charts
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: ceph-csi
+spec:
+  interval: ${interval}
+  chart:
+    spec:
+      chart: ceph-csi-rbd
+      version: 3.17.0
+      sourceRef:
+        kind: HelmRepository
+        name: ceph-csi
+      interval: ${interval}
+  values:
+    csiConfig:
+      - clusterID: b6e1f4cf-3e62-40f2-95aa-b403d469a097
+        monitors:
+          - 10.42.30.10:6789
+          - 10.42.30.20:6789
+          - 10.42.30.30:6789
+    storageClass:
+      annotations:
+        storageclass.kubernetes.io/is-default-class: "true"
+      create: true
+      name: ceph-rbd
+      clusterID: b6e1f4cf-3e62-40f2-95aa-b403d469a097
+      pool: ceph-rbd
+      reclaimPolicy: Delete
+      allowVolumeExpansion: true
+      volumeBindingMode: WaitForFirstConsumer
+      mountOptions:
+        - discard
+      imageFeatures:
+        layering
+      csi.storage.k8s.io/provisioner-secret-name: ceph-secret
+      csi.storage.k8s.io/provisioner-secret-namespace: ceph-csi
+      csi.storage.k8s.io/controller-expand-secret-name: ceph-secret
+      csi.storage.k8s.io/controller-expand-secret-namespace: ceph-csi
+      csi.storage.k8s.io/node-stage-secret-name: ceph-secret
+      csi.storage.k8s.io/node-stage-secret-namespace: ceph-csi
+    secret:
+      create: false
+    provisioner:
+      replicaCount: 3
+    logLevel: 2
