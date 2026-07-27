@@ -42,5 +42,5 @@ spec:
     secret:
       create: false
     provisioner:
-      replicaCount: 3
+      replicaCount: 1
     logLevel: 2
