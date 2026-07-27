@@ -1,7 +1,7 @@
 cluster:
   apiServer:
     extraArgs:
-      feature-gates: DynamicResourceAllocation=true #AuthorizeNodeWithSelectors=false
+      feature-gates: DynamicResourceAllocation=true
   controllerManager:
     extraArgs:
       feature-gates: DynamicResourceAllocation=true

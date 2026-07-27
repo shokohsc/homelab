@@ -4,7 +4,7 @@ metadata:
   name: autoscaler-config
 data:
   cluster_name: "talos"          # Talos cluster name
-  min_workers: "1"               # Minimum worker nodes
+  min_workers: "0"               # Minimum worker nodes
   max_workers: "20"              # Maximum worker nodes
   disk_gib: "50"                # Disk per worker VM (GiB)
   storage_pool: "local-lvm"      # Proxmox storage for VM disks
