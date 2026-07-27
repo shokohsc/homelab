@@ -7,7 +7,6 @@ resources:
   - cloudflared
   # - commander
   # - crossplane
-  - csi-proxmox
   - external-dns
   - gatekeeper
   - headlamp

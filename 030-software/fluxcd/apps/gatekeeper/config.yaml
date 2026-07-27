@@ -6,15 +6,14 @@ metadata:
 spec:
   match:
     - excludedNamespaces:
+        - ceph-csi
         - cilium
-        - csi-proxmox
         - flux-system
         - gatekeeper-system
-        # - karpenter-proxmox
         - kube-node-lease
         - kube-public
         - kube-state-metrics
         - kube-system
         - nfs-proxmox
-        # - talos-proxmox-autoscaler
+        - talos-proxmox-autoscaler
       processes: ["*"]

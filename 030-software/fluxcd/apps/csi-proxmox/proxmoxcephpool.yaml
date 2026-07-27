@@ -1,8 +1,0 @@
-apiVersion: platform.${publicDomain}/v1alpha1
-kind: ProxmoxCephPool
-metadata:
-  name: replicated
-spec:
-  name: ceph
-  nodeName: genji
-  pgNum: 32
