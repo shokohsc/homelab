@@ -33,4 +33,4 @@ spec:
           cpu: 500m
           memory: 512Mi
       extraLabels:
-        policy.gatekeeper.sh/ignore-psp-readonlyrootfilesystem: true
+        policy.gatekeeper.sh/ignore: true
