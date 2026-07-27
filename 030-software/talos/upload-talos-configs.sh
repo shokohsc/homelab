@@ -18,3 +18,6 @@ rsync -vz --delete --progress ./clusterconfig/talos-winston.yaml "$TALOSCONFIGS_
 
 rsync -vz --delete --progress ./clusterconfig/talos-worker-vm.yaml "$TALOSCONFIGS_HOST:$REMOTE_CONFIG_PATH/m/00-00-00-01.yaml"
 rsync -vz --delete --progress ./clusterconfig/talos-worker-vm-gpu.yaml "$TALOSCONFIGS_HOST:$REMOTE_CONFIG_PATH/m/00-00-00-02.yaml"
+
+rsync -vz --delete --progress ./clusterconfig/talos-worker-vm.yaml "$TALOSCONFIGS_HOST:$REMOTE_CONFIG_PATH/s/worker-vm.yaml"
+rsync -vz --delete --progress ./clusterconfig/talos-worker-vm-gpu.yaml "$TALOSCONFIGS_HOST:$REMOTE_CONFIG_PATH/s/worker-vm-gpu.yaml"
