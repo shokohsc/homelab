@@ -1,0 +1,34 @@
+---
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: HelmRepository
+metadata:
+  name: victoria-metrics
+spec:
+  interval: ${interval}
+  url: https://victoriametrics.github.io/helm-charts/
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: victoria-metrics
+spec:
+  interval: ${interval}
+  chart:
+    spec:
+      chart: victoria-metrics-single
+      version: 0.43.0
+      sourceRef:
+        kind: HelmRepository
+        name: victoria-metrics
+      interval: ${interval}
+  values:
+    server:
+      persistentVolume:
+        size: 1Gi
+      resources:
+        limits:
+          cpu: 500m
+          memory: 512Mi
+        requests:
+          cpu: 500m
+          memory: 512Mi
