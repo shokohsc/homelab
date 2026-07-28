@@ -36,6 +36,7 @@ spec:
       clusterID: b6e1f4cf-3e62-40f2-95aa-b403d469a097
       pool: ceph-rbd
       volumeBindingMode: WaitForFirstConsumer
+      provisionerSecret: ceph-secret
       controllerExpandSecret: ceph-secret
       controllerPublishSecret: ceph-secret
       nodeStageSecret: ceph-secret
