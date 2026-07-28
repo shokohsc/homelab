@@ -16,8 +16,12 @@ rsync -vz --progress ./clusterconfig/talos-zarya.yaml "$TALOSCONFIGS_HOST:$REMOT
 rsync -vz --progress ./clusterconfig/talos-mercy.yaml "$TALOSCONFIGS_HOST:$REMOTE_CONFIG_PATH/m/1C-69-7A-69-D9-1E.yaml"
 rsync -vz --progress ./clusterconfig/talos-winston.yaml "$TALOSCONFIGS_HOST:$REMOTE_CONFIG_PATH/m/70-85-C2-5E-D0-D3.yaml"
 
+log "Done copying baremetal talos configs"
+
 rsync -vz --progress ./clusterconfig/talos-worker-vm.yaml "$TALOSCONFIGS_HOST:$REMOTE_CONFIG_PATH/m/00-00-00-01.yaml"
 rsync -vz --progress ./clusterconfig/talos-worker-vm-gpu.yaml "$TALOSCONFIGS_HOST:$REMOTE_CONFIG_PATH/m/00-00-00-02.yaml"
 
 rsync -vz --progress ./clusterconfig/talos-worker-vm.yaml "$TALOSCONFIGS_HOST:$REMOTE_CONFIG_PATH/s/worker-vm.yaml"
 rsync -vz --progress ./clusterconfig/talos-worker-vm-gpu.yaml "$TALOSCONFIGS_HOST:$REMOTE_CONFIG_PATH/s/worker-vm-gpu.yaml"
+
+log "Done copying virtual machine talos configs"
