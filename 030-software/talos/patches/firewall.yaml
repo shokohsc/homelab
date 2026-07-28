@@ -95,6 +95,17 @@ ingress:
 ---
 apiVersion: v1alpha1
 kind: NetworkRuleConfig
+name: metrics-server
+portSelector:
+  ports:
+    - 4443
+  protocol: tcp
+ingress:
+  - subnet: 10.244.0.0/0
+  - subnet: 10.42.20.0/0
+---
+apiVersion: v1alpha1
+kind: NetworkRuleConfig
 name: syslog
 portSelector:
   ports:
