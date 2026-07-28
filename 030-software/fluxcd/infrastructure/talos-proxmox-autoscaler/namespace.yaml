@@ -3,5 +3,4 @@ kind: Namespace
 metadata:
   name: talos-proxmox-autoscaler
   labels:
-    pod-security.kubernetes.io/enforce: privileged
     bundle.cert-manager.io/inject: enabled
