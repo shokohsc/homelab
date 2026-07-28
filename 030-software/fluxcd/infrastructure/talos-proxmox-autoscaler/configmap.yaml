@@ -19,7 +19,6 @@ data:
   # mac_address: ""
   serial: "worker-vm"
   proxmox_insecure: "false"
-  tags: "talos"
   vlan_id: "20"
   worker_prefix: "worker-vm"
   gpu_prefix: "worker-vm-gpu"
