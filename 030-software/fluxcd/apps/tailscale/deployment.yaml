@@ -12,6 +12,7 @@ spec:
     metadata:
       labels:
         app: tailscale
+        policy.gatekeeper.sh/ignore-psp-capabilities-baseline: "true"
     spec:
       serviceAccountName: tailscale
       securityContext:
