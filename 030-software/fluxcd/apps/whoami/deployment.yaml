@@ -33,7 +33,7 @@ spec:
                     app: whoami
       containers:
         - name: whoami
-          image: ghcr.io/traefik/whoami:v1.11
+          image: ghcr.io/traefik/whoami:v1.12
           securityContext:
             allowPrivilegeEscalation: false
             readOnlyRootFilesystem: true
