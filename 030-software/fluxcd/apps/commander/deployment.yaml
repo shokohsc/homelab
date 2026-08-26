@@ -22,7 +22,7 @@ spec:
           type: RuntimeDefault
       containers:
         - name: commander
-          image: ghcr.io/coderaiser/cloudcmd:19.20.2-alpine
+          image: ghcr.io/coderaiser/cloudcmd:19.20.3-alpine
           securityContext:
             allowPrivilegeEscalation: false
             readOnlyRootFilesystem: true
