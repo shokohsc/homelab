@@ -5,11 +5,11 @@
       tank \
       raidz2 \
         /dev/disk/by-id/scsi-35000c500843cd9bf \
+        /dev/disk/by-id/scsi-35000c500843cdf9b \
         /dev/disk/by-id/scsi-35000c50084480e57 \
-        /dev/disk/by-id/scsi-35000cca255429d78 \
         /dev/disk/by-id/scsi-35000cca255455440 \
+        /dev/disk/by-id/scsi-35000cca2554557f0 \
         /dev/disk/by-id/scsi-35000cca255456054 \
-        /dev/disk/by-id/scsi-35000cca255480ce4 \
       spare \
         /dev/disk/by-id/scsi-35000cca255489568 \
         /dev/disk/by-id/scsi-35000cca2559ee368
@@ -29,11 +29,11 @@
 
 ## Disk mapping
 
-    scsi-35000c500843cd9bf -> sde
-scsi-35000c50084480e57 -> sda
-scsi-35000cca255429d78 -> sdh
-scsi-35000cca255455440 -> sdg
-scsi-35000cca255456054 -> sdf
-scsi-35000cca255480ce4 -> sdb
-scsi-35000cca255489568 -> sdd
-scsi-35000cca2559ee368 -> sdc
+    scsi-35000c500843cd9bf -> sda
+    scsi-35000c500843cdf9b -> sdf
+    scsi-35000c50084480e57 -> sde
+    scsi-35000cca255455440 -> sdc
+    scsi-35000cca2554557f0 -> sdd
+    scsi-35000cca255456054 -> sdb
+    scsi-35000cca255489568 -> sdh
+    scsi-35000cca2559ee368 -> sdg
