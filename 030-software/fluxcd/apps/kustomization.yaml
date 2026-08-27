@@ -23,5 +23,5 @@ resources:
   # - sidekick
   - syslog
   - tailscale
-  # - victoria-metrics
+  - victoria-metrics
   # - whoami
