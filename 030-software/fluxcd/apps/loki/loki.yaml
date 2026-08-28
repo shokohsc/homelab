@@ -185,8 +185,33 @@ spec:
 
     singleBinary:
       replicas: 1
+      resources:
+        requests:
+          cpu: 10m
+          memory: 64Mi
+        limits:
+          cpu: 100m
+          memory: 64Mi
       persistence:
         size: 1Gi
+
+    resultsCache:
+      resources:
+        requests:
+          cpu: 10m
+          memory: 64Mi
+        limits:
+          cpu: 100m
+          memory: 64Mi
+
+    chunksCache:
+      resources:
+        requests:
+          cpu: 10m
+          memory: 64Mi
+        limits:
+          cpu: 100m
+          memory: 64Mi
 
     # Zero out replica counts of other deployment modes
     backend:
