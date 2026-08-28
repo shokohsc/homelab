@@ -136,15 +136,15 @@ spec:
         bucketNames:
           chunks: loki-chunks
           ruler: loki-ruler
-        schemaConfig:
-          configs:
-            - from: "2024-04-01"
-              store: tsdb
-              object_store: filesystem
-              schema: v13
-              index:
-                prefix: loki_index_
-                period: 86400s
+      schemaConfig:
+        configs:
+          - from: "2024-04-01"
+            store: tsdb
+            object_store: filesystem
+            schema: v13
+            index:
+              prefix: loki_index_
+              period: 86400s
       # schemaConfig:
       #   configs:
       #     - from: "2024-04-01"
