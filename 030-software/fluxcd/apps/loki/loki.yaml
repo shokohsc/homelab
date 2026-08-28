@@ -128,13 +128,14 @@ spec:
         ring:
           kvstore:
             store: inmemory
-        storage:
-          bucketNames:
-            chunks: loki-chunks
           type: filesystem
           filesystem:
             chunks_directory: /tmp/loki/chunks
             rules_directory: /tmp/loki/rules
+      storage:
+        bucketNames:
+          chunks: loki-chunks
+          ruler: loki-ruler
         schemaConfig:
           configs:
             - from: "2024-04-01"
