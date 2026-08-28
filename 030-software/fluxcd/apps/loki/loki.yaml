@@ -24,6 +24,15 @@ spec:
   values:
     commonLabels: null
     deploymentMode: Monolithic
+    gateway:
+      route:
+        main:
+          enabled: true
+          parentRefs:
+            - name: cilium
+              namespace: cilium
+          hostnames:
+            - loki.${domain}
     write:
       replicas: 0
     read:
