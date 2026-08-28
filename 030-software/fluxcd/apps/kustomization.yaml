@@ -14,7 +14,7 @@ resources:
   # - konflate
   - kube-state-metrics
   - kube-system
-  - loki
+  # - loki
   - metrics-server
   # - nats
   # - pod-gateway
