@@ -4,16 +4,3 @@ namespace: loki
 resources:
   - namespace.yaml
   - loki.yaml
-  # - cronjob.yaml
-# configMapGenerator:
-# - name: scripts
-#   files:
-#   - ./scripts/curator.sh
-# generatorOptions:
-#   disableNameSuffixHash: true
-#   annotations:
-#     kustomize.toolkit.fluxcd.io/substitute: disabled
-# secretGenerator:
-# - name: loki
-#   files:
-#   - ./config/loki.yaml
