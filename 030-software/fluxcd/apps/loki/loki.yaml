@@ -23,7 +23,6 @@ spec:
     name: loki
   values:
     commonLabels: null
-    loki:
     deploymentMode: Monolithic
     # write:
     #   replicas: 0
