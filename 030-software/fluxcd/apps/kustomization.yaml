@@ -18,6 +18,7 @@ resources:
   - metrics-server
   # - nats
   # - pod-gateway
+  - promtail
   - proxmox
   # - radio
   - reloader

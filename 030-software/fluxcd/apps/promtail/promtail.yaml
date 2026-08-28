@@ -1,0 +1,148 @@
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: promtail
+  labels:
+    namespace: promtail
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: promtail
+spec:
+  interval: ${interval}
+  chart:
+    spec:
+      # renovate: registryUrl=https://grafana.github.io/helm-charts
+      chart: promtail
+      version: 6.17.1
+      sourceRef:
+        kind: HelmRepository
+        name: grafana
+        namespace: flux-system
+  values:
+    podAnnotations:
+      prometheus.io/scrape: "true"
+      prometheus.io/port: "http-metrics"
+    config:
+      clients:
+        - url: http://loki-gateway.loki/loki/api/v1/push
+      snippets:
+        pipelineStages:
+          - cri: {}
+          - docker:
+          - match:
+              selector: '{app="eventrouter"}'
+              stages:
+              - json:
+                  expressions:
+                    event_verb: verb
+                    event_kind: event.involvedObject.kind
+                    event_reason: event.reason
+                    event_namespace: event.involvedObject.namespace
+                    event_name: event.metadata.name
+                    event_source_host: event.source.host
+                    event_source_component: event.source.component
+                    event_type: event.type
+              - labels:
+                  event_verb:
+                  event_kind:
+                  event_reason:
+                  event_namespace:
+                  event_name:
+                  event_source_host:
+                  event_source_component:
+                  event_type:
+              # - json:
+              #     expressions:
+              #       namespace: event.metadata.namespace
+              # - labels:
+              #     namespace: ""
+        extraScrapeConfigs: |
+          - job_name: journal
+            journal:
+              path: /var/log/journal
+              max_age: 12h
+              labels:
+                job: systemd-journal
+            relabel_configs:
+              - source_labels: ['__journal__systemd_unit']
+                target_label: 'unit'
+              - source_labels: ['__journal__hostname']
+                target_label: 'hostname'
+          - job_name: containerd
+            containerd:
+              path: /var/log/containerd
+              max_age: 12h
+              labels:
+                job: containerd
+            relabel_configs:
+              - source_labels: ['__containerd_unit']
+                target_label: 'unit'
+              - source_labels: ['__containerd__hostname']
+                target_label: 'hostname'
+          # - job_name: syslog
+          #   syslog:
+          #     listen_address: 0.0.0.0:1601
+          #     listen_protocol: tcp
+          #     idle_timeout: 60s
+          #     label_structured_data: yes
+          #     labels:
+          #       job: "syslog"
+          #   relabel_configs:
+          #     - source_labels: [__syslog_message_hostname]
+          #       target_label: host
+          #     - source_labels: [__syslog_message_hostname]
+          #       target_label: hostname
+          #     - source_labels: [__syslog_message_severity]
+          #       target_label: level
+          #     - source_labels: [__syslog_message_app_name]
+          #       target_label: application
+          #     - source_labels: [__syslog_message_facility]
+          #       target_label: facility
+          #     - source_labels: [__syslog_connection_hostname]
+          #       target_label: connection_hostname
+        extraRelabelConfigs:
+          - source_labels: [__meta_kubernetes_pod_container_image]
+            target_label: image
+    extraVolumes:
+      - name: journal
+        hostPath:
+          path: /var/log/journal
+      - name: containerd
+        hostPath:
+          path: /var/lib/rancher/k3s/agent/containerd/
+    extraVolumeMounts:
+      - name: journal
+        mountPath: /var/log/journal
+        readOnly: true
+      - name: containerd
+        mountPath: /var/log/containerd
+        readOnly: true
+    # extraPorts:
+    #   syslog:
+    #     name: tcp-syslog
+    #     containerPort: 1601
+    #     protocol: TCP
+    #     service:
+    #       type: ClusterIP
+    #       port: 1601
+    # extraEnv:
+    #   - name: GOMEMLIMIT
+    #     valueFrom:
+    #       resourceFieldRef:
+    #         containerName: promtail
+    #         resource: limits.memory
+    #   - name: GOMAXPROCS
+    #     valueFrom:
+    #       resourceFieldRef:
+    #         containerName: promtail
+    #         resource: limits.cpu
+    resources:
+      requests:
+        cpu: 100m
+        memory: 64M
+      limits:
+        cpu: 1000m
+        memory: 128M

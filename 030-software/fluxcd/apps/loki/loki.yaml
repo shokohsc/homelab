@@ -99,16 +99,6 @@ spec:
       tracing:
         enabled: true
 
-    gateway:
-      enabled: true
-      resources:
-        requests:
-          cpu: 100m
-          memory: 64M
-        limits:
-          cpu: 1000m
-          memory: 64M
-
     chunksCache:
       enabled: false
     resultsCache:
