@@ -129,6 +129,8 @@ spec:
           kvstore:
             store: inmemory
         storage:
+          bucketNames:
+            chunks: loki-chunks
           type: filesystem
           filesystem:
             chunks_directory: /tmp/loki/chunks
