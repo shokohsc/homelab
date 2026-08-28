@@ -213,6 +213,15 @@ spec:
           cpu: 100m
           memory: 64Mi
 
+    sidecar:
+      resources:
+        requests:
+          cpu: 10m
+          memory: 64Mi
+        limits:
+          cpu: 100m
+          memory: 64Mi
+
     # Zero out replica counts of other deployment modes
     backend:
       replicas: 0
