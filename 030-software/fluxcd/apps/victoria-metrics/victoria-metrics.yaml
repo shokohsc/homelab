@@ -22,7 +22,15 @@ spec:
         name: victoria-metrics
       interval: ${interval}
   values:
+    nameOverride: "vms"
     server:
+      route:
+        enabled: true
+        parentRefs:
+          - name: cilium
+            namespace: cilium
+        hostnames:
+          - victoria-metrics.${domain}
       persistentVolume:
         size: 1Gi
       resources:
