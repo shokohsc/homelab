@@ -24,14 +24,14 @@ spec:
   values:
     commonLabels: null
     deploymentMode: Monolithic
-    # write:
-    #   replicas: 0
-    # read:
-    #   replicas: 0
-    # backend:
-    #   replicas: 0
+    write:
+      replicas: 0
+    read:
+      replicas: 0
+    backend:
+      replicas: 0
     singleBinary:
-      # replicas: 1
+      replicas: 1
       resources:
         requests:
           cpu: 100m
