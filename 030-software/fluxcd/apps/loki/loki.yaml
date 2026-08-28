@@ -129,6 +129,14 @@ spec:
         limits:
           cpu: 100m
           memory: 64Mi
+      metrics:
+        resources:
+          requests:
+            cpu: 10m
+            memory: 64Mi
+          limits:
+            cpu: 100m
+            memory: 64Mi
     loki:
       commonConfig:
         replication_factor: 1
