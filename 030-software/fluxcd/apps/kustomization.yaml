@@ -7,12 +7,14 @@ resources:
   - cloudflared
   # - commander
   - external-dns
+  # - fan-control
   - gatekeeper
   # - headlamp
   - http-echo
   # - konflate
   - kube-state-metrics
   - kube-system
+  - loki
   - metrics-server
   # - nats
   # - pod-gateway
