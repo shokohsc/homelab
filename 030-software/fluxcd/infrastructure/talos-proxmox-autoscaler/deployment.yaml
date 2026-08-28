@@ -24,7 +24,7 @@ spec:
           type: RuntimeDefault
       containers:
         - name: talos-proxmox-autoscaler
-          image: ghcr.io/shokohsc/talos-proxmox-autoscaler:bf27524
+          image: ghcr.io/shokohsc/talos-proxmox-autoscaler:1cca6e4
           securityContext:
             allowPrivilegeEscalation: false
             readOnlyRootFilesystem: true
