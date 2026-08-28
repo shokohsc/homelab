@@ -125,8 +125,14 @@ spec:
     loki:
       commonConfig:
         replication_factor: 1
+        ring:
+          kvstore:
+            store: inmemory
         storage:
           type: filesystem
+          filesystem:
+            chunks_directory: /tmp/loki/chunks
+            rules_directory: /tmp/loki/rules
         schemaConfig:
           configs:
             - from: "2024-04-01"
