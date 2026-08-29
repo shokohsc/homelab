@@ -107,7 +107,7 @@ spec:
         datasources:
           - name: VictoriMetrics
             type: prometheus
-            url: http://victoria-metrics.victoria-metrics.svc.cluster.local
+            url: http://victoria-metrics-vms-server.victoria-metrics.svc.cluster.local
             access: proxy
             isDefault: true
           - name: VictoriLogs
