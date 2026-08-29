@@ -5,6 +5,7 @@ resources:
   # - browserless
   - cert-manager
   - cloudflared
+  - cloudnativepg
   # - commander
   - external-dns
   # - fan-control
