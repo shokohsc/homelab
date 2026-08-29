@@ -88,7 +88,7 @@ spec:
         memory: 64M
       limits:
         cpu: 1000m
-        memory: 256M
+        memory: 1024Mi
 
     sidecar:
       dashboards:

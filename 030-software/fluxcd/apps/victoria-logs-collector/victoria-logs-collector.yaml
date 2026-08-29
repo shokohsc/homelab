@@ -28,6 +28,7 @@ spec:
     maxDiskUsagePerURL: 1GB
     podLabels:
       policy.gatekeeper.sh/ignore-no-host-paths: "true"
+      policy.gatekeeper.sh/ignore-psp-volume-types: "true"
     resources:
       limits:
         cpu: 500m
