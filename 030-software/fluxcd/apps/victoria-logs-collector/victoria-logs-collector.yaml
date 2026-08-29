@@ -29,13 +29,11 @@ spec:
     podLabels:
       policy.gatekeeper.sh/ignore-no-host-paths: "true"
       policy.gatekeeper.sh/ignore-psp-volume-types: "true"
-    extraVolumeMounts:
-      - name: work
-        mountPath: /var/lib/vl-collector/vlagent-remotewrite-data
-    extraVolumes:
-      - name: work
-        emptyDir:
-          medium: Memory
+    persistence:
+      volume:
+        - name: work
+          emptyDir:
+            medium: Memory
     resources:
       limits:
         cpu: 500m
