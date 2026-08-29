@@ -9,16 +9,15 @@ resources:
   - external-dns
   # - fan-control
   - gatekeeper
+  - grafana
   # - headlamp
   - http-echo
   # - konflate
   - kube-state-metrics
   - kube-system
-  # - loki
   - metrics-server
   # - nats
   # - pod-gateway
-  - promtail
   - proxmox
   # - radio
   - reloader
@@ -26,5 +25,7 @@ resources:
   # - sidekick
   - syslog
   - tailscale
+  - victoria-logs
+  - victoria-logs-collector
   - victoria-metrics
   # - whoami

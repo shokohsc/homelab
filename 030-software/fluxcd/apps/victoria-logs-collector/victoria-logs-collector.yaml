@@ -1,0 +1,49 @@
+---
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: HelmRepository
+metadata:
+  name: victoria-logs-collector
+spec:
+  interval: ${interval}
+  url: https://victoriametrics.github.io/helm-charts/
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: victoria-logs-collector
+spec:
+  interval: ${interval}
+  chart:
+    spec:
+      chart: victoria-logs-collector-single
+      version: v1.52.0
+      sourceRef:
+        kind: HelmRepository
+        name: victoria-logs-collector
+      interval: ${interval}
+  values:
+    nameOverride: "vlc"
+    remoteWrite:
+      - url: http://victoria-logs.victoria-logs.svc.cluster.local:9428
+    maxDiskUsagePerURL: 1GB
+    resources:
+      limits:
+        cpu: 500m
+        memory: 512Mi
+      requests:
+        cpu: 500m
+        memory: 512Mi
+    podSecurityContext:
+      runAsNonRoot: true
+      runAsUser: 1000
+      runAsGroup: 1000
+      fsGroup: 1000
+      seccompProfile:
+        type: RuntimeDefault
+    securityContext:
+      allowPrivilegeEscalation: false
+      readOnlyRootFilesystem: true
+      runAsNonRoot: true
+      capabilities:
+        drop:
+          - ALL

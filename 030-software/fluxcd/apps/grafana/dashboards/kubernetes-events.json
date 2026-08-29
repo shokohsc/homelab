@@ -1,0 +1,526 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": {
+          "type": "datasource",
+          "uid": "grafana"
+        },
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "target": {
+          "limit": 100,
+          "matchAny": false,
+          "tags": [],
+          "type": "dashboard"
+        },
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "links": [],
+  "liveNow": false,
+  "panels": [
+    {
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "P439CB9F79A05E3BF"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "align": "auto",
+            "cellOptions": {
+              "type": "auto"
+            },
+            "inspect": false
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
+      "id": 4,
+      "options": {
+        "cellHeight": "sm",
+        "footer": {
+          "countRows": false,
+          "fields": "",
+          "reducer": [
+            "sum"
+          ],
+          "show": false
+        },
+        "showHeader": true
+      },
+      "pluginVersion": "10.4.3",
+      "targets": [
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "P439CB9F79A05E3BF"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "group": [],
+          "metricColumn": "none",
+          "rawQuery": true,
+          "rawSql": "SELECT\n  reason,\n  count AS \"eventCount\",\n  \"involvedObjectApiVersion\",\n  \"involvedObjectKind\",\n  \"involvedObjectName\",\n  \"involvedObjectNamespace\",\n  \"sourceComponent\",\n  \"sourceHost\"\nFROM\n  events\nWHERE\n  $__timeFilter(\"createdAt\")\nAND reason = ANY(ARRAY[$reason]::varchar[])\nAND \"involvedObjectApiVersion\" = ANY(ARRAY[$involvedObjectApiVersion]::varchar[])\nAND \"involvedObjectKind\" = ANY(ARRAY[$involvedObjectKind]::varchar[])\nAND \"involvedObjectName\" = ANY(ARRAY[$involvedObjectName]::varchar[])\nAND \"involvedObjectNamespace\" = ANY(ARRAY[$involvedObjectNamespace]::varchar[])\nAND \"sourceComponent\" = ANY(ARRAY[$sourceComponent]::varchar[])\nAND \"sourceHost\" = ANY(ARRAY[$sourceHost]::varchar[])\nORDER BY \"createdAt\" DESC",
+          "refId": "A",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "column"
+              }
+            ]
+          ],
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          },
+          "timeColumn": "time",
+          "where": [
+            {
+              "name": "$__timeFilter",
+              "params": [],
+              "type": "macro"
+            }
+          ]
+        }
+      ],
+      "title": "Kubernetes warning events times",
+      "type": "table"
+    },
+    {
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "P439CB9F79A05E3BF"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "align": "auto",
+            "cellOptions": {
+              "type": "auto"
+            },
+            "inspect": false
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Time"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 162
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "type"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 223
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 15,
+        "w": 24,
+        "x": 0,
+        "y": 8
+      },
+      "id": 2,
+      "options": {
+        "cellHeight": "sm",
+        "footer": {
+          "countRows": false,
+          "fields": "",
+          "reducer": [
+            "sum"
+          ],
+          "show": false
+        },
+        "showHeader": true,
+        "sortBy": []
+      },
+      "pluginVersion": "10.4.3",
+      "targets": [
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "P439CB9F79A05E3BF"
+          },
+          "editorMode": "code",
+          "format": "time_series",
+          "group": [],
+          "metricColumn": "none",
+          "rawQuery": true,
+          "rawSql": "SELECT\n  $__time(\"createdAt\"),\n  message\nFROM\n  events\nWHERE\n  $__timeFilter(\"createdAt\")\nAND reason = ANY(ARRAY[$reason]::varchar[])\nAND \"involvedObjectApiVersion\" = ANY(ARRAY[$involvedObjectApiVersion]::varchar[])\nAND \"involvedObjectKind\" = ANY(ARRAY[$involvedObjectKind]::varchar[])\nAND \"involvedObjectName\" = ANY(ARRAY[$involvedObjectName]::varchar[])\nAND \"involvedObjectNamespace\" = ANY(ARRAY[$involvedObjectNamespace]::varchar[])\nAND \"sourceComponent\" = ANY(ARRAY[$sourceComponent]::varchar[])\nAND \"sourceHost\" = ANY(ARRAY[$sourceHost]::varchar[])\nORDER BY time DESC\n",
+          "refId": "A",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "column"
+              }
+            ]
+          ],
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          },
+          "timeColumn": "time",
+          "where": [
+            {
+              "name": "$__timeFilter",
+              "params": [],
+              "type": "macro"
+            }
+          ]
+        }
+      ],
+      "title": "Kubernetes warning events",
+      "type": "table"
+    },
+    {
+      "datasource": {
+        "type": "loki",
+        "uid": "P8E80F9AEF21F6940"
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 24,
+        "x": 0,
+        "y": 23
+      },
+      "id": 6,
+      "options": {
+        "dedupStrategy": "none",
+        "enableLogDetails": true,
+        "prettifyLogMessage": false,
+        "showCommonLabels": false,
+        "showLabels": true,
+        "showTime": true,
+        "sortOrder": "Descending",
+        "wrapLogMessage": true
+      },
+      "pluginVersion": "7.5.5",
+      "targets": [
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "P8E80F9AEF21F6940"
+          },
+          "expr": "{namespace=~\"$involvedObjectNamespace\"}",
+          "refId": "A"
+        }
+      ],
+      "title": "Logs",
+      "type": "logs"
+    }
+  ],
+  "schemaVersion": 39,
+  "tags": [],
+  "templating": {
+    "list": [
+      {
+        "current": {
+          "selected": true,
+          "text": [
+            "All"
+          ],
+          "value": [
+            "$__all"
+          ]
+        },
+        "datasource": {
+          "type": "postgres",
+          "uid": "P439CB9F79A05E3BF"
+        },
+        "definition": "select reason from events WHERE $__timeFilter(\"createdAt\")",
+        "description": "Event reason",
+        "hide": 0,
+        "includeAll": true,
+        "label": "Reason",
+        "multi": true,
+        "name": "reason",
+        "options": [],
+        "query": "select reason from events WHERE $__timeFilter(\"createdAt\")",
+        "refresh": 2,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 1,
+        "type": "query"
+      },
+      {
+        "current": {
+          "selected": true,
+          "text": [
+            "All"
+          ],
+          "value": [
+            "$__all"
+          ]
+        },
+        "datasource": {
+          "type": "postgres",
+          "uid": "P439CB9F79A05E3BF"
+        },
+        "definition": "select \"involvedObjectApiVersion\" from events WHERE $__timeFilter(\"createdAt\")",
+        "description": "Event involved object apiVersion",
+        "hide": 0,
+        "includeAll": true,
+        "label": "apiVersion",
+        "multi": true,
+        "name": "involvedObjectApiVersion",
+        "options": [],
+        "query": "select \"involvedObjectApiVersion\" from events WHERE $__timeFilter(\"createdAt\")",
+        "refresh": 2,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 1,
+        "type": "query"
+      },
+      {
+        "current": {
+          "selected": true,
+          "text": [
+            "All"
+          ],
+          "value": [
+            "$__all"
+          ]
+        },
+        "datasource": {
+          "type": "postgres",
+          "uid": "P439CB9F79A05E3BF"
+        },
+        "definition": "select \"involvedObjectKind\" from events WHERE $__timeFilter(\"createdAt\")",
+        "description": "Event involved object kind",
+        "hide": 0,
+        "includeAll": true,
+        "label": "kind",
+        "multi": true,
+        "name": "involvedObjectKind",
+        "options": [],
+        "query": "select \"involvedObjectKind\" from events WHERE $__timeFilter(\"createdAt\")",
+        "refresh": 2,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 1,
+        "type": "query"
+      },
+      {
+        "current": {
+          "selected": true,
+          "text": [
+            "All"
+          ],
+          "value": [
+            "$__all"
+          ]
+        },
+        "datasource": {
+          "type": "postgres",
+          "uid": "P439CB9F79A05E3BF"
+        },
+        "definition": "select \"involvedObjectName\" from events WHERE $__timeFilter(\"createdAt\")",
+        "description": "Event involved object name",
+        "hide": 0,
+        "includeAll": true,
+        "label": "name",
+        "multi": true,
+        "name": "involvedObjectName",
+        "options": [],
+        "query": "select \"involvedObjectName\" from events WHERE $__timeFilter(\"createdAt\")",
+        "refresh": 2,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 1,
+        "type": "query"
+      },
+      {
+        "current": {
+          "selected": true,
+          "text": [
+            "All"
+          ],
+          "value": [
+            "$__all"
+          ]
+        },
+        "datasource": {
+          "type": "postgres",
+          "uid": "P439CB9F79A05E3BF"
+        },
+        "definition": "select \"involvedObjectNamespace\" from events WHERE $__timeFilter(\"createdAt\")",
+        "description": "Event involved object namespace",
+        "hide": 0,
+        "includeAll": true,
+        "label": "namespace",
+        "multi": true,
+        "name": "involvedObjectNamespace",
+        "options": [],
+        "query": "select \"involvedObjectNamespace\" from events WHERE $__timeFilter(\"createdAt\")",
+        "refresh": 2,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 1,
+        "type": "query"
+      },
+      {
+        "current": {
+          "selected": true,
+          "text": [
+            "All"
+          ],
+          "value": [
+            "$__all"
+          ]
+        },
+        "datasource": {
+          "type": "postgres",
+          "uid": "P439CB9F79A05E3BF"
+        },
+        "definition": "select \"sourceComponent\" from events WHERE $__timeFilter(\"createdAt\")",
+        "description": "Event source component",
+        "hide": 0,
+        "includeAll": true,
+        "label": "component",
+        "multi": true,
+        "name": "sourceComponent",
+        "options": [],
+        "query": "select \"sourceComponent\" from events WHERE $__timeFilter(\"createdAt\")",
+        "refresh": 2,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 1,
+        "type": "query"
+      },
+      {
+        "current": {
+          "selected": true,
+          "text": [
+            "All"
+          ],
+          "value": [
+            "$__all"
+          ]
+        },
+        "datasource": {
+          "type": "postgres",
+          "uid": "P439CB9F79A05E3BF"
+        },
+        "definition": "select \"sourceHost\" from events WHERE $__timeFilter(\"createdAt\")",
+        "description": "Event source host",
+        "hide": 0,
+        "includeAll": true,
+        "label": "host",
+        "multi": true,
+        "name": "sourceHost",
+        "options": [],
+        "query": "select \"sourceHost\" from events WHERE $__timeFilter(\"createdAt\")",
+        "refresh": 2,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 1,
+        "type": "query"
+      }
+    ]
+  },
+  "time": {
+    "from": "now-15m",
+    "to": "now"
+  },
+  "timepicker": {},
+  "timezone": "",
+  "title": "Kubernetes events",
+  "uid": "ByioLUb7z",
+  "version": 2,
+  "weekStart": ""
+}

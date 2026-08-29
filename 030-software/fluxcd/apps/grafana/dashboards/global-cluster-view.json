@@ -1,0 +1,1306 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": {
+          "type": "datasource",
+          "uid": "grafana"
+        },
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "target": {
+          "limit": 100,
+          "matchAny": false,
+          "tags": [],
+          "type": "dashboard"
+        },
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "id": 6,
+  "links": [],
+  "panels": [
+    {
+      "collapsed": true,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
+      "id": 16,
+      "panels": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "description": "$namespace/$pod:$container",
+          "fieldConfig": {
+            "defaults": {
+              "fieldMinMax": false,
+              "mappings": []
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 8,
+            "x": 0,
+            "y": 1
+          },
+          "id": 11,
+          "options": {
+            "autoSizeColumns": false,
+            "autoSizePolygons": true,
+            "autoSizeRows": true,
+            "compositeConfig": {
+              "animationSpeed": "1500",
+              "composites": [],
+              "enabled": true
+            },
+            "compositeGlobalAliasingEnabled": false,
+            "ellipseCharacters": 18,
+            "ellipseEnabled": false,
+            "globalAutoScaleFonts": true,
+            "globalClickthrough": "",
+            "globalClickthroughCustomTarget": "",
+            "globalClickthroughCustomTargetEnabled": false,
+            "globalClickthroughNewTabEnabled": true,
+            "globalClickthroughSanitizedEnabled": true,
+            "globalDecimals": 0,
+            "globalDisplayMode": "all",
+            "globalDisplayTextTriggeredEmpty": "OK",
+            "globalFillColor": "rgba(10, 85, 161, 1)",
+            "globalFontSize": 12,
+            "globalGradientsEnabled": true,
+            "globalOperator": "last",
+            "globalPolygonBorderColor": "rgba(0, 0, 0, 0)",
+            "globalPolygonBorderSize": 2,
+            "globalPolygonSize": 25,
+            "globalRegexPattern": "",
+            "globalShape": "hexagon_pointed_top",
+            "globalShowTimestampEnabled": false,
+            "globalShowTimestampFontSize": 12,
+            "globalShowTimestampFormat": "YYYY-MM-DD HH:mm:ss",
+            "globalShowTimestampPosition": "below_value",
+            "globalShowTimestampYOffset": 0,
+            "globalShowTooltipColumnHeadersEnabled": false,
+            "globalShowValueEnabled": true,
+            "globalTextFontAutoColorEnabled": true,
+            "globalTextFontColor": "#000000",
+            "globalTextFontFamily": "Roboto Mono",
+            "globalThresholdsConfig": [
+              {
+                "color": "#299c46",
+                "state": 0,
+                "value": 0
+              },
+              {
+                "color": "#ed8128",
+                "state": 1,
+                "value": 60
+              },
+              {
+                "color": "#f53636",
+                "state": 2,
+                "value": 80
+              }
+            ],
+            "globalTooltipsEnabled": true,
+            "globalTooltipsFontFamily": "Roboto",
+            "globalTooltipsShowTimestampEnabled": false,
+            "globalTooltipsShowValueEnabled": true,
+            "globalUnitFormat": "percent",
+            "layoutDisplayLimit": 100,
+            "layoutNumColumns": 4,
+            "layoutNumRows": 8,
+            "overrideConfig": {
+              "overrides": []
+            },
+            "sortByDirection": 1,
+            "sortByField": "name",
+            "tooltipDisplayMode": "all",
+            "tooltipDisplayTextTriggeredEmpty": "OK",
+            "tooltipPrimarySortByField": "thresholdLevel",
+            "tooltipPrimarySortDirection": 1,
+            "tooltipSecondarySortByField": "value",
+            "tooltipSecondarySortDirection": 1
+          },
+          "pluginVersion": "2.1.13",
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "PBFA97CFB590B2093"
+              },
+              "editorMode": "code",
+              "exemplar": false,
+              "expr": "round(\n  100 *\n    sum(\n      rate(container_cpu_usage_seconds_total{instance=\"sombra\", namespace=~\"$namespace\", pod=~\"$pod\", container=~\"$container\", container!=\"\"}[5m])\n    ) by (namespace, pod)\n      /\n    sum(\n      kube_pod_container_resource_limits{node=\"sombra\", namespace=~\"$namespace\", pod=~\"$pod\", container=~\"$container\", container!=\"\", resource=\"cpu\"}\n    ) by (namespace, pod)\n)",
+              "format": "time_series",
+              "hide": false,
+              "instant": false,
+              "interval": "",
+              "legendFormat": "{{ pod }}",
+              "refId": "C"
+            },
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "PBFA97CFB590B2093"
+              },
+              "editorMode": "code",
+              "exemplar": false,
+              "expr": "sum(1000 * rate(container_cpu_usage_seconds_total{instance=\"sombra\", namespace=~\"$namespace\", pod=~\"$pod\", container=~\"$container\", container!=\"\"}[5m])) by (namespace, pod)",
+              "format": "time_series",
+              "hide": true,
+              "instant": false,
+              "interval": "",
+              "legendFormat": "{{ namespace }}/{{ pod }}:{{ container }}",
+              "refId": "B"
+            },
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "PBFA97CFB590B2093"
+              },
+              "editorMode": "code",
+              "exemplar": false,
+              "expr": "round(\n  100 *\n    sum(\n      rate(container_cpu_usage_seconds_total{instance=~\"$node\", namespace=~\"$namespace\", pod=~\"$pod\", container=~\"$container\", container!=\"\"}[5m])\n    ) by (instance, namespace, pod)\n      /\n    sum(\n      kube_pod_container_resource_requests{instance=~\"$node\", namespace=~\"$namespace\", pod=~\"$pod\", container=~\"$container\", container!=\"\", resource=\"cpu\"}\n    ) by (instance, namespace, pod)\n) ",
+              "format": "time_series",
+              "hide": true,
+              "instant": false,
+              "interval": "",
+              "legendFormat": "{{ namespace }}/{{ pod }}:{{ container }}",
+              "refId": "A"
+            }
+          ],
+          "title": "CPU Sombra %Limit",
+          "type": "grafana-polystat-panel"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "description": "$namespace/$pod:$container",
+          "fieldConfig": {
+            "defaults": {
+              "fieldMinMax": false,
+              "mappings": []
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 8,
+            "x": 8,
+            "y": 1
+          },
+          "id": 12,
+          "options": {
+            "autoSizeColumns": false,
+            "autoSizePolygons": true,
+            "autoSizeRows": true,
+            "compositeConfig": {
+              "animationSpeed": "1500",
+              "composites": [],
+              "enabled": true
+            },
+            "compositeGlobalAliasingEnabled": false,
+            "ellipseCharacters": 18,
+            "ellipseEnabled": false,
+            "globalAutoScaleFonts": true,
+            "globalClickthrough": "",
+            "globalClickthroughCustomTarget": "",
+            "globalClickthroughCustomTargetEnabled": false,
+            "globalClickthroughNewTabEnabled": true,
+            "globalClickthroughSanitizedEnabled": true,
+            "globalDecimals": 0,
+            "globalDisplayMode": "all",
+            "globalDisplayTextTriggeredEmpty": "OK",
+            "globalFillColor": "rgba(10, 85, 161, 1)",
+            "globalFontSize": 12,
+            "globalGradientsEnabled": true,
+            "globalOperator": "last",
+            "globalPolygonBorderColor": "rgba(0, 0, 0, 0)",
+            "globalPolygonBorderSize": 2,
+            "globalPolygonSize": 25,
+            "globalRegexPattern": "",
+            "globalShape": "hexagon_pointed_top",
+            "globalShowTimestampEnabled": false,
+            "globalShowTimestampFontSize": 12,
+            "globalShowTimestampFormat": "YYYY-MM-DD HH:mm:ss",
+            "globalShowTimestampPosition": "below_value",
+            "globalShowTimestampYOffset": 0,
+            "globalShowTooltipColumnHeadersEnabled": false,
+            "globalShowValueEnabled": true,
+            "globalTextFontAutoColorEnabled": true,
+            "globalTextFontColor": "#000000",
+            "globalTextFontFamily": "Roboto Mono",
+            "globalThresholdsConfig": [
+              {
+                "color": "#299c46",
+                "state": 0,
+                "value": 0
+              },
+              {
+                "color": "#ed8128",
+                "state": 1,
+                "value": 60
+              },
+              {
+                "color": "#f53636",
+                "state": 2,
+                "value": 80
+              }
+            ],
+            "globalTooltipsEnabled": true,
+            "globalTooltipsFontFamily": "Roboto",
+            "globalTooltipsShowTimestampEnabled": false,
+            "globalTooltipsShowValueEnabled": true,
+            "globalUnitFormat": "percent",
+            "layoutDisplayLimit": 100,
+            "layoutNumColumns": 4,
+            "layoutNumRows": 8,
+            "overrideConfig": {
+              "overrides": []
+            },
+            "sortByDirection": 1,
+            "sortByField": "name",
+            "tooltipDisplayMode": "all",
+            "tooltipDisplayTextTriggeredEmpty": "OK",
+            "tooltipPrimarySortByField": "thresholdLevel",
+            "tooltipPrimarySortDirection": 1,
+            "tooltipSecondarySortByField": "value",
+            "tooltipSecondarySortDirection": 1
+          },
+          "pluginVersion": "2.1.13",
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "PBFA97CFB590B2093"
+              },
+              "editorMode": "code",
+              "exemplar": false,
+              "expr": "round(\n  100 *\n    sum(\n      rate(container_cpu_usage_seconds_total{instance=\"lucio\", namespace=~\"$namespace\", pod=~\"$pod\", container=~\"$container\", container!=\"\"}[5m])\n    ) by (namespace, pod)\n      /\n    sum(\n      kube_pod_container_resource_limits{node=\"lucio\", namespace=~\"$namespace\", pod=~\"$pod\", container=~\"$container\", container!=\"\", resource=\"cpu\"}\n    ) by (namespace, pod)\n)",
+              "format": "time_series",
+              "hide": false,
+              "instant": false,
+              "interval": "",
+              "legendFormat": "{{ pod }}",
+              "refId": "C"
+            },
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "PBFA97CFB590B2093"
+              },
+              "editorMode": "code",
+              "exemplar": false,
+              "expr": "sum(1000 * rate(container_cpu_usage_seconds_total{instance=\"sombra\", namespace=~\"$namespace\", pod=~\"$pod\", container=~\"$container\", container!=\"\"}[5m])) by (namespace, pod)",
+              "format": "time_series",
+              "hide": true,
+              "instant": false,
+              "interval": "",
+              "legendFormat": "{{ namespace }}/{{ pod }}:{{ container }}",
+              "refId": "B"
+            },
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "PBFA97CFB590B2093"
+              },
+              "editorMode": "code",
+              "exemplar": false,
+              "expr": "round(\n  100 *\n    sum(\n      rate(container_cpu_usage_seconds_total{instance=~\"$node\", namespace=~\"$namespace\", pod=~\"$pod\", container=~\"$container\", container!=\"\"}[5m])\n    ) by (instance, namespace, pod)\n      /\n    sum(\n      kube_pod_container_resource_requests{instance=~\"$node\", namespace=~\"$namespace\", pod=~\"$pod\", container=~\"$container\", container!=\"\", resource=\"cpu\"}\n    ) by (instance, namespace, pod)\n) ",
+              "format": "time_series",
+              "hide": true,
+              "instant": false,
+              "interval": "",
+              "legendFormat": "{{ namespace }}/{{ pod }}:{{ container }}",
+              "refId": "A"
+            }
+          ],
+          "title": "CPU Lucio %Limit",
+          "type": "grafana-polystat-panel"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "description": "$namespace/$pod:$container",
+          "fieldConfig": {
+            "defaults": {
+              "fieldMinMax": false,
+              "mappings": []
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 8,
+            "x": 16,
+            "y": 1
+          },
+          "id": 13,
+          "options": {
+            "autoSizeColumns": false,
+            "autoSizePolygons": true,
+            "autoSizeRows": true,
+            "compositeConfig": {
+              "animationSpeed": "1500",
+              "composites": [],
+              "enabled": true
+            },
+            "compositeGlobalAliasingEnabled": false,
+            "ellipseCharacters": 18,
+            "ellipseEnabled": false,
+            "globalAutoScaleFonts": true,
+            "globalClickthrough": "",
+            "globalClickthroughCustomTarget": "",
+            "globalClickthroughCustomTargetEnabled": false,
+            "globalClickthroughNewTabEnabled": true,
+            "globalClickthroughSanitizedEnabled": true,
+            "globalDecimals": 0,
+            "globalDisplayMode": "all",
+            "globalDisplayTextTriggeredEmpty": "OK",
+            "globalFillColor": "rgba(10, 85, 161, 1)",
+            "globalFontSize": 12,
+            "globalGradientsEnabled": true,
+            "globalOperator": "last",
+            "globalPolygonBorderColor": "rgba(0, 0, 0, 0)",
+            "globalPolygonBorderSize": 2,
+            "globalPolygonSize": 25,
+            "globalRegexPattern": "",
+            "globalShape": "hexagon_pointed_top",
+            "globalShowTimestampEnabled": false,
+            "globalShowTimestampFontSize": 12,
+            "globalShowTimestampFormat": "YYYY-MM-DD HH:mm:ss",
+            "globalShowTimestampPosition": "below_value",
+            "globalShowTimestampYOffset": 0,
+            "globalShowTooltipColumnHeadersEnabled": false,
+            "globalShowValueEnabled": true,
+            "globalTextFontAutoColorEnabled": true,
+            "globalTextFontColor": "#000000",
+            "globalTextFontFamily": "Roboto Mono",
+            "globalThresholdsConfig": [
+              {
+                "color": "#299c46",
+                "state": 0,
+                "value": 0
+              },
+              {
+                "color": "#ed8128",
+                "state": 1,
+                "value": 60
+              },
+              {
+                "color": "#f53636",
+                "state": 2,
+                "value": 80
+              }
+            ],
+            "globalTooltipsEnabled": true,
+            "globalTooltipsFontFamily": "Roboto",
+            "globalTooltipsShowTimestampEnabled": false,
+            "globalTooltipsShowValueEnabled": true,
+            "globalUnitFormat": "percent",
+            "layoutDisplayLimit": 100,
+            "layoutNumColumns": 4,
+            "layoutNumRows": 8,
+            "overrideConfig": {
+              "overrides": []
+            },
+            "sortByDirection": 1,
+            "sortByField": "name",
+            "tooltipDisplayMode": "all",
+            "tooltipDisplayTextTriggeredEmpty": "OK",
+            "tooltipPrimarySortByField": "thresholdLevel",
+            "tooltipPrimarySortDirection": 1,
+            "tooltipSecondarySortByField": "value",
+            "tooltipSecondarySortDirection": 1
+          },
+          "pluginVersion": "2.1.13",
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "PBFA97CFB590B2093"
+              },
+              "editorMode": "code",
+              "exemplar": false,
+              "expr": "round(\n  100 *\n    sum(\n      rate(container_cpu_usage_seconds_total{instance=\"zarya\", namespace=~\"$namespace\", pod=~\"$pod\", container=~\"$container\", container!=\"\"}[5m])\n    ) by (namespace, pod)\n      /\n    sum(\n      kube_pod_container_resource_limits{node=\"zarya\", namespace=~\"$namespace\", pod=~\"$pod\", container=~\"$container\", container!=\"\", resource=\"cpu\"}\n    ) by (namespace, pod)\n)",
+              "format": "time_series",
+              "hide": false,
+              "instant": false,
+              "interval": "",
+              "legendFormat": "{{ pod }}",
+              "refId": "C"
+            },
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "PBFA97CFB590B2093"
+              },
+              "editorMode": "code",
+              "exemplar": false,
+              "expr": "sum(1000 * rate(container_cpu_usage_seconds_total{instance=\"sombra\", namespace=~\"$namespace\", pod=~\"$pod\", container=~\"$container\", container!=\"\"}[5m])) by (namespace, pod)",
+              "format": "time_series",
+              "hide": true,
+              "instant": false,
+              "interval": "",
+              "legendFormat": "{{ namespace }}/{{ pod }}:{{ container }}",
+              "refId": "B"
+            },
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "PBFA97CFB590B2093"
+              },
+              "editorMode": "code",
+              "exemplar": false,
+              "expr": "round(\n  100 *\n    sum(\n      rate(container_cpu_usage_seconds_total{instance=~\"$node\", namespace=~\"$namespace\", pod=~\"$pod\", container=~\"$container\", container!=\"\"}[5m])\n    ) by (instance, namespace, pod)\n      /\n    sum(\n      kube_pod_container_resource_requests{instance=~\"$node\", namespace=~\"$namespace\", pod=~\"$pod\", container=~\"$container\", container!=\"\", resource=\"cpu\"}\n    ) by (instance, namespace, pod)\n) ",
+              "format": "time_series",
+              "hide": true,
+              "instant": false,
+              "interval": "",
+              "legendFormat": "{{ namespace }}/{{ pod }}:{{ container }}",
+              "refId": "A"
+            }
+          ],
+          "title": "CPU Zarya %Limit",
+          "type": "grafana-polystat-panel"
+        }
+      ],
+      "title": "Pod Spread",
+      "type": "row"
+    },
+    {
+      "collapsed": true,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 1
+      },
+      "id": 15,
+      "panels": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "description": "$namespace/$pod:$container",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "axisBorderShow": false,
+                "axisCenteredZero": false,
+                "axisColorMode": "text",
+                "axisLabel": "",
+                "axisPlacement": "auto",
+                "barAlignment": 0,
+                "barWidthFactor": 0.6,
+                "drawStyle": "line",
+                "fillOpacity": 50,
+                "gradientMode": "opacity",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "insertNulls": false,
+                "lineInterpolation": "linear",
+                "lineWidth": 2,
+                "pointSize": 5,
+                "scaleDistribution": {
+                  "type": "linear"
+                },
+                "showPoints": "never",
+                "spanNulls": false,
+                "stacking": {
+                  "group": "A",
+                  "mode": "none"
+                },
+                "thresholdsStyle": {
+                  "mode": "line"
+                }
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  }
+                ]
+              },
+              "unit": "short"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 24,
+            "x": 0,
+            "y": 2
+          },
+          "id": 2,
+          "options": {
+            "legend": {
+              "calcs": [
+                "lastNotNull",
+                "max",
+                "min"
+              ],
+              "displayMode": "table",
+              "placement": "right",
+              "showLegend": true
+            },
+            "tooltip": {
+              "mode": "multi",
+              "sort": "none"
+            }
+          },
+          "pluginVersion": "11.3.1",
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "PBFA97CFB590B2093"
+              },
+              "editorMode": "code",
+              "exemplar": false,
+              "expr": "sum(1000 * rate(container_cpu_usage_seconds_total{namespace=~\"$namespace\", pod=~\"$pod\", container=~\"$container\", container!=\"\"}[5m])) by (namespace, pod, container)",
+              "format": "time_series",
+              "hide": false,
+              "instant": false,
+              "interval": "",
+              "legendFormat": "{{ namespace }}/{{ pod }}:{{ container }}",
+              "refId": "B"
+            },
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "PBFA97CFB590B2093"
+              },
+              "editorMode": "code",
+              "exemplar": false,
+              "expr": "round(\n  100 *\n    sum(\n      rate(container_cpu_usage_seconds_total{namespace=~\"$namespace\", pod=~\"$pod\", container=~\"$container\", container!=\"\"}[5m])\n    ) by (namespace, pod, container)\n      /\n    sum(\n      kube_pod_container_resource_requests{namespace=~\"$namespace\", pod=~\"$pod\", container=~\"$container\", container!=\"\", resource=\"cpu\"}\n    ) by (namespace, pod, container)\n)",
+              "format": "time_series",
+              "hide": true,
+              "instant": false,
+              "interval": "",
+              "legendFormat": "{{ namespace }}/{{ pod }}:{{ container }}",
+              "refId": "A"
+            },
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "PBFA97CFB590B2093"
+              },
+              "editorMode": "code",
+              "exemplar": false,
+              "expr": "round(\n  100 *\n    sum(\n      rate(container_cpu_usage_seconds_total{namespace=~\"$namespace\", pod=~\"$pod\", container=~\"$container\", container!=\"\"}[5m])\n    ) by (namespace, pod, container)\n      /\n    sum(\n      kube_pod_container_resource_limits{namespace=~\"$namespace\", pod=~\"$pod\", container=~\"$container\", container!=\"\", resource=\"cpu\"}\n    ) by (namespace, pod, container)\n)",
+              "format": "time_series",
+              "hide": true,
+              "instant": false,
+              "interval": "",
+              "legendFormat": "{{ namespace }}/{{ pod }}:{{ container }}",
+              "refId": "C"
+            }
+          ],
+          "title": "CPU",
+          "type": "timeseries"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "description": "$namespace/$pod:$container",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "axisBorderShow": false,
+                "axisCenteredZero": false,
+                "axisColorMode": "text",
+                "axisLabel": "",
+                "axisPlacement": "auto",
+                "barAlignment": 0,
+                "barWidthFactor": 0.6,
+                "drawStyle": "line",
+                "fillOpacity": 50,
+                "gradientMode": "opacity",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "insertNulls": false,
+                "lineInterpolation": "linear",
+                "lineWidth": 2,
+                "pointSize": 5,
+                "scaleDistribution": {
+                  "type": "linear"
+                },
+                "showPoints": "never",
+                "spanNulls": false,
+                "stacking": {
+                  "group": "A",
+                  "mode": "none"
+                },
+                "thresholdsStyle": {
+                  "mode": "off"
+                }
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  }
+                ]
+              },
+              "unit": "decbytes"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 24,
+            "x": 0,
+            "y": 10
+          },
+          "id": 4,
+          "options": {
+            "legend": {
+              "calcs": [
+                "lastNotNull",
+                "max",
+                "min"
+              ],
+              "displayMode": "table",
+              "placement": "right",
+              "showLegend": true
+            },
+            "tooltip": {
+              "mode": "multi",
+              "sort": "none"
+            }
+          },
+          "pluginVersion": "11.3.1",
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "PBFA97CFB590B2093"
+              },
+              "editorMode": "code",
+              "exemplar": false,
+              "expr": "sum(container_memory_usage_bytes{namespace=~\"$namespace\", pod=~\"$pod\", container=~\"$container\", container!=\"\"}) by (namespace, pod, container)",
+              "hide": false,
+              "interval": "",
+              "legendFormat": "{{ namespace }}/{{ pod }}:{{ container }}",
+              "range": true,
+              "refId": "A"
+            },
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "PBFA97CFB590B2093"
+              },
+              "editorMode": "code",
+              "exemplar": false,
+              "expr": "round(\n  100 *\n    sum(\n      container_memory_usage_bytes{namespace=~\"$namespace\", pod=~\"$pod\", container=~\"$container\", container!=\"\"}\n    ) by (namespace, pod, container)\n      /\n    sum(\n      kube_pod_container_resource_requests{namespace=~\"$namespace\", pod=~\"$pod\", container=~\"$container\", container!=\"\", resource=\"memory\"}\n    ) by (namespace, pod, container)\n)",
+              "hide": true,
+              "interval": "",
+              "legendFormat": "{{ namespace }}/{{ pod }}:{{ container }}",
+              "range": true,
+              "refId": "B"
+            },
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "PBFA97CFB590B2093"
+              },
+              "editorMode": "code",
+              "exemplar": false,
+              "expr": "round(\n  100 *\n    sum(\n      container_memory_usage_bytes{namespace=~\"$namespace\", pod=~\"$pod\", container=~\"$container\", container!=\"\"}\n    ) by (namespace, pod, container)\n      /\n    sum(\n      kube_pod_container_resource_limits{namespace=~\"$namespace\", pod=~\"$pod\", container=~\"$container\", container!=\"\", resource=\"memory\"}\n    ) by (namespace, pod, container)\n)",
+              "hide": true,
+              "interval": "",
+              "legendFormat": "{{ namespace }}/{{ pod }}:{{ container }}",
+              "range": true,
+              "refId": "C"
+            }
+          ],
+          "title": "Memory",
+          "type": "timeseries"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "description": "$namespace/$pod",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "axisBorderShow": false,
+                "axisCenteredZero": false,
+                "axisColorMode": "text",
+                "axisLabel": "",
+                "axisPlacement": "auto",
+                "barAlignment": 0,
+                "barWidthFactor": 0.6,
+                "drawStyle": "line",
+                "fillOpacity": 50,
+                "gradientMode": "opacity",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "insertNulls": false,
+                "lineInterpolation": "linear",
+                "lineWidth": 2,
+                "pointSize": 5,
+                "scaleDistribution": {
+                  "type": "linear"
+                },
+                "showPoints": "never",
+                "spanNulls": false,
+                "stacking": {
+                  "group": "A",
+                  "mode": "none"
+                },
+                "thresholdsStyle": {
+                  "mode": "off"
+                }
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  }
+                ]
+              },
+              "unit": "Bps"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 24,
+            "x": 0,
+            "y": 18
+          },
+          "id": 5,
+          "options": {
+            "legend": {
+              "calcs": [
+                "lastNotNull",
+                "max",
+                "min"
+              ],
+              "displayMode": "table",
+              "placement": "right",
+              "showLegend": true
+            },
+            "tooltip": {
+              "mode": "multi",
+              "sort": "none"
+            }
+          },
+          "pluginVersion": "11.3.1",
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "PBFA97CFB590B2093"
+              },
+              "editorMode": "code",
+              "exemplar": false,
+              "expr": "avg(rate(container_network_transmit_bytes_total{namespace=~\"$namespace\", pod=~\"$pod\", pod!=\"\"}[5m])) by (namespace, pod)",
+              "format": "time_series",
+              "interval": "",
+              "legendFormat": "{{ namespace }}/{{ pod }} Tx",
+              "range": true,
+              "refId": "A"
+            },
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "PBFA97CFB590B2093"
+              },
+              "editorMode": "code",
+              "exemplar": false,
+              "expr": "avg(rate(container_network_receive_bytes_total{namespace=~\"$namespace\", pod=~\"$pod\", pod!=\"\"}[5m])) by (namespace, pod)",
+              "format": "time_series",
+              "hide": false,
+              "interval": "",
+              "legendFormat": "{{ namespace }}/{{ pod }} Rx",
+              "range": true,
+              "refId": "B"
+            }
+          ],
+          "title": "Network",
+          "type": "timeseries"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "description": "$namespace/$pod:$container",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "axisBorderShow": false,
+                "axisCenteredZero": false,
+                "axisColorMode": "text",
+                "axisLabel": "",
+                "axisPlacement": "auto",
+                "barAlignment": 0,
+                "barWidthFactor": 0.6,
+                "drawStyle": "line",
+                "fillOpacity": 50,
+                "gradientMode": "opacity",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "insertNulls": false,
+                "lineInterpolation": "linear",
+                "lineWidth": 2,
+                "pointSize": 5,
+                "scaleDistribution": {
+                  "type": "linear"
+                },
+                "showPoints": "never",
+                "spanNulls": false,
+                "stacking": {
+                  "group": "A",
+                  "mode": "none"
+                },
+                "thresholdsStyle": {
+                  "mode": "off"
+                }
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  }
+                ]
+              },
+              "unit": "decbytes"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 24,
+            "x": 0,
+            "y": 26
+          },
+          "id": 6,
+          "options": {
+            "legend": {
+              "calcs": [
+                "lastNotNull",
+                "max",
+                "min"
+              ],
+              "displayMode": "table",
+              "placement": "right",
+              "showLegend": true
+            },
+            "tooltip": {
+              "mode": "multi",
+              "sort": "none"
+            }
+          },
+          "pluginVersion": "11.3.1",
+          "targets": [
+            {
+              "exemplar": false,
+              "expr": "sum(rate(container_fs_reads_bytes_total{namespace=~\"$namespace\", pod=~\"$pod\", container=~\"$container\", container!=\"\"}[5m])) by (namespace, pod, container)",
+              "interval": "",
+              "legendFormat": "{{ namespace }}/{{ pod }}:{{ container }} Rx",
+              "refId": "A"
+            },
+            {
+              "exemplar": false,
+              "expr": "sum(rate(container_fs_writes_bytes_total{namespace=~\"$namespace\", pod=~\"$pod\", container=~\"$container\", container!=\"\"}[5m])) by (namespace, pod, container)",
+              "hide": false,
+              "interval": "",
+              "legendFormat": "{{ namespace }}/{{ pod }}:{{ container }} Wx",
+              "refId": "B"
+            }
+          ],
+          "title": "Filesystem",
+          "type": "timeseries"
+        }
+      ],
+      "title": "Resources Usage",
+      "type": "row"
+    },
+    {
+      "collapsed": true,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 2
+      },
+      "id": 14,
+      "panels": [
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "P8E80F9AEF21F6940"
+          },
+          "fieldConfig": {
+            "defaults": {},
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 24,
+            "x": 0,
+            "y": 35
+          },
+          "id": 8,
+          "options": {
+            "dedupStrategy": "none",
+            "enableLogDetails": true,
+            "prettifyLogMessage": false,
+            "showCommonLabels": false,
+            "showLabels": false,
+            "showTime": true,
+            "sortOrder": "Descending",
+            "wrapLogMessage": false
+          },
+          "pluginVersion": "7.5.5",
+          "targets": [
+            {
+              "expr": "{namespace=~\"$namespace\", pod=~\"$pod\", container=~\"$container\", container!=\"\"}",
+              "refId": "A"
+            }
+          ],
+          "title": "Logs",
+          "type": "logs"
+        },
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "P439CB9F79A05E3BF"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "custom": {
+                "align": "auto",
+                "cellOptions": {
+                  "type": "auto"
+                },
+                "inspect": false
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green"
+                  },
+                  {
+                    "color": "red",
+                    "value": 80
+                  }
+                ]
+              }
+            },
+            "overrides": [
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "Time"
+                },
+                "properties": [
+                  {
+                    "id": "custom.width",
+                    "value": 162
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "type"
+                },
+                "properties": [
+                  {
+                    "id": "custom.width",
+                    "value": 223
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "involvedObjectName"
+                },
+                "properties": [
+                  {
+                    "id": "custom.width",
+                    "value": 293
+                  }
+                ]
+              }
+            ]
+          },
+          "gridPos": {
+            "h": 6,
+            "w": 24,
+            "x": 0,
+            "y": 43
+          },
+          "id": 10,
+          "options": {
+            "cellHeight": "sm",
+            "footer": {
+              "countRows": false,
+              "fields": "",
+              "reducer": [
+                "sum"
+              ],
+              "show": false
+            },
+            "showHeader": true,
+            "sortBy": []
+          },
+          "pluginVersion": "10.4.3",
+          "targets": [
+            {
+              "datasource": {
+                "type": "postgres",
+                "uid": "P439CB9F79A05E3BF"
+              },
+              "editorMode": "code",
+              "format": "time_series",
+              "group": [],
+              "metricColumn": "none",
+              "rawQuery": true,
+              "rawSql": "SELECT\n  $__time(\"createdAt\"),\n  \"involvedObjectName\",\n  \"message\"\nFROM\n  events\nWHERE\n  $__timeFilter(\"createdAt\")\nAND \"involvedObjectName\" = ANY(ARRAY[$pod]::varchar[])\nAND \"involvedObjectNamespace\" = ANY(ARRAY[$namespace]::varchar[])\nORDER BY time DESC\n",
+              "refId": "A",
+              "select": [
+                [
+                  {
+                    "params": [
+                      "value"
+                    ],
+                    "type": "column"
+                  }
+                ]
+              ],
+              "sql": {
+                "columns": [
+                  {
+                    "parameters": [],
+                    "type": "function"
+                  }
+                ],
+                "groupBy": [
+                  {
+                    "property": {
+                      "type": "string"
+                    },
+                    "type": "groupBy"
+                  }
+                ],
+                "limit": 50
+              },
+              "timeColumn": "time",
+              "where": [
+                {
+                  "name": "$__timeFilter",
+                  "params": [],
+                  "type": "macro"
+                }
+              ]
+            }
+          ],
+          "title": "warning events",
+          "type": "table"
+        }
+      ],
+      "title": "Logs & Events",
+      "type": "row"
+    }
+  ],
+  "preload": false,
+  "refresh": "10s",
+  "schemaVersion": 40,
+  "tags": [
+    "metron"
+  ],
+  "templating": {
+    "list": [
+      {
+        "current": {
+          "text": [
+            "All"
+          ],
+          "value": [
+            "$__all"
+          ]
+        },
+        "definition": "label_values(kube_node_info,node)",
+        "includeAll": true,
+        "label": "Node",
+        "multi": true,
+        "name": "node",
+        "options": [],
+        "query": {
+          "qryType": 1,
+          "query": "label_values(kube_node_info,node)",
+          "refId": "PrometheusVariableQueryEditor-VariableQuery"
+        },
+        "refresh": 1,
+        "regex": "",
+        "sort": 1,
+        "type": "query"
+      },
+      {
+        "current": {
+          "text": [
+            "default"
+          ],
+          "value": [
+            "default"
+          ]
+        },
+        "datasource": {
+          "type": "prometheus",
+          "uid": "PBFA97CFB590B2093"
+        },
+        "definition": "label_values(namespace)",
+        "includeAll": false,
+        "label": "Namespace",
+        "multi": true,
+        "name": "namespace",
+        "options": [],
+        "query": {
+          "query": "label_values(namespace)",
+          "refId": "StandardVariableQuery"
+        },
+        "refresh": 1,
+        "regex": "/[^\"]/",
+        "sort": 1,
+        "type": "query"
+      },
+      {
+        "current": {
+          "text": [
+            "All"
+          ],
+          "value": [
+            "$__all"
+          ]
+        },
+        "datasource": {
+          "type": "prometheus",
+          "uid": "PBFA97CFB590B2093"
+        },
+        "definition": "label_values(kube_pod_status_ready{namespace=~\"$namespace\", condition!=\"false\"},pod)",
+        "includeAll": true,
+        "label": "Pod",
+        "multi": true,
+        "name": "pod",
+        "options": [],
+        "query": {
+          "qryType": 1,
+          "query": "label_values(kube_pod_status_ready{namespace=~\"$namespace\", condition!=\"false\"},pod)",
+          "refId": "PrometheusVariableQueryEditor-VariableQuery"
+        },
+        "refresh": 1,
+        "regex": "",
+        "sort": 1,
+        "type": "query"
+      },
+      {
+        "current": {
+          "text": [
+            "All"
+          ],
+          "value": [
+            "$__all"
+          ]
+        },
+        "datasource": {
+          "type": "prometheus",
+          "uid": "PBFA97CFB590B2093"
+        },
+        "definition": "label_values(container_memory_rss{namespace=~\"$namespace\", pod=~\"$pod\"}, container)",
+        "includeAll": true,
+        "label": "Container",
+        "multi": true,
+        "name": "container",
+        "options": [],
+        "query": {
+          "query": "label_values(container_memory_rss{namespace=~\"$namespace\", pod=~\"$pod\"}, container)",
+          "refId": "StandardVariableQuery"
+        },
+        "refresh": 1,
+        "regex": "",
+        "sort": 1,
+        "type": "query"
+      }
+    ]
+  },
+  "time": {
+    "from": "now-15m",
+    "to": "now"
+  },
+  "timepicker": {},
+  "timezone": "",
+  "title": "Global Cluster View",
+  "uid": "Ie9afVlMz",
+  "version": 2,
+  "weekStart": ""
+}

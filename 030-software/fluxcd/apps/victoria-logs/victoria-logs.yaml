@@ -1,0 +1,59 @@
+---
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: HelmRepository
+metadata:
+  name: victoria-logs
+spec:
+  interval: ${interval}
+  url: https://victoriametrics.github.io/helm-charts/
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: victoria-logs
+spec:
+  interval: ${interval}
+  chart:
+    spec:
+      chart: victoria-logs-single
+      version: 0.13.9
+      sourceRef:
+        kind: HelmRepository
+        name: victoria-logs
+      interval: ${interval}
+  values:
+    nameOverride: "vls"
+    server:
+      route:
+        enabled: true
+        parentRefs:
+          - name: cilium
+            namespace: cilium
+        hostnames:
+          - victoria-logs.${domain}
+      retentionPeriod: 2d
+      persistentVolume:
+        size: 1Gi
+      dashboards:
+        enabled: true
+      resources:
+        limits:
+          cpu: 500m
+          memory: 512Mi
+        requests:
+          cpu: 500m
+          memory: 512Mi
+      podSecurityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        seccompProfile:
+          type: RuntimeDefault
+      securityContext:
+        allowPrivilegeEscalation: false
+        readOnlyRootFilesystem: true
+        runAsNonRoot: true
+        capabilities:
+          drop:
+            - ALL

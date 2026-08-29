@@ -1,0 +1,260 @@
+---
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: HelmRepository
+metadata:
+  name: grafana-community
+spec:
+  interval: ${interval}
+  url: https://grafana-community.github.io/helm-charts
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: grafana
+spec:
+  interval: ${interval}
+  chart:
+    spec:
+      chart: grafana
+      version: 13.0.1
+      sourceRef:
+        kind: HelmRepository
+        name: grafana-community
+        namespace: flux-system
+
+  values:
+    rbac:
+      pspEnabled: false
+    route:
+      main:
+        enabled: true
+        annotations:
+          dashboard.${domain}/name: grafana
+          dashboard.${domain}/url: https://grafana.${domain}
+          dashboard.${domain}/icon: monitor-dashboard
+        hostnames:
+          - grafana.${domain}
+        parentRefs:
+          - name: cilium
+            namespace: cilium
+
+    grafana.ini:
+      auth.anonymous:
+        enabled: true
+        org_name: Main Org.
+        org_role: Admin
+      auth:
+        disable_login_form: true
+        disable_signout_menu: true
+      panels:
+        disable_sanitize_html: true
+
+    plugins:
+      - hamedkarbasi93-nodegraphapi-datasource
+      - grafana-piechart-panel
+      - yesoreyeram-infinity-datasource
+
+      - grafana-polystat-panel
+      # - digrich-bubblechart-panel
+      # - boazreicher-mosaicplot-panel
+
+    resources:
+      requests:
+        cpu: 10m
+        memory: 64M
+      limits:
+        cpu: 1000m
+        memory: 256M
+
+    sidecar:
+      dashboards:
+        enabled: true
+        labelValue: k8s-gitops
+      resources:
+        requests:
+          cpu: 10m
+          memory: 64M
+        limits:
+          cpu: 100m
+          memory: 256M
+
+    datasources:
+      nodegraphapi-plugin-datasource.yaml:
+        apiVersion: 1
+        datasources:
+        - name: "Node Graph API"
+          jsonData:
+            url: "http://k8spacket.k8spacket.svc.cluster.local:8080"
+          access: "proxy"
+          basicAuth: false
+          isDefault: false
+          readOnly: false
+          type: "hamedkarbasi93-nodegraphapi-datasource"
+          typeLogoUrl: "public/plugins/hamedkarbasi93-nodegraphapi-datasource/img/logo.svg"
+          typeName: "node-graph-plugin"
+          orgId: 1
+          version: 1
+        - orgId: 1
+          name: sidekick
+          type: "yesoreyeram-infinity-datasource"
+          url: "http://api.sidekick.svc.cluster.local:3000"
+          basicAuth: false
+          isDefault: false
+          jsonData:
+            customHealthCheckEnabled: true
+            customHealthCheckUrl: "http://api.sidekick.svc.cluster.local:3000/"
+      datasources.yaml:
+        apiVersion: 1
+        datasources:
+          - name: VictoriMetrics
+            type: prometheus
+            url: http://victoria-metrics.victoria-metrics.svc.cluster.local
+            access: proxy
+            isDefault: true
+          - name: VictoriLogs
+            type: victorialogs
+            access: proxy
+            url: http://victoria-logs.victoria-logs.svc.cluster.local
+            jsonData:
+              httpHeaderName1: 'X-Scope-OrgID'
+            secureJsonData:
+              httpHeaderValue1: '1'
+          - name: Tempo
+            type: tempo
+            access: proxy
+            url: http://tempo.tempo:3200
+          - name: mattermost-postgres
+            type: postgres
+            access: proxy
+            url: postgresql.postgresql
+            user: mattermost
+            database: mattermost
+            jsonData:
+              sslmode: disable
+              postgresVersion: 1200
+            secureJsonData:
+              password: mattermost
+          - name: sidekick-postgres
+            type: postgres
+            access: proxy
+            url: postgresql.postgresql
+            user: sidekick
+            database: sidekick
+            jsonData:
+              sslmode: disable
+              postgresVersion: 1200
+            secureJsonData:
+              password: sidekick
+          - name: blocky-postgres
+            type: postgres
+            access: proxy
+            url: postgresql.postgresql
+            user: blocky
+            database: blocky
+            jsonData:
+              sslmode: disable
+              postgresVersion: 1200
+            secureJsonData:
+              password: blocky
+
+
+    dashboardProviders:
+      dashboardproviders.yaml:
+        apiVersion: 1
+        providers:
+        - name: 'default'
+          orgId: 1
+          folder: ''
+          type: file
+          editable: true
+          options:
+            path: /var/lib/grafana/dashboards/default
+        # - name: 'kubernetes-mixin'
+        #   orgId: 1
+        #   folder: ''
+        #   type: file
+        #   editable: true
+        #   options:
+        #     path: /var/lib/grafana/dashboards/kubernetes-mixin
+        - name: 'external'
+          orgId: 1
+          folder: ''
+          type: file
+          editable: true
+          options:
+            path: /var/lib/grafana/dashboards/external
+
+    dashboardsConfigMaps:
+      default: dashboards
+      # kubernetes-mixin: kubernetes-dashboards
+
+    dashboards:
+      external:
+        1-node-exporter:
+          gnetId: 11074
+          revision: 9
+          datasource: VictoriMetrics
+        node-exporter-full:
+          gnetId: 1860
+          revision: 30
+          datasource: VictoriMetrics
+        openwrt:
+          gnetId: 11147
+          revision: 1
+          datasource: VictoriMetrics
+        ceph-cluster:
+          gnetId: 2842
+          revision: 16
+          datasource: VictoriMetrics
+        ceph-osd:
+          gnetId: 5336
+          revision: 9
+          datasource: VictoriMetrics
+        ceph-pools:
+          gnetId: 5342
+          revision: 9
+          datasource: VictoriMetrics
+        flux-cluster:
+          url: https://raw.githubusercontent.com/fluxcd/flux2-monitoring-example/main/monitoring/configs/dashboards/cluster.json
+          datasource: VictoriMetrics
+        flux-control-plane:
+          url: https://raw.githubusercontent.com/fluxcd/flux2-monitoring-example/main/monitoring/configs/dashboards/control-plane.json
+          datasource: VictoriMetrics
+        flux-logs:
+          url: https://raw.githubusercontent.com/fluxcd/flux2-monitoring-example/main/monitoring/configs/dashboards/logs.json
+          datasource: VictoriMetrics
+        nginx-dashboard:
+          url: https://raw.githubusercontent.com/kubernetes/ingress-nginx/main/deploy/grafana/dashboards/nginx.json
+          datasource: VictoriMetrics
+        weave-net:
+          gnetId: 11804
+          revision: 3
+          datasource: VictoriMetrics
+        k8s-volumes:
+          gnetId: 11455
+          revision: 6
+          datasource: VictoriMetrics
+        coredns:
+          gnetId: 14981
+          revision: 2
+          datasource: VictoriMetrics
+        # blocky:
+        #   url: https://github.com/0xERR0R/blocky/raw/refs/heads/main/docs/blocky-grafana.json
+        #   datasource: VictoriMetrics
+        blocky-query:
+          url: https://raw.githubusercontent.com/0xERR0R/blocky/main/docs/blocky-query-grafana-postgres.json
+          datasource: blocky-postgres
+        kubernetes-event-exporter:
+          gnetId: 17882
+          revision: 2
+          datasource: VictoriLogs
+        # haproxy:
+        #   gnetId: 12693
+        #   revision: 5
+        #   datasource: VictoriMetrics
+        # windows-exporter:
+        #   gnetId: 14499
+        #   datasource: VictoriMetrics
+        # proxmox-prometheus:
+        #   gnetId: 10347
+        #   datasource: VictoriMetrics
