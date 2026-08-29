@@ -2,7 +2,7 @@
 apiVersion: source.toolkit.fluxcd.io/v1
 kind: HelmRepository
 metadata:
-  name: victoria-logs-collector
+  name: victoria-metrics
 spec:
   interval: ${interval}
   url: https://victoriametrics.github.io/helm-charts/
@@ -15,11 +15,11 @@ spec:
   interval: ${interval}
   chart:
     spec:
-      chart: victoria-logs-collector-single
+      chart: victoria-logs-collector
       version: v1.52.0
       sourceRef:
         kind: HelmRepository
-        name: victoria-logs-collector
+        name: victoria-metrics
       interval: ${interval}
   values:
     nameOverride: "vlc"

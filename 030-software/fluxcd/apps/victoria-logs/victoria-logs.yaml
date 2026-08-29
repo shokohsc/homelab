@@ -2,7 +2,7 @@
 apiVersion: source.toolkit.fluxcd.io/v1
 kind: HelmRepository
 metadata:
-  name: victoria-logs
+  name: victoria-metrics
 spec:
   interval: ${interval}
   url: https://victoriametrics.github.io/helm-charts/
@@ -19,7 +19,7 @@ spec:
       version: 0.13.9
       sourceRef:
         kind: HelmRepository
-        name: victoria-logs
+        name: victoria-metrics
       interval: ${interval}
   values:
     nameOverride: "vls"
