@@ -130,15 +130,15 @@ spec:
       datasources.yaml:
         apiVersion: 1
         datasources:
-          - name: VictoriMetrics
+          - name: VictoriaMetrics
             type: prometheus
-            url: http://victoria-metrics-vms-server.victoria-metrics.svc.cluster.local
+            url: http://victoria-metrics-vms-server.victoria-metrics.svc.cluster.local:8428
             access: proxy
             isDefault: true
-          - name: VictoriLogs
-            type: victorialogs
+          - name: VictoriaLogs
+            type: victoriametrics-logs-datasource
             access: proxy
-            url: http://victoria-logs-vls-server.victoria-logs.svc.cluster.local
+            url: http://victoria-logs-vls-server.victoria-logs.svc.cluster.local:9428
             jsonData:
               httpHeaderName1: 'X-Scope-OrgID'
             secureJsonData:
