@@ -8,6 +8,7 @@ spec:
     - excludedNamespaces:
         - ceph-csi
         - cilium
+        - cnpg-system
         - flux-system
         - gatekeeper-system
         - kube-node-lease
