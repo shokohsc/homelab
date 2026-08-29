@@ -20,7 +20,7 @@ configMapGenerator:
   - ./dashboards/squid-dashboard.json
   # - ./dashboards/storage-io-statistics.json
   - ./dashboards/pod-spread.json
-  - ./dashboards/cert-manager.json
+  # - ./dashboards/cert-manager.json
 
 generatorOptions:
   disableNameSuffixHash: true
