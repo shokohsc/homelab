@@ -21,3 +21,19 @@ spec:
         kind: HelmRepository
         name: stackgres
       interval: ${interval}
+      postRenderers:
+        - kustomize:
+            patches:
+              - patch: |
+                  apiVersion: apps/v1
+                  kind: Job
+                  metadata:
+                    name: all
+                  spec:
+                    template:
+                      metadata:
+                        labels:
+                          policy.gatekeeper.sh/ignore-psp-readonlyrootfilesystem: "true"
+                target:
+                  kind: Job
+                  labelSelector: app=stackgres-operator-init

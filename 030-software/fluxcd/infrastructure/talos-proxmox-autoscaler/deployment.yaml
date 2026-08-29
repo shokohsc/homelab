@@ -5,6 +5,7 @@ metadata:
   labels:
     app: talos-proxmox-autoscaler
 spec:
+  revisionHistoryLimit: 0
   selector:
     matchLabels:
       app: talos-proxmox-autoscaler
