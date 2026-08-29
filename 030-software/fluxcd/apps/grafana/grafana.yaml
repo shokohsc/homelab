@@ -113,7 +113,7 @@ spec:
           - name: VictoriLogs
             type: victorialogs
             access: proxy
-            url: http://victoria-logs.victoria-logs.svc.cluster.local
+            url: http://victoria-logs-vls-server.victoria-logs.svc.cluster.local
             jsonData:
               httpHeaderName1: 'X-Scope-OrgID'
             secureJsonData:

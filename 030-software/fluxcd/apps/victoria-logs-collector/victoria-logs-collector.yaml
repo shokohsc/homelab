@@ -24,7 +24,7 @@ spec:
   values:
     nameOverride: "vlc"
     remoteWrite:
-      - url: http://victoria-logs.victoria-logs.svc.cluster.local:9428
+      - url: http://victoria-logs-vls-server.victoria-logs.svc.cluster.local:9428
     maxDiskUsagePerURL: 1GB
     resources:
       limits:
