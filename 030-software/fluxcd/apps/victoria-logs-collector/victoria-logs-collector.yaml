@@ -30,6 +30,8 @@ spec:
       policy.gatekeeper.sh/ignore-no-host-paths: "true"
       policy.gatekeeper.sh/ignore-psp-volume-types: "true"
       policy.gatekeeper.sh/ignore-psp-pods-allowed-user-ranges: "true"
+    extraArgs:
+      tmpDataPath: /tmp
     persistence:
       volume:
         emptyDir:
