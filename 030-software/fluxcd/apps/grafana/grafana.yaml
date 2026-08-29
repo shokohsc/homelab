@@ -74,6 +74,7 @@ spec:
         disable_sanitize_html: true
 
     plugins:
+      - victoriametrics-logs-datasource
       - hamedkarbasi93-nodegraphapi-datasource
       - grafana-piechart-panel
       - yesoreyeram-infinity-datasource
@@ -139,10 +140,10 @@ spec:
             type: victoriametrics-logs-datasource
             access: proxy
             url: http://victoria-logs-vls-server.victoria-logs.svc.cluster.local:9428
-            jsonData:
-              httpHeaderName1: 'X-Scope-OrgID'
-            secureJsonData:
-              httpHeaderValue1: '1'
+            # jsonData:
+            #   httpHeaderName1: 'X-Scope-OrgID'
+            # secureJsonData:
+            #   httpHeaderValue1: '1'
           # - name: Tempo
           #   type: tempo
           #   access: proxy
