@@ -79,30 +79,30 @@ spec:
           memory: 256M
 
     datasources:
-      nodegraphapi-plugin-datasource.yaml:
-        apiVersion: 1
-        datasources:
-        - name: "Node Graph API"
-          jsonData:
-            url: "http://k8spacket.k8spacket.svc.cluster.local:8080"
-          access: "proxy"
-          basicAuth: false
-          isDefault: false
-          readOnly: false
-          type: "hamedkarbasi93-nodegraphapi-datasource"
-          typeLogoUrl: "public/plugins/hamedkarbasi93-nodegraphapi-datasource/img/logo.svg"
-          typeName: "node-graph-plugin"
-          orgId: 1
-          version: 1
-        - orgId: 1
-          name: sidekick
-          type: "yesoreyeram-infinity-datasource"
-          url: "http://api.sidekick.svc.cluster.local:3000"
-          basicAuth: false
-          isDefault: false
-          jsonData:
-            customHealthCheckEnabled: true
-            customHealthCheckUrl: "http://api.sidekick.svc.cluster.local:3000/"
+      # nodegraphapi-plugin-datasource.yaml:
+      #   apiVersion: 1
+      #   datasources:
+      #   - name: "Node Graph API"
+      #     jsonData:
+      #       url: "http://k8spacket.k8spacket.svc.cluster.local:8080"
+      #     access: "proxy"
+      #     basicAuth: false
+      #     isDefault: false
+      #     readOnly: false
+      #     type: "hamedkarbasi93-nodegraphapi-datasource"
+      #     typeLogoUrl: "public/plugins/hamedkarbasi93-nodegraphapi-datasource/img/logo.svg"
+      #     typeName: "node-graph-plugin"
+      #     orgId: 1
+      #     version: 1
+      #   - orgId: 1
+      #     name: sidekick
+      #     type: "yesoreyeram-infinity-datasource"
+      #     url: "http://api.sidekick.svc.cluster.local:3000"
+      #     basicAuth: false
+      #     isDefault: false
+      #     jsonData:
+      #       customHealthCheckEnabled: true
+      #       customHealthCheckUrl: "http://api.sidekick.svc.cluster.local:3000/"
       datasources.yaml:
         apiVersion: 1
         datasources:
@@ -119,43 +119,43 @@ spec:
               httpHeaderName1: 'X-Scope-OrgID'
             secureJsonData:
               httpHeaderValue1: '1'
-          - name: Tempo
-            type: tempo
-            access: proxy
-            url: http://tempo.tempo:3200
-          - name: mattermost-postgres
-            type: postgres
-            access: proxy
-            url: postgresql.postgresql
-            user: mattermost
-            database: mattermost
-            jsonData:
-              sslmode: disable
-              postgresVersion: 1200
-            secureJsonData:
-              password: mattermost
-          - name: sidekick-postgres
-            type: postgres
-            access: proxy
-            url: postgresql.postgresql
-            user: sidekick
-            database: sidekick
-            jsonData:
-              sslmode: disable
-              postgresVersion: 1200
-            secureJsonData:
-              password: sidekick
-          - name: blocky-postgres
-            type: postgres
-            access: proxy
-            url: postgresql.postgresql
-            user: blocky
-            database: blocky
-            jsonData:
-              sslmode: disable
-              postgresVersion: 1200
-            secureJsonData:
-              password: blocky
+          # - name: Tempo
+          #   type: tempo
+          #   access: proxy
+          #   url: http://tempo.tempo:3200
+          # - name: mattermost-postgres
+          #   type: postgres
+          #   access: proxy
+          #   url: postgresql.postgresql
+          #   user: mattermost
+          #   database: mattermost
+          #   jsonData:
+          #     sslmode: disable
+          #     postgresVersion: 1200
+          #   secureJsonData:
+          #     password: mattermost
+          # - name: sidekick-postgres
+          #   type: postgres
+          #   access: proxy
+          #   url: postgresql.postgresql
+          #   user: sidekick
+          #   database: sidekick
+          #   jsonData:
+          #     sslmode: disable
+          #     postgresVersion: 1200
+          #   secureJsonData:
+          #     password: sidekick
+          # - name: blocky-postgres
+          #   type: postgres
+          #   access: proxy
+          #   url: postgresql.postgresql
+          #   user: blocky
+          #   database: blocky
+          #   jsonData:
+          #     sslmode: disable
+          #     postgresVersion: 1200
+          #   secureJsonData:
+          #     password: blocky
 
 
     dashboardProviders:
