@@ -37,6 +37,31 @@ spec:
           - name: cilium
             namespace: cilium
 
+    downloadDashboards:
+      resources:
+        requests:
+          cpu: 10m
+          memory: 64Mi
+        limits:
+          cpu: 100m
+          memory: 64Mi
+    
+    # podLabels:
+    #   policy.gatekeeper.sh/ignore-psp-readonlyrootfilesystem: "true"
+
+    persistence:
+      inMemory:
+        enabled: true
+    
+    initChownData:
+      resources:
+        requests:
+          cpu: 10m
+          memory: 64Mi
+        limits:
+          cpu: 100m
+          memory: 64Mi
+
     grafana.ini:
       auth.anonymous:
         enabled: true

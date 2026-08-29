@@ -26,6 +26,8 @@ spec:
     remoteWrite:
       - url: http://victoria-logs-vls-server.victoria-logs.svc.cluster.local:9428
     maxDiskUsagePerURL: 1GB
+    podLabels:
+      policy.gatekeeper.sh/ignore-no-host-paths: "true"
     resources:
       limits:
         cpu: 500m
