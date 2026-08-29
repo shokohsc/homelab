@@ -29,7 +29,6 @@ spec:
     podLabels:
       policy.gatekeeper.sh/ignore-no-host-paths: "true"
       policy.gatekeeper.sh/ignore-psp-volume-types: "true"
-      policy.gatekeeper.sh/ignore-psp-readonlyrootfilesystem: "true"
     persistence:
       volume:
         emptyDir:
@@ -50,7 +49,7 @@ spec:
         type: RuntimeDefault
     securityContext:
       allowPrivilegeEscalation: false
-      # readOnlyRootFilesystem: true
+      readOnlyRootFilesystem: true
       runAsNonRoot: true
       capabilities:
         drop:
