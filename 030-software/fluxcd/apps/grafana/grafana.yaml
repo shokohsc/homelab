@@ -46,8 +46,8 @@ spec:
           cpu: 100m
           memory: 64Mi
     
-    # podLabels:
-    #   policy.gatekeeper.sh/ignore-psp-readonlyrootfilesystem: "true"
+    podLabels:
+      policy.gatekeeper.sh/ignore-psp-readonlyrootfilesystem: "true"
 
     persistence:
       inMemory:
