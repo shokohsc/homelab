@@ -23,6 +23,7 @@ resources:
   # - radio
   - reloader
   - renovate
+  - rustfs
   # - sidekick
   - syslog
   - tailscale
