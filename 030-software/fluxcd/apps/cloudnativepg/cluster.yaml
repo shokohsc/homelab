@@ -6,6 +6,13 @@ spec:
   instances: 3
   storage:
     size: 1Gi
+  bootstrap:
+    initdb:
+      database: instancez
+      owner: instancez
+  postgresql:
+    parameters:
+      max_connections: "200"
 # ---
 # apiVersion: postgresql.cnpg.io/v1
 # kind: Cluster
