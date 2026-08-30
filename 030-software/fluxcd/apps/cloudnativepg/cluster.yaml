@@ -1,8 +1,17 @@
 apiVersion: postgresql.cnpg.io/v1
 kind: Cluster
 metadata:
-  name: main
+  name: instancez
 spec:
   instances: 3
   storage:
     size: 1Gi
+# ---
+# apiVersion: postgresql.cnpg.io/v1
+# kind: Cluster
+# metadata:
+#   name: supabase
+# spec:
+#   instances: 3
+#   storage:
+#     size: 1Gi
