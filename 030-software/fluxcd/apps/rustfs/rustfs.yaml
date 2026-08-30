@@ -61,6 +61,9 @@ spec:
       existingGateway:
         name: cilium
         namespace: cilium
+
+    podLabels:
+      policy.gatekeeper.sh/ignore-container-must-have-limits: "true"
     
     resources:
       requests:
