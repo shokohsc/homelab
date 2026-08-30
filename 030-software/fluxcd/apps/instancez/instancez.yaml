@@ -64,8 +64,8 @@ spec:
       #     type: s3
       #     bucket: instancez
       #     region: homelab
-      #     access_key_id: "${MY_S3_ACCESS_KEY_ID}"
-      #     secret_access_key: "${MY_S3_SECRET_ACCESS_KEY}"
+      #     access_key_id: "$MY_S3_ACCESS_KEY_ID"
+      #     secret_access_key: "$MY_S3_SECRET_ACCESS_KEY"
       #     endpoint: http://rustfs-svc.rustfs.svc.cluster.local:9001
 
     postgres:
