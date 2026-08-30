@@ -56,8 +56,12 @@ spec:
     
     gatewayApi:
       enabled: true
+      httpToHttpsRedirect: false
       gatewayClass: cilium
       hostname: rustfs.${domain}
+      listeners:
+        https:
+          name: https
       existingGateway:
         name: cilium
         namespace: cilium
