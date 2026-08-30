@@ -41,11 +41,6 @@ spec:
 
     drivesPerNode: 1
 
-    secret:
-      rustfs:
-        access_key: "<your-access-key>"
-        secret_key: "<your-secret-key>"
-
     storageclass:
       name: ceph-rbd
       dataStorageSize: 1Gi

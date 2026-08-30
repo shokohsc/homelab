@@ -13,7 +13,6 @@ resources:
   - grafana
   # - headlamp
   - http-echo
-  - instancez
   # - konflate
   - kube-state-metrics
   - kube-system
