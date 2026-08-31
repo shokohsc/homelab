@@ -9,8 +9,14 @@ metadata:
   name: cnpg-platform
 rules:
   - apiGroups: ["postgresql.cnpg.io"]
-    resources: ["clusters", "backups"]
-    verbs: ["get", "list", "watch", "create"]
+    resources: ["clusters", "backups", "scheduledbackups", "poolers", "databases", "databaseroles", "imagecatalogs", "publications", "subscriptions"]
+    verbs: ["get", "list", "watch"]
+  - apiGroups: ["postgresql.cnpg.io"]
+    resources: ["clusters", "backups", "scheduledbackups", "poolers", "databases", "databaseroles", "imagecatalogs", "publications", "subscriptions"]
+    verbs: ["create", "update", "patch", "delete"]
+  - apiGroups: ["postgresql.cnpg.io"]
+    resources: ["clusterimagecatalogs"]
+    verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
   - apiGroups: [""]
     resources: ["secrets", "pods"]
     verbs: ["get", "list", "watch", "create", "update"]
