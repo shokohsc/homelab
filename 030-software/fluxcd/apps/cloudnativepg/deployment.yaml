@@ -53,7 +53,7 @@ spec:
           readinessProbe:
             httpGet:
               port: http
-              path: /
+              path: /healthz
           livenessProbe:
             tcpSocket:
               port: http
