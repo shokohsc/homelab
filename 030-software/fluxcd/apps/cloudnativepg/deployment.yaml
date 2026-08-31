@@ -32,7 +32,7 @@ spec:
       serviceAccountName: cnpg-platform
       containers:
         - name: cnpg-platform
-          image: ghcr.io/shokohsc/cnpg-platform:0b89677
+          image: ghcr.io/shokohsc/cnpg-platform:75a6e1d
           securityContext:
             allowPrivilegeEscalation: false
             readOnlyRootFilesystem: true
