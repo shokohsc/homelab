@@ -13,6 +13,9 @@ spec:
       lbipam.cilium.io/sharing-key: vip
     labels:
       vlan: lb
+  allowedListeners:
+    namespaces:
+      from: All
   listeners:
     - name: http
       port: 80
@@ -28,8 +31,30 @@ spec:
       allowedRoutes:
         namespaces:
           from: All
-      tls:
-        mode: Terminate
-        certificateRefs:
-          - kind: Secret
-            name: gateway-tls
+    - name: dnla-tcp
+      port: 32400
+      protocol: TCP
+      allowedRoutes:
+        namespaces:
+          from: Selector
+          selector:
+            matchLabels:
+              app: plex
+    - name: dnla-udp
+      port: 1900
+      protocol: UDP
+      allowedRoutes:
+        namespaces:
+          from: Selector
+          selector:
+            matchLabels:
+              app: plex
+    - name: dnla-tcp
+      port: 32469
+      protocol: TCP
+      allowedRoutes:
+        namespaces:
+          from: Selector
+          selector:
+            matchLabels:
+              app: plex

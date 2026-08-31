@@ -139,8 +139,8 @@ spec:
             name: chromecast
             defaultMode: 0644
         - name: transcode
-          persistentVolumeClaim:
-            claimName: transcode
+          emptyDir:
+            sizeLimit: 20Gi
         - name: movies
           nfs:
             server: genji.home.arpa
