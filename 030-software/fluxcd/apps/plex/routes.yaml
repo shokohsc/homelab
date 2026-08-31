@@ -16,7 +16,7 @@ spec:
   rules:
   - backendRefs:
     - name: plex
-      port: 80
+      port: 32400
     matches:
     - path:
         type: PathPrefix
