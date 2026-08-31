@@ -125,7 +125,7 @@ spec:
             name: config
             readOnly: true
           - mountPath: /tmp
-            name: promtail
+            name: work
       volumes:
         - name: config
           persistentVolumeClaim:
@@ -144,7 +144,7 @@ spec:
         - name: transcode
           emptyDir:
             sizeLimit: 20Gi
-        - name: promtail
+        - name: work
           emptyDir:
             medium: Memory
         - name: movies
