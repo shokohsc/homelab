@@ -3,8 +3,6 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: cnpg-platform
-  labels:
-    app: cnpg-platform
 spec:
   revisionHistoryLimit: 0
   selector:
@@ -34,7 +32,7 @@ spec:
       serviceAccountName: cnpg-platform
       containers:
         - name: cnpg-platform
-          image: ghcr.io/shokohsc/cnpg-platform:4d581c7
+          image: ghcr.io/shokohsc/cnpg-platform:0b89677
           securityContext:
             allowPrivilegeEscalation: false
             readOnlyRootFilesystem: true
@@ -52,13 +50,14 @@ spec:
           ports:
             - containerPort: 8080
               name: http
-          startupProbe:
-            tcpSocket:
+          readinessProbe:
+            httpGet:
               port: http
+              path: /
           livenessProbe:
             tcpSocket:
               port: http
-          readinessProbe:
+          startupProbe:
             tcpSocket:
               port: http
           resources:
