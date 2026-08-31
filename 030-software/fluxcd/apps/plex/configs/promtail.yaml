@@ -1,0 +1,16 @@
+server:
+  http_listen_port: 9080
+  grpc_listen_port: 0
+positions:
+  filename: /tmp/positions.yaml
+client:
+  url: http://victoria-logs-vls-server.victoria-logs.svc.cluster.local:9428
+scrape_configs:
+- job_name: promtail/plex
+  static_configs:
+  - targets:
+      - localhost
+    labels:
+      job: promtail/plex
+      namespace: plex
+      __path__: "/config/Library/Application Support/Plex Media Server/Logs/*.log"

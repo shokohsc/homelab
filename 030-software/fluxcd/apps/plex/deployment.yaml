@@ -1,0 +1,151 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: plex
+  annotations:
+    configmap.reloader.stakater.com/reload: "promtail,s6-plex"
+spec:
+  strategy:
+    type: Recreate
+  revisionHistoryLimit: 0
+  selector:
+    matchLabels:
+      app: plex
+  template:
+    metadata:
+      labels:
+        app: plex
+        nfs-genji: "true"
+    spec:
+      automountServiceAccountToken: false
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: plex
+          image: plexinc/pms-docker:latest
+          imagePullPolicy: Always
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+            capabilities:
+              drop:
+                - ALL
+          env:
+            - name: ADVERTISE_IP
+              value: "http://${vip}:32400,https://plex.${domain}"
+            - name: ALLOWED_NETWORKS
+              value: "${cidr},${kubeServicesCidr}"
+            - name: PGID
+              value: "1000"
+            - name: PUID
+              value: "1000"
+            - name: TZ
+              value: "${timezone}"
+            - name: VERSION
+              value: "docker"
+            - name: PLEX_CLAIM
+              valueFrom:
+                secretKeyRef:
+                  key: plex-claim
+                  name: plex-claim
+          ports:
+            - name: http
+              containerPort: 32400
+              protocol: TCP
+            - name: dnla-tcp
+              containerPort: 32469
+              protocol: TCP
+            - name: dnla-udp
+              containerPort: 1900
+              protocol: UDP
+          volumeMounts:
+            - name: config
+              mountPath: /config
+            - mountPath: /etc/services.d/plex/run
+              name: s6-plex
+              subPath: s6-plex.sh
+            - mountPath: /usr/lib/plexmediaserver/Resources/Profiles/Chromecast.xml
+              name: chromecast
+              subPath: Chromecast.xml
+            - name: transcode
+              mountPath: /transcode
+            - name: movies
+              mountPath: /data/movies
+            - name: tvshows
+              mountPath: /data/tvshows
+          startupProbe:
+            tcpSocket:
+              port: http
+          livenessProbe:
+            tcpSocket:
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+          resources:
+            limits:
+              cpu: 3000m
+              memory: 2048M
+            requests:
+              cpu: 100m
+              memory: 128M
+        - args:
+          - -config.file=/etc/promtail/promtail.yaml
+          image: grafana/promtail:3.6.11
+          name: promtail
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+            capabilities:
+              drop:
+                - ALL
+          resources:
+            limits:
+              cpu: 100m
+              memory: 64M
+            requests:
+              cpu: 100m
+              memory: 64M
+          volumeMounts:
+          - mountPath: /etc/promtail/promtail.yaml
+            name: promtail
+            readOnly: true
+            subPath: promtail.yaml
+          - mountPath: /config
+            name: config
+            readOnly: true
+      volumes:
+        - name: config
+          persistentVolumeClaim:
+            claimName: config
+        - name: promtail
+          configMap:
+            name: promtail
+        - name: s6-plex
+          configMap:
+            name: s6-plex
+            defaultMode: 0755
+        - name: chromecast
+          configMap:
+            name: chromecast
+            defaultMode: 0644
+        - name: transcode
+          persistentVolumeClaim:
+            claimName: transcode
+        - name: movies
+          nfs:
+            server: genji.home.arpa
+            path: /movies
+        - name: tvshows
+          nfs:
+            server: genji.home.arpa
+            path: /tvshows

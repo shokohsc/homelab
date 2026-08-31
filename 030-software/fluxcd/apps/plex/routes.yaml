@@ -1,0 +1,65 @@
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: plex
+  annotations:
+    dashboard.${domain}/icon: play
+    dashboard.${domain}/name: plex
+    dashboard.${domain}/url: https://plex.${domain}
+spec:
+  hostnames:
+  - plex.${domain}
+  parentRefs:
+  - name: cilium
+    namespace: cilium
+  rules:
+  - backendRefs:
+    - name: plex
+      port: 80
+    matches:
+    - path:
+        type: PathPrefix
+        value: /
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: TCPRoute
+metadata:
+  name: plex
+spec:
+  parentRefs:
+    - name: cilium
+      namespace: cilium
+      sectionName: plex
+  rules:
+    - backendRefs:
+        - name: plex
+          port: 32400
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: TCPRoute
+metadata:
+  name: dnla-tcp
+spec:
+  parentRefs:
+    - name: cilium
+      namespace: cilium
+      sectionName: dnla-tcp
+  rules:
+    - backendRefs:
+        - name: dnla-tcp
+          port: 32469
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: UDPRoute
+metadata:
+  name: dnla-udp
+spec:
+  parentRefs:
+    - name: cilium
+      namespace: cilium
+      sectionName: dnla-udp
+  rules:
+    - backendRefs:
+        - name: dnla-udp
+          port: 1900
