@@ -30,7 +30,6 @@ spec:
       containers:
         - name: plex
           image: ghcr.io/11notes/plex:1.43.3-nobody
-          imagePullPolicy: Always
           securityContext:
             allowPrivilegeEscalation: false
             readOnlyRootFilesystem: true
@@ -98,55 +97,55 @@ spec:
             requests:
               cpu: 100m
               memory: 128M
-        - args:
-          - -config.file=/etc/promtail/promtail.yaml
-          image: grafana/promtail:3.6.11
-          name: promtail
-          securityContext:
-            allowPrivilegeEscalation: false
-            readOnlyRootFilesystem: true
-            runAsNonRoot: true
-            capabilities:
-              drop:
-                - ALL
-          resources:
-            limits:
-              cpu: 100m
-              memory: 64M
-            requests:
-              cpu: 100m
-              memory: 64M
-          volumeMounts:
-          - mountPath: /etc/promtail/promtail.yaml
-            name: promtail
-            readOnly: true
-            subPath: promtail.yaml
-          - mountPath: /config
-            name: config
-            readOnly: true
-          - mountPath: /tmp
-            name: work
+        # - args:
+        #   - -config.file=/etc/promtail/promtail.yaml
+        #   image: grafana/promtail:3.6.11
+        #   name: promtail
+        #   securityContext:
+        #     allowPrivilegeEscalation: false
+        #     readOnlyRootFilesystem: true
+        #     runAsNonRoot: true
+        #     capabilities:
+        #       drop:
+        #         - ALL
+        #   resources:
+        #     limits:
+        #       cpu: 100m
+        #       memory: 64M
+        #     requests:
+        #       cpu: 100m
+        #       memory: 64M
+        #   volumeMounts:
+        #   - mountPath: /etc/promtail/promtail.yaml
+        #     name: promtail
+        #     readOnly: true
+        #     subPath: promtail.yaml
+        #   - mountPath: /config
+        #     name: config
+        #     readOnly: true
+        #   - mountPath: /tmp
+        #     name: work
       volumes:
         - name: config
           persistentVolumeClaim:
             claimName: config
-        - name: promtail
-          configMap:
-            name: promtail
-        - name: s6-plex
-          configMap:
-            name: s6-plex
-            defaultMode: 0755
-        - name: chromecast
-          configMap:
-            name: chromecast
-            defaultMode: 0644
+        # - name: s6-plex
+        #   configMap:
+        #     name: s6-plex
+        #     defaultMode: 0755
+        # - name: chromecast
+        #   configMap:
+        #     name: chromecast
+        #     defaultMode: 0644
         - name: transcode
           emptyDir:
             sizeLimit: 20Gi
-        - name: work
-          emptyDir:
-            medium: Memory
+        # - name: promtail
+        #   configMap:
+        #     name: promtail
+        # - name: work
+        #   emptyDir:
+        #     medium: Memory
         - name: movies
           nfs:
             server: genji.home.arpa
