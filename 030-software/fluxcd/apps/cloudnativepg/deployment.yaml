@@ -2,18 +2,18 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: whoami
+  name: cnpg-platform
   labels:
-    app: whoami
+    app: cnpg-platform
 spec:
   revisionHistoryLimit: 0
   selector:
     matchLabels:
-      app: whoami
+      app: cnpg-platform
   template:
     metadata:
       labels:
-        app: whoami
+        app: cnpg-platform
     spec:
       securityContext:
         runAsNonRoot: true
@@ -30,10 +30,10 @@ spec:
                 topologyKey: "kubernetes.io/hostname"
                 labelSelector:
                   matchLabels:
-                    app: whoami
+                    app: cnpg-platform
       containers:
-        - name: whoami
-          image: ghcr.io/traefik/whoami:v1.12
+        - name: cnpg-platform
+          image: ghcr.io/shokohsc/cnpg-platform:1ba8195
           securityContext:
             allowPrivilegeEscalation: false
             readOnlyRootFilesystem: true
