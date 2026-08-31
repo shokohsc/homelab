@@ -1,5 +1,5 @@
 # helm upgrade -i cilium cilium/cilium \
-# --version 1.19.6 \
+# --version 1.20.1 \
 # --namespace cilium \
 # --values cilium.values.yaml
 #

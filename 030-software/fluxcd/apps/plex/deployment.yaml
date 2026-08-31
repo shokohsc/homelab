@@ -29,7 +29,7 @@ spec:
           type: RuntimeDefault
       containers:
         - name: plex
-          image: plexinc/pms-docker:latest
+          image: ghcr.io/11notes/plex:1.43.3-nobody
           imagePullPolicy: Always
           securityContext:
             allowPrivilegeEscalation: false
