@@ -31,6 +31,7 @@ spec:
                 labelSelector:
                   matchLabels:
                     app: cnpg-platform
+      serviceAccountName: cnpg-manager
       containers:
         - name: cnpg-platform
           image: ghcr.io/shokohsc/cnpg-platform:1ba8195
@@ -43,6 +44,11 @@ spec:
                 - ALL
           args:
             - --port=8080
+          env:
+            - name: POD_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
           ports:
             - containerPort: 8080
               name: http
