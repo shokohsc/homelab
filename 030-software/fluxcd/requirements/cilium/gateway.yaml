@@ -64,3 +64,31 @@ spec:
     #       selector:
     #         matchLabels:
     #           app: plex
+
+    - name: jellyfin
+      port: 8096
+      protocol: TCP
+      allowedRoutes:
+        namespaces:
+          from: Selector
+          selector:
+            matchLabels:
+              app: jellyfin
+    - name: discovery
+      port: 7359
+      protocol: TCP
+      allowedRoutes:
+        namespaces:
+          from: Selector
+          selector:
+            matchLabels:
+              app: jellyfin
+    - name: dlna
+      port: 1900
+      protocol: UDP
+      allowedRoutes:
+        namespaces:
+          from: Selector
+          selector:
+            matchLabels:
+              app: jellyfin
