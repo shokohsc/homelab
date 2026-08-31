@@ -31,7 +31,7 @@ spec:
                 labelSelector:
                   matchLabels:
                     app: cnpg-platform
-      serviceAccountName: cnpg-manager
+      serviceAccountName: cnpg-platform
       containers:
         - name: cnpg-platform
           image: ghcr.io/shokohsc/cnpg-platform:1ba8195
