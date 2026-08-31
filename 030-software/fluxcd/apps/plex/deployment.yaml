@@ -124,6 +124,8 @@ spec:
           - mountPath: /config
             name: config
             readOnly: true
+          - mountPath: /tmp
+            name: promtail
       volumes:
         - name: config
           persistentVolumeClaim:
@@ -142,6 +144,9 @@ spec:
         - name: transcode
           emptyDir:
             sizeLimit: 20Gi
+        - name: promtail
+          emptyDir:
+            medium: Memory
         - name: movies
           nfs:
             server: genji.home.arpa
