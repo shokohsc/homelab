@@ -31,8 +31,17 @@ spec:
       allowedRoutes:
         namespaces:
           from: All
-    - name: dnla-tcp
+    - name: plex
       port: 32400
+      protocol: TCP
+      allowedRoutes:
+        namespaces:
+          from: Selector
+          selector:
+            matchLabels:
+              app: plex
+    - name: dnla-tcp
+      port: 32469
       protocol: TCP
       allowedRoutes:
         namespaces:
@@ -43,15 +52,6 @@ spec:
     - name: dnla-udp
       port: 1900
       protocol: UDP
-      allowedRoutes:
-        namespaces:
-          from: Selector
-          selector:
-            matchLabels:
-              app: plex
-    - name: dnla-tcp
-      port: 32469
-      protocol: TCP
       allowedRoutes:
         namespaces:
           from: Selector
