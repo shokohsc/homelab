@@ -1,0 +1,65 @@
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: jellyfin
+  annotations:
+    dashboard.${domain}/icon: play
+    dashboard.${domain}/name: jellyfin
+    dashboard.${domain}/url: https://jellyfin.${domain}
+spec:
+  hostnames:
+  - jellyfin.${domain}
+  parentRefs:
+  - name: cilium
+    namespace: cilium
+  rules:
+  - backendRefs:
+    - name: jellyfin
+      port: 8096
+    matches:
+    - path:
+        type: PathPrefix
+        value: /
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: TCPRoute
+metadata:
+  name: jellyfin
+spec:
+  parentRefs:
+    - name: cilium
+      namespace: cilium
+      sectionName: jellyfin
+  rules:
+    - backendRefs:
+        - name: jellyfin
+          port: 8096
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: TCPRoute
+metadata:
+  name: discovery
+spec:
+  parentRefs:
+    - name: cilium
+      namespace: cilium
+      sectionName: discovery
+  rules:
+    - backendRefs:
+        - name: discovery
+          port: 7359
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: UDPRoute
+metadata:
+  name: dlna
+spec:
+  parentRefs:
+    - name: cilium
+      namespace: cilium
+      sectionName: dlna
+  rules:
+    - backendRefs:
+        - name: dlna
+          port: 1900

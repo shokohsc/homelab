@@ -1,0 +1,107 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: jellyfin
+spec:
+  strategy:
+    type: Recreate
+  revisionHistoryLimit: 0
+  selector:
+    matchLabels:
+      app: jellyfin
+  template:
+    metadata:
+      labels:
+        app: jellyfin
+        nfs-genji: "true"
+        policy.gatekeeper.sh/ignore-container-must-have-limits: "true"
+    spec:
+      automountServiceAccountToken: false
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: jellyfin
+          image: ghcr.io/jellyfin/jellyfin:10.11.11
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+            capabilities:
+              drop:
+                - ALL
+          env:
+            - name: JELLYFIN_PublishedServerUrl
+              value: "https://jellyfin.${domain}"
+            - name: TZ
+              value: "${timezone}"
+            - name: JELLYFIN_DATA_DIR
+              value: /data
+            - name: JELLYFIN_CACHE_DIR
+              value: /data/cache
+            - name: JELLYFIN_CONFIG_DIR
+              value: /data/config
+            - name: JELLYFIN_LOG_DIR
+              value: /data/log
+          ports:
+            - name: jellyfin
+              containerPort: 8096
+              protocol: TCP
+            - name: dlna
+              containerPort: 1900
+              protocol: UDP
+            - name: discovery
+              containerPort: 7359
+              protocol: UDP
+          volumeMounts:
+            - name: data
+              mountPath: /data
+            - name: transcode
+              mountPath: /transcode
+            - name: movies
+              mountPath: /data/movies
+            - name: tvshows
+              mountPath: /data/tvshows
+            - name: tutorials
+              mountPath: /data/tutorials
+          startupProbe:
+            tcpSocket:
+              port: jellyfin
+          livenessProbe:
+            tcpSocket:
+              port: jellyfin
+          readinessProbe:
+            httpGet:
+              path: /
+              port: jellyfin
+          resources:
+            limits:
+              cpu: 3000m
+              memory: 2048M
+            requests:
+              cpu: 100m
+              memory: 128M
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: data
+        - name: transcode
+          emptyDir:
+            medium: Memory
+        - name: movies
+          nfs:
+            server: genji.home.arpa
+            path: /movies
+        - name: tvshows
+          nfs:
+            server: genji.home.arpa
+            path: /tvshows
+        - name: tutorials
+          nfs:
+            server: genji.home.arpa
+            path: /tutorials
