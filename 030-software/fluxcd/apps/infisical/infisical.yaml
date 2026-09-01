@@ -82,7 +82,8 @@ spec:
         name: infisical
       interval: ${interval}
   values:
-    hostAPI: "https://infisical.${domain}/api"
+    # hostAPI: "https://infisical.${domain}/api"
+    hostAPI: "http://infisical-infisical-standalone-infisical.infisical.svc.cluster.local:8080"
     controllerManager:
       manager:
         containerSecurityContext:
