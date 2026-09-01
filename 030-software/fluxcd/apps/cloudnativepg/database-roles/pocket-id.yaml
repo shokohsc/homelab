@@ -1,0 +1,24 @@
+apiVersion: postgresql.cnpg.io/v1
+kind: Database
+metadata:
+  name: pocket-id
+spec:
+  name: pocket-id
+  owner: pocket-id
+  cluster:
+    name: main
+---
+apiVersion: postgresql.cnpg.io/v1
+kind: DatabaseRole
+metadata:
+  name: pocket-id
+spec:
+  cluster:
+    name: main
+  name: pocket-id
+  login: true
+  superuser: false
+  createdb: false
+  createrole: false
+  passwordSecret:
+    name: pocket-id

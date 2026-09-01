@@ -1,0 +1,97 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pocket-id
+  labels:
+    app: pocket-id
+  annotations:
+    secret.reloader.stakater.com/reload: pocket-id
+spec:
+  revisionHistoryLimit: 0
+  selector:
+    matchLabels:
+      app: pocket-id
+  template:
+    metadata:
+      # annotations:
+      #   prometheus.io/scrape: "true"
+      #   prometheus.io/path: /metrics
+      #   prometheus.io/port: "9464"
+      labels:
+        app: pocket-id
+    spec:
+      automountServiceAccountToken: false
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: pocket-id
+          image: ghcr.io/pocket-id/pocket-id:v2
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+            capabilities:
+              drop:
+                - ALL
+          env:
+            - name: APP_URL
+              value: "https://pocket-id.${domain}"
+            - name: TRUST_PROXY
+              value: "true"
+            - name: PUID
+              value: "1000"
+            - name: PGID
+              value: "1000"
+            - name: DB_PROVIDER
+              value: postgres
+            - name: DB_CONNECTION_STRING
+              valueFrom:
+                secretKeyRef:
+                  key: database-url
+                  name: pocket-id
+            - name: MAXMIND_LICENSE_KEY
+              valueFrom:
+                secretKeyRef:
+                  key: maxmind-license
+                  name: pocket-id
+            # - name: TRACING_ENABLED
+            #   value: "true"
+            - name: METRICS_ENABLED
+              value: "true"
+            - name: OTEL_METRICS_EXPORTER
+              value: "prometheus"
+            - name: ALLOW_DOWNGRADE
+              value: "true"
+          ports:
+            - name: http
+              containerPort: 1411
+              protocol: TCP
+          startupProbe:
+            tcpSocket:
+              port: http
+          livenessProbe:
+            tcpSocket:
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: http
+          resources:
+            limits:
+              cpu: 100m
+              memory: 64M
+            requests:
+              cpu: 10m
+              memory: 64M
+          volumeMounts:
+            - name: data
+              mountPath: /app/data
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: data
