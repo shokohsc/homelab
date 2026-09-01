@@ -4,5 +4,5 @@ namespace: infisical
 resources:
   - namespace.yaml
   - secret.yaml
-  # - infisical.yaml
+  - infisical.yaml
   # - http-route.yaml
