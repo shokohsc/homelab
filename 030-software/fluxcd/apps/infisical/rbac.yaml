@@ -16,9 +16,3 @@ subjects:
   - kind: ServiceAccount
     name: infisical-token-reviewer
     namespace: infisical
----
-apiVersion: v1
-kind: ServiceAccount
-metadata:
-  name: infisical-service-account-token
-  namespace: infisical
