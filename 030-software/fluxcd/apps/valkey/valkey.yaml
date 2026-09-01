@@ -30,6 +30,11 @@ spec:
     metrics:
       enabled: false
 
+    initResources:
+      limits:
+        cpu: 100m
+        memory: 64Mi
+
     resources:
       requests:
         cpu: 100m
