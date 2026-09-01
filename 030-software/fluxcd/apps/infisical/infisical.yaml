@@ -82,7 +82,6 @@ spec:
           capabilities:
             drop:
               - ALL
-          readOnlyRootFilesystem: true
         resources:
           limits:
             cpu: 500m
