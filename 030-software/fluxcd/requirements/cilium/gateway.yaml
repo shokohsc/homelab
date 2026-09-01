@@ -37,10 +37,24 @@ spec:
           - kind: Secret
             name: gateway-tls
 
+    - name: syslog
+      port: 601
+      protocol: TCP
+      allowedRoutes:
+        kinds:
+          - kind: TCPRoute
+        namespaces:
+          from: Selector
+          selector:
+            matchLabels:
+              app: syslog
+
     - name: postgres
       port: 5432
       protocol: TCP
       allowedRoutes:
+        kinds:
+          - kind: TCPRoute
         namespaces:
           from: Selector
           selector:
@@ -79,6 +93,8 @@ spec:
       port: 8096
       protocol: TCP
       allowedRoutes:
+        kinds:
+          - kind: TCPRoute
         namespaces:
           from: Selector
           selector:
@@ -88,6 +104,8 @@ spec:
       port: 7359
       protocol: TCP
       allowedRoutes:
+        kinds:
+          - kind: TCPRoute
         namespaces:
           from: Selector
           selector:
@@ -97,6 +115,8 @@ spec:
       port: 1900
       protocol: UDP
       allowedRoutes:
+        kinds:
+          - kind: UDPRoute
         namespaces:
           from: Selector
           selector:
