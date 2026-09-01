@@ -31,6 +31,15 @@ spec:
       enabled: false
     server:
       enabled: true
+      extraEnvironmentVars:
+        - name: BAO_K8S_NAMESPACE
+          valuesFrom:
+            fieldRef:
+              fieldPath: metadata.namespace
+        - name: BAO_K8S_POD_NAME
+          valuesFrom:
+            fieldRef:
+              fieldPath: metadata.name
       volumeMounts:
         - name: temp
           mountPath: /tmp
