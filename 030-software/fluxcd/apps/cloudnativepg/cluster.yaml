@@ -1,18 +1,9 @@
-# ---
-# apiVersion: postgresql.cnpg.io/v1
-# kind: Cluster
-# metadata:
-#   name: main
-# spec:
-#   instances: 3
-#   storage:
-#     size: 1Gi
 ---
 apiVersion: postgresql.cnpg.io/v1
 kind: Cluster
 metadata:
-  name: test
+  name: main
 spec:
-  instances: 1
+  instances: 3
   storage:
     size: 1Gi

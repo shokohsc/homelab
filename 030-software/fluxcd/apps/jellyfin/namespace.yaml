@@ -4,4 +4,4 @@ kind: Namespace
 metadata:
   name: jellyfin
   labels:
-    namespace: jellyfin
+    app: jellyfin

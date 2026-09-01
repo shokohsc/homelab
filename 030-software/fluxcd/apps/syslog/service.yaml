@@ -5,6 +5,7 @@ metadata:
   name: syslog
   labels:
     vlan: lb
+    lbipam.cilium.io/sharing-key: vip
 spec:
   type: LoadBalancer
   ports:

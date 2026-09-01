@@ -37,6 +37,16 @@ spec:
           - kind: Secret
             name: gateway-tls
 
+    - name: postgres
+      port: 5432
+      protocol: TCP
+      allowedRoutes:
+        namespaces:
+          from: Selector
+          selector:
+            matchLabels:
+              app.kubernetes.io/name: cloudnative-pg
+
     # - name: plex
     #   port: 32400
     #   protocol: TCP
