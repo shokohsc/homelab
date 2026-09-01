@@ -65,10 +65,10 @@ spec:
               mountPath: /transcode
             - name: temp
               mountPath: /tmp
-            - name: movies
-              mountPath: /data/movies
-            - name: tvshows
-              mountPath: /data/tvshows
+            # - name: movies
+            #   mountPath: /data/movies
+            # - name: tvshows
+            #   mountPath: /data/tvshows
             - name: tutorials
               mountPath: /data/tutorials
           startupProbe:
@@ -98,14 +98,14 @@ spec:
         - name: temp
           emptyDir:
             medium: Memory
-        - name: movies
-          nfs:
-            server: genji.home.arpa
-            path: /movies
-        - name: tvshows
-          nfs:
-            server: genji.home.arpa
-            path: /tvshows
+        # - name: movies
+        #   nfs:
+        #     server: genji.home.arpa
+        #     path: /movies
+        # - name: tvshows
+        #   nfs:
+        #     server: genji.home.arpa
+        #     path: /tvshows
         - name: tutorials
           nfs:
             server: genji.home.arpa

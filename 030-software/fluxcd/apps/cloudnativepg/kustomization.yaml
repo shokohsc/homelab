@@ -7,4 +7,6 @@ resources:
   # - http-route.yaml
   # - rbac.yaml
   - cluster.yaml
+  - secret.yaml
+  - database.yaml
   # - pooler.yaml

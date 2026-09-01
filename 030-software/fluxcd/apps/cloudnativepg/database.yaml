@@ -7,7 +7,6 @@ spec:
   owner: infisical
   cluster:
     name: main
-    namespace: cnpg-system
 ---
 apiVersion: postgresql.cnpg.io/v1
 kind: DatabaseRole
@@ -16,7 +15,6 @@ metadata:
 spec:
   cluster:
     name: main
-    namespace: cnpg-system
   name: infisical
   login: true
   superuser: false
