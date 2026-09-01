@@ -15,8 +15,8 @@ spec:
   interval: ${interval}
   chart:
     spec:
-      chart: secrets-operator
-      version: 
+      chart: infisical-standalone
+      version: 1.10.0
       sourceRef:
         kind: HelmRepository
         name: infisical

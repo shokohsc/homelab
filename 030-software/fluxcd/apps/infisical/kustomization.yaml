@@ -5,4 +5,4 @@ resources:
   - namespace.yaml
   - secret.yaml
   - infisical.yaml
-  # - http-route.yaml
+  - http-route.yaml
