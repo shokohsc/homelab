@@ -24,7 +24,6 @@ spec:
   valuesFrom:
     - kind: Secret
       name: openbao
-      valuesKey: config
       targetPath: server.ha.config
   values:
     global:
