@@ -49,6 +49,8 @@ spec:
     kubeSecretRef: infisical-secrets
     ingress:
       enabled: false
+      nginx:
+        enabled: false
     postgresql:
       enabled: false
     redis:
