@@ -3,4 +3,4 @@ kind: Namespace
 metadata:
   name: proxmox
   labels:
-    bundle.cert-manager.io/inject: enabled
+    bundle.cert-manager.io/inject-cm: enabled

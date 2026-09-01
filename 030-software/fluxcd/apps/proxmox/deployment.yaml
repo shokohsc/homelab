@@ -65,7 +65,7 @@ spec:
             name: config
         - name: tls
           configMap:
-            name: homelab-ca
+            name: homelab-ca-cm
             defaultMode: 0600
       affinity:
         nodeAffinity:

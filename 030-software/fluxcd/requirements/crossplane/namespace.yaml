@@ -4,4 +4,4 @@ kind: Namespace
 metadata:
   name: crossplane-system
   labels:
-    bundle.cert-manager.io/inject: enabled
+    bundle.cert-manager.io/inject-cm: enabled

@@ -2,29 +2,39 @@
 apiVersion: trust.cert-manager.io/v1alpha1
 kind: Bundle
 metadata:
-  name: homelab-ca  # The bundle name will also be used for the target
+  name: homelab-ca-cm
 spec:
   sources:
-  # Include a bundle of publicly trusted certificates which can be
-  # used to validate most TLS certificates on the internet, such as
-  # those issued by Let's Encrypt, Google, Amazon and others.
-  # NB: Unless you pin the package providing these CAs, the default can change!
-  - useDefaultCAs: true
-
-  # A Secret in the "trust" namespace; see "Trust Namespace" below for further details
-  - secret:
-      name: ca-key-pair
-      key: tls.crt
-
+    - useDefaultCAs: true
+    - secret:
+        name: ca-key-pair
+        key: tls.crt
   target:
-    # Sync the bundle to a ConfigMap called `my-org.com` in every namespace which
-    # has the label "bundle.cert-manager.io/inject=enabled"
-    # All ConfigMaps will include a PEM-formatted bundle, here named "ca-certs.pem"
     configMap:
       key: "ca-certs.pem"
       metadata:
         labels:
-          app.kubernetes.io/component: "trust-bundle"
+          app.kubernetes.io/component: trust-bundle
     namespaceSelector:
       matchLabels:
-        bundle.cert-manager.io/inject: "enabled"
+        bundle.cert-manager.io/inject-cm: enabled
+---
+apiVersion: trust.cert-manager.io/v1alpha1
+kind: Bundle
+metadata:
+  name: homelab-ca-secret
+spec:
+  sources:
+    - useDefaultCAs: true
+    - secret:
+        name: ca-key-pair
+        key: tls.crt
+  target:
+    secret:
+      key: "ca-certs.pem"
+      metadata:
+        labels:
+          app.kubernetes.io/component: trust-bundle
+    namespaceSelector:
+      matchLabels:
+        bundle.cert-manager.io/inject-secret: enabled

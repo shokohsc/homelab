@@ -1,0 +1,29 @@
+apiVersion: secrets.infisical.com/v1beta1
+kind: InfisicalAuth
+metadata:
+  name: homelab
+spec:
+  infisicalConnectionRef:
+    name: homelab
+    namespace: infisical
+  method: kubernetes
+  kubernetes:
+    identityIdRef:
+      name: kubernetes-credentials
+      namespace: infisical
+      key: identityId
+    serviceAccountRef:
+      name: infisical-infisical
+      namespace: infisical
+---
+apiVersion: secrets.infisical.com/v1beta1
+kind: InfisicalConnection
+metadata:
+  name: homelab
+spec:
+  address: https://infisical.${domain}
+  tls:
+    caCertificate:
+      name: homelab-ca-secret
+      key: ca-certs.pem
+      namespace: infisical

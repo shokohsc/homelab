@@ -47,7 +47,7 @@ spec:
           volumes:
             - name: tls
               configMap:
-                name: homelab-ca
+                name: homelab-ca-cm
                 defaultMode: 0644
             - name: temp
               emptyDir:
