@@ -19,6 +19,7 @@ resources:
   - kube-system
   - metrics-server
   # - nats
+  - openbao
   # - plex
   # - pocket-id
   # - pod-gateway
