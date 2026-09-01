@@ -65,7 +65,7 @@ spec:
   interval: ${interval}
   chart:
     spec:
-      chart: secret-operator
+      chart: secrets-operator
       version: v0.11.8
       sourceRef:
         kind: HelmRepository
