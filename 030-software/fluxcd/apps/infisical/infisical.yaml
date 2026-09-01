@@ -27,6 +27,9 @@ spec:
       autoBootstrap:
         enabled: true
         organization: "homelab"
+      extraEnv:
+        - name: ALLOW_INTERNAL_IP_CONNECTIONS
+          value: "true"
       resources:
         limits:
           cpu: 1000m
