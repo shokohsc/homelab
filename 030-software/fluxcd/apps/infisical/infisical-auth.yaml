@@ -21,9 +21,10 @@ kind: InfisicalConnection
 metadata:
   name: homelab
 spec:
-  address: https://infisical.${domain}
-  tls:
-    caCertificate:
-      name: homelab-ca-secret
-      key: ca-certs.pem
-      namespace: infisical
+  # address: https://infisical.${domain}
+  address: http://infisical-infisical-standalone-infisical.infisical.svc.cluster.local
+  # tls:
+  #   caCertificate:
+  #     name: homelab-ca-secret
+  #     key: ca-certs.pem
+  #     namespace: infisical
