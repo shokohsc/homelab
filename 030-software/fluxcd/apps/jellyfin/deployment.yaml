@@ -63,6 +63,8 @@ spec:
               mountPath: /data
             - name: transcode
               mountPath: /transcode
+            - name: temp
+              mountPath: /tmp
             - name: movies
               mountPath: /data/movies
             - name: tvshows
@@ -91,6 +93,9 @@ spec:
           persistentVolumeClaim:
             claimName: data
         - name: transcode
+          emptyDir:
+            sizeLimit: 20Gi
+        - name: temp
           emptyDir:
             medium: Memory
         - name: movies
