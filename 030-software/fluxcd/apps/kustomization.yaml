@@ -29,6 +29,7 @@ resources:
   # - sidekick
   - syslog
   - tailscale
+  - valkey
   - victoria-logs
   - victoria-logs-collector
   - victoria-metrics
