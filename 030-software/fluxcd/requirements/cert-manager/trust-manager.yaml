@@ -36,3 +36,7 @@ spec:
         limits:
           cpu: 100m
           memory: 128Mi
+
+    secretTargets:
+      enabled: true
+      authorizedSecretsAll: true
