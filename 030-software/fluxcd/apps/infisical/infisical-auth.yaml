@@ -22,7 +22,7 @@ metadata:
   name: homelab
 spec:
   # address: https://infisical.${domain}
-  address: http://infisical-infisical-standalone-infisical.infisical.svc.cluster.local
+  address: http://infisical-infisical-standalone-infisical.infisical.svc.cluster.local:8080
   # tls:
   #   caCertificate:
   #     name: homelab-ca-secret
