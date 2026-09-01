@@ -3,4 +3,4 @@ kind: Namespace
 metadata:
   name: infisical
   labels:
-    bundle.cert-manager.io/inject-cm: enabled
+    bundle.cert-manager.io/inject-secret: enabled
