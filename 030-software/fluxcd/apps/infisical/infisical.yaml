@@ -32,9 +32,22 @@ spec:
           memory: 1000Mi
         requests:
           cpu: 350m
+      podSecurityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        seccompProfile:
+          type: RuntimeDefault
+      containerSecurityContext:
+        allowPrivilegeEscalation: false
+        readOnlyRootFilesystem: true
+        runAsNonRoot: true
+        capabilities:
+          drop:
+            - ALL
     ingress:
-      nginx:
-        enabled: false
+      enabled: false
     kubeSecretRef: infisical-secrets
     postgresql:
       enabled: false
