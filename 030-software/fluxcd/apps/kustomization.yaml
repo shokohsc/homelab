@@ -21,6 +21,7 @@ resources:
   - metrics-server
   # - nats
   # - plex
+  - pocket-id
   # - pod-gateway
   - proxmox
   # - radio

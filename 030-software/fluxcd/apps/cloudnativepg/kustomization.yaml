@@ -8,5 +8,6 @@ resources:
   # - rbac.yaml
   - cluster.yaml
   - secret.yaml
-  - database.yaml
+  - database-roles/infisical.yaml
+  - database-roles/pocket-id.yaml
   # - pooler.yaml
