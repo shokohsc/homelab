@@ -26,7 +26,7 @@ spec:
       enabled: true
       autoBootstrap:
         enabled: false
-        organization: "homelab"
+        organization: homelab
       extraEnv:
         - name: ALLOW_INTERNAL_IP_CONNECTIONS
           value: "true"
