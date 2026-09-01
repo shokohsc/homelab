@@ -4,4 +4,5 @@ namespace: openbao
 resources:
   - namespace.yaml
   - secret.yaml
+  - rbac.yaml
   - openbao.yaml
