@@ -1,0 +1,39 @@
+---
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: HelmRepository
+metadata:
+  name: infisical
+spec:
+  interval: ${interval}
+  url: https://dl.cloudsmith.io/public/infisical/helm-charts/helm/charts/
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: infisical
+spec:
+  interval: ${interval}
+  chart:
+    spec:
+      chart: secrets-operator
+      version: 
+      sourceRef:
+        kind: HelmRepository
+        name: infisical
+      interval: ${interval}
+  values:
+    infisical:
+      enabled: true
+      autoBootstrap:
+        enabled: true
+        organization: "homelab"
+      resources:
+        limits:
+          memory: 1000Mi
+        requests:
+          cpu: 350m
+    kubeSecretRef: infisical-secrets
+    postgresql:
+      enabled: false
+    redis:
+      enabled: false

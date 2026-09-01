@@ -1,0 +1,24 @@
+apiVersion: postgresql.cnpg.io/v1
+kind: Database
+metadata:
+  name: infisical
+spec:
+  name: infisical
+  owner: infisical
+  cluster:
+    name: main
+---
+apiVersion: postgresql.cnpg.io/v1
+kind: DatabaseRole
+metadata:
+  name: infisical
+spec:
+  cluster:
+    name: main
+  name: infisical
+  login: true
+  superuser: false
+  createdb: false
+  createrole: false
+  passwordSecret:
+    name: database

@@ -13,7 +13,8 @@ resources:
   - grafana
   # - headlamp
   - http-echo
-  - jellyfin
+  - infisical
+  # - jellyfin
   # - konflate
   - kube-state-metrics
   - kube-system
