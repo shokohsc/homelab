@@ -31,6 +31,12 @@ spec:
       enabled: false
     server:
       enabled: true
+      volumeMounts:
+        - name: temp
+          mountPath: /tmp
+      volumes:
+        - name: temp
+          emptyDir: {}
       resources:
         requests:
           memory: 256Mi
