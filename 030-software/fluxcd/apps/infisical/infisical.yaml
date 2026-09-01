@@ -21,17 +21,6 @@ spec:
         kind: HelmRepository
         name: infisical
       interval: ${interval}
-      postRenderers:
-        - kustomize:
-            patches:
-              - target:
-                  version: v1
-                  kind: Deployment
-                  name: infisical
-                patch: |
-                  - op: add
-                    path: /spec/template/metadata/labels
-                    value: policy.gatekeeper.sh/ignore-container-must-have-limits=true
   values:
     infisical:
       enabled: true
@@ -40,6 +29,7 @@ spec:
         organization: "homelab"
       resources:
         limits:
+          cpu: 1000m
           memory: 1000Mi
         requests:
           cpu: 350m
