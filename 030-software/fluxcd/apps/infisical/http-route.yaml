@@ -11,7 +11,7 @@ spec:
     namespace: cilium
   rules:
   - backendRefs:
-    - name: infisical
+    - name: infisical-infisical-standalone-infisical
       port: 8080
     matches:
     - path:
