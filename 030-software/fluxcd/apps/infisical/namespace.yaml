@@ -1,6 +1,0 @@
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: infisical
-  labels:
-    bundle.cert-manager.io/inject-secret: enabled

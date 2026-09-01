@@ -1,24 +1,24 @@
 apiVersion: postgresql.cnpg.io/v1
 kind: Database
 metadata:
-  name: infisical
+  name: openbao
 spec:
-  name: infisical
-  owner: infisical
+  name: openbao
+  owner: openbao
   cluster:
     name: main
 ---
 apiVersion: postgresql.cnpg.io/v1
 kind: DatabaseRole
 metadata:
-  name: infisical
+  name: openbao
 spec:
   cluster:
     name: main
-  name: infisical
+  name: openbao
   login: true
   superuser: false
   createdb: false
   createrole: false
   passwordSecret:
-    name: infisical
+    name: openbao
