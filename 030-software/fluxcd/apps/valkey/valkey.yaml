@@ -28,7 +28,7 @@ spec:
     auth:
       enabled: false
     metrics:
-      enabled: true
+      enabled: false
 
     resources:
       requests:
