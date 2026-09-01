@@ -46,9 +46,9 @@ spec:
         capabilities:
           drop:
             - ALL
+    kubeSecretRef: infisical-secrets
     ingress:
       enabled: false
-    kubeSecretRef: infisical-secrets
     postgresql:
       enabled: false
     redis:
