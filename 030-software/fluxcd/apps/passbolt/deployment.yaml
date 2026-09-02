@@ -79,4 +79,5 @@ spec:
           emptyDir:
             medium: Memory
         - name: gpg
-          emptyDir: {}
+          emptyDir:
+            medium: Memory
