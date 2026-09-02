@@ -19,7 +19,6 @@ resources:
   - kube-system
   - metrics-server
   # - nats
-  - passbolt
   # - plex
   # - pocket-id
   # - pod-gateway
