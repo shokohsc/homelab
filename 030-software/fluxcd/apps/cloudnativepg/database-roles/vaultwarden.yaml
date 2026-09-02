@@ -1,24 +1,24 @@
 apiVersion: postgresql.cnpg.io/v1
 kind: Database
 metadata:
-  name: passbolt
+  name: vaultwarden
 spec:
-  name: passbolt
-  owner: passbolt
+  name: vaultwarden
+  owner: vaultwarden
   cluster:
     name: main
 ---
 apiVersion: postgresql.cnpg.io/v1
 kind: DatabaseRole
 metadata:
-  name: passbolt
+  name: vaultwarden
 spec:
   cluster:
     name: main
-  name: passbolt
+  name: vaultwarden
   login: true
   superuser: false
   createdb: false
   createrole: false
   passwordSecret:
-    name: passbolt
+    name: vaultwarden

@@ -9,6 +9,6 @@ resources:
   - cluster.yaml
   - routes.yaml
   - secret.yaml
-  - database-roles/passbolt.yaml
+  - database-roles/vaultwarden.yaml
   - database-roles/pocket-id.yaml
   # - pooler.yaml
