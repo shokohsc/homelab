@@ -43,7 +43,7 @@ spec:
             - name: EMAIL_TRANSPORT_DEFAULT_HOST
               value: "smtp.domain.tld"
             - name: EMAIL_TRANSPORT_DEFAULT_PORT
-              value: 587
+              value: "587"
             - name: DATASOURCES_DEFAULT_URL
               valueFrom:
                 secretKeyRef:
