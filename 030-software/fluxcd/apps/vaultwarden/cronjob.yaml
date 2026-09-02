@@ -1,0 +1,64 @@
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: backup
+spec:
+  schedule: "0 5 * * *"
+  successfulJobsHistoryLimit: 0
+  failedJobsHistoryLimit: 1
+  jobTemplate:
+    spec:
+      backoffLimit: 0
+      template:
+        spec:
+          restartPolicy: OnFailure
+          automountServiceAccountToken: false
+          containers:
+          - name: bw-cli
+            image: node:alpine
+            command: ["/bin/vaultwarden_export.sh"]
+            env:
+              - name: BW_HOST
+                value: "https://vaultwarden.${domain}"
+              - name: BACKUP_DIR
+                value: /archive
+              - name: BW_CLIENTID
+                valueFrom:
+                  secretKeyRef:
+                    name: vaultwarden
+                    key: client-id
+              - name: BW_CLIENTSECRET
+                valueFrom:
+                  secretKeyRef:
+                    name: vaultwarden
+                    key: client-secret
+              - name: MASTER_PASSWORD
+                valueFrom:
+                  secretKeyRef:
+                    name: vaultwarden
+                    key: master-password
+              - name: NODE_EXTRA_CA_CERTS
+                value: /usr/local/share/ca-certificates/ca.crt
+            volumeMounts:
+              - name: scripts
+                mountPath: /bin/vaultwarden_export.sh
+                subPath: vaultwarden_export.sh
+              - name: shared
+                mountPath: /archive
+              - name: ca-cert
+                mountPath: /usr/local/share/ca-certificates/ca.crt
+                subPath: ca.crt
+          volumes:
+            - name: scripts
+              configMap:
+                name: scripts
+                defaultMode: 0755
+            - name: shared
+              nfs:
+                server: nfs-shared.nfs-shared.svc.cluster.local
+                path: /backups/vaultwarden
+            - name: ca-cert
+              secret:
+                secretName: ca-cert
+                defaultMode: 0600

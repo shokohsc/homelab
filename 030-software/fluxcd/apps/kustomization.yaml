@@ -31,6 +31,7 @@ resources:
   - syslog
   - tailscale
   - valkey
+  - vaultwarden
   - victoria-logs
   - victoria-logs-collector
   - victoria-metrics

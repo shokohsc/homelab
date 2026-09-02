@@ -56,7 +56,7 @@ cgroup:
 
 gatewayAPI:
   enabled: true
-  externalTrafficPolicy: Local
+  externalTrafficPolicy: Cluster
   enableAlpn: true
   enableAppProtocol: true
 
