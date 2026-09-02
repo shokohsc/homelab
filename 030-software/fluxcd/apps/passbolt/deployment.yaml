@@ -72,7 +72,11 @@ spec:
           volumeMounts:
             - mountPath: /var/lib/passbolt
               name: work
+            - mountPath: /etc/passbolt/gpg
+              name: gpg
       volumes:
         - name: work
           emptyDir:
             medium: Memory
+        - name: gpg
+          emptyDir: {}
