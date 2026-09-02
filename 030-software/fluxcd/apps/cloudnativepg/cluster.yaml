@@ -5,5 +5,26 @@ metadata:
   name: main
 spec:
   instances: 3
+  # postgresql:
+  #   parameters:
+  #     shared_buffers: 256MB
+  #     pg_stat_statements.max: '10000'
+  #     pg_stat_statements.track: all
+  #     auto_explain.log_min_duration: '10s'
+  #   pg_hba:
+  #     - host all all 10.244.0.0/16 md5
+  enableSuperuserAccess: true
+  superuserSecret:
+    name: postgres
   storage:
     size: 1Gi
+  resources:
+    requests:
+      memory: "512Mi"
+      cpu: "1"
+    limits:
+      memory: "1Gi"
+      cpu: "2"
+  # affinity:
+  #   enablePodAntiAffinity: true
+  #   topologyKey: topology.kubernetes.io/zone
