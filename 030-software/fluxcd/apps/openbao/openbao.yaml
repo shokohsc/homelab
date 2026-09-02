@@ -70,10 +70,6 @@ spec:
               namespace: cilium
       livenessProbe:
         enabled: true
-        execCommand:
-          - /bin/sh
-          - -c
-          - /openbao/userconfig/mylivenessscript/run.sh
 
       dataStorage:
         enabled: false
