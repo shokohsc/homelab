@@ -4,25 +4,38 @@ kind: Deployment
 metadata:
   name: vaultwarden
   labels:
-    app.kubernetes.io/name: vaultwarden
+    app: vaultwarden
 spec:
-  revisionHistoryLimit: 3
+  revisionHistoryLimit: 0
   replicas: 1
   strategy:
     type: Recreate
   selector:
     matchLabels:
-      app.kubernetes.io/name: vaultwarden
+      app: vaultwarden
   template:
     metadata:
       labels:
-        app.kubernetes.io/name: vaultwarden
+        app: vaultwarden
     spec:
       automountServiceAccountToken: false
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        seccompProfile:
+          type: RuntimeDefault
       containers:
         - name: vaultwarden
-          image: vaultwarden/server:1.37.2
-          imagePullPolicy: IfNotPresent
+          image: ghcr.io/vaultwarden/server:1.37.2
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+            capabilities:
+              drop:
+                - ALL
           env:
             - name: DATA_FOLDER
               value: config
@@ -33,9 +46,11 @@ spec:
                   key: postgresql-url
             - name: DOMAIN
               value: https://vaultwarden.${domain}
+            - name: ROCKET_PORT
+              value: "8080"
           ports:
             - name: http
-              containerPort: 80
+              containerPort: 8080
               protocol: TCP
             - name: websocket
               containerPort: 3012
@@ -45,13 +60,13 @@ spec:
               mountPath: /config
           livenessProbe:
             tcpSocket:
-              port: 80
+              port: http
           readinessProbe:
             tcpSocket:
-              port: 80
+              port: http
           startupProbe:
             tcpSocket:
-              port: 80
+              port: http
           resources:
             limits:
               cpu: 100m
@@ -62,4 +77,4 @@ spec:
       volumes:
         - name: config
           persistentVolumeClaim:
-            claimName: vaultwarden-config
+            claimName: config

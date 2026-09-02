@@ -4,7 +4,7 @@ kind: Service
 metadata:
   name: vaultwarden
   labels:
-    app.kubernetes.io/name: vaultwarden
+    app: vaultwarden
 spec:
   type: ClusterIP
   ports:
@@ -17,4 +17,4 @@ spec:
     protocol: TCP
     name: websocket
   selector:
-    app.kubernetes.io/name: vaultwarden
+    app: vaultwarden

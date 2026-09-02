@@ -2,7 +2,7 @@
 kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
-  name: vaultwarden-config
+  name: config
   labels:
     app.kubernetes.io/name: vaultwarden
   annotations:
