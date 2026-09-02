@@ -9,6 +9,10 @@ resources:
   - cluster.yaml
   - routes.yaml
   - secret.yaml
-  - database-roles/vaultwarden.yaml
+  - database-roles/atuin.yaml
+  - database-roles/maddy.yaml
+  - database-roles/miniflux.yaml
   - database-roles/pocket-id.yaml
+  - database-roles/prowlarr.yaml
+  - database-roles/vaultwarden.yaml
   # - pooler.yaml
