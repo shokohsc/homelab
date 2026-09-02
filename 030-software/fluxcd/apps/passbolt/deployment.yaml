@@ -69,10 +69,10 @@ spec:
             limits:
               cpu: 1000m
               memory: 256Mi
-      #     volumeMounts:
-      #       - mountPath: /tmp
-      #         name: work
-      # volumes:
-      #   - name: work
-      #     emptyDir:
-      #       medium: Memory
+          volumeMounts:
+            - mountPath: /var/lib/passbolt
+              name: work
+      volumes:
+        - name: work
+          emptyDir:
+            medium: Memory
