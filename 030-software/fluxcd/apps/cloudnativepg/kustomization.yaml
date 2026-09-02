@@ -9,6 +9,6 @@ resources:
   - cluster.yaml
   - routes.yaml
   - secret.yaml
-  - database-roles/openbao.yaml
+  - database-roles/passbolt.yaml
   - database-roles/pocket-id.yaml
   # - pooler.yaml

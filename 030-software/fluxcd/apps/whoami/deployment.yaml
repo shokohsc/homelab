@@ -53,7 +53,8 @@ spec:
             tcpSocket:
               port: http
           readinessProbe:
-            tcpSocket:
+            httpGet:
+              path: /
               port: http
           resources:
             requests:

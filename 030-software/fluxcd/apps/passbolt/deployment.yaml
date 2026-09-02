@@ -2,18 +2,18 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: konflate
+  name: passbolt
   labels:
-    app: konflate
+    app: passbolt
 spec:
   revisionHistoryLimit: 0
   selector:
     matchLabels:
-      app: konflate
+      app: passbolt
   template:
     metadata:
       labels:
-        app: konflate
+        app: passbolt
     spec:
       enableServiceLinks: false
       securityContext:
@@ -23,18 +23,9 @@ spec:
         fsGroup: 1000
         seccompProfile:
           type: RuntimeDefault
-      affinity:
-        podAntiAffinity:
-          preferredDuringSchedulingIgnoredDuringExecution:
-            - weight: 100
-              podAffinityTerm:
-                topologyKey: "kubernetes.io/hostname"
-                labelSelector:
-                  matchLabels:
-                    app: konflate
       containers:
-        - name: konflate
-          image: ghcr.io/home-operations/konflate:0.6.2
+        - name: passbolt
+          image: passbolt/passbolt:5.15.0-1-ce-non-root
           securityContext:
             allowPrivilegeEscalation: false
             readOnlyRootFilesystem: true
@@ -43,24 +34,24 @@ spec:
               drop:
                 - ALL
           env:
-            - name: KONFLATE_REPO
-              value: github://shokohsc/homelab
-            - name: KONFLATE_CLUSTER_PATH
-              value: 030-software/fluxcd
-            - name: KONFLATE_CACHE_DIR
-              value: /tmp/cache
-            - name: KONFLATE_CLONE_DIR
-              value: /tmp/clone
-            - name: KONFLATE_TOKEN
+            - name: APP_FULL_BASE_URL
+              value: https://passbolt.${domain}
+            - name: DATASOURCES_DEFAULT_DRIVER
+              value: Cake\Database\Driver\Postgres
+            - name: DATASOURCES_DEFAULT_ENCODING
+              value: "utf8"
+            - name: EMAIL_TRANSPORT_DEFAULT_HOST
+              value: "smtp.domain.tld"
+            - name: EMAIL_TRANSPORT_DEFAULT_PORT
+              value: 587
+            - name: DATASOURCES_DEFAULT_URL
               valueFrom:
                 secretKeyRef:
-                  name: github
-                  key: token
+                  name: passbolt
+                  key: database-url
           ports:
             - containerPort: 8080
               name: http
-            - containerPort: 9090
-              name: metrics
           startupProbe:
             tcpSocket:
               port: http
@@ -78,10 +69,10 @@ spec:
             limits:
               cpu: 1000m
               memory: 256Mi
-          volumeMounts:
-            - mountPath: /tmp
-              name: work
-      volumes:
-        - name: work
-          emptyDir:
-            medium: Memory
+      #     volumeMounts:
+      #       - mountPath: /tmp
+      #         name: work
+      # volumes:
+      #   - name: work
+      #     emptyDir:
+      #       medium: Memory
