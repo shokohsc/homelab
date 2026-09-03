@@ -32,7 +32,7 @@ resources:
   - tailscale
   - valkey
   - vaultwarden
-  - vaultwarden-kubernetes-secrets
+  # - vaultwarden-kubernetes-secrets
   - victoria-logs
   - victoria-logs-collector
   - victoria-metrics
