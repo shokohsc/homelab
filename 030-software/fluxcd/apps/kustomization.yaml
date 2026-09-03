@@ -34,6 +34,7 @@ resources:
   - valkey
   - vaultwarden
   # - vaultwarden-kubernetes-secrets
+  - vaultwarden-secrets-sync
   - victoria-logs
   - victoria-logs-collector
   - victoria-metrics

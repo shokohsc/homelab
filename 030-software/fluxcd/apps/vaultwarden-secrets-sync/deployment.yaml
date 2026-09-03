@@ -1,0 +1,42 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vaultwarden-secrets-sync
+  labels:
+    app: vaultwarden-secrets-sync
+spec:
+  revisionHistoryLimit: 0
+  selector:
+    matchLabels:
+      app: vaultwarden-secrets-sync
+  template:
+    metadata:
+      labels:
+        app: vaultwarden-secrets-sync
+    spec:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        seccompProfile:
+          type: RuntimeDefault
+      serviceAccountName: vaultwarden-secrets-sync
+      containers:
+        - name: vaultwarden-secrets-sync
+          image: ghcr.io/your-org/vaultwarden-k8s-sync:51299d4
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+            capabilities:
+              drop:
+                - ALL
+          resources:
+            requests:
+              cpu: 10m
+              memory: 64Mi
+            limits:
+              cpu: 100m
+              memory: 64Mi
