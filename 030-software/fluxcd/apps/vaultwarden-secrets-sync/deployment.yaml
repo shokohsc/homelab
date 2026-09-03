@@ -44,6 +44,10 @@ spec:
               value: "true"
             - name: VAULTWARDEN_SERVER_URL
               value: "https://vaultwarden.${domain}"
+            - name: BW_SERVER
+              value: "https://vaultwarden.${domain}"
+            - name: NODE_EXTRA_CA_CERTS
+              value: "/etc/ssl/certs"
           envFrom:
             - secretRef:
                 name: vaultwarden-secrets-sync
