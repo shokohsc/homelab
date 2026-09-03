@@ -13,10 +13,6 @@ spec:
       app: pocket-id
   template:
     metadata:
-      # annotations:
-      #   prometheus.io/scrape: "true"
-      #   prometheus.io/path: /metrics
-      #   prometheus.io/port: "9464"
       labels:
         app: pocket-id
     spec:
