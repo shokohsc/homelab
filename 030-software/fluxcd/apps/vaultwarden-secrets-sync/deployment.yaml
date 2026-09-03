@@ -42,6 +42,8 @@ spec:
               value: "true"
             - name: DELETE_ORPHANS
               value: "true"
+            - name: VAULTWARDEN_SERVER_URL
+              value: "https://vaultwarden.${domain}"
           envFrom:
             - secretRef:
                 name: vaultwarden-secrets-sync
@@ -55,7 +57,13 @@ spec:
           volumeMounts:
             - name: temp
               mountPath: /.config
+            - name: tls
+              mountPath: /etc/ssl/certs
       volumes:
         - name: temp
           emptyDir:
             medium: Memory
+        - name: tls
+          configMap:
+            name: homelab-ca-cm
+            defaultMode: 0600
