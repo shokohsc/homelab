@@ -7,7 +7,6 @@ resources:
   - service.yaml
   - routes.yaml
   - pvc.yaml
-  # - secret.yaml
 configMapGenerator:
 - name: promtail
   files:
