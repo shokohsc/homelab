@@ -3,8 +3,6 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: vaultwarden-secrets-sync
-  labels:
-    app: vaultwarden-secrets-sync
 spec:
   revisionHistoryLimit: 0
   selector:
@@ -33,6 +31,16 @@ spec:
             capabilities:
               drop:
                 - ALL
+          env:
+            - name: SYNC_INTERVAL
+              value: "5"
+            - name: DRY_RUN
+              value: "true"
+            - name: DELETE_ORPHANS
+              value: "true"
+          envFrom:
+            - secretRef:
+                name: vaultwarden-secrets-sync
           resources:
             requests:
               cpu: 10m

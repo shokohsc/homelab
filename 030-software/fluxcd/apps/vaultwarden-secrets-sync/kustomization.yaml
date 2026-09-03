@@ -3,5 +3,6 @@ kind: Kustomization
 namespace: vaultwarden-secrets-sync
 resources:
   - namespace.yaml
+  - secret.yaml
   - deployment.yaml
   - rbac.yaml
