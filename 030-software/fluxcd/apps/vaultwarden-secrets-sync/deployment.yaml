@@ -48,3 +48,10 @@ spec:
             limits:
               cpu: 100m
               memory: 64Mi
+          volumeMounts:
+            - name: temp
+              mountPath: /.config
+      volumes:
+        - name: temp
+          emptyDir:
+            medium: Memory
