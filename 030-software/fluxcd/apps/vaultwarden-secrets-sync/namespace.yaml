@@ -1,7 +1,0 @@
----
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: vaultwarden-secrets-sync
-  labels:
-    bundle.cert-manager.io/inject-cm: enabled

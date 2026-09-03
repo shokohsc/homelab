@@ -20,7 +20,7 @@ resources:
   - kube-system
   - metrics-server
   # - nats
-  # - plex
+  - plex
   - pocket-id
   # - pod-gateway
   - proxmox
@@ -34,7 +34,6 @@ resources:
   - valkey
   - vaultwarden
   - vaultwarden-kubernetes-secrets
-  # - vaultwarden-secrets-sync
   - victoria-logs
   - victoria-logs-collector
   - victoria-metrics

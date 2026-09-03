@@ -59,39 +59,39 @@ spec:
             matchLabels:
               app.kubernetes.io/name: cloudnative-pg
 
-    # - name: plex
-    #   port: 32400
-    #   protocol: TCP
-    #   allowedRoutes:
-    #     kinds:
-    #       - kind: TCPRoute
-    #     namespaces:
-    #       from: Selector
-    #       selector:
-    #         matchLabels:
-    #           app: plex
-    # - name: dnla-tcp
-    #   port: 32469
-    #   protocol: TCP
-    #   allowedRoutes:
-    #     kinds:
-    #       - kind: TCPRoute
-    #     namespaces:
-    #       from: Selector
-    #       selector:
-    #         matchLabels:
-    #           app: plex
-    # - name: dnla-udp
-    #   port: 1900
-    #   protocol: UDP
-    #   allowedRoutes:
-    #     kinds:
-    #       - kind: UDPRoute
-    #     namespaces:
-    #       from: Selector
-    #       selector:
-    #         matchLabels:
-    #           app: plex
+    - name: plex
+      port: 32400
+      protocol: TCP
+      allowedRoutes:
+        kinds:
+          - kind: TCPRoute
+        namespaces:
+          from: Selector
+          selector:
+            matchLabels:
+              app: plex
+    - name: dnla-tcp
+      port: 32469
+      protocol: TCP
+      allowedRoutes:
+        kinds:
+          - kind: TCPRoute
+        namespaces:
+          from: Selector
+          selector:
+            matchLabels:
+              app: plex
+    - name: dnla-udp
+      port: 1900
+      protocol: UDP
+      allowedRoutes:
+        kinds:
+          - kind: UDPRoute
+        namespaces:
+          from: Selector
+          selector:
+            matchLabels:
+              app: plex
 
     # - name: jellyfin
     #   port: 8096

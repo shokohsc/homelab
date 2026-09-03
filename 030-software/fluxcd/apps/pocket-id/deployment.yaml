@@ -43,8 +43,6 @@ spec:
               value: "1000"
             - name: PGID
               value: "1000"
-            - name: DB_PROVIDER
-              value: postgres
             - name: DB_CONNECTION_STRING
               valueFrom:
                 secretKeyRef:
@@ -54,6 +52,11 @@ spec:
               valueFrom:
                 secretKeyRef:
                   key: maxmind-license
+                  name: pocket-id
+            - name: ENCRYPTION_KEY
+              valueFrom:
+                secretKeyRef:
+                  key: encryption-key
                   name: pocket-id
             # - name: TRACING_ENABLED
             #   value: "true"
