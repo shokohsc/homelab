@@ -38,8 +38,8 @@ spec:
           env:
             - name: ADMINER_PLUGINS
               value:
-            - name: ADMINER_DESIGN
-              value: dracula
+            # - name: ADMINER_DESIGN
+            #   value: dracula
             - name: ADMINER_DEFAULT_SERVER
               value: postgresql.postgresql
           startupProbe:
