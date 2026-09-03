@@ -25,7 +25,7 @@ spec:
       serviceAccountName: vaultwarden-secrets-sync
       containers:
         - name: vaultwarden-secrets-sync
-          image: ghcr.io/shokohsc/vaultwarden-k8s-sync:51299d4
+          image: ghcr.io/shokohsc/vaultwarden-secrets-sync:51299d4
           securityContext:
             allowPrivilegeEscalation: false
             readOnlyRootFilesystem: true
