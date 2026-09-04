@@ -83,10 +83,10 @@ spec:
           resources:
             limits:
               cpu: 100m
-              memory: 64M
+              memory: 256Mi
             requests:
               cpu: 10m
-              memory: 64M
+              memory: 64Mi
           volumeMounts:
             - name: data
               mountPath: /app/data
