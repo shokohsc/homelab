@@ -67,36 +67,6 @@ spec:
             stage.cri { }
 
             stage.docker { }
-
-            # stage.match {
-            #   selector = "{app=\"eventrouter\"}"
-
-            #   stage.json {
-            #     expressions = {
-            #       event_kind             = "event.involvedObject.kind",
-            #       event_name             = "event.metadata.name",
-            #       event_namespace        = "event.involvedObject.namespace",
-            #       event_reason           = "event.reason",
-            #       event_source_component = "event.source.component",
-            #       event_source_host      = "event.source.host",
-            #       event_type             = "event.type",
-            #       event_verb             = "verb",
-            #     }
-            #   }
-
-            #   stage.labels {
-            #     values = {
-            #       event_kind             = null,
-            #       event_name             = null,
-            #       event_namespace        = null,
-            #       event_reason           = null,
-            #       event_source_component = null,
-            #       event_source_host      = null,
-            #       event_type             = null,
-            #       event_verb             = null,
-            #     }
-            #   }
-            # }
           }
 
           discovery.relabel "kubernetes_pods" {
