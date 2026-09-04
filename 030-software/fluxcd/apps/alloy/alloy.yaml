@@ -28,6 +28,10 @@ spec:
         extra:
           - name: temp
             emptyDir: {}
+      tolerations:
+        - key: "node.kubernetes.io/nuc"
+          operator: "Exists"
+          effect: "NoSchedule"
     mounts:
       varlog: true
       dockercontainers: false
