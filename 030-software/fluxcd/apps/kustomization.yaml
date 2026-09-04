@@ -13,6 +13,8 @@ resources:
   - gatekeeper
   - grafana
   # - headlamp
+  - loki
+  - alloy
   - http-echo
   # - jellyfin
   # - konflate

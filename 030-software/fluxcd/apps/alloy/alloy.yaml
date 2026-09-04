@@ -1,0 +1,111 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: alloy
+spec:
+  interval: ${interval}
+  chart:
+    spec:
+      # renovate: registryUrl=https://grafana.github.io/helm-charts
+      chart: alloy
+      version: 1.12.1
+      sourceRef:
+        kind: HelmRepository
+        name: grafana
+        namespace: flux-system
+  values:
+    controller:
+      type: daemonset
+    mounts:
+      varlog: true
+      dockercontainers: false
+      extra:
+        - name: journal
+          mountPath: /var/log/journal
+          readOnly: true
+          hostPath:
+            path: /var/log/journal
+        - name: containerd
+          mountPath: /var/log/containerd
+          readOnly: true
+          hostPath:
+            path: /var/lib/rancher/k3s/agent/containerd/
+    alloy:
+      configMap:
+        content: |
+          loki.source.kubernetes "pods" {
+            namespaces = [""]
+            forward_to = [loki.process.processed.receiver]
+          }
+
+          loki.process "processed" {
+            stage.cri {}
+            stage.docker {}
+            stage.match {
+              selector = "{app=\"eventrouter\"}"
+              stages {
+                stage.json {
+                  expressions = {
+                    event_verb = "verb"
+                    event_kind = "event.involvedObject.kind"
+                    event_reason = "event.reason"
+                    event_namespace = "event.involvedObject.namespace"
+                    event_name = "event.metadata.name"
+                    event_source_host = "event.source.host"
+                    event_source_component = "event.source.component"
+                    event_type = "event.type"
+                  }
+                }
+                stage.labels {
+                  values = {
+                    event_verb = ""
+                    event_kind = ""
+                    event_reason = ""
+                    event_namespace = ""
+                    event_name = ""
+                    event_source_host = ""
+                    event_source_component = ""
+                    event_type = ""
+                  }
+                }
+              }
+            }
+            output = [loki.write.gateway.receiver]
+          }
+
+          loki.source.journald "journal" {
+            max_age = "12h"
+            labels = { job = "systemd-journal" }
+            forward_to = [loki.process.journal.receiver]
+          }
+
+          loki.process "journal" {
+            stage.label_drop {
+              names = ["timestamp"]
+            }
+            output = [loki.write.gateway.receiver]
+          }
+
+          loki.process "containerd" {
+            stage.cri {}
+            output = [loki.write.gateway.receiver]
+          }
+
+          loki.source.file "containerd" {
+            paths = ["/var/log/containerd"]
+            forward_to = [loki.process.containerd.receiver]
+          }
+
+          loki.write "gateway" {
+            endpoint {
+              url = "http://loki-gateway.loki/loki/api/v1/push"
+            }
+          }
+      resources:
+        requests:
+          cpu: 100m
+          memory: 64M
+        limits:
+          cpu: 1000m
+          memory: 128M
