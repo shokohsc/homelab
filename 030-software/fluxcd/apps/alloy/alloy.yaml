@@ -27,7 +27,22 @@ spec:
     mounts:
       varlog: true
       dockercontainers: false
+    global:
+      podSecurityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        seccompProfile:
+          type: RuntimeDefault
     alloy:
+      securityContext:
+        allowPrivilegeEscalation: false
+        readOnlyRootFilesystem: true
+        runAsNonRoot: true
+        capabilities:
+          drop:
+            - ALL
       configMap:
         content: |
           loki.source.kubernetes "pods" {
