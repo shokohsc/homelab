@@ -15,7 +15,6 @@ spec:
   interval: ${interval}
   chart:
     spec:
-      # renovate: registryUrl=https://grafana.github.io/helm-charts
       chart: alloy
       version: 1.12.1
       sourceRef:
