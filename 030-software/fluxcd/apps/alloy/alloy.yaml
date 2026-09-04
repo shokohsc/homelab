@@ -120,3 +120,11 @@ spec:
         limits:
           cpu: 1000m
           memory: 128M
+    configReloader:
+      resources:
+        requests:
+          cpu: 10m
+          memory: 64M
+        limits:
+          cpu: 100m
+          memory: 64M
