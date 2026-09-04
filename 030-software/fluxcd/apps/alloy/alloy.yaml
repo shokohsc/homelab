@@ -27,17 +27,6 @@ spec:
     mounts:
       varlog: true
       dockercontainers: false
-      extra:
-        - name: journal
-          mountPath: /var/log/journal
-          readOnly: true
-          hostPath:
-            path: /var/log/journal
-        - name: containerd
-          mountPath: /var/log/containerd
-          readOnly: true
-          hostPath:
-            path: /var/lib/rancher/k3s/agent/containerd/
     alloy:
       configMap:
         content: |
@@ -100,7 +89,7 @@ spec:
           }
 
           loki.source.file "containerd" {
-            paths = ["/var/log/containerd"]
+            paths = ["/var/log/containers/*/*.log"]
             forward_to = [loki.process.containerd.receiver]
           }
 
