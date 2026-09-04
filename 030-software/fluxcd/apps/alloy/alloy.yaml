@@ -24,6 +24,10 @@ spec:
   values:
     controller:
       type: daemonset
+      volumes:
+        extra:
+          - name: temp
+            emptyDir: {}
     mounts:
       varlog: true
       dockercontainers: false
@@ -113,6 +117,10 @@ spec:
               url = "http://loki-gateway.loki/loki/api/v1/push"
             }
           }
+      mounts:
+        extra:
+          - name: temp
+            mountPath: /tmp
       resources:
         requests:
           cpu: 100m
