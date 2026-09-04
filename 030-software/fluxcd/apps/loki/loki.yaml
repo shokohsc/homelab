@@ -24,7 +24,7 @@ spec:
   values:
     commonLabels: null
 
-    deploymentMode: Distributed
+    deploymentMode: Monolithic
 
     gateway:
       route:
@@ -51,39 +51,7 @@ spec:
             cpu: 100m
             memory: 64Mi
 
-    write:
-      replicas: 1
-      persistence:
-        size: 1Gi
-      resources:
-        requests:
-          cpu: 10m
-          memory: 64Mi
-        limits:
-          cpu: 100m
-          memory: 64Mi
-      ingester:
-        chunk_target_size: 1536000
-        chunk_idle_period: 5m
-        chunk_max_age: 10m
-        max_chunk_retries: 2
-        wal:
-          enabled: true
-          dir: /var/loki/wal
-
-    read:
-      replicas: 1
-      persistence:
-        size: 1Gi
-      resources:
-        requests:
-          cpu: 10m
-          memory: 64Mi
-        limits:
-          cpu: 100m
-          memory: 64Mi
-
-    backend:
+    singleBinary:
       replicas: 1
       resources:
         requests:
@@ -94,14 +62,6 @@ spec:
           memory: 64Mi
       persistence:
         size: 1Gi
-      compactor:
-        working_directory: /var/loki/compactor
-        compaction_interval: 10m
-        retention_enabled: true
-        retention_delete_delay: 2h
-        retention_delete_worker_count: 150
-      indexGateway:
-        diskDirectory: /var/loki/index
 
     loki:
       auth_enabled: false
@@ -141,9 +101,6 @@ spec:
     minio:
       enabled: false
 
-    singleBinary:
-      replicas: 0
-
     chunksCache:
       enabled: false
     resultsCache:
@@ -164,3 +121,10 @@ spec:
         limits:
           cpu: 100m
           memory: 64Mi
+
+    write:
+      replicas: 0
+    read:
+      replicas: 0
+    backend:
+      replicas: 0
