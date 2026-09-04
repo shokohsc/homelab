@@ -210,7 +210,7 @@ spec:
 
           loki.write "default" {
             endpoint {
-              url = "http://loki-gateway.lokisvc.cluster.local/loki/api/v1/push"
+              url = "http://loki-gateway.loki.svc.cluster.local/loki/api/v1/push"
             }
             external_labels = {}
           }
