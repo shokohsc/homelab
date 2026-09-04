@@ -62,25 +62,25 @@ spec:
               stages {
                 stage.json {
                   expressions = {
-                    event_verb = "verb"
-                    event_kind = "event.involvedObject.kind"
-                    event_reason = "event.reason"
-                    event_namespace = "event.involvedObject.namespace"
-                    event_name = "event.metadata.name"
-                    event_source_host = "event.source.host"
-                    event_source_component = "event.source.component"
+                    event_verb = "verb",
+                    event_kind = "event.involvedObject.kind",
+                    event_reason = "event.reason",
+                    event_namespace = "event.involvedObject.namespace",
+                    event_name = "event.metadata.name",
+                    event_source_host = "event.source.host",
+                    event_source_component = "event.source.component",
                     event_type = "event.type"
                   }
                 }
                 stage.labels {
                   values = {
-                    event_verb = ""
-                    event_kind = ""
-                    event_reason = ""
-                    event_namespace = ""
-                    event_name = ""
-                    event_source_host = ""
-                    event_source_component = ""
+                    event_verb = "",
+                    event_kind = "",
+                    event_reason = "",
+                    event_namespace = "",
+                    event_name = "",
+                    event_source_host = "",
+                    event_source_component = "",
                     event_type = ""
                   }
                 }
