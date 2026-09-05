@@ -19,12 +19,13 @@ spec:
         nfs-genji: "true"
         policy.gatekeeper.sh/ignore-container-must-have-limits: "true"
         policy.gatekeeper.sh/ignore-psp-readonlyrootfilesystem: "true"
+        policy.gatekeeper.sh/ignore-psp-pods-allowed-user-ranges: "true"
     spec:
       automountServiceAccountToken: false
       securityContext:
-        runAsNonRoot: true
-        runAsUser: 1000
-        runAsGroup: 1000
+        # runAsNonRoot: true
+        # runAsUser: 1000
+        # runAsGroup: 1000
         fsGroup: 1000
         seccompProfile:
           type: RuntimeDefault
@@ -35,7 +36,7 @@ spec:
           securityContext:
             allowPrivilegeEscalation: false
             # readOnlyRootFilesystem: true
-            runAsNonRoot: true
+            # runAsNonRoot: true
             capabilities:
               drop:
                 - ALL
