@@ -61,14 +61,6 @@ spec:
             }
           }
 
-          loki.process "kubernetes_pods" {
-            forward_to = [loki.write.default.receiver]
-
-            stage.cri { }
-
-            stage.docker { }
-          }
-
           discovery.relabel "kubernetes_pods" {
             targets = discovery.kubernetes.kubernetes_pods.targets
 
@@ -146,11 +138,14 @@ spec:
           loki.source.file "kubernetes_pods" {
             targets    = discovery.relabel.kubernetes_pods.output
             forward_to = [loki.process.kubernetes_pods.receiver]
+          }
 
-            file_match {
-              enabled = true
-            }
-            legacy_positions_file = "/run/promtail/positions.yaml"
+          loki.process "kubernetes_pods" {
+            forward_to = [loki.write.default.receiver]
+
+            stage.cri { }
+
+            stage.docker { }
           }
 
           loki.write "default" {
