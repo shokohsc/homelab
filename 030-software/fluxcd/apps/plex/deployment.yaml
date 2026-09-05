@@ -34,7 +34,7 @@ spec:
           # image: ghcr.io/11notes/plex:1.43.3-nobody
           image: plexinc/pms-docker:1.43.3.10896-cb3ebc72d
           securityContext:
-            allowPrivilegeEscalation: false
+            # allowPrivilegeEscalation: false
             # readOnlyRootFilesystem: true
             # runAsNonRoot: true
             capabilities:
