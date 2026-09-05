@@ -142,10 +142,6 @@ spec:
 
           loki.process "kubernetes_pods" {
             forward_to = [loki.write.default.receiver]
-
-            stage.cri { }
-
-            stage.docker { }
           }
 
           loki.write "default" {

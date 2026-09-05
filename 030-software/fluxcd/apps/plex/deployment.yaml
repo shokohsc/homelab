@@ -18,6 +18,7 @@ spec:
         app: plex
         nfs-genji: "true"
         policy.gatekeeper.sh/ignore-container-must-have-limits: "true"
+        policy.gatekeeper.sh/ignore-psp-readonlyrootfilesystem: "true"
     spec:
       automountServiceAccountToken: false
       securityContext:
@@ -29,10 +30,11 @@ spec:
           type: RuntimeDefault
       containers:
         - name: plex
-          image: ghcr.io/11notes/plex:1.43.3-nobody
+          # image: ghcr.io/11notes/plex:1.43.3-nobody
+          image: plexinc/pms-docker:1.43.3.10896-cb3ebc72d
           securityContext:
             allowPrivilegeEscalation: false
-            readOnlyRootFilesystem: true
+            # readOnlyRootFilesystem: true
             runAsNonRoot: true
             capabilities:
               drop:
@@ -67,7 +69,8 @@ spec:
               protocol: UDP
           volumeMounts:
             - name: config
-              mountPath: /plex/etc
+              # mountPath: /plex/etc
+              mountPath: /config
             # - mountPath: /etc/services.d/plex/run
             #   name: s6-plex
             #   subPath: s6-plex.sh
@@ -75,7 +78,8 @@ spec:
             #   name: chromecast
             #   subPath: Chromecast.xml
             - name: transcode
-              mountPath: /plex/tmp
+              # mountPath: /plex/tmp
+              mountPath: /transcode
             - name: movies
               mountPath: /data/movies
             - name: tvshows
