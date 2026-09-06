@@ -5,3 +5,9 @@ resources:
   - namespace.yaml
   - vuio.yaml
   - http-route.yaml
+configMapGenerator:
+- name: config
+  files:
+  - ./config/entrypoint.sh
+generatorOptions:
+  disableNameSuffixHash: true
