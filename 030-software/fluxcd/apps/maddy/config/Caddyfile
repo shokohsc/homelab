@@ -1,0 +1,9 @@
+:8080 {
+    respond /.well-known/mta-sts.txt `version: STSv1
+mode: testing
+mx: ${publicDomain}
+mx: _dc-mx.a4e6ddf75a56.${publicDomain}
+max_age: 604800` 200 {
+        content_type text/plain
+    }
+}

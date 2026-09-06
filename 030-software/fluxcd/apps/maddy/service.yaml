@@ -37,11 +37,8 @@ metadata:
   name: imap
   labels:
     app: maddy
-  annotations:
-    metallb.universe.tf/address-pool: vip
-    metallb.universe.tf/allow-shared-ip: "true"
 spec:
-  type: LoadBalancer
+  type: ClusterIP
   ports:
   - port: 143
     targetPort: imap
@@ -60,11 +57,8 @@ metadata:
   name: smtp
   labels:
     app: maddy
-  annotations:
-    metallb.universe.tf/address-pool: vip
-    metallb.universe.tf/allow-shared-ip: "true"
 spec:
-  type: LoadBalancer
+  type: ClusterIP
   ports:
   - port: 25
     targetPort: smtp

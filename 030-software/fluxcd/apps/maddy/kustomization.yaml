@@ -20,7 +20,7 @@ configMapGenerator:
   - ./config/ban-list
   - ./config/quarantine-list
   - ./config/spam-domain-list
-  - ./config/nginx.conf
+  - ./config/Caddyfile
 - name: scripts
   files:
   - ./config/alias-filter.sh
