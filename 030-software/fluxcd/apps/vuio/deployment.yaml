@@ -84,4 +84,4 @@ spec:
           server: genji.home.arpa
       - configMap:
           defaultMode: 493
-        name: scripts
+          name: scripts
