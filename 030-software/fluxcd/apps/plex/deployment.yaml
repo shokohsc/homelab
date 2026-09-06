@@ -22,29 +22,30 @@ spec:
         policy.gatekeeper.sh/ignore-psp-pods-allowed-user-ranges: "true"
     spec:
       automountServiceAccountToken: false
-      securityContext:
-        # runAsNonRoot: true
-        # runAsUser: 1000
-        # runAsGroup: 1000
-        # fsGroup: 1000
-        seccompProfile:
-          type: RuntimeDefault
+      # securityContext:
+      #   # runAsNonRoot: true
+      #   # runAsUser: 1000
+      #   # runAsGroup: 1000
+      #   # fsGroup: 1000
+      #   seccompProfile:
+      #     type: RuntimeDefault
       containers:
         - name: plex
           # image: ghcr.io/11notes/plex:1.43.3-nobody
           image: plexinc/pms-docker:1.43.3.10896-cb3ebc72d
-          securityContext:
-            # allowPrivilegeEscalation: false
-            # readOnlyRootFilesystem: true
-            # runAsNonRoot: true
-            capabilities:
-              drop:
-                - ALL
+          # securityContext:
+          #   # allowPrivilegeEscalation: false
+          #   # readOnlyRootFilesystem: true
+          #   # runAsNonRoot: true
+          #   capabilities:
+          #     drop:
+          #       - ALL
           env:
             - name: ADVERTISE_IP
               value: "http://${vip}:32400,https://plex.${domain}"
             - name: ALLOWED_NETWORKS
-              value: "${cidr},${kubeServicesCidr},10.244.0.0/16,10.42.10.0/24"
+              # value: "${cidr},${kubeServicesCidr},10.244.0.0/16,10.42.10.0/24"
+              value: "0.0.0.0/0"
             - name: PGID
               value: "1000"
             - name: PUID
