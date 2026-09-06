@@ -1,0 +1,334 @@
+---
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: post-account
+  labels:
+    app.kubernetes.io/version: "0.1"
+  annotations:
+    kustomize.toolkit.fluxcd.io/substitute: disabled
+    tekton.dev/pipelines.minVersion: "0.12.1"
+    tekton.dev/displayName: post-account
+    tekton.dev/platforms: "linux/amd64"
+spec:
+  description: >-
+    Idempotently creates a maddy account.
+  params:
+    - name: ACCOUNT
+      type: string
+      description: the account name, i.e test
+    - name: PASSWORD
+      type: string
+      description: the account password, i.e not 12345
+    - name: MADDY_DOMAIN
+      type: string
+      description: the domain name, i.e example.com
+  steps:
+    - name: kubectl
+      image: public.ecr.aws/bitnami/kubectl:1.36.1
+      resources:
+        requests:
+          cpu: 10m
+          memory: 64M
+        limits:
+          cpu: 100m
+          memory: 64M
+      script: |
+        #!/bin/bash
+        kubectl exec -n maddy deploy/maddy -c maddy '--' maddy --config /config/maddy.conf creds create --password "$(params.PASSWORD)" "$(params.ACCOUNT)@$(params.MADDY_DOMAIN)"
+        kubectl exec -n maddy deploy/maddy -c maddy '--' maddy --config /config/maddy.conf imap-acct create "$(params.ACCOUNT)@$(params.MADDY_DOMAIN)"
+        exit 0
+---
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: delete-account
+  labels:
+    app.kubernetes.io/version: "0.1"
+  annotations:
+    kustomize.toolkit.fluxcd.io/substitute: disabled
+    tekton.dev/pipelines.minVersion: "0.12.1"
+    tekton.dev/displayName: delete-account
+    tekton.dev/platforms: "linux/amd64"
+spec:
+  description: >-
+    Idempotently removes a maddy account.
+  params:
+    - name: ACCOUNT
+      type: string
+      description: the account name, i.e test
+    - name: MADDY_DOMAIN
+      type: string
+      description: the domain name, i.e example.com
+  steps:
+    - name: kubectl
+      image: public.ecr.aws/bitnami/kubectl:1.36.1
+      resources:
+        requests:
+          cpu: 10m
+          memory: 64M
+        limits:
+          cpu: 100m
+          memory: 64M
+      script: |
+        #!/bin/bash
+        kubectl exec -n maddy deploy/maddy -c maddy '--' maddy --config /config/maddy.conf imap-acct remove --yes "$(params.ACCOUNT)@$(params.MADDY_DOMAIN)"
+        kubectl exec -n maddy deploy/maddy -c maddy '--' maddy --config /config/maddy.conf creds remove --yes "$(params.ACCOUNT)@$(params.MADDY_DOMAIN)"
+        exit 0
+---
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: list-account
+  labels:
+    app.kubernetes.io/version: "0.1"
+  annotations:
+    kustomize.toolkit.fluxcd.io/substitute: disabled
+    tekton.dev/pipelines.minVersion: "0.12.1"
+    tekton.dev/displayName: list-account
+    tekton.dev/platforms: "linux/amd64"
+spec:
+  description: >-
+    Lists maddy accounts.
+  steps:
+    - name: kubectl
+      image: public.ecr.aws/bitnami/kubectl:1.36.1
+      resources:
+        requests:
+          cpu: 10m
+          memory: 64M
+        limits:
+          cpu: 100m
+          memory: 64M
+      script: |
+        #!/bin/bash
+        kubectl exec -n maddy deploy/maddy -c maddy '--' maddy --config /config/maddy.conf creds list
+        kubectl exec -n maddy deploy/maddy -c maddy '--' maddy --config /config/maddy.conf imap-acct list
+        exit 0
+---
+apiVersion: tekton.dev/v1beta1
+kind: Pipeline
+metadata:
+  name: post-accounts
+  labels:
+    app.kubernetes.io/version: "0.1"
+  annotations:
+    kustomize.toolkit.fluxcd.io/substitute: disabled
+    tekton.dev/pipelines.minVersion: "0.12.1"
+    tekton.dev/displayName: post-accounts
+    tekton.dev/platforms: "linux/amd64"
+spec:
+  description: >-
+    Initializes accounts & mailboxes.
+  params:
+    - name: PASSWORD
+      type: string
+      description: The accounts password
+    - name: MADDY_DOMAIN
+      type: string
+      description: The accounts domain
+  tasks:
+    - name: post-account-postmaster
+      taskRef:
+        name: post-account
+      params:
+        - name: ACCOUNT
+          value: postmaster
+        - name: PASSWORD
+          value: $(params.PASSWORD)
+        - name: MADDY_DOMAIN
+          value: $(params.MADDY_DOMAIN)
+
+    - name: post-account-catchall
+      taskRef:
+        name: post-account
+      params:
+        - name: ACCOUNT
+          value: catchall
+        - name: PASSWORD
+          value: $(params.PASSWORD)
+        - name: MADDY_DOMAIN
+          value: $(params.MADDY_DOMAIN)
+
+---
+apiVersion: tekton.dev/v1beta1
+kind: Pipeline
+metadata:
+  name: delete-accounts
+  labels:
+    app.kubernetes.io/version: "0.1"
+  annotations:
+    kustomize.toolkit.fluxcd.io/substitute: disabled
+    tekton.dev/pipelines.minVersion: "0.12.1"
+    tekton.dev/displayName: delete-accounts
+    tekton.dev/platforms: "linux/amd64"
+spec:
+  description: >-
+    Deletes accounts & mailboxes.
+  params:
+    - name: MADDY_DOMAIN
+      type: string
+      description: The accounts domain
+  tasks:
+    - name: delete-account-postmaster
+      taskRef:
+        name: delete-account
+      params:
+        - name: ACCOUNT
+          value: postmaster
+        - name: MADDY_DOMAIN
+          value: $(params.MADDY_DOMAIN)
+
+    - name: delete-account-catchall
+      taskRef:
+        name: delete-account
+      params:
+        - name: ACCOUNT
+          value: catchall
+        - name: MADDY_DOMAIN
+          value: $(params.MADDY_DOMAIN)
+---
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: post-mailbox
+  labels:
+    app.kubernetes.io/version: "0.1"
+  annotations:
+    kustomize.toolkit.fluxcd.io/substitute: disabled
+    tekton.dev/pipelines.minVersion: "0.12.1"
+    tekton.dev/displayName: post-mailbox
+    tekton.dev/platforms: "linux/amd64"
+spec:
+  description: >-
+    Idempotently creates a maddy account mailbox.
+  params:
+    - name: ACCOUNT
+      type: string
+      description: the mailbox name, i.e test
+    - name: MADDY_DOMAIN
+      type: string
+      description: the domain name, i.e example.com
+    - name: MAILBOX
+      type: string
+      description: the mailbox name, i.e folder_name
+  steps:
+    - name: kubectl
+      image: public.ecr.aws/bitnami/kubectl:1.36.1
+      resources:
+        requests:
+          cpu: 10m
+          memory: 64M
+        limits:
+          cpu: 100m
+          memory: 64M
+      script: |
+        #!/bin/bash
+        kubectl exec -n maddy deploy/maddy -c maddy '--' maddy --config /config/maddy.conf imap-mboxes create "$(params.ACCOUNT)@$(params.MADDY_DOMAIN)" $(params.MAILBOX)
+        exit 0
+---
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: delete-mailbox
+  labels:
+    app.kubernetes.io/version: "0.1"
+  annotations:
+    kustomize.toolkit.fluxcd.io/substitute: disabled
+    tekton.dev/pipelines.minVersion: "0.12.1"
+    tekton.dev/displayName: delete-mailbox
+    tekton.dev/platforms: "linux/amd64"
+spec:
+  description: >-
+    Idempotently removes a maddy account mailbox.
+  params:
+    - name: ACCOUNT
+      type: string
+      description: the mailbox name, i.e test
+    - name: MADDY_DOMAIN
+      type: string
+      description: the domain name, i.e example.com
+    - name: MAILBOX
+      type: string
+      description: the mailbox name, i.e folder_name
+  steps:
+    - name: kubectl
+      image: public.ecr.aws/bitnami/kubectl:1.36.1
+      resources:
+        requests:
+          cpu: 10m
+          memory: 64M
+        limits:
+          cpu: 100m
+          memory: 64M
+      script: |
+        #!/bin/bash
+        kubectl exec -n maddy deploy/maddy -c maddy '--' maddy --config /config/maddy.conf imap-mboxes remove "$(params.ACCOUNT)@$(params.MADDY_DOMAIN)" $(params.MAILBOX)
+        exit 0
+---
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: list-mailboxes
+  labels:
+    app.kubernetes.io/version: "0.1"
+  annotations:
+    kustomize.toolkit.fluxcd.io/substitute: disabled
+    tekton.dev/pipelines.minVersion: "0.12.1"
+    tekton.dev/displayName: list-mailboxes
+    tekton.dev/platforms: "linux/amd64"
+spec:
+  description: >-
+    Lists maddy account mailboxes.
+  params:
+    - name: ACCOUNT
+      type: string
+      description: the mailbox name, i.e test
+    - name: MADDY_DOMAIN
+      type: string
+      description: the domain name, i.e example.com
+  steps:
+    - name: kubectl
+      image: public.ecr.aws/bitnami/kubectl:1.36.1
+      resources:
+        requests:
+          cpu: 10m
+          memory: 64M
+        limits:
+          cpu: 100m
+          memory: 64M
+      script: |
+        #!/bin/bash
+        kubectl exec -n maddy deploy/maddy -c maddy '--' maddy --config /config/maddy.conf imap-mboxes list "$(params.ACCOUNT)@$(params.MADDY_DOMAIN)"
+        exit 0
+---
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: restore
+spec:
+  description: >-
+    Restores data from nfs-shared.
+  params:
+  - name: backup_file
+  steps:
+  - name: backup
+    image: offen/docker-volume-backup:v2.48.2@sha256:19102d8e59eb1d598cf8c647c2b21100abaadc5a1c808ac643fa612e323c3013
+    script: |
+      #!/usr/bin/env sh
+      set -eu
+      rm -rf /data/*
+      tar -C /data --strip-components=2 -xvzf "/archive/$(params.backup_file)"
+    volumeMounts:
+      - name: data
+        mountPath: /data
+      - name: shared
+        mountPath: /archive
+  volumes:
+    - name: data
+      persistentVolumeClaim:
+        claimName: data
+    - name: shared
+      nfs:
+        server: nfs-shared.nfs-shared.svc.cluster.local
+        path: /backups/maddy

@@ -1,0 +1,124 @@
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: backup
+spec:
+  schedule: "0 5 * * *"
+  successfulJobsHistoryLimit: 0
+  failedJobsHistoryLimit: 1
+  jobTemplate:
+    spec:
+      backoffLimit: 0
+      template:
+        spec:
+          restartPolicy: Never
+          securityContext:
+            fsGroup: 1000
+          automountServiceAccountToken: false
+          containers:
+          - name: backup
+            image: offen/docker-volume-backup:v2.48.2@sha256:19102d8e59eb1d598cf8c647c2b21100abaadc5a1c808ac643fa612e323c3013
+            command:
+              - backup
+            env:
+              - name: BACKUP_RETENTION_DAYS
+                value: '1'
+            volumeMounts:
+              - name: data
+                mountPath: /backup
+              - name: shared
+                mountPath: /archive
+          volumes:
+            - name: data
+              persistentVolumeClaim:
+                claimName: data
+            - name: shared
+              nfs:
+                server: nfs-shared.nfs-shared.svc.cluster.local
+                path: /backups/maddy
+          affinity:
+            podAffinity:
+              requiredDuringSchedulingIgnoredDuringExecution:
+              - labelSelector:
+                  matchExpressions:
+                  - key: app.kubernetes.io/name
+                    operator: In
+                    values:
+                    - maddy
+                topologyKey: kubernetes.io/hostname
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: go-imap-backup
+spec:
+  schedule: "5 5 * * *"
+  successfulJobsHistoryLimit: 0
+  failedJobsHistoryLimit: 1
+  jobTemplate:
+    spec:
+      backoffLimit: 0
+      template:
+        spec:
+          restartPolicy: OnFailure
+          securityContext:
+            fsGroup: 1000
+          automountServiceAccountToken: false
+          containers:
+          - name: go-imap-backup
+            image: golang:1.27.1-alpine
+            env:
+            - name: IMAP_SERVER
+              value: maddy.${domain}
+            - name: POSTMASTER_ACCOUNT
+              value: postmaster@${publicDomain}
+            - name: POSTMASTER_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: go-imap-backup
+                  key: postmaster-password
+            - name: CATCHALL_ACCOUNT
+              value: catchall@${publicDomain}
+            - name: CATCHALL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: go-imap-backup
+                  key: catchall-password
+            command:
+              - /bin/sh
+            args:
+              - -c
+              - /backup.sh
+            volumeMounts:
+              - name: scripts
+                mountPath: /backup.sh
+                subPath: backup.sh
+              - name: shared
+                mountPath: /backup
+              - name: imap-crt
+                mountPath: /usr/local/share/ca-certificates/maddy.${domain}.crt
+                subPath: tls.crt
+          volumes:
+            - name: scripts
+              configMap:
+                name: scripts
+                defaultMode: 0755
+            - name: shared
+              nfs:
+                server: nfs-shared.nfs-shared.svc.cluster.local
+                path: /backups/maddy
+            - name: imap-crt
+              secret:
+                secretName: imap-crt
+                defaultMode: 0600
+          affinity:
+            podAffinity:
+              requiredDuringSchedulingIgnoredDuringExecution:
+              - labelSelector:
+                  matchExpressions:
+                  - key: app.kubernetes.io/name
+                    operator: In
+                    values:
+                    - maddy
+                topologyKey: kubernetes.io/hostname

@@ -1,0 +1,220 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: maddy
+  annotations:
+    configmap.reloader.stakater.com/reload: "config,scripts"
+spec:
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: maddy
+  template:
+    metadata:
+      labels:
+        app: maddy
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "9749"
+    spec:
+      automountServiceAccountToken: false
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: maddy
+          image: foxcpp/maddy:0.9.5
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+            capabilities:
+              drop:
+                - ALL
+          command:
+            - /bin/maddy
+          args:
+            - -config
+            - /config/maddy.conf
+            - run
+          env:
+            - name: MADDY_HOSTNAME
+              value: ${publicDomain}
+            - name: MADDY_DOMAIN
+              value: ${publicDomain}
+            - name: DB_HOST
+              value: main-rw.cnpg-system
+            - name: DB_NAME
+              value: maddy
+            - name: DB_USER
+              valueFrom:
+                secretKeyRef:
+                  key: db-user
+                  name: maddy
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: db-password
+                  name: maddy
+            - name: RELAY_HOST
+              value: smtp-relay.sendinblue.com
+            - name: RELAY_PORT
+              value: "587"
+            - name: RELAY_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  key: relay-username
+                  name: maddy
+            - name: RELAY_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: relay-password
+                  name: maddy
+            - name: MATTERMOST_CHANNEL
+              valueFrom:
+                secretKeyRef:
+                  key: mattermost-channel
+                  name: maddy
+            - name: MATTERMOST_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  key: mattermost-token
+                  name: maddy
+          ports:
+            - name: imap
+              containerPort: 143
+              protocol: TCP
+            - name: imap-ssl
+              containerPort: 993
+              protocol: TCP
+            - name: smtp
+              containerPort: 25
+              protocol: TCP
+            - name: submission-ssl
+              containerPort: 587
+              protocol: TCP
+            - name: submission
+              containerPort: 465
+              protocol: TCP
+            - name: metrics
+              containerPort: 9749
+              protocol: TCP
+          volumeMounts:
+            - name: smtp
+              mountPath: /certificates/smtp
+            - name: imap
+              mountPath: /certificates/imap
+            - name: dkim
+              mountPath: /dkim
+            - name: config
+              mountPath: /config
+            - name: data
+              mountPath: /data
+            - name: scripts
+              mountPath: /etc/maddy
+          livenessProbe:
+            tcpSocket:
+              port: 143
+          readinessProbe:
+            tcpSocket:
+              port: 143
+          startupProbe:
+            tcpSocket:
+              port: 143
+          resources:
+            limits:
+              cpu: 1000m
+              memory: 1024M
+            requests:
+              cpu: 10m
+              memory: 64M
+      volumes:
+        - name: smtp
+          secret:
+            secretName: smtp-crt
+        - name: imap
+          secret:
+            secretName: imap-crt
+        - name: dkim
+          secret:
+            secretName: dkim
+        - name: config
+          configMap:
+            name: config
+        - name: scripts
+          configMap:
+            name: scripts
+            defaultMode: 0755
+        - name: data
+          persistentVolumeClaim:
+            claimName: data
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx
+  labels:
+    app: nginx
+  annotations:
+    configmap.reloader.stakater.com/reload: "config"
+spec:
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      automountServiceAccountToken: false
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: nginx
+          image: nginx:1.31.4-alpine
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+            capabilities:
+              drop:
+                - ALL
+          ports:
+            - name: http
+              containerPort: 80
+              protocol: TCP
+          volumeMounts:
+            - name: config
+              mountPath: /etc/nginx/nginx.conf
+              subPath: nginx.conf
+          livenessProbe:
+            tcpSocket:
+              port: http
+          readinessProbe:
+            tcpSocket:
+              port: http
+          startupProbe:
+            tcpSocket:
+              port: http
+          resources:
+            limits:
+              cpu: 100m
+              memory: 64M
+            requests:
+              cpu: 10m
+              memory: 64M
+      volumes:
+        - name: config
+          configMap:
+            name: config

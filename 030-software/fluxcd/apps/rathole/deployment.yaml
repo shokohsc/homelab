@@ -1,0 +1,56 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rathole
+  annotations:
+    secret.reloader.stakater.com/reload: config
+spec:
+  revisionHistoryLimit: 0
+  selector:
+    matchLabels:
+      app: rathole
+  template:
+    metadata:
+      labels:
+        app: rathole
+    spec:
+      automountServiceAccountToken: false
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: rathole
+          image: rapiz1/rathole:v0.5.0
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+            capabilities:
+              drop:
+                - ALL
+          env:
+            - name: RUST_LOG
+              value: trace
+          args:
+            - --client
+            - /app/client.toml
+          resources:
+            requests:
+              cpu: 10m
+              memory: 64M
+            limits:
+              cpu: 100m
+              memory: 64M
+          volumeMounts:
+            - name: config
+              mountPath: /app/client.toml
+              subPath: client.toml
+      volumes:
+        - name: config
+          secret:
+            secretName: config

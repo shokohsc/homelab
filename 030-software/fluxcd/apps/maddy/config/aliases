@@ -1,0 +1,8 @@
+## Replace 'cat' with any domain to 'dog'.
+## E.g. cat@example.net -> dog@example.net
+# cat: dog
+## Replace cat@example.org with cat@example.com.
+## Takes priority over the previous line.
+#cat@example.org: cat@example.com
+
+me: catchall

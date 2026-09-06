@@ -23,6 +23,8 @@ spec:
   values:
     controller:
       type: daemonset
+      podLabels:
+        policy.gatekeeper.sh/ignore-no-host-paths: "true"
       volumes:
         extra:
           - name: temp

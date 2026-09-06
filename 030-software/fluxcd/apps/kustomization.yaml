@@ -20,6 +20,7 @@ resources:
   # - konflate
   - kube-state-metrics
   - kube-system
+  - maddy
   - metrics-server
   # - nats
   # - plex
@@ -27,6 +28,7 @@ resources:
   # - pod-gateway
   - proxmox
   # - radio
+  - rathole
   - reloader
   - renovate
   # - rustfs
@@ -35,7 +37,7 @@ resources:
   - tailscale
   - valkey
   - vaultwarden
-  - vaultwarden-kubernetes-secrets
+  # - vaultwarden-kubernetes-secrets
   - victoria-logs
   - victoria-logs-collector
   - victoria-metrics
