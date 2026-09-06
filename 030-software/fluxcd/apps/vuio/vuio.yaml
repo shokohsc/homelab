@@ -22,6 +22,8 @@ spec:
     kind: OCIRepository
     name: vuio
   values:
+    image:
+      tag: v0.0.49
     hostNetwork: false
 
     securityContext:
