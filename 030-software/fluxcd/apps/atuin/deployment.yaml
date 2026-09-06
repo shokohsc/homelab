@@ -6,6 +6,7 @@ metadata:
   labels:
     app: atuin
 spec:
+  revisionHistoryLimit: 0
   strategy:
     type: Recreate
   selector:
@@ -18,10 +19,22 @@ spec:
     spec:
       automountServiceAccountToken: false
       securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
         fsGroup: 1000
+        seccompProfile:
+          type: RuntimeDefault
       containers:
         - name: atuin
           image: ghcr.io/atuinsh/atuin:18.21.0
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+            capabilities:
+              drop:
+                - ALL
           args:
             - start
           env:
@@ -64,13 +77,3 @@ spec:
         - name: data
           persistentVolumeClaim:
             claimName: data
-      # affinity:
-      #   nodeAffinity:
-      #     preferredDuringSchedulingIgnoredDuringExecution:
-      #     - weight: 100
-      #       preference:
-      #         matchExpressions:
-      #         - key: kubernetes.io/hostname
-      #           operator: NotIn
-      #           values:
-      #           - zarya
