@@ -1,12 +1,11 @@
----
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: nfs-downloads
+  labels:
+    app: nfs-downloads
 spec:
   revisionHistoryLimit: 0
-  strategy:
-    type: Recreate
   selector:
     matchLabels:
       app: nfs-downloads
@@ -14,62 +13,57 @@ spec:
     metadata:
       labels:
         app: nfs-downloads
+        policy.gatekeeper.sh/ignore: "true"
     spec:
       automountServiceAccountToken: false
       securityContext:
-        runAsNonRoot: true
-        runAsUser: 1000
-        runAsGroup: 1000
-        fsGroup: 1000
         seccompProfile:
           type: RuntimeDefault
       containers:
-        - name: nfs
+        - name: nfs-server-alpine
+          image: itsthenetwork/nfs-server-alpine:latest # Find an alpine image that has nfsdcld
           securityContext:
-            allowPrivilegeEscalation: false
-            readOnlyRootFilesystem: true
-            runAsNonRoot: true
-            capabilities:
-              drop:
-                - ALL
-          image: izdock/nfs-ganesha:3.4
+            privileged: true
           env:
-            - name: PSEUDO_PATH
-              value: /
-            - name: EXPORT_PATH
-              value: /downloads
-            - name: TRANSPORTS
-              value: TCP
-            - name: GRACELESS
-              value: "true"
-            - name: CLIENT_LIST
-              value: "${cidr}, ${kubeServicesCidr}"
-            - name: DISABLE_ACL
-              value: "true"
+            - name: SHARED_DIRECTORY
+              value: /exports
           ports:
             - name: nfs
               containerPort: 2049
               protocol: TCP
-            - name: rpc-tcp
+            - name: rpc
               containerPort: 111
               protocol: TCP
+          volumeMounts:
+            - name: downloads
+              mountPath: /exports
+            # - name: nfsdcld
+            #   mountPath: /var/lib/nfs/nfsdcld
+          lifecycle:
+            postStart:
+              exec:
+                # command: ["/bin/sh", "-c", "chmod 777 /exports && nfsdcld"]
+                command: ["/bin/sh", "-c", "chmod 777 /exports"]
+          startupProbe:
+            tcpSocket:
+              port: nfs
           livenessProbe:
             tcpSocket:
               port: nfs
           readinessProbe:
             tcpSocket:
               port: nfs
-          volumeMounts:
-            - name: downloads
-              mountPath: /downloads
           resources:
-            requests:
-              cpu: 100m
-              memory: 512M
             limits:
               cpu: 1000m
-              memory: 1024M
+              memory: 1024Mi
+            requests:
+              cpu: 100m
+              memory: 512Mi
       volumes:
         - name: downloads
           persistentVolumeClaim:
             claimName: downloads
+        # - name: nfsdcld
+        #   emptyDir:
+        #     medium: Memory
