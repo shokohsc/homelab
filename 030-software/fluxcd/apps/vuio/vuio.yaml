@@ -57,7 +57,7 @@ spec:
           mountPath: /data/movies
           readOnly: true
       volumes:
-        - name: media
+        - name: movies
           nfs:
             server: genji.home.arpa
             path: /movies

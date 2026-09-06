@@ -4,3 +4,4 @@ namespace: vuio
 resources:
   - namespace.yaml
   - vuio.yaml
+  - http-route.yaml
