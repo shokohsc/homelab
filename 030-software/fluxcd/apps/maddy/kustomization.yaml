@@ -9,6 +9,7 @@ resources:
   # - cronjob.yaml
   - certificate.yaml
   - http-route.yaml
+  - routes.yaml
   - rbac.yaml
   - secret.yaml
   # - tekton.yaml
