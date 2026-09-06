@@ -152,6 +152,9 @@ spec:
           }
 
       mounts:
+        varlog: true
+        dockercontainers: true
+      mounts:
         extra:
           - name: temp
             mountPath: /tmp
