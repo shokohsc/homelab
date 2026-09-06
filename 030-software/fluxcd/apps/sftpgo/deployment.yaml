@@ -51,9 +51,9 @@ spec:
             # - mountPath: /etc/sftpgo/host-keys/ssh_host_ed25519_key
             #   name: config
             #   subPath: ssh_host_ed25519_key
-            - mountPath: /var/lib/sftpgo/nfs/nfs-genji
+            - mountPath: /var/lib/sftpgo/nfs/genji
               name: nfs-genji
-            - mountPath: /var/lib/sftpgo/nfs/nfs-hanzo
+            - mountPath: /var/lib/sftpgo/nfs/hanzo
               name: nfs-hanzo
             - mountPath: /var/lib/sftpgo/nfs/downloads
               name: nfs-downloads

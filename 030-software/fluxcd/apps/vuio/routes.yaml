@@ -1,0 +1,14 @@
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: UDPRoute
+metadata:
+  name: dlna
+spec:
+  parentRefs:
+    - name: cilium
+      namespace: cilium
+      sectionName: dlna
+  rules:
+    - backendRefs:
+        - name: dlna
+          port: 1900
