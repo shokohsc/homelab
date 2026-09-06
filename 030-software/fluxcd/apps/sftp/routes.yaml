@@ -1,0 +1,14 @@
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: TCPRoute
+metadata:
+  name: sftp
+spec:
+  parentRefs:
+    - name: cilium
+      namespace: cilium
+      sectionName: sftp
+  rules:
+    - backendRefs:
+        - name: sftp
+          port: 32768

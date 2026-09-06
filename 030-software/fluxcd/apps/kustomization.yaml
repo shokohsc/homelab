@@ -33,6 +33,7 @@ resources:
   - reloader
   - renovate
   # - rustfs
+  - sftp
   # - sidekick
   - syslog
   - tailscale

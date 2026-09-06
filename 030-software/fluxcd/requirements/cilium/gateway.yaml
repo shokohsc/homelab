@@ -182,3 +182,15 @@ spec:
           selector:
             matchLabels:
               app: maddy
+
+    - name: sftp
+      port: 32768
+      protocol: TCP
+      allowedRoutes:
+        kinds:
+          - kind: TCPRoute
+        namespaces:
+          from: Selector
+          selector:
+            matchLabels:
+              app: sftp

@@ -1,0 +1,86 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sftp
+spec:
+  revisionHistoryLimit: 0
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: sftp
+  template:
+    metadata:
+      labels:
+        app: sftp
+        nfs-genji: "true"
+        nfs-hanzo: "true"
+    spec:
+      automountServiceAccountToken: false
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        seccompProfile:
+          type: RuntimeDefault
+        supplementalGroups:
+        - 1001
+      containers:
+        - name: sftp
+          image: emberstack/sftp:5.1.71
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+            capabilities:
+              drop:
+                - ALL
+          ports:
+            - name: ssh
+              containerPort: 22
+              protocol: TCP
+          volumeMounts:
+            - mountPath: /app/config/sftp.json
+              name: config
+              subPath: sftp.json
+            - mountPath: /etc/ssh/keys/ssh_host_ed25519_key
+              name: config
+              subPath: ssh_host_ed25519_key
+            - mountPath: /home/shokohsc/sftp/nfs-genji
+              name: nfs-genji
+            - mountPath: /home/shokohsc/sftp/nfs-hanzo
+              name: nfs-hanzo
+            # - mountPath: /home/shokohsc/sftp/nfs-shared
+            #   name: shared
+            # - mountPath: /home/shokohsc/sftp/downloads
+            #   name: downloads
+          startupProbe:
+            tcpSocket:
+              port: ssh
+          livenessProbe:
+            tcpSocket:
+              port: ssh
+          readinessProbe:
+            tcpSocket:
+              port: ssh
+          resources:
+            limits:
+              cpu: 1000m
+              memory: 1024M
+            requests:
+              cpu: 100m
+              memory: 64M
+      volumes:
+        - name: config
+          secret:
+            secretName: config
+        - name: nfs-genji
+          nfs:
+            path: /
+            server: genji.home.arpa
+        - name: nfs-hanzo
+          nfs:
+            path: /
+            server: hanzo.home.arpa
