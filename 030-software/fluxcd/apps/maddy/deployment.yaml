@@ -202,6 +202,8 @@ spec:
             - name: config
               mountPath: /etc/caddy/Caddyfile
               subPath: Caddyfile
+            - name: data
+              mountPath: /config/caddy
           startupProbe:
             tcpSocket:
               port: https
@@ -223,3 +225,6 @@ spec:
         - name: config
           configMap:
             name: config
+        - name: data
+          emptyDir:
+            medium: Memory
