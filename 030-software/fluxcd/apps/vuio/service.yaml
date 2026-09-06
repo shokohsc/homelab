@@ -8,10 +8,10 @@ spec:
     port: 8080
     protocol: TCP
     targetPort: http
-  - name: ssdp
+  - name: dlna
     port: 1900
     protocol: UDP
-    targetPort: ssdp
+    targetPort: dlna
   selector:
     app: vuio
   type: ClusterIP
