@@ -1,0 +1,87 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vuio
+spec:
+  replicas: 1
+  revisionHistoryLimit: 0
+  selector:
+    matchLabels:
+      app: vuio
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: vuio
+    spec:
+      containers:
+      - command:
+        - /usr/bin/entrypoint.sh
+        env:
+        - name: PUID
+          value: "1000"
+        - name: PGID
+          value: "1000"
+        - name: VUIO_PORT
+          value: "8080"
+        - name: VUIO_BIND_INTERFACE
+          value: 0.0.0.0
+        - name: VUIO_SSDP_INTERFACE
+          value: Auto
+        - name: VUIO_SERVER_NAME
+          value: VuIO
+        - name: VUIO_DB_PATH
+          value: /config/media.db
+        - name: VUIO_AUTH
+          value: "false"
+        image: ghcr.io/vuiodev/vuio:v0.0.49
+        name: vuio
+        ports:
+        - containerPort: 8080
+          name: http
+          protocol: TCP
+        - containerPort: 1900
+          name: ssdp
+          protocol: UDP
+        resources:
+          limits:
+            cpu: "1"
+            memory: 1Gi
+          requests:
+            cpu: 100m
+            memory: 128Mi
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+          privileged: false
+          readOnlyRootFilesystem: true
+          runAsNonRoot: true
+        volumeMounts:
+        - mountPath: /usr/bin/entrypoint.sh
+          subPath: entrypoint.sh
+          name: scripts
+        - mountPath: /config
+          name: data
+        - mountPath: /data/movies
+          name: movies
+          readOnly: true
+      securityContext:
+        fsGroup: 1000
+        runAsGroup: 1000
+        runAsNonRoot: true
+        runAsUser: 1000
+        seccompProfile:
+          type: RuntimeDefault
+      volumes:
+      - name: data
+        persistentVolumeClaim:
+          claimName: data
+      - name: movies
+        nfs:
+          path: /movies
+          server: genji.home.arpa
+      - configMap:
+          defaultMode: 493
+        name: scripts

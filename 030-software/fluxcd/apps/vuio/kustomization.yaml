@@ -3,10 +3,13 @@ kind: Kustomization
 namespace: vuio
 resources:
   - namespace.yaml
-  - vuio.yaml
+  # - vuio.yaml
+  - deployment.yaml
+  - pvc.yaml
+  - service.yaml
   - http-route.yaml
 configMapGenerator:
-- name: config
+- name: scripts
   files:
   - ./config/entrypoint.sh
 generatorOptions:
