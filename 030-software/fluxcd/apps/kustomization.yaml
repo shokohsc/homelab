@@ -24,6 +24,7 @@ resources:
   - maddy
   - metrics-server
   # - nats
+  - nfs-downloads
   # - plex
   - pocket-id
   # - pod-gateway
@@ -33,7 +34,7 @@ resources:
   - reloader
   - renovate
   # - rustfs
-  - sftp
+  - sftpgo
   # - sidekick
   - syslog
   - tailscale

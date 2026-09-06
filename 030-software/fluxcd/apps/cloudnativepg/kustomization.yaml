@@ -14,5 +14,6 @@ resources:
   - database-roles/miniflux.yaml
   - database-roles/pocket-id.yaml
   - database-roles/prowlarr.yaml
+  - database-roles/sftpgo.yaml
   - database-roles/vaultwarden.yaml
   # - pooler.yaml

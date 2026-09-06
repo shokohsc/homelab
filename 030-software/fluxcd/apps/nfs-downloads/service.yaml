@@ -15,4 +15,4 @@ spec:
       protocol: TCP
       name: rpc-tcp
   selector:
-    app.kubernetes.io/name: nfs-downloads
+    app: nfs-downloads

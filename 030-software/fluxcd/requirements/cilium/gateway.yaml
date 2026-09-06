@@ -184,7 +184,7 @@ spec:
               app: maddy
 
     - name: sftpgo
-      port: 32768
+      port: 2022
       protocol: TCP
       allowedRoutes:
         kinds:

@@ -11,4 +11,4 @@ spec:
   rules:
     - backendRefs:
         - name: sftpgo
-          port: 32768
+          port: 2022

@@ -8,5 +8,4 @@ spec:
     - ReadWriteOnce
   resources:
     requests:
-      storage: 150Gi
-  storageClassName: temp
+      storage: 200Gi

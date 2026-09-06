@@ -25,8 +25,6 @@ spec:
         fsGroup: 1000
         seccompProfile:
           type: RuntimeDefault
-        supplementalGroups:
-        - 1001
       containers:
         - name: sftpgo
           image: ghcr.io/drakkan/sftpgo:v2.7.5-distroless-slim
@@ -37,24 +35,27 @@ spec:
             capabilities:
               drop:
                 - ALL
+          envFrom:
+            - configMapRef:
+                name: variables
           ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
             - name: ssh
-              containerPort: 22
+              containerPort: 2022
               protocol: TCP
           volumeMounts:
-            - mountPath: /app/config/sftp.json
-              name: config
-              subPath: sftp.json
-            - mountPath: /etc/ssh/keys/ssh_host_ed25519_key
+            - mountPath: /etc/sftpgo/host-keys/ssh_host_ed25519_key
               name: config
               subPath: ssh_host_ed25519_key
-            - mountPath: /home/shokohsc/sftp/nfs-genji
+            - mountPath: /var/lib/sftpgo/nfs/nfs-genji
               name: nfs-genji
-            - mountPath: /home/shokohsc/sftp/nfs-hanzo
+            - mountPath: /var/lib/sftpgo/nfs/nfs-hanzo
               name: nfs-hanzo
-            # - mountPath: /home/shokohsc/sftp/nfs-shared
+            # - mountPath: /var/lib/sftpgo/nfs/nfs-shared
             #   name: shared
-            # - mountPath: /home/shokohsc/sftp/downloads
+            # - mountPath: /var/lib/sftpgo/nfs/downloads
             #   name: downloads
           startupProbe:
             tcpSocket:
