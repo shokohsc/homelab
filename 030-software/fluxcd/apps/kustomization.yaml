@@ -2,6 +2,7 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
   - adminer
+  - atuin
   # - blocky
   # - browserless
   - cert-manager
@@ -41,4 +42,5 @@ resources:
   - victoria-logs
   - victoria-logs-collector
   - victoria-metrics
+  - vuio
   # - whoami

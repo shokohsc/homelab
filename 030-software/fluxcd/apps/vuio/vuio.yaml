@@ -1,0 +1,63 @@
+---
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: OCIRepository
+metadata:
+  name: vuio
+spec:
+  interval: ${interval}
+  url: oci://ghcr.io/vuiodev/charts/vuio
+  layerSelector:
+    mediaType: "application/vnd.cncf.helm.chart.content.v1.tar+gzip"
+    operation: copy
+  ref:
+    semver: "^v0.0.49"
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: vuio
+spec:
+  interval: ${interval}
+  chartRef:
+    kind: OCIRepository
+    name: vuio
+  values:
+    hostNetwork: false
+
+    securityContext:
+      allowPrivilegeEscalation: false
+      readOnlyRootFilesystem: true
+      runAsNonRoot: true
+      capabilities:
+        drop:
+          - ALL
+
+    podSecurityContext:
+      runAsNonRoot: true
+      runAsUser: 1000
+      runAsGroup: 1000
+      fsGroup: 1000
+      seccompProfile:
+        type: RuntimeDefault
+
+    env:
+      VUIO_AUTH: "false"
+
+    resources:
+      limits:
+        cpu: 1000m
+        memory: 1Gi
+      requests:
+        cpu: 100m
+        memory: 128Mi
+
+    media:
+      volumeMounts:
+        - name: movies
+          mountPath: /data/movies
+          readOnly: true
+      volumes:
+        - name: media
+          nfs:
+            server: genji.home.arpa
+            path: /movies
