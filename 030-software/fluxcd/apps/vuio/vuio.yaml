@@ -61,6 +61,7 @@ spec:
           readOnly: true
         - name: scripts
           mountPath: /usr/local/bin/docker-entrypoint.sh
+          subPath: docker-entrypoint.sh
       volumes:
         - name: movies
           nfs:
