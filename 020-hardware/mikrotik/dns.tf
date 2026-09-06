@@ -39,3 +39,10 @@ resource "routeros_ip_dns_record" "homelab_records" {
   ttl     = "5m"
   type    = "A"
 }
+
+resource "routeros_ip_dns_record" "wildcard_homelab_record" {
+  name    = "maddy.home.arpa"
+  address = cidrhost(local.vlan_cidrs["60"], 2)
+  ttl     = "5m"
+  type    = "A"
+}
