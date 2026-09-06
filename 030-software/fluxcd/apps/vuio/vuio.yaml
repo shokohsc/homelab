@@ -59,15 +59,8 @@ spec:
         - name: movies
           mountPath: /data/movies
           readOnly: true
-        - name: scripts
-          mountPath: /usr/local/bin/docker-entrypoint.sh
-          subPath: docker-entrypoint.sh
       volumes:
         - name: movies
           nfs:
             server: genji.home.arpa
             path: /movies
-        - name: scripts
-          configMap:
-            name: config
-            defaultMode: 0755

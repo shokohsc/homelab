@@ -1,0 +1,18 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nfs
+spec:
+  type: ClusterIP
+  ports:
+    - port: 2049
+      targetPort: nfs
+      protocol: TCP
+      name: nfs
+    - port: 111
+      targetPort: rpc-tcp
+      protocol: TCP
+      name: rpc-tcp
+  selector:
+    app.kubernetes.io/name: nfs-downloads

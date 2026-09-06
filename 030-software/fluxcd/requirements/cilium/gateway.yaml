@@ -183,7 +183,7 @@ spec:
             matchLabels:
               app: maddy
 
-    - name: sftp
+    - name: sftpgo
       port: 32768
       protocol: TCP
       allowedRoutes:
@@ -193,4 +193,4 @@ spec:
           from: Selector
           selector:
             matchLabels:
-              app: sftp
+              app: sftpgo

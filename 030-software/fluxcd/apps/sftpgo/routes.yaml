@@ -2,13 +2,13 @@
 apiVersion: gateway.networking.k8s.io/v1
 kind: TCPRoute
 metadata:
-  name: sftp
+  name: sftpgo
 spec:
   parentRefs:
     - name: cilium
       namespace: cilium
-      sectionName: sftp
+      sectionName: sftpgo
   rules:
     - backendRefs:
-        - name: sftp
+        - name: sftpgo
           port: 32768

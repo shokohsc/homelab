@@ -2,18 +2,18 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: sftp
+  name: sftpgo
 spec:
   revisionHistoryLimit: 0
   strategy:
     type: Recreate
   selector:
     matchLabels:
-      app: sftp
+      app: sftpgo
   template:
     metadata:
       labels:
-        app: sftp
+        app: sftpgo
         nfs-genji: "true"
         nfs-hanzo: "true"
     spec:
@@ -28,8 +28,8 @@ spec:
         supplementalGroups:
         - 1001
       containers:
-        - name: sftp
-          image: emberstack/sftp:5.1.71
+        - name: sftpgo
+          image: ghcr.io/drakkan/sftpgo:v2.7.5-distroless-slim
           securityContext:
             allowPrivilegeEscalation: false
             readOnlyRootFilesystem: true
