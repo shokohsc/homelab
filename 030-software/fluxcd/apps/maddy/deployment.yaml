@@ -118,6 +118,8 @@ spec:
               mountPath: /data
             - name: scripts
               mountPath: /etc/maddy
+            - name: temp
+              mountPath: /tmp
           livenessProbe:
             tcpSocket:
               port: 143
@@ -154,6 +156,9 @@ spec:
         - name: data
           persistentVolumeClaim:
             claimName: data
+        - name: temp
+          emptyDir:
+            medium: Memory
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -198,6 +203,8 @@ spec:
             - name: config
               mountPath: /etc/nginx/nginx.conf
               subPath: nginx.conf
+            - name: cache
+              mountPath: /var/cache/nginx
           livenessProbe:
             tcpSocket:
               port: http
@@ -218,3 +225,6 @@ spec:
         - name: config
           configMap:
             name: config
+        - name: cache
+          emptyDir:
+            medium: Memory

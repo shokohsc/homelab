@@ -25,6 +25,7 @@ spec:
       type: daemonset
       podLabels:
         policy.gatekeeper.sh/ignore-no-host-paths: "true"
+        policy.gatekeeper.sh/ignore-psp-volume-types: "true"
       volumes:
         extra:
           - name: temp
