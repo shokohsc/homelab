@@ -46,17 +46,17 @@ spec:
               containerPort: 2022
               protocol: TCP
           volumeMounts:
-            - mountPath: /etc/sftpgo/host-keys/ssh_host_ed25519_key
-              name: config
-              subPath: ssh_host_ed25519_key
+            - mountPath: /etc/sftpgo/host-keys
+              name: temp
+            # - mountPath: /etc/sftpgo/host-keys/ssh_host_ed25519_key
+            #   name: config
+            #   subPath: ssh_host_ed25519_key
             - mountPath: /var/lib/sftpgo/nfs/nfs-genji
               name: nfs-genji
             - mountPath: /var/lib/sftpgo/nfs/nfs-hanzo
               name: nfs-hanzo
-            # - mountPath: /var/lib/sftpgo/nfs/nfs-shared
-            #   name: shared
-            # - mountPath: /var/lib/sftpgo/nfs/downloads
-            #   name: downloads
+            - mountPath: /var/lib/sftpgo/nfs/downloads
+              name: downloads
           startupProbe:
             tcpSocket:
               port: ssh
@@ -74,6 +74,9 @@ spec:
               cpu: 100m
               memory: 64M
       volumes:
+        - name: temp
+          emptyDir:
+            medium: Memory
         - name: config
           secret:
             secretName: config
@@ -85,3 +88,7 @@ spec:
           nfs:
             path: /
             server: hanzo.home.arpa
+        - name: nfs-downloads
+          nfs:
+            path: /
+            server: nfs-downloads.nfs-downloads.svc.cluster.local
