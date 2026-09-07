@@ -71,7 +71,10 @@ spec:
           name: scripts
         - mountPath: /config
           name: data
-        - mountPath: /data/movies
+        - mountPath: /media/movies
+          name: movies
+          readOnly: true
+        - mountPath: /media/tvshows
           name: movies
           readOnly: true
         - mountPath: /tmp
@@ -92,6 +95,10 @@ spec:
       - name: movies
         nfs:
           path: /movies
+          server: genji.home.arpa
+      - name: tvshows
+        nfs:
+          path: /tvshows
           server: genji.home.arpa
       - name: scripts
         configMap:
