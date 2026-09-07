@@ -25,7 +25,7 @@ resources:
   - kube-system
   - maddy
   - metrics-server
-  # - nats
+  - nats
   - nfs-downloads
   # - plex
   - pocket-id
