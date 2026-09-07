@@ -66,3 +66,10 @@ spec:
             limits:
               cpu: 3
               memory: 4096M
+          volumeMounts:
+            - mountPath: /tmp
+              name: data
+      volumes:
+        - name: data
+          emptyDir:
+            medium: Memory
