@@ -70,13 +70,15 @@ spec:
           subPath: entrypoint.sh
           name: scripts
         - mountPath: /config
-          name: data
+          name: config
         - mountPath: /media/movies
           name: movies
           readOnly: true
         - mountPath: /media/tvshows
           name: movies
           readOnly: true
+        - mountPath: /data
+          name: data
         - mountPath: /tmp
           name: temp
         - mountPath: /home/vuio/.local/state/vuio/logs
@@ -89,7 +91,7 @@ spec:
         seccompProfile:
           type: RuntimeDefault
       volumes:
-      - name: data
+      - name: config
         persistentVolumeClaim:
           claimName: data
       - name: movies
@@ -105,6 +107,9 @@ spec:
           defaultMode: 493
           name: scripts
       - name: temp
+        emptyDir:
+          medium: Memory
+      - name: data
         emptyDir:
           medium: Memory
       - name: logs
