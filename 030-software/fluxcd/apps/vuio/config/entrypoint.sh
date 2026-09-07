@@ -23,7 +23,7 @@ validate_env() {
     if [ -z "$VUIO_PORT" ]; then
         error_exit "VUIO_PORT environment variable is required"
     fi
-    
+
     if [ "$VUIO_PORT" -lt 1 ] || [ "$VUIO_PORT" -gt 65535 ]; then
         error_exit "VUIO_PORT must be between 1 and 65535"
     fi
@@ -47,43 +47,43 @@ validate_env() {
 setup_user() {
     local target_uid=${PUID:-1000}
     local target_gid=${PGID:-1000}
-    
+
     log "Setting up user with UID=$target_uid, GID=$target_gid"
-    
+
     # Get current IDs
     local current_uid=$(id -u vuio)
     local current_gid=$(id -g vuio)
-    
+
     # Update group if needed
     if [ "$current_gid" != "$target_gid" ]; then
         log "Updating vuio group ID from $current_gid to $target_gid"
         groupmod -g "$target_gid" vuio || error_exit "Failed to update group ID"
     fi
-    
+
     # Update user if needed
     if [ "$current_uid" != "$target_uid" ]; then
         log "Updating vuio user ID from $current_uid to $target_uid"
         usermod -u "$target_uid" vuio || error_exit "Failed to update user ID"
     fi
-    
+
     log "User setup completed"
 }
 
 # Setup directories and permissions
 setup_directories() {
     log "Setting up directories and permissions"
-    
+
     # Ensure directories exist
     mkdir -p /config /app /data
-    
+
     # Create media directory if it doesn't exist, but don't fail if it's read-only
     if [ ! -d "/media" ]; then
         mkdir -p /media 2>/dev/null || log "Warning: Could not create /media directory (may be read-only)"
     fi
-    
+
     # Set ownership for directories we can control
     # chown -R vuio:vuio /config /app /data
-    
+
     # Try to set ownership on media directory, but don't fail if it's read-only
     if [ -d "/media" ]; then
         if chown -R vuio:vuio /media 2>/dev/null; then
@@ -91,7 +91,7 @@ setup_directories() {
         else
             log "Warning: Could not change ownership of /media directory (likely read-only)"
             log "This is normal for read-only media mounts and should not affect functionality"
-            
+
             # Check if we can at least read the media directory
             if [ -r "/media" ]; then
                 log "Media directory is readable, continuing..."
@@ -101,64 +101,64 @@ setup_directories() {
             fi
         fi
     fi
-    
+
     # Set permissions for directories we can control
     chmod 755 /config /app 2>/dev/null || true
     # chmod +x /app/vuio
-    
+
     # Try to set permissions on media directory if possible
     chmod 755 /media 2>/dev/null || log "Warning: Could not set permissions on /media (likely read-only)"
-    
+
     log "Directory setup completed"
 }
 
 # Validate existing configuration
 validate_existing_config() {
     local config_file="/config/config.toml"
-    
+
     # Check if file exists and is readable
     if [ ! -f "$config_file" ] || [ ! -r "$config_file" ]; then
         return 1
     fi
-    
+
     # Check for required sections
-    if ! grep -q "\[server\]" "$config_file" || 
-       ! grep -q "\[network\]" "$config_file" || 
-       ! grep -q "\[media\]" "$config_file" || 
+    if ! grep -q "\[server\]" "$config_file" ||
+       ! grep -q "\[network\]" "$config_file" ||
+       ! grep -q "\[media\]" "$config_file" ||
        ! grep -q "\[database\]" "$config_file"; then
         log "Configuration file missing required sections"
         return 1
     fi
-    
+
     # Check for required fields
-    if ! grep -q "uuid =" "$config_file" || 
-       ! grep -q "port =" "$config_file" || 
+    if ! grep -q "uuid =" "$config_file" ||
+       ! grep -q "port =" "$config_file" ||
        ! grep -q "path =" "$config_file"; then
         log "Configuration file missing required fields"
         return 1
     fi
-    
+
     # Basic TOML syntax check - ensure no obvious syntax errors
     if grep -q "^\[.*\]\[" "$config_file"; then
         log "Configuration file has TOML syntax errors"
         return 1
     fi
-    
+
     return 0
 }
 
 # Check if environment variables require config updates
 should_update_config() {
     local config_file="/config/config.toml"
-    
+
     # Check if critical environment variables differ from config
     local current_port=$(grep '^port' "$config_file" | sed 's/port = \([0-9]*\)/\1/' || echo "")
     local current_name=$(grep '^name' "$config_file" | sed 's/name = "\(.*\)"/\1/' || echo "")
     local current_interface=$(grep '^interface' "$config_file" | sed 's/interface = "\(.*\)"/\1/' || echo "")
     local current_ip=$(grep '^ip' "$config_file" | sed 's/ip = "\(.*\)"/\1/' || echo "")
-    
-    [ "${VUIO_PORT:-8080}" != "$current_port" ] || 
-    [ "${VUIO_SERVER_NAME:-VuIO}" != "$current_name" ] || 
+
+    [ "${VUIO_PORT:-8080}" != "$current_port" ] ||
+    [ "${VUIO_SERVER_NAME:-VuIO}" != "$current_name" ] ||
     [ "${VUIO_BIND_INTERFACE:-0.0.0.0}" != "$current_interface" ] ||
     [ "${VUIO_SERVER_IP:-}" != "$current_ip" ]
 }
@@ -167,28 +167,28 @@ should_update_config() {
 update_existing_config() {
     local config_file="/config/config.toml"
     local temp_file="/tmp/config_update.toml"
-    
+
     # Create backup
     cp "$config_file" "${config_file}.backup" || error_exit "Failed to create config backup"
-    
+
     # Update port if different
     if [ "${VUIO_PORT:-8080}" != "$(grep '^port' "$config_file" | sed 's/port = \([0-9]*\)/\1/')" ]; then
         sed "s/^port = .*/port = ${VUIO_PORT:-8080}/" "$config_file" > "$temp_file" && mv "$temp_file" "$config_file"
         log "Updated port to ${VUIO_PORT:-8080}"
     fi
-    
+
     # Update server name if different
     if [ "${VUIO_SERVER_NAME:-VuIO}" != "$(grep '^name' "$config_file" | sed 's/name = "\(.*\)"/\1/')" ]; then
         sed "s/^name = .*/name = \"${VUIO_SERVER_NAME:-VuIO}\"/" "$config_file" > "$temp_file" && mv "$temp_file" "$config_file"
         log "Updated server name to ${VUIO_SERVER_NAME:-VuIO}"
     fi
-    
+
     # Update interface if different
     if [ "${VUIO_BIND_INTERFACE:-0.0.0.0}" != "$(grep '^interface' "$config_file" | sed 's/interface = "\(.*\)"/\1/')" ]; then
         sed "s/^interface = .*/interface = \"${VUIO_BIND_INTERFACE:-0.0.0.0}\"/" "$config_file" > "$temp_file" && mv "$temp_file" "$config_file"
         log "Updated bind interface to ${VUIO_BIND_INTERFACE:-0.0.0.0}"
     fi
-    
+
     # Update server IP if specified
     if [ -n "${VUIO_SERVER_IP:-}" ]; then
         if ! grep -q '^ip = ' "$config_file"; then
@@ -201,7 +201,7 @@ update_existing_config() {
             log "Updated server IP to ${VUIO_SERVER_IP}"
         fi
     fi
-    
+
     # Set proper ownership
     chown vuio:vuio "$config_file"
     chmod 644 "$config_file"
@@ -210,11 +210,11 @@ update_existing_config() {
 # Generate configuration file
 generate_config() {
     local config_file="/config/config.toml"
-    
+
     # Check if valid config already exists
     if [ -f "$config_file" ] && validate_existing_config; then
         log "Valid configuration file already exists: $config_file"
-        
+
         # Check if environment variables require config updates
         if should_update_config; then
             log "Updating configuration with new environment variables"
@@ -224,16 +224,16 @@ generate_config() {
         fi
         return 0
     fi
-    
+
     log "Generating configuration file: $config_file"
-    
+
     # Read existing UUID if present
     local uuid=""
     if [ -f "$config_file" ]; then
         uuid=$(grep '^uuid' "$config_file" 2>/dev/null | sed 's/uuid = "\(.*\)"/\1/' || true)
         log "Found existing UUID: ${uuid:-none}"
     fi
-    
+
     # Generate new UUID if none exists
     if [ -z "$uuid" ]; then
         if command -v uuidgen >/dev/null 2>&1; then
@@ -253,12 +253,12 @@ generate_config() {
     else
         log "Using existing UUID: $uuid"
     fi
-    
+
     # Validate UUID format
     if ! echo "$uuid" | grep -qE '^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$'; then
         error_exit "Invalid UUID format: $uuid"
     fi
-    
+
     # Generate configuration with error checking
     cat > "$config_file" <<EOF || error_exit "Failed to write configuration file"
 # This file is auto-generated by docker-entrypoint.sh on container start.
@@ -282,7 +282,7 @@ EOF
     case "$(printf '%s' "${VUIO_WEB_UI:-1}" | tr '[:upper:]' '[:lower:]')" in
         0|false|no|off) web_ui_enabled="false" ;;
     esac
-    
+
     cat >> "$config_file" <<EOF
 
 # The Svelte browser interface, on a second listener carrying the same API and
@@ -304,7 +304,7 @@ EOF
     else
         echo "interface_selection = \"$ssdp_interface\"" >> "$config_file"
     fi
-    
+
     # Add media and database configuration
     cat >> "$config_file" <<EOF || error_exit "Failed to append configuration"
 
@@ -327,13 +327,13 @@ path = "${VUIO_DB_PATH:-/config/media.db}"
 vacuum_on_startup = false
 backup_enabled = true
 EOF
-    
+
     # Set proper ownership and permissions
     chown vuio:vuio "$config_file"
     chmod 644 "$config_file"
-    
+
     log "Configuration file generated successfully"
-    
+
     # Display configuration (without sensitive data)
     log "Configuration summary:"
     log "  Server port: ${VUIO_PORT:-8080}"
@@ -348,13 +348,13 @@ EOF
 # Validate generated configuration
 validate_config() {
     local config_file="/config/config.toml"
-    
+
     log "Validating configuration file"
-    
+
     if ! validate_existing_config; then
         error_exit "Configuration validation failed"
     fi
-    
+
     log "Configuration validation passed"
 }
 
@@ -365,7 +365,7 @@ show_system_info() {
     log "  Architecture: $(uname -m)"
     log "  Kernel: $(uname -r)"
     log "  Available interfaces: $(ls /sys/class/net/ | tr '\n' ' ')"
-    
+
     if [ -d "/media" ]; then
         local media_count=$(find /media -type f 2>/dev/null | wc -l || echo "0")
         log "  Media files found: $media_count"
@@ -375,7 +375,7 @@ show_system_info() {
 # Main execution
 main() {
     log "Starting VuIO container initialization"
-    
+
     # Run setup steps
     validate_env
     setup_user
@@ -383,13 +383,13 @@ main() {
     generate_config
     validate_config
     show_system_info
-    
+
     log "Initialization completed successfully"
     log "Starting VuIO as user vuio with command: $*"
-    
+
     # Switch to vuio user and execute the command
     # exec su-exec vuio "$@"
-    vuio "$@"
+    /app/vuio "$@"
 }
 
 # Execute main function with all arguments
