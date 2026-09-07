@@ -28,6 +28,8 @@ spec:
           value: "1000"
         - name: PGID
           value: "1000"
+        - name: VUIO_WEB_PORT
+          value: "8090"
         - name: VUIO_PORT
           value: "8080"
         - name: VUIO_BIND_INTERFACE
