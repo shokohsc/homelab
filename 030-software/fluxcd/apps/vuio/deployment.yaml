@@ -20,9 +20,11 @@ spec:
       - command:
         - /usr/bin/entrypoint.sh
         args:
-        - /app/vuio
-        - --config
-        - /config/config.toml
+          - sleep
+          - "60"
+        # - /app/vuio
+        # - --config
+        # - /config/config.toml
         env:
         - name: PUID
           value: "1000"
