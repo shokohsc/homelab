@@ -33,6 +33,8 @@ spec:
           ports:
             - containerPort: 4222
               name: http
+            - containerPort: 8222
+              name: cluster
           startupProbe:
             tcpSocket:
               port: http
@@ -41,8 +43,8 @@ spec:
               port: http
           readinessProbe:
             httpGet:
-              path: /
-              port: http
+              path: /varz
+              port: cluster
           resources:
             requests:
               cpu: 10m
