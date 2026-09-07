@@ -53,3 +53,4 @@ resources:
   - victoria-metrics
   - vuio
   # - whoami
+  - zipkin

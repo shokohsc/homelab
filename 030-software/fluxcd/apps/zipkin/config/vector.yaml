@@ -1,0 +1,45 @@
+data_dir: /var/lib/vector
+sources:
+  http:
+    type: http_server
+    path: "/api/v2/spans"
+    strict_path: false
+    address: 0.0.0.0:9412
+    encoding: json
+    method: POST
+
+transforms:
+  01-filter-liveness-probe:
+    type: filter
+    inputs:
+    - http
+    condition: .name != "GET /api/status/liveness" && .name != "GET /status/liveness"
+  02-filter-readiness-probe:
+    type: filter
+    inputs:
+    - 01-filter-liveness-probe
+    condition: .name != "GET /api/status/readiness" && .name != "GET /status/readiness"
+
+sinks:
+  tempo:
+    type: http
+    method: post
+    inputs:
+    - 02-filter-readiness-probe
+    uri: http://tempo.tempo:9411/api/v2/spans
+    encoding:
+      codec: json
+    request:
+      headers:
+        Content-Type: application/json
+        User-Agent: timberio/vector
+
+  loki:
+    type: loki
+    inputs:
+      - 02-filter-readiness-probe
+    endpoint: "http://loki-gateway.loki.svc.cluster.local"
+    encoding:
+      codec: json
+    labels:
+      job: loki-zipkin
