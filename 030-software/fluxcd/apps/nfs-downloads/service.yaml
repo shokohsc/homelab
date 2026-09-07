@@ -2,7 +2,7 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: nfs
+  name: nfs-downloads
 spec:
   type: ClusterIP
   ports:
