@@ -35,7 +35,7 @@ resources:
   - reloader
   - renovate
   # - rustfs
-  # - samba
+  - samba
   - sftpgo
   # - sidekick
   # - sign-pdf
