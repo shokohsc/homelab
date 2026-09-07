@@ -5,5 +5,5 @@ resources:
   - namespace.yaml
   - deployment.yaml
   - service.yaml
-  - routes.yaml
+  # - routes.yaml
   - pvc.yaml

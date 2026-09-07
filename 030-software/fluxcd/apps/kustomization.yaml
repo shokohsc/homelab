@@ -18,7 +18,7 @@ resources:
   - loki
   - alloy
   - http-echo
-  # - jellyfin
+  - jellyfin
   # - konflate
   - kube-state-metrics
   - kube-system
