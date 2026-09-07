@@ -16,6 +16,7 @@ spec:
         app: pod-gateway
         policy.gatekeeper.sh/ignore-psp-volume-types: "true"
         policy.gatekeeper.sh/ignore-psp-capabilities-baseline: "true"
+        policy.gatekeeper.sh/ignore-no-host-paths: "true"
       annotations:
         descheduler.alpha.kubernetes.io/evict: "true"
     spec:
