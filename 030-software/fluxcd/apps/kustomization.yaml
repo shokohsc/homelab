@@ -8,7 +8,7 @@ resources:
   - cert-manager
   - cloudflared
   - cloudnativepg
-  # - commander
+  - commander
   - external-dns
   # - fan-control
   - gatekeeper

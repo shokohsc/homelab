@@ -104,7 +104,7 @@ setup_directories() {
     
     # Set permissions for directories we can control
     chmod 755 /config /app 2>/dev/null || true
-    chmod +x /app/vuio
+    # chmod +x /app/vuio
     
     # Try to set permissions on media directory if possible
     chmod 755 /media 2>/dev/null || log "Warning: Could not set permissions on /media (likely read-only)"
