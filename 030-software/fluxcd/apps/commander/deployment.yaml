@@ -58,6 +58,8 @@ spec:
               mountPath: /mnt/hanzo
             - name: genji
               mountPath: /mnt/genji
+            - name: downloads
+              mountPath: /mnt/downloads
           resources:
             requests:
               cpu: 10m
@@ -81,4 +83,8 @@ spec:
         - name: genji
           nfs:
             server: genji.home.arpa
+            path: /
+        - name: downloads
+          nfs:
+            server: 10.102.22.211
             path: /

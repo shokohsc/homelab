@@ -28,7 +28,7 @@ resources:
   - nfs-downloads
   # - plex
   - pocket-id
-  # - pod-gateway
+  - pod-gateway
   - proxmox
   # - radio
   - rathole
