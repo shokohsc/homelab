@@ -17,6 +17,7 @@ spec:
         policy.gatekeeper.sh/ignore-psp-volume-types: "true"
         policy.gatekeeper.sh/ignore-psp-capabilities-baseline: "true"
         policy.gatekeeper.sh/ignore-no-host-paths: "true"
+        policy.gatekeeper.sh/ignore-psp-privileged-container: "true"
       annotations:
         descheduler.alpha.kubernetes.io/evict: "true"
     spec:
