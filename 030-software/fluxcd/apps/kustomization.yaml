@@ -4,11 +4,12 @@ resources:
   - adminer
   - atuin
   # - blocky
-  # - browserless
+  - browserless
   - cert-manager
   - cloudflared
   - cloudnativepg
   - commander
+  - deluge
   - external-dns
   # - fan-control
   - ferretdb
@@ -30,6 +31,7 @@ resources:
   - pocket-id
   - pod-gateway
   - proxmox
+  - pyload
   # - radio
   - rathole
   - reloader
@@ -37,7 +39,7 @@ resources:
   # - rustfs
   - samba
   - sftpgo
-  # - sidekick
+  - sidekick
   # - sign-pdf
   - syslog
   - tailscale

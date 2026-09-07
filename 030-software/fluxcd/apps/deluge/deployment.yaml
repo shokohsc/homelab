@@ -1,0 +1,114 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: deluge
+  annotations:
+    configmap.reloader.stakater.com/reload: "settings,scripts,pod-gateway"
+spec:
+  revisionHistoryLimit: 0
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: deluge
+  template:
+    metadata:
+      labels:
+        app: deluge
+    spec:
+      automountServiceAccountToken: false
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+      - name: deluge
+        image: lscr.io/linuxserver/deluge:2.2.0
+        securityContext:
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: true
+          runAsNonRoot: true
+          capabilities:
+            drop:
+              - ALL
+        env:
+        - name: PGID
+          value: "1000"
+        - name: PUID
+          value: "1000"
+        - name: TZ
+          value: "${timezone}"
+        ports:
+        - name: http
+          containerPort: 8112
+          protocol: TCP
+        - name: daemon
+          containerPort: 58846
+          protocol: TCP
+        volumeMounts:
+        - mountPath: /config
+          name: config
+        - mountPath: /downloads/complete
+          name: nfs-downloads
+        - mountPath: /watch
+          name: nfs-shared
+        - mountPath: /config/core.conf
+          name: settings
+          subPath: core.conf
+        - mountPath: /config/web.conf
+          name: settings
+          subPath: web.conf
+        - mountPath: /config/autoadd.conf
+          name: settings
+          subPath: autoadd.conf
+        - mountPath: /config/hostlist.conf
+          name: settings
+          subPath: hostlist.conf
+        - mountPath: /config/auth
+          name: creds
+          subPath: auth
+          readOnly: true
+        startupProbe:
+          tcpSocket:
+            port: http
+        livenessProbe:
+          tcpSocket:
+            port: http
+        readinessProbe:
+          httpGet:
+            path: /
+            port: http
+        resources:
+          limits:
+            cpu: 1000m
+            memory: 1024M
+          requests:
+            cpu: 10m
+            memory: 64M
+
+      volumes:
+      - name: config
+        persistentVolumeClaim:
+          claimName: config
+      - name: nfs-downloads
+        nfs:
+          path: /deluge
+          server: 10.102.22.211
+      - name: nfs-shared
+        nfs:
+          path: /shared/watch
+          server: genji.home.arpa
+      - configMap:
+          defaultMode: 0755
+          name: scripts
+        name: scripts
+      - configMap:
+          name: settings
+        name: settings
+      - name: creds
+        secret:
+          secretName: auth

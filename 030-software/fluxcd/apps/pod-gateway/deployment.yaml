@@ -3,8 +3,6 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: pod-gateway
-  labels:
-    app: pod-gateway
   annotations:
     configmap.reloader.stakater.com/reload: pod-gateway,openvpn-client
 spec:
@@ -16,7 +14,7 @@ spec:
     metadata:
       labels:
         app: pod-gateway
-        # policy.gatekeeper.sh/ignore: "true"
+        policy.gatekeeper.sh/ignore-psp-volume-types: "true"
       annotations:
         descheduler.alpha.kubernetes.io/evict: "true"
     spec:
@@ -280,8 +278,6 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: pod-gateway-webhook
-  labels:
-    app: pod-gateway-webhook
 spec:
   revisionHistoryLimit: 0
   selector:

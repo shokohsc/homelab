@@ -43,12 +43,10 @@ spec:
             - name: SERVICES
               value: vpn
             - name: ADAPTER_URL
-              value: "postgres://user:password@localhost:5432/vpn"
-            # - name: ADAPTER_URL
-            #   valueFrom:
-            #     secretKeyRef:
-            #       name: sidekick
-            #       key: adapter-url
+              valueFrom:
+                secretKeyRef:
+                  name: vpn
+                  key: postgresql-url
             - name: IPINFO_TOKEN
               valueFrom:
                 secretKeyRef:
@@ -83,7 +81,3 @@ spec:
             limits:
               cpu: 1000m
               memory: 128M
-      tolerations:
-        - key: "node.kubernetes.io/nuc"
-          operator: "Exists"
-          effect: "NoSchedule"

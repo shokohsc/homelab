@@ -4,8 +4,6 @@ apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
   name: pod-gateway-webhook-ca
-  labels:
-    app: pod-gateway
 spec:
   secretName: pod-gateway-webhook-ca
   duration: 43800h # 5y
@@ -20,8 +18,6 @@ apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
   name: pod-gateway-webhook-tls
-  labels:
-    app: pod-gateway
 spec:
   secretName: pod-gateway-webhook-tls
   duration: 8760h # 1y

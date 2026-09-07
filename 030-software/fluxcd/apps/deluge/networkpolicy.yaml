@@ -1,0 +1,19 @@
+---
+kind: NetworkPolicy
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: deluge
+spec:
+  podSelector:
+    matchLabels:
+      app: deluge
+  policyTypes:
+    - Egress
+  egress:
+    - to:
+      - namespaceSelector:
+          matchLabels:
+            namespace: pod-gateway
+        podSelector:
+          matchLabels:
+            app: pod-gateway

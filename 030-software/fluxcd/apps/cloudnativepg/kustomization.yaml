@@ -17,4 +17,5 @@ resources:
   - database-roles/prowlarr.yaml
   - database-roles/sftpgo.yaml
   - database-roles/vaultwarden.yaml
+  - database-roles/vpn.yaml
   # - pooler.yaml

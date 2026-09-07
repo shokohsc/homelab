@@ -78,7 +78,3 @@ spec:
           # nfs:
           #   server: nfs-shared.nfs-shared.svc.cluster.local
           #   path: /wallpapers
-      tolerations:
-        - key: "node.kubernetes.io/nuc"
-          operator: "Exists"
-          effect: "NoSchedule"

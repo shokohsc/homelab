@@ -1,0 +1,82 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pyload
+spec:
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: pyload
+  template:
+    metadata:
+      labels:
+        app: pyload
+    spec:
+      automountServiceAccountToken: false
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: pyload
+          image: linuxserver/pyload-ng:0.5.0
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+            capabilities:
+              drop:
+                - ALL
+          env:
+            - name: TZ
+              value: ${timezone}
+            - name: PGID
+              value: "1000"
+            - name: PUID
+              value: "1000"
+          ports:
+            - name: http
+              containerPort: 8000
+              protocol: TCP
+          startupProbe:
+            tcpSocket:
+              port: http
+          livenessProbe:
+            tcpSocket:
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+          volumeMounts:
+            - name: config
+              mountPath: /config
+            - name: pyload
+              mountPath: /config/pyload.conf
+              subPath: pyload.cfg
+            - name: downloads
+              mountPath: /downloads
+          resources:
+            requests:
+              cpu: 10m
+              memory: 64M
+            limits:
+              cpu: 1000m
+              memory: 128M
+      volumes:
+        - name: config
+          persistentVolumeClaim:
+            claimName: config
+        - name: pyload
+          configMap:
+            defaultMode: 0644
+            name: pyload
+        - name: downloads
+          nfs:
+            server: 10.102.22.211
+            path: /pyload
