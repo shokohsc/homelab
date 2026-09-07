@@ -16,6 +16,7 @@ spec:
         app: samba
         nfs-genji: "true"
         nfs-hanzo: "true"
+        policy.gatekeeper.sh/ignore-psp-readonlyrootfilesystem: "true"
     spec:
       automountServiceAccountToken: false
       securityContext:
@@ -33,7 +34,7 @@ spec:
           imagePullPolicy: Always
           securityContext:
             allowPrivilegeEscalation: false
-            readOnlyRootFilesystem: true
+            # readOnlyRootFilesystem: true
             runAsNonRoot: true
             capabilities:
               drop:
