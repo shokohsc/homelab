@@ -4,3 +4,4 @@ namespace: alloy
 resources:
   - namespace.yaml
   - alloy.yaml
+  - http-route.yaml
