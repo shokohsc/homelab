@@ -82,6 +82,7 @@ spec:
         nfs:
           path: /movies
           server: genji.home.arpa
-      - configMap:
+      - name: scripts
+        configMap:
           defaultMode: 493
           name: scripts
