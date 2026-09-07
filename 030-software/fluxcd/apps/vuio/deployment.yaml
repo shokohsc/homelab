@@ -75,6 +75,8 @@ spec:
           readOnly: true
         - mountPath: /tmp
           name: temp
+        - mountPath: /home/vuio/.local/state/vuio/logs
+          name: logs
       securityContext:
         fsGroup: 1000
         runAsGroup: 1000
@@ -97,3 +99,5 @@ spec:
       - name: temp
         emptyDir:
           medium: Memory
+      - name: logs
+        emptyDir: {}
