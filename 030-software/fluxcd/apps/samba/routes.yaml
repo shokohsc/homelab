@@ -1,0 +1,28 @@
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: TCPRoute
+metadata:
+  name: netbios
+spec:
+  parentRefs:
+    - name: cilium
+      namespace: cilium
+      sectionName: netbios
+  rules:
+    - backendRefs:
+        - name: netbios
+          port: 139
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: TCPRoute
+metadata:
+  name: smb
+spec:
+  parentRefs:
+    - name: cilium
+      namespace: cilium
+      sectionName: smb
+  rules:
+    - backendRefs:
+        - name: smb
+          port: 445

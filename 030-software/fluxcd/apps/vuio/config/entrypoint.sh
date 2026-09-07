@@ -389,7 +389,7 @@ main() {
     
     # Switch to vuio user and execute the command
     # exec su-exec vuio "$@"
-    exec vuio "$@"
+    vuio "$@"
 }
 
 # Execute main function with all arguments

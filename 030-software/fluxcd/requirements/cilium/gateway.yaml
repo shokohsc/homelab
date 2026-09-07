@@ -195,6 +195,30 @@ spec:
             matchLabels:
               app: sftpgo
 
+    - name: netbios
+      port: 139
+      protocol: TCP
+      allowedRoutes:
+        kinds:
+          - kind: TCPRoute
+        namespaces:
+          from: Selector
+          selector:
+            matchLabels:
+              app: samba
+
+    - name: smb
+      port: 445
+      protocol: TCP
+      allowedRoutes:
+        kinds:
+          - kind: TCPRoute
+        namespaces:
+          from: Selector
+          selector:
+            matchLabels:
+              app: samba
+
     - name: dlna
       port: 1900
       protocol: UDP

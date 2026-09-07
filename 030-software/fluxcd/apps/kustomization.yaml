@@ -35,6 +35,7 @@ resources:
   - reloader
   - renovate
   # - rustfs
+  - samba
   - sftpgo
   # - sidekick
   - syslog

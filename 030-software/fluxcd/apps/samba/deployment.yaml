@@ -1,0 +1,93 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: samba
+spec:
+  revisionHistoryLimit: 0
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: samba
+  template:
+    metadata:
+      labels:
+        app: samba
+        nfs-genji: "true"
+        nfs-hanzo: "true"
+    spec:
+      automountServiceAccountToken: false
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        seccompProfile:
+          type: RuntimeDefault
+        supplementalGroups:
+        - 101
+      containers:
+        - name: samba
+          image: dperson/samba:latest
+          imagePullPolicy: Always
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+            capabilities:
+              drop:
+                - ALL
+          args:
+            - -s
+            - shared;/mnt;yes;no;yes;all;none
+          env:
+            - name: "GROUPID"
+              value: "1000"
+            - name: "TZ"
+              value: "UTC"
+            - name: "USERID"
+              value: "1000"
+          ports:
+            - name: netbios
+              containerPort: 139
+              protocol: TCP
+            - name: smb
+              containerPort: 445
+              protocol: TCP
+          volumeMounts:
+            - name: nfs-genji
+              mountPath: /mnt/nfs/genji
+            - name: nfs-hanzo
+              mountPath: /mnt/nfs/hanzo
+            # - name: nfs-downloads
+            #   mountPath: /mnt/nfs/downloads
+          startupProbe:
+            tcpSocket:
+              port: netbios
+          livenessProbe:
+            tcpSocket:
+              port: netbios
+          readinessProbe:
+            tcpSocket:
+              port: netbios
+          resources:
+            limits:
+              cpu: 100m
+              memory: 1024M
+            requests:
+              cpu: 10m
+              memory: 64M
+      volumes:
+        - name: nfs-genji
+          nfs:
+            path: /
+            server: genji.home.arpa
+        - name: nfs-hanzo
+          nfs:
+            path: /
+            server: hanzo.home.arpa
+        # - name: nfs-downloads
+        #   nfs:
+        #     path: /
+        #     server: nfs-downloads.nfs-downloads.svc.cluster.local
