@@ -11,6 +11,7 @@ resources:
   - commander
   - external-dns
   # - fan-control
+  - ferretdb
   - gatekeeper
   - grafana
   # - headlamp

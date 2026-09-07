@@ -7,9 +7,10 @@ resources:
   # - http-route.yaml
   # - rbac.yaml
   - cluster.yaml
-  - routes.yaml
+  # - routes.yaml
   - secret.yaml
   - database-roles/atuin.yaml
+  - database-roles/ferretdb.yaml
   - database-roles/maddy.yaml
   - database-roles/miniflux.yaml
   - database-roles/pocket-id.yaml

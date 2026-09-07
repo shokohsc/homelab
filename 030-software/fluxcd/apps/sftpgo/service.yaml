@@ -10,5 +10,9 @@ spec:
       targetPort: ssh
       protocol: TCP
       name: ssh
+    - port: 80
+      targetPort: http
+      protocol: TCP
+      name: http
   selector:
     app: sftpgo

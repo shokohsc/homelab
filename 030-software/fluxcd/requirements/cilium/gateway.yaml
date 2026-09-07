@@ -47,17 +47,17 @@ spec:
     #         matchLabels:
     #           app: syslog
 
-    - name: postgres
-      port: 5432
-      protocol: TCP
-      allowedRoutes:
-        kinds:
-          - kind: TCPRoute
-        namespaces:
-          from: Selector
-          selector:
-            matchLabels:
-              app.kubernetes.io/name: cloudnative-pg
+    # - name: postgres
+    #   port: 5432
+    #   protocol: TCP
+    #   allowedRoutes:
+    #     kinds:
+    #       - kind: TCPRoute
+    #     namespaces:
+    #       from: Selector
+    #       selector:
+    #         matchLabels:
+    #           app.kubernetes.io/name: cloudnative-pg
 
     # - name: plex
     #   port: 32400
