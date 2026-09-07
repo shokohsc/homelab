@@ -219,14 +219,14 @@ spec:
             matchLabels:
               app: samba
 
-    - name: dlna
-      port: 1900
-      protocol: UDP
-      allowedRoutes:
-        kinds:
-          - kind: UDPRoute
-        namespaces:
-          from: Selector
-          selector:
-            matchLabels:
-              app: vuio
+    # - name: dlna
+    #   port: 1900
+    #   protocol: UDP
+    #   allowedRoutes:
+    #     kinds:
+    #       - kind: UDPRoute
+    #     namespaces:
+    #       from: Selector
+    #       selector:
+    #         matchLabels:
+    #           app: vuio
