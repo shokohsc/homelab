@@ -61,8 +61,8 @@ spec:
               mountPath: /mnt/nfs/genji
             - name: nfs-hanzo
               mountPath: /mnt/nfs/hanzo
-            # - name: nfs-downloads
-            #   mountPath: /mnt/nfs/downloads
+            - name: nfs-downloads
+              mountPath: /mnt/nfs/downloads
           startupProbe:
             tcpSocket:
               port: netbios
@@ -88,7 +88,7 @@ spec:
           nfs:
             path: /
             server: hanzo.home.arpa
-        # - name: nfs-downloads
-        #   nfs:
-        #     path: /
-        #     server: nfs-downloads.nfs-downloads.svc.cluster.local
+        - name: nfs-downloads
+          nfs:
+            path: /
+            server: nfs-downloads.nfs-downloads.svc.cluster.local
