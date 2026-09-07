@@ -38,6 +38,7 @@ resources:
   - samba
   - sftpgo
   # - sidekick
+  - sign-pdf
   - syslog
   - tailscale
   - valkey
