@@ -19,6 +19,10 @@ spec:
       containers:
       - command:
         - /usr/bin/entrypoint.sh
+        args:
+        - /app/vuio
+        - --config
+        - /config/config.toml
         env:
         - name: PUID
           value: "1000"
@@ -69,6 +73,8 @@ spec:
         - mountPath: /data/movies
           name: movies
           readOnly: true
+        - mountPath: /tmp
+          name: temp
       securityContext:
         fsGroup: 1000
         runAsGroup: 1000
@@ -88,3 +94,6 @@ spec:
         configMap:
           defaultMode: 493
           name: scripts
+      - name: temp
+        emptyDir:
+          medium: Memory
