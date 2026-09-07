@@ -18,8 +18,8 @@ spec:
         app: plex
         nfs-genji: "true"
         policy.gatekeeper.sh/ignore-container-must-have-limits: "true"
-        policy.gatekeeper.sh/ignore-psp-readonlyrootfilesystem: "true"
-        policy.gatekeeper.sh/ignore-psp-pods-allowed-user-ranges: "true"
+        # policy.gatekeeper.sh/ignore-psp-readonlyrootfilesystem: "true"
+        # policy.gatekeeper.sh/ignore-psp-pods-allowed-user-ranges: "true"
     spec:
       automountServiceAccountToken: false
       securityContext:
@@ -52,11 +52,11 @@ spec:
               value: "${timezone}"
             - name: VERSION
               value: "docker"
-            - name: PLEX_CLAIM
-              valueFrom:
-                secretKeyRef:
-                  key: plex-claim
-                  name: plex-claim
+            # - name: PLEX_CLAIM
+            #   valueFrom:
+            #     secretKeyRef:
+            #       key: plex-claim
+            #       name: plex-claim
           ports:
             - name: http
               containerPort: 32400
@@ -90,7 +90,7 @@ spec:
               port: http
           readinessProbe:
             httpGet:
-              path: /identity
+              path: /
               port: http
           resources:
             limits:

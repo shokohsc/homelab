@@ -13,6 +13,7 @@ resources:
   - external-dns
   # - fan-control
   - ferretdb
+  # - freellmapi
   - gatekeeper
   - grafana
   # - headlamp
@@ -27,17 +28,18 @@ resources:
   - metrics-server
   - nats
   - nfs-downloads
-  # - plex
+  # - omniroute
+  - plex
   - pocket-id
   - pod-gateway
   - proxmox
-  - pyload
+  # - pyload
   # - radio
   - rathole
   - reloader
   - renovate
   # - rustfs
-  - samba
+  # - samba
   - sftpgo
   - sidekick
   # - sign-pdf
