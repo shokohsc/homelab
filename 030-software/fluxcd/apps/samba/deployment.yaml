@@ -91,4 +91,5 @@ spec:
         - name: nfs-downloads
           nfs:
             path: /
-            server: nfs-downloads.nfs-downloads.svc.cluster.local
+            server: 10.102.22.211
+            # server: nfs-downloads.nfs-downloads.svc.cluster.local
