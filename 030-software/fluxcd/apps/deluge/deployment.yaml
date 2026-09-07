@@ -16,9 +16,7 @@ spec:
     metadata:
       labels:
         app: deluge
-        policy.gatekeeper.sh/ignore-psp-capabilities-baseline: "true"
-        policy.gatekeeper.sh/ignore-container-must-have-limits: "true"
-        policy.gatekeeper.sh/ignore-psp-readonlyrootfilesystem: "true"
+        policy.gatekeeper.sh/ignore: "true"
     spec:
       automountServiceAccountToken: false
       securityContext:
