@@ -20,7 +20,6 @@ spec:
       - command:
         - /usr/bin/entrypoint.sh
         args:
-        - /app/vuio
         - --config
         - /config/config.toml
         env:
