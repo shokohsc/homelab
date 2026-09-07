@@ -19,8 +19,8 @@ cleanup() {
     fi
 
     if [[ "$KILL_SWITCH" == "on" ]]; then
-        log "Printing iptables rules."
-        iptables -L
+        log "Printing nftables rules."
+        nft list ruleset
 
         log "Printing routes."
         ip route
@@ -28,98 +28,12 @@ cleanup() {
         # local_subnet=$(ip r | grep -v 'default via' | grep eth0 | tail -n 1 | cut -d " " -f 1)
 
         log "Deleting VPN kill switch and local routes."
+        nft flush ruleset
 
-        log "Preventing established and related connections..."
-        iptables -D INPUT -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT -m comment --comment "${header} Allow established and related connections"
+        log "nftables rules deleted and routes configured."
 
-        log "Preventing loopback connections..."
-        iptables -D INPUT -i lo -j ACCEPT -m comment --comment "${header} Allow loopback input"
-        iptables -D OUTPUT -o lo -j ACCEPT -m comment --comment "${header} Allow loopback output"
-
-        # log "Preventing Docker network connections..."
-        # iptables -D INPUT -s "$local_subnet" -j ACCEPT -m comment --comment "${header} Allow Docker network input"
-        # iptables -D OUTPUT -d "$local_subnet" -j ACCEPT -m comment --comment "${header} Allow Docker network output"
-
-        log "Preventing specified subnets..."
-        # for every specified subnet...
-        for subnet in ${SUBNETS//,/ }; do
-            # # delete a route to it and...
-            # ip route del "$subnet" via "$default_gateway" dev eth0 || true
-            # prevent connections
-            iptables -D INPUT -s "$subnet" -j ACCEPT -m comment --comment "${header} Allow subnet $subnet input"
-            iptables -D OUTPUT -d "$subnet" -j ACCEPT -m comment --comment "${header} Allow subnet $subnet output"
-        done
-
-        log "Preventing specified ports..."
-        # for every specified port...
-        for line in ${PORTS//,/ }; do
-            IFS=';' read -r -a part <<< "$line"
-            port=${part[0]}
-            protocol=${part[1]}
-            iptables -D INPUT -p $protocol -m $protocol --dport $port -j ACCEPT -m comment --comment "${header} Allow $protocol port $port"
-        done
-
-        log "Preventing remote servers in configuration file..."
-        global_port=$(grep "port " "$config_file_modified" | cut -d " " -f 2)
-        global_protocol=$(grep "proto " "$config_file_modified" | cut -d " " -f 2 | cut -c1-3)
-        remotes=$(grep "remote " "$config_file_modified")
-
-        log "  Using:"
-        comment_regex='^[[:space:]]*[#;]'
-        echo "$remotes" | while IFS= read -r line; do
-            # Ignore comments.
-            if ! [[ "$line" =~ $comment_regex ]]; then
-                # Remove the line prefix 'remote '.
-                line=${line#remote }
-
-                # Remove any trailing comments.
-                line=${line%%#*}
-
-                # Split the line into an array.
-                # The first element is an address (IP or domain), the second is a port,
-                # and the fourth is a protocol.
-                IFS=' ' read -r -a remote <<< "$line"
-                address=${remote[0]}
-                # Use port from 'remote' line, then 'port' line, then '1194'.
-                port=${remote[1]:-${global_port:-1194}}
-                # Use protocol from 'remote' line, then 'proto' line, then 'udp'.
-                protocol=${remote[2]:-${global_protocol:-udp}}
-
-                # Map from OpenVPN tcp-client config option to tcp for iptables
-                if [[ $protocol == "tcp-client" ]]; then
-                    protocol='tcp'
-                fi
-
-                ip_regex='^(([1-9]?[0-9]|1[0-9][0-9]|2([0-4][0-9]|5[0-5]))\.){3}([1-9]?[0-9]|1[0-9][0-9]|2([0-4][0-9]|5[0-5]))$'
-                if [[ "$address" =~ $ip_regex ]]; then
-                    log "    IP: $address PORT: $port PROTOCOL: $protocol"
-                    iptables -D OUTPUT -o eth0 -d "$address" -p "$protocol" --dport "$port" -j ACCEPT -m comment --comment "${header} Allow $protocol to $address:$port"
-                else
-                    for ip in $(dig -4 +short "$address"); do
-                        log "    $address (IP: $ip PORT: $port PROTOCOL: $protocol)"
-                        iptables -D OUTPUT -o eth0 -d "$ip" -p "$protocol" --dport "$port" -j ACCEPT -m comment --comment "${header} Allow $protocol to $ip:$port"
-                        echo "$ip $address" >> /etc/hosts
-                    done
-                fi
-            fi
-        done
-
-        log "Preventing connections over VPN interface..."
-        iptables -D INPUT -i tun0 -j ACCEPT -m comment --comment "${header} Allow VPN input"
-        iptables -D OUTPUT -o tun0 -j ACCEPT -m comment --comment "${header} Allow VPN output"
-
-        # log "Preventing traffic to port 8080 for kubelet readiness probe..."
-        # iptables -D INPUT -p tcp -m tcp --dport 8080 -j ACCEPT -m comment --comment "${header} Allow traffic to port 8080 for kubelet readiness probe"
-
-        log "Allowing anything else..."
-        iptables -P INPUT ACCEPT -m comment --comment "${header} Accept all input"
-        iptables -P OUTPUT DROP -m comment --comment "${header} Drop all output"
-        iptables -P FORWARD DROP -m comment --comment "${header} Drop all forwarding"
-
-        log "iptables rules deleted and routes configured."
-
-        log "Printing iptables rules."
-        iptables -L
+        log "Printing nftables rules."
+        nft list ruleset
 
     else
         log "VPN kill switch is disabled. Traffic will be allowed outside of the tunnel if the connection is lost." "WARNING"
@@ -209,8 +123,8 @@ date="$(date "+%Y-%m-%d %H:%M:%S")"
 header="[$(hostname) ${date}]"
 # default_gateway=$(ip r | grep 'default via' | cut -d " " -f 3)
 if [[ "$KILL_SWITCH" == "on" ]]; then
-    log "Printing iptables rules."
-    iptables -L
+    log "Printing nftables rules."
+    nft list ruleset
 
     log "Printing routes."
     ip route
@@ -219,25 +133,29 @@ if [[ "$KILL_SWITCH" == "on" ]]; then
 
     log "Creating VPN kill switch and local routes."
 
+    nft flush ruleset
+    nft add table ip killswitch
+    nft add chain ip killswitch input "{ type filter hook input priority 0; policy accept; }"
+    nft add chain ip killswitch output "{ type filter hook output priority 0; policy accept; }"
+    nft add chain ip killswitch forward "{ type filter hook forward priority 0; policy accept; }"
+
     log "Allowing established and related connections..."
-    iptables -A INPUT -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT -m comment --comment "${header} Allow established and related connections"
+    nft add rule ip killswitch input ct state established,related accept comment "${header} Allow established and related connections"
 
     log "Allowing loopback connections..."
-    iptables -A INPUT -i lo -j ACCEPT -m comment --comment "${header} Allow loopback input"
-    iptables -A OUTPUT -o lo -j ACCEPT -m comment --comment "${header} Allow loopback output"
+    nft add rule ip killswitch input iif "lo" accept comment "${header} Allow loopback input"
+    nft add rule ip killswitch output oif "lo" accept comment "${header} Allow loopback output"
 
     # log "Allowing Docker network connections..."
-    # iptables -A INPUT -s "$local_subnet" -j ACCEPT -m comment --comment "${header} Allow Docker network input"
-    # iptables -A OUTPUT -d "$local_subnet" -j ACCEPT -m comment --comment "${header} Allow Docker network output"
+    # nft add rule ip killswitch input ip saddr "$local_subnet" accept comment "${header} Allow Docker network input"
+    # nft add rule ip killswitch output ip daddr "$local_subnet" accept comment "${header} Allow Docker network output"
 
     log "Allowing specified subnets..."
     # for every specified subnet...
     for subnet in ${SUBNETS//,/ }; do
-        # # create a route to it and...
-        # ip route add "$subnet" via "$default_gateway" dev eth0 || true
         # allow connections
-        iptables -A INPUT -s "$subnet" -j ACCEPT -m comment --comment "${header} Allow subnet $subnet input"
-        iptables -A OUTPUT -d "$subnet" -j ACCEPT -m comment --comment "${header} Allow subnet $subnet output"
+        nft add rule ip killswitch input ip saddr "$subnet" accept comment "${header} Allow subnet $subnet input"
+        nft add rule ip killswitch output ip daddr "$subnet" accept comment "${header} Allow subnet $subnet output"
     done
 
     log "Allowing specified ports..."
@@ -246,7 +164,7 @@ if [[ "$KILL_SWITCH" == "on" ]]; then
         IFS=';' read -r -a part <<< "$line"
         port=${part[0]}
         protocol=${part[1]}
-        iptables -A INPUT -p $protocol -m $protocol --dport $port -j ACCEPT -m comment --comment "${header} Allow $protocol port $port"
+        nft add rule ip killswitch input "$protocol" dport "$port" accept comment "${header} Allow $protocol port $port"
     done
 
     log "Allowing remote servers in configuration file..."
@@ -275,7 +193,7 @@ if [[ "$KILL_SWITCH" == "on" ]]; then
             # Use protocol from 'remote' line, then 'proto' line, then 'udp'.
             protocol=${remote[2]:-${global_protocol:-udp}}
 
-            # Map from OpenVPN tcp-client config option to tcp for iptables
+            # Map from OpenVPN tcp-client config option to tcp for nftables
             if [[ $protocol == "tcp-client" ]]; then
                 protocol='tcp'
             fi
@@ -283,11 +201,11 @@ if [[ "$KILL_SWITCH" == "on" ]]; then
             ip_regex='^(([1-9]?[0-9]|1[0-9][0-9]|2([0-4][0-9]|5[0-5]))\.){3}([1-9]?[0-9]|1[0-9][0-9]|2([0-4][0-9]|5[0-5]))$'
             if [[ "$address" =~ $ip_regex ]]; then
                 log "    IP: $address PORT: $port PROTOCOL: $protocol"
-                iptables -A OUTPUT -o eth0 -d "$address" -p "$protocol" --dport "$port" -j ACCEPT -m comment --comment "${header} Allow $protocol to $address:$port"
+                nft add rule ip killswitch output oif "eth0" ip daddr "$address" "$protocol" dport "$port" accept comment "${header} Allow $protocol to $address:$port"
             else
                 for ip in $(dig -4 +short "$address"); do
                     log "    $address (IP: $ip PORT: $port PROTOCOL: $protocol)"
-                    iptables -A OUTPUT -o eth0 -d "$ip" -p "$protocol" --dport "$port" -j ACCEPT -m comment --comment "${header} Allow $protocol to $ip:$port"
+                    nft add rule ip killswitch output oif "eth0" ip daddr "$ip" "$protocol" dport "$port" accept comment "${header} Allow $protocol to $ip:$port"
                     echo "$ip $address" >> /etc/hosts
                 done
             fi
@@ -295,21 +213,21 @@ if [[ "$KILL_SWITCH" == "on" ]]; then
     done
 
     log "Allowing connections over VPN interface..."
-    iptables -A INPUT -i tun0 -j ACCEPT -m comment --comment "${header} Allow VPN input"
-    iptables -A OUTPUT -o tun0 -j ACCEPT -m comment --comment "${header} Allow VPN output"
+    nft add rule ip killswitch input iif "tun0" accept comment "${header} Allow VPN input"
+    nft add rule ip killswitch output oif "tun0" accept comment "${header} Allow VPN output"
 
     # log "Allowing traffic to port 8080 for kubelet readiness probe..."
-    # iptables -A INPUT -p tcp -m tcp --dport 8080 -j ACCEPT -m comment --comment "${header} Allow traffic to port 8080 for kubelet readiness probe"
+    # nft add rule ip killswitch input tcp dport 8080 accept comment "${header} Allow traffic to port 8080 for kubelet readiness probe"
 
     log "Preventing anything else..."
-    iptables -P INPUT DROP -m comment --comment "${header} Drop all input"
-    iptables -P OUTPUT DROP -m comment --comment "${header} Drop all output"
-    iptables -P FORWARD DROP -m comment --comment "${header} Drop all forwarding"
+    nft chain ip killswitch input policy drop
+    nft chain ip killswitch output policy drop
+    nft chain ip killswitch forward policy drop
 
-    log "iptables rules created and routes configured."
+    log "nftables rules created and routes configured."
 
-    log "Printing iptables rules."
-    iptables -L
+    log "Printing nftables rules."
+    nft list ruleset
 else
     log "VPN kill switch is disabled. Traffic will be allowed outside of the tunnel if the connection is lost." "WARNING"
     # log "Creating routes to specified subnets..."
