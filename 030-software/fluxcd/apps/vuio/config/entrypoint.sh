@@ -388,7 +388,7 @@ main() {
     log "Starting VuIO as user vuio with command: $*"
 
     # Switch to vuio user and execute the command
-    # exec su-exec vuio "$@"
+    sleep 600 && exit 0
     # /app/vuio "$@"
 }
 
