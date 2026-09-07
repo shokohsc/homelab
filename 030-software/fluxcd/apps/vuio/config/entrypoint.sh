@@ -82,7 +82,7 @@ setup_directories() {
     fi
     
     # Set ownership for directories we can control
-    chown -R vuio:vuio /config /app
+    # chown -R vuio:vuio /config /app /data
     
     # Try to set ownership on media directory, but don't fail if it's read-only
     if [ -d "/media" ]; then
