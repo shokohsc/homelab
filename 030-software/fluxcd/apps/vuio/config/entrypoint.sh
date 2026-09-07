@@ -388,7 +388,8 @@ main() {
     log "Starting VuIO as user vuio with command: $*"
     
     # Switch to vuio user and execute the command
-    exec su-exec vuio "$@"
+    # exec su-exec vuio "$@"
+    exec vuio "$@"
 }
 
 # Execute main function with all arguments
