@@ -130,8 +130,8 @@ spec:
           - mountPath: /plex/etc
             name: config
             readOnly: true
-          # - mountPath: /tmp
-          #   name: work
+          - mountPath: /var/lib/vector
+            name: work
       volumes:
         - name: config
           persistentVolumeClaim:
@@ -150,9 +150,9 @@ spec:
         - name: vector
           configMap:
             name: vector
-        # - name: work
-        #   emptyDir:
-        #     medium: Memory
+        - name: work
+          emptyDir:
+            medium: Memory
         - name: movies
           nfs:
             server: genji.home.arpa
