@@ -52,11 +52,11 @@ spec:
               value: "${timezone}"
             - name: VERSION
               value: "docker"
-            # - name: PLEX_CLAIM
-            #   valueFrom:
-            #     secretKeyRef:
-            #       key: plex-claim
-            #       name: plex-claim
+            - name: PLEX_CLAIM
+              valueFrom:
+                secretKeyRef:
+                  key: plex-claim
+                  name: plex-claim
           ports:
             - name: http
               containerPort: 32400
