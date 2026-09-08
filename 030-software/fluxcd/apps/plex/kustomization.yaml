@@ -5,6 +5,7 @@ resources:
   - namespace.yaml
   - deployment.yaml
   - service.yaml
+  - secret.yaml
   - routes.yaml
   - pvc.yaml
 configMapGenerator:
