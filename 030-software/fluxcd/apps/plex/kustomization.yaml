@@ -9,9 +9,9 @@ resources:
   - routes.yaml
   - pvc.yaml
 configMapGenerator:
-- name: promtail
+- name: vector
   files:
-  - ./configs/promtail.yaml
+  - ./configs/vector.yaml
 - name: s6-plex
   files:
   - ./configs/s6-plex.sh

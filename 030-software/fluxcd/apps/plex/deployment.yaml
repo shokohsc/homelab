@@ -4,7 +4,7 @@ kind: Deployment
 metadata:
   name: plex
   annotations:
-    configmap.reloader.stakater.com/reload: "promtail,s6-plex"
+    configmap.reloader.stakater.com/reload: "vector,s6-plex"
 spec:
   strategy:
     type: Recreate
@@ -22,6 +22,10 @@ spec:
         # policy.gatekeeper.sh/ignore-psp-pods-allowed-user-ranges: "true"
     spec:
       automountServiceAccountToken: false
+      dnsConfig:
+        options:
+          - name: ndots
+            value: "1"
       securityContext:
         runAsNonRoot: true
         runAsUser: 1000
@@ -99,34 +103,35 @@ spec:
             requests:
               cpu: 100m
               memory: 128M
-        # - args:
-        #   - -config.file=/etc/promtail/promtail.yaml
-        #   image: grafana/promtail:3.6.11
-        #   name: promtail
-        #   securityContext:
-        #     allowPrivilegeEscalation: false
-        #     readOnlyRootFilesystem: true
-        #     runAsNonRoot: true
-        #     capabilities:
-        #       drop:
-        #         - ALL
-        #   resources:
-        #     limits:
-        #       cpu: 100m
-        #       memory: 64M
-        #     requests:
-        #       cpu: 100m
-        #       memory: 64M
-        #   volumeMounts:
-        #   - mountPath: /etc/promtail/promtail.yaml
-        #     name: promtail
-        #     readOnly: true
-        #     subPath: promtail.yaml
-        #   - mountPath: /config
-        #     name: config
-        #     readOnly: true
-        #   - mountPath: /tmp
-        #     name: work
+        - name: vector
+          image: timberio/vector:0.58.0-alpine
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+            capabilities:
+              drop:
+                - ALL
+          args:
+            - --config
+            - /etc/vector/vector.yaml
+          resources:
+            limits:
+              cpu: 100m
+              memory: 64M
+            requests:
+              cpu: 100m
+              memory: 64M
+          volumeMounts:
+          - mountPath: /etc/vector/vector.yaml
+            name: vector
+            readOnly: true
+            subPath: vector.yaml
+          - mountPath: /plex/etc
+            name: config
+            readOnly: true
+          # - mountPath: /tmp
+          #   name: work
       volumes:
         - name: config
           persistentVolumeClaim:
@@ -142,9 +147,9 @@ spec:
         - name: transcode
           emptyDir:
             sizeLimit: 20Gi
-        # - name: promtail
-        #   configMap:
-        #     name: promtail
+        - name: vector
+          configMap:
+            name: vector
         # - name: work
         #   emptyDir:
         #     medium: Memory
