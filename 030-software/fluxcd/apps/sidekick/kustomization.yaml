@@ -16,7 +16,7 @@ resources:
 
 images:
   - name: shokohsc/moleculer-sidekick
-    newTag: "fb8c753"
+    newTag: "657b23e"
 
 configMapGenerator:
   - name: common-env
