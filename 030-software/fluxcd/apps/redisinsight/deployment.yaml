@@ -2,15 +2,15 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: redis-commander
+  name: redisinsight
 spec:
   selector:
     matchLabels:
-      app: redis-commander
+      app: redisinsight
   template:
     metadata:
       labels:
-        app: redis-commander
+        app: redisinsight
     spec:
       automountServiceAccountToken: false
       securityContext:
@@ -21,8 +21,8 @@ spec:
         seccompProfile:
           type: RuntimeDefault
       containers:
-        - name: redis-commander
-          image: ghcr.io/joeferner/redis-commander:0.9.1
+        - name: redisinsight
+          image: redislabs/redisinsight:3.8.0
           securityContext:
             allowPrivilegeEscalation: false
             readOnlyRootFilesystem: true
@@ -31,11 +31,13 @@ spec:
               drop:
                 - ALL
           env:
-            - name: REDIS_HOSTS
-              value: valkey:valkey.valkey.svc.cluster.local:6379
+            - name: RILOGLEVEL
+              value: "DEBUG"
+            - name: RITRUSTEDORIGINS
+              value: "https://redisinsight.${domain}"
           ports:
             - name: http
-              containerPort: 8081
+              containerPort: 8001
               protocol: TCP
           startupProbe:
             tcpSocket:
@@ -45,19 +47,18 @@ spec:
               port: http
           readinessProbe:
             httpGet:
-              path: /
+              path: /healthcheck
               port: http
           resources:
             requests:
               cpu: 10m
               memory: 64M
             limits:
-              cpu: 100m
-              memory: 64M
+              cpu: 1000m
+              memory: 256M
           volumeMounts:
-            - mountPath: /redis-commander/config
-              name: config
+            - name: db
+              mountPath: /db
       volumes:
-        - name: config
-          emptyDir:
-            medium: Memory
+        - name: db
+          emptyDir: {}

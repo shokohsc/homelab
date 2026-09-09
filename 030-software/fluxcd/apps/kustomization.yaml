@@ -38,7 +38,7 @@ resources:
   # - pyload
   # - radio
   - rathole
-  - redis-commander
+  - redisinsight
   - reloader
   - renovate
   # - rustfs
