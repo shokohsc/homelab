@@ -31,10 +31,8 @@ spec:
               drop:
                 - ALL
           env:
-            - name: REDIS_HOST
-              value: valkey.valkey
-            - name: REDIS_PORT
-              value: "6379"
+            - name: REDIS_HOSTS
+              value: valkey:valkey.valkey.svc.cluster.local:6379
           ports:
             - name: http
               containerPort: 8081
@@ -56,3 +54,10 @@ spec:
             limits:
               cpu: 100m
               memory: 64M
+          volumeMounts:
+            - mountPath: /redis-commander/config
+              name: config
+      volumes:
+        - name: config
+          emptyDir:
+            medium: Memory
