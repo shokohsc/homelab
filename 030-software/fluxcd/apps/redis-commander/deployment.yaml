@@ -33,7 +33,7 @@ spec:
           env:
             - name: REDIS_HOST
               value: valkey.valkey
-            - name: REDIS_HOST
+            - name: REDIS_PORT
               value: "6379"
           ports:
             - name: http
