@@ -204,6 +204,8 @@ spec:
               subPath: Caddyfile
             - name: data
               mountPath: /config/caddy
+            - name: data
+              mountPath: /data/caddy
           startupProbe:
             tcpSocket:
               port: https
