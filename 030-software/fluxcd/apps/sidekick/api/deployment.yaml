@@ -37,6 +37,8 @@ spec:
             capabilities:
               drop:
                 - ALL
+          command: ["npm"]
+          args: ["run", "start"]
           envFrom:
             - configMapRef:
                 name: common-env
