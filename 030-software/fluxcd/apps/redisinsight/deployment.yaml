@@ -31,9 +31,7 @@ spec:
               drop:
                 - ALL
           env:
-            - name: RILOGLEVEL
-              value: "DEBUG"
-            - name: RITRUSTEDORIGINS
+            - name: RI_EXTERNAL_URL
               value: "https://redisinsight.${domain}"
           ports:
             - name: http
@@ -58,7 +56,7 @@ spec:
               memory: 256M
           volumeMounts:
             - name: logs
-              mountPath: /data/logs
+              mountPath: /data
       volumes:
         - name: logs
           emptyDir: {}
