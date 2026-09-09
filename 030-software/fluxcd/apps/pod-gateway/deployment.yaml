@@ -116,7 +116,7 @@ spec:
               mountPath: /bin/gateway_sidecar.sh
               subPath: gateway_sidecar.sh
 
-        - image: ghcr.io/shokohsc/vpn-egress-gateway:latest
+        - image: ghcr.io/shokohsc/gateway:latest
           name: openvpn
           command:
             - /usr/bin/get_ovpn_profile.sh
