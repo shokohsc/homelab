@@ -22,6 +22,7 @@ resources:
   - alloy
   - http-echo
   - jellyfin
+  - kaniko
   # - konflate
   - kube-state-metrics
   - kube-system
