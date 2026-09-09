@@ -7,6 +7,14 @@ log () {
     echo "[${2:-INFO}] $(date "+%Y-%m-%d %H:%M:%S") $1"
 }
 
+# nft re-joins its argv with spaces, so multi-word strings passed on the
+# command line lose their quoting and fail to parse. Pass the rule through
+# the parser (stdin) instead so the comment keeps its quotes.
+# Args: <chain> <rule> <comment>
+nft_rule () {
+    printf '%s\n' "add rule ip killswitch $1 $2 comment \"$3\"" | nft -f -
+}
+
 cleanup() {
     # When you run `docker stop` or any equivalent, a SIGTERM signal is sent to PID 1.
     # A process running as PID 1 inside a container is treated specially by Linux:
@@ -140,11 +148,11 @@ if [ "$KILL_SWITCH" = "on" ]; then
     nft add chain ip killswitch forward "{ type filter hook forward priority 0; policy accept; }"
 
     log "Allowing established and related connections..."
-    nft add rule ip killswitch input ct state established,related accept comment "${header} Allow established and related connections"
+    nft_rule input "ct state established,related accept" "${header} Allow established and related connections"
 
     log "Allowing loopback connections..."
-    nft add rule ip killswitch input iif "lo" accept comment "${header} Allow loopback input"
-    nft add rule ip killswitch output oif "lo" accept comment "${header} Allow loopback output"
+    nft_rule input "iif lo accept" "${header} Allow loopback input"
+    nft_rule output "oif lo accept" "${header} Allow loopback output"
 
     # log "Allowing Docker network connections..."
     # nft add rule ip killswitch input ip saddr "$local_subnet" accept comment "${header} Allow Docker network input"
@@ -154,8 +162,8 @@ if [ "$KILL_SWITCH" = "on" ]; then
     # for every specified subnet...
     for subnet in $(printf '%s\n' "$SUBNETS" | tr ',' ' '); do
         # allow connections
-        nft add rule ip killswitch input ip saddr "$subnet" accept comment "${header} Allow subnet $subnet input"
-        nft add rule ip killswitch output ip daddr "$subnet" accept comment "${header} Allow subnet $subnet output"
+        nft_rule input "ip saddr $subnet accept" "${header} Allow subnet $subnet input"
+        nft_rule output "ip daddr $subnet accept" "${header} Allow subnet $subnet output"
     done
 
     log "Allowing specified ports..."
@@ -164,7 +172,7 @@ if [ "$KILL_SWITCH" = "on" ]; then
         IFS=';' read -r port protocol <<EOF
 $line
 EOF
-        nft add rule ip killswitch input "$protocol" dport "$port" accept comment "${header} Allow $protocol port $port"
+        nft_rule input "$protocol dport $port accept" "${header} Allow $protocol port $port"
     done
 
     log "Allowing remote servers in configuration file..."
@@ -202,11 +210,11 @@ EOF
             ip_regex='^(([1-9]?[0-9]|1[0-9][0-9]|2([0-4][0-9]|5[0-5]))\.){3}([1-9]?[0-9]|1[0-9][0-9]|2([0-4][0-9]|5[0-5]))$'
             if printf '%s\n' "$address" | grep -Eq "$ip_regex"; then
                 log "    IP: $address PORT: $port PROTOCOL: $protocol"
-                nft add rule ip killswitch output oif "eth0" ip daddr "$address" "$protocol" dport "$port" accept comment "${header} Allow $protocol to $address:$port"
+                nft_rule output "oif eth0 ip daddr $address $protocol dport $port accept" "${header} Allow $protocol to $address:$port"
             else
                 for ip in $(dig -4 +short "$address"); do
                     log "    $address (IP: $ip PORT: $port PROTOCOL: $protocol)"
-                    nft add rule ip killswitch output oif "eth0" ip daddr "$ip" "$protocol" dport "$port" accept comment "${header} Allow $protocol to $ip:$port"
+                    nft_rule output "oif eth0 ip daddr $ip $protocol dport $port accept" "${header} Allow $protocol to $ip:$port"
                     printf '%s %s\n' "$ip" "$address" >> /etc/hosts
                 done
             fi
@@ -214,16 +222,16 @@ EOF
     done
 
     log "Allowing connections over VPN interface..."
-    nft add rule ip killswitch input iif "tun0" accept comment "${header} Allow VPN input"
-    nft add rule ip killswitch output oif "tun0" accept comment "${header} Allow VPN output"
+    nft_rule input "iif tun0 accept" "${header} Allow VPN input"
+    nft_rule output "oif tun0 accept" "${header} Allow VPN output"
 
     # log "Allowing traffic to port 8080 for kubelet readiness probe..."
     # nft add rule ip killswitch input tcp dport 8080 accept comment "${header} Allow traffic to port 8080 for kubelet readiness probe"
 
     log "Preventing anything else..."
-    nft chain ip killswitch input policy drop
-    nft chain ip killswitch output policy drop
-    nft chain ip killswitch forward policy drop
+    nft chain ip killswitch input "{ policy drop; }"
+    nft chain ip killswitch output "{ policy drop; }"
+    nft chain ip killswitch forward "{ policy drop; }"
 
     log "nftables rules created and routes configured."
 
