@@ -57,8 +57,8 @@ spec:
               cpu: 1000m
               memory: 256M
           volumeMounts:
-            - name: db
-              mountPath: /db
+            - name: logs
+              mountPath: /data/logs
       volumes:
-        - name: db
+        - name: logs
           emptyDir: {}
