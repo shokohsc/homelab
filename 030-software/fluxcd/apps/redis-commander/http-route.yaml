@@ -1,0 +1,19 @@
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: redis-commander
+spec:
+  hostnames:
+    - redis-commander.${domain}
+  parentRefs:
+    - name: cilium
+      namespace: cilium
+  rules:
+    - backendRefs:
+        - name: api
+          port: 3000
+      matches:
+        - path:
+            type: PathPrefix
+            value: /

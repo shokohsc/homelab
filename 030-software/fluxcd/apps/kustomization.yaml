@@ -33,11 +33,12 @@ resources:
   # - omniroute
   - plex
   - pocket-id
-  - pod-gateway
+  # - pod-gateway
   - proxmox
   # - pyload
   # - radio
   - rathole
+  - redis-commander
   - reloader
   - renovate
   # - rustfs
