@@ -45,6 +45,10 @@ spec:
               value: "true"
             - name: MAX_MEMORY_PERCENT
               value: "80"
+            - name: XDG_CONFIG_HOME
+              value: /tmp/.chromium
+            - name: XDG_CACHE_HOME
+              value: /tmp/.chromium
           ports:
             - name: http
               containerPort: 3000
