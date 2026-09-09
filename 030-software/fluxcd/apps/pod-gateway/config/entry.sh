@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/usr/bin/env sh
 
 log () {
     # if ("ERROR" === ${2}) {
@@ -13,12 +13,12 @@ cleanup() {
     # it ignores any signal with the default action. As a result, the process will
     # not terminate on SIGINT or SIGTERM unless it is coded to do so. Because of this,
     # I've defined behavior for when SIGINT and SIGTERM is received.
-    if [[ -n "$openvpn_child" ]]; then
+    if [ -n "$openvpn_child" ]; then
         log "Stopping OpenVPN..."
         kill -TERM "$openvpn_child" || true
     fi
 
-    if [[ "$KILL_SWITCH" == "on" ]]; then
+    if [ "$KILL_SWITCH" = "on" ]; then
         log "Printing nftables rules."
         nft list ruleset
 
@@ -38,7 +38,7 @@ cleanup() {
     else
         log "VPN kill switch is disabled. Traffic will be allowed outside of the tunnel if the connection is lost." "WARNING"
         # log "Deleting routes to specified subnets..."
-        # for subnet in ${SUBNETS//,/ }; do
+        # for subnet in $(printf '%s\n' "$SUBNETS" | tr ',' ' '); do
         #     ip route del "$subnet" via "$default_gateway" dev eth0 || true
         # done
         # log "Routes deleted."
@@ -60,7 +60,7 @@ cleanup() {
 
 # OpenVPN log levels are 1-11.
 # shellcheck disable=SC2153
-if [[ "$VPN_LOG_LEVEL" -lt 1 || "$VPN_LOG_LEVEL" -gt 11 ]]; then
+if [ -n "$VPN_LOG_LEVEL" ] && { [ "$VPN_LOG_LEVEL" -lt 1 ] || [ "$VPN_LOG_LEVEL" -gt 11 ]; }; then
     log "Invalid log level $VPN_LOG_LEVEL. Setting to default." "WARNING"
     vpn_log_level=3
 else
@@ -79,17 +79,17 @@ Allowing subnets: ${SUBNETS:-none}
 Using OpenVPN log level: $vpn_log_level
 Listening on: ${LISTEN_ON:-none}"
 
-if [[ -n "$VPN_CONFIG_FILE" ]]; then
+if [ -n "$VPN_CONFIG_FILE" ]; then
     config_file_original="/data/vpn/$VPN_CONFIG_FILE"
-elif [[ -n "$VPN_CONFIG_PATTERN" ]]; then
+elif [ -n "$VPN_CONFIG_PATTERN" ]; then
     # Capture the filename of the random .conf file according to the pattern to use as OpenVPN config.
-    config_file_original=$(find /data/vpn -name "$VPN_CONFIG_PATTERN" 2> /dev/null | sort | shuf -n 1)
+    config_file_original=$(find /data/vpn -name "$VPN_CONFIG_PATTERN" 2>/dev/null | sort | shuf -n 1)
 else
     # Capture the filename of the random .conf file to use as the OpenVPN config.
-    config_file_original=$(find /data/vpn -name "*.conf" 2> /dev/null | sort | shuf -n 1)
+    config_file_original=$(find /data/vpn -name "*.conf" 2>/dev/null | sort | shuf -n 1)
 fi
 
-if [[ -z "$config_file_original" ]]; then
+if [ -z "$config_file_original" ]; then
     log "No configuration file found. Please check your mount and file permissions. Exiting." "ERROR"
     exit 1
 fi
@@ -110,19 +110,19 @@ sed -i \
     -e 's/\r$//' \
     "$config_file_modified"
 
-if [[ "$KEEP_DNS_UNCHANGED" != "on" ]]; then
+if [ "$KEEP_DNS_UNCHANGED" != "on" ]; then
     echo "up /etc/openvpn/up.sh" >> "$config_file_modified"
     echo "down /etc/openvpn/down.sh" >> "$config_file_modified"
 fi
 
 log "Changes made."
 
-trap cleanup SIGINT SIGTERM EXIT ERR
+trap cleanup INT TERM EXIT
 
 date="$(date "+%Y-%m-%d %H:%M:%S")"
 header="[$(hostname) ${date}]"
 # default_gateway=$(ip r | grep 'default via' | cut -d " " -f 3)
-if [[ "$KILL_SWITCH" == "on" ]]; then
+if [ "$KILL_SWITCH" = "on" ]; then
     log "Printing nftables rules."
     nft list ruleset
 
@@ -152,7 +152,7 @@ if [[ "$KILL_SWITCH" == "on" ]]; then
 
     log "Allowing specified subnets..."
     # for every specified subnet...
-    for subnet in ${SUBNETS//,/ }; do
+    for subnet in $(printf '%s\n' "$SUBNETS" | tr ',' ' '); do
         # allow connections
         nft add rule ip killswitch input ip saddr "$subnet" accept comment "${header} Allow subnet $subnet input"
         nft add rule ip killswitch output ip daddr "$subnet" accept comment "${header} Allow subnet $subnet output"
@@ -160,10 +160,10 @@ if [[ "$KILL_SWITCH" == "on" ]]; then
 
     log "Allowing specified ports..."
     # for every specified port...
-    for line in ${PORTS//,/ }; do
-        IFS=';' read -r -a part <<< "$line"
-        port=${part[0]}
-        protocol=${part[1]}
+    for line in $(printf '%s\n' "$PORTS" | tr ',' ' '); do
+        IFS=';' read -r port protocol <<EOF
+$line
+EOF
         nft add rule ip killswitch input "$protocol" dport "$port" accept comment "${header} Allow $protocol port $port"
     done
 
@@ -174,39 +174,40 @@ if [[ "$KILL_SWITCH" == "on" ]]; then
 
     log "  Using:"
     comment_regex='^[[:space:]]*[#;]'
-    echo "$remotes" | while IFS= read -r line; do
+    printf '%s\n' "$remotes" | while IFS= read -r line; do
         # Ignore comments.
-        if ! [[ "$line" =~ $comment_regex ]]; then
+        if ! printf '%s\n' "$line" | grep -Eq "$comment_regex"; then
             # Remove the line prefix 'remote '.
             line=${line#remote }
 
             # Remove any trailing comments.
             line=${line%%#*}
 
-            # Split the line into an array.
-            # The first element is an address (IP or domain), the second is a port,
-            # and the fourth is a protocol.
-            IFS=' ' read -r -a remote <<< "$line"
-            address=${remote[0]}
+            # Split the line into fields.
+            # The first field is an address (IP or domain), the second is a port,
+            # and the third is a protocol.
+            IFS=' ' read -r address port protocol <<EOF
+$line
+EOF
             # Use port from 'remote' line, then 'port' line, then '1194'.
-            port=${remote[1]:-${global_port:-1194}}
+            port=${port:-${global_port:-1194}}
             # Use protocol from 'remote' line, then 'proto' line, then 'udp'.
-            protocol=${remote[2]:-${global_protocol:-udp}}
+            protocol=${protocol:-${global_protocol:-udp}}
 
             # Map from OpenVPN tcp-client config option to tcp for nftables
-            if [[ $protocol == "tcp-client" ]]; then
+            if [ "$protocol" = "tcp-client" ]; then
                 protocol='tcp'
             fi
 
             ip_regex='^(([1-9]?[0-9]|1[0-9][0-9]|2([0-4][0-9]|5[0-5]))\.){3}([1-9]?[0-9]|1[0-9][0-9]|2([0-4][0-9]|5[0-5]))$'
-            if [[ "$address" =~ $ip_regex ]]; then
+            if printf '%s\n' "$address" | grep -Eq "$ip_regex"; then
                 log "    IP: $address PORT: $port PROTOCOL: $protocol"
                 nft add rule ip killswitch output oif "eth0" ip daddr "$address" "$protocol" dport "$port" accept comment "${header} Allow $protocol to $address:$port"
             else
                 for ip in $(dig -4 +short "$address"); do
                     log "    $address (IP: $ip PORT: $port PROTOCOL: $protocol)"
                     nft add rule ip killswitch output oif "eth0" ip daddr "$ip" "$protocol" dport "$port" accept comment "${header} Allow $protocol to $ip:$port"
-                    echo "$ip $address" >> /etc/hosts
+                    printf '%s %s\n' "$ip" "$address" >> /etc/hosts
                 done
             fi
         fi
@@ -231,7 +232,7 @@ if [[ "$KILL_SWITCH" == "on" ]]; then
 else
     log "VPN kill switch is disabled. Traffic will be allowed outside of the tunnel if the connection is lost." "WARNING"
     # log "Creating routes to specified subnets..."
-    # for subnet in ${SUBNETS//,/ }; do
+    # for subnet in $(printf '%s\n' "$SUBNETS" | tr ',' ' '); do
     #     ip route add "$subnet" via "$default_gateway" dev eth0 || true
     # done
     # log "Routes created."
@@ -239,20 +240,19 @@ fi
 
 log "Printing routes."
 ip route
-set +x
 
-if [[ "$HTTP_PROXY" == "on" ]]; then
-    if [[ -n "$PROXY_USERNAME" ]]; then
-        if [[ -n "$PROXY_PASSWORD" ]]; then
+if [ "$HTTP_PROXY" = "on" ]; then
+    if [ -n "$PROXY_USERNAME" ]; then
+        if [ -n "$PROXY_PASSWORD" ]; then
             log "Configuring HTTP proxy authentication."
-            echo -e "\nBasicAuth $PROXY_USERNAME $PROXY_PASSWORD" >> /data/tinyproxy.conf
+            printf '\nBasicAuth %s %s\n' "$PROXY_USERNAME" "$PROXY_PASSWORD" >> /data/tinyproxy.conf
         else
             log "Proxy username supplied without password. Starting HTTP proxy without credentials." "WARNING"
         fi
-    elif [[ -f "/run/secrets/$PROXY_USERNAME_SECRET" ]]; then
-        if [[ -f "/run/secrets/$PROXY_PASSWORD_SECRET" ]]; then
+    elif [ -f "/run/secrets/$PROXY_USERNAME_SECRET" ]; then
+        if [ -f "/run/secrets/$PROXY_PASSWORD_SECRET" ]; then
             log "Configuring proxy authentication."
-            echo -e "\nBasicAuth $(cat /run/secrets/$PROXY_USERNAME_SECRET) $(cat /run/secrets/$PROXY_PASSWORD_SECRET)" >> /data/tinyproxy.conf
+            printf '\nBasicAuth %s %s\n' "$(cat /run/secrets/$PROXY_USERNAME_SECRET)" "$(cat /run/secrets/$PROXY_PASSWORD_SECRET)" >> /data/tinyproxy.conf
         else
             log "Credentials secrets not read. Starting HTTP proxy without credentials." "WARNING"
         fi
@@ -260,24 +260,24 @@ if [[ "$HTTP_PROXY" == "on" ]]; then
     /data/scripts/tinyproxy_wrapper.sh &
 fi
 
-if [[ "$SOCKS_PROXY" == "on" ]]; then
-    if [[ -n "$LISTEN_ON" ]]; then
+if [ "$SOCKS_PROXY" = "on" ]; then
+    if [ -n "$LISTEN_ON" ]; then
             sed -i "s/internal: eth0/internal: $LISTEN_ON/" /data/sockd.conf
     fi
-    if [[ -n "$PROXY_USERNAME" ]]; then
-        if [[ -n "$PROXY_PASSWORD" ]]; then
+    if [ -n "$PROXY_USERNAME" ]; then
+        if [ -n "$PROXY_PASSWORD" ]; then
             log "Configuring SOCKS proxy authentication."
             adduser -S -D -g "$PROXY_USERNAME" -H -h /dev/null "$PROXY_USERNAME"
-            echo "$PROXY_USERNAME:$PROXY_PASSWORD" | chpasswd 2> /dev/null
+            printf '%s:%s\n' "$PROXY_USERNAME" "$PROXY_PASSWORD" | chpasswd 2>/dev/null
             sed -i 's/socksmethod: none/socksmethod: username/' /data/sockd.conf
         else
             log "Proxy username supplied without password. Starting SOCKS proxy without credentials." "WARNING"
         fi
-    elif [[ -f "/run/secrets/$PROXY_USERNAME_SECRET" ]]; then
-        if [[ -f "/run/secrets/$PROXY_PASSWORD_SECRET" ]]; then
+    elif [ -f "/run/secrets/$PROXY_USERNAME_SECRET" ]; then
+        if [ -f "/run/secrets/$PROXY_PASSWORD_SECRET" ]; then
             log "Configuring proxy authentication."
             adduser -S -D -g "$(cat /run/secrets/$PROXY_USERNAME_SECRET)" -H -h /dev/null "$(cat /run/secrets/$PROXY_USERNAME_SECRET)"
-            echo "$(cat /run/secrets/$PROXY_USERNAME_SECRET):$(cat /run/secrets/$PROXY_PASSWORD_SECRET)" | chpasswd 2> /dev/null
+            printf '%s:%s\n' "$(cat /run/secrets/$PROXY_USERNAME_SECRET)" "$(cat /run/secrets/$PROXY_PASSWORD_SECRET)" | chpasswd 2>/dev/null
             sed -i 's/socksmethod: none/socksmethod: username/' /data/sockd.conf
         else
             log "Credentials secrets not present. Starting SOCKS proxy without credentials." "WARNING"
@@ -286,21 +286,20 @@ if [[ "$SOCKS_PROXY" == "on" ]]; then
     /data/scripts/dante_wrapper.sh &
 fi
 
-openvpn_args=(
-    "--config" "$config_file_modified"
-    "--auth-nocache"
-    "--cd" "/data/vpn"
-    "--pull-filter" "ignore" "ifconfig-ipv6"
-    "--pull-filter" "ignore" "route-ipv6"
-    "--script-security" "2"
-    "--up-restart"
-    "--verb" "$vpn_log_level"
-)
+set -- \
+    --config "$config_file_modified" \
+    --auth-nocache \
+    --cd /data/vpn \
+    --pull-filter ignore ifconfig-ipv6 \
+    --pull-filter ignore route-ipv6 \
+    --script-security 2 \
+    --up-restart \
+    --verb "$vpn_log_level"
 
-if [[ -n "$VPN_AUTH_SECRET" ]]; then
-    if [[ -f "/run/secrets/$VPN_AUTH_SECRET" ]]; then
+if [ -n "$VPN_AUTH_SECRET" ]; then
+    if [ -f "/run/secrets/$VPN_AUTH_SECRET" ]; then
         log "Configuring OpenVPN authentication."
-        openvpn_args+=("--auth-user-pass" "/run/secrets/$VPN_AUTH_SECRET")
+        set -- "$@" --auth-user-pass "/run/secrets/$VPN_AUTH_SECRET"
     else
         log "OpenVPN credentials secrets not present." "WARNING"
     fi
@@ -308,7 +307,7 @@ fi
 
 log "Running OpenVPN client."
 
-openvpn "${openvpn_args[@]}" &
+openvpn "$@" &
 openvpn_child=$!
 
 wait $openvpn_child
