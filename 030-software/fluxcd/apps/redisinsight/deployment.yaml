@@ -37,7 +37,7 @@ spec:
               value: "https://redisinsight.${domain}"
           ports:
             - name: http
-              containerPort: 8001
+              containerPort: 5540
               protocol: TCP
           startupProbe:
             tcpSocket:
