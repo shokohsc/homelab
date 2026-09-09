@@ -9,7 +9,7 @@ resources:
   - cloudflared
   - cloudnativepg
   - commander
-  - deluge
+  # - deluge
   - external-dns
   - external-services
   # - fan-control
