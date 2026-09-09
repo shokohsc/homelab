@@ -10,13 +10,6 @@ spec:
     - Egress
   egress:
     - to:
-        - namespaceSelector:
-            matchLabels:
-              namespace: sidekick
-          podSelector:
-            matchLabels:
-              app: api
-    - to:
         - namespaceSelector: {}
           podSelector:
             matchLabels:
@@ -24,6 +17,13 @@ spec:
       ports:
         - port: 53
           protocol: UDP
+    - to:
+        - namespaceSelector:
+            matchLabels:
+              namespace: sidekick
+          podSelector:
+            matchLabels:
+              app: api
     - to:
         - podSelector: {}
     - to:

@@ -22,7 +22,7 @@ spec:
     - toEndpoints:
         - matchLabels:
             app: api
-            io.kubernetes.pod.namespace.labels.namespace: sidekick
+            io.kubernetes.pod.namespace: sidekick
     - toEndpoints:
         - {}
     - toEntities:
