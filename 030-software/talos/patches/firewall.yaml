@@ -106,6 +106,18 @@ ingress:
 ---
 apiVersion: v1alpha1
 kind: NetworkRuleConfig
+name: vpn-egress-gateway
+portSelector:
+  ports:
+    # - 8472
+    - 4789
+  protocol: udp
+ingress:
+  - subnet: 10.244.0.0/0
+  - subnet: 10.42.20.0/0
+---
+apiVersion: v1alpha1
+kind: NetworkRuleConfig
 name: syslog
 portSelector:
   ports:

@@ -29,7 +29,7 @@ spec:
             - name: VXLAN_ID
               value: "42"
             - name: VXLAN_PORT
-              value: "4789"
+              value: "8472"
             - name: VXLAN_NET
               value: 10.255.0.0/16
             - name: CLUSTER_SERVICES_CIDR
@@ -40,6 +40,13 @@ spec:
               value: 172.16.0.0/24
             - name: TUN_IF
               value: tun0"
+          ports:
+            # - name: vxlan
+            #   containerPort: 8472
+            #   protocol: UDP
+            - name: cilium
+              containerPort: 4789
+              protocol: UDP
           startupProbe:
             exec:
               command:

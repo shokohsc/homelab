@@ -10,8 +10,14 @@ spec:
   selector:
     app: vpn-egress-gateway
   ports:
-    - port: 1194
-      name: vpn
+    # - port: 8472
+    #   targetPort: vxlan
+    #   protocol: UDP
+    #   name: vxlan
+    - port: 4789
+      targetPort: cilium
+      protocol: UDP
+      name: cilium
 ---
 apiVersion: v1
 kind: Service
@@ -25,5 +31,5 @@ spec:
     app: vpn-egress-webhook
   ports:
     - port: 443
-      targetPort: 8443
+      targetPort: https
       name: https
