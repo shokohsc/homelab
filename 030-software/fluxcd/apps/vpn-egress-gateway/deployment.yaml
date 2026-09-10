@@ -45,7 +45,7 @@ spec:
           volumeMounts:
             - name: openvpn
               mountPath: /etc/openvpn
-            - name: devices-net
+            - name: tun-device
               mountPath: /dev/net
       volumes:
         - name: openvpn
