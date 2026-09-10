@@ -20,7 +20,7 @@ spec:
       automountServiceAccountToken: false
       initContainers:
         - name: fetchconfig
-          image: ghcr.io/shokohsc/gateway:ed9ce66
+          image: ghcr.io/shokohsc/gateway:1518642
           command: ["/usr/local/bin/fetchconfig.sh"]
           env:
             - name: CONFIG_URL
@@ -30,7 +30,7 @@ spec:
               mountPath: /etc/openvpn
       containers:
         - name: gateway
-          image: ghcr.io/shokohsc/gateway:ed9ce66
+          image: ghcr.io/shokohsc/gateway:1518642
           securityContext:
             privileged: true
           env:
@@ -39,9 +39,7 @@ spec:
             - name: GATEWAY_CIDR
               value: 172.16.0.0/24
             - name: VPN_SERVER_IP
-              valueFrom:
-                fieldRef:
-                  fieldPath: status.podIP
+              value: 10.97.237.172
             - name: TUN_IF
               value: tunl0"
           volumeMounts:
@@ -78,7 +76,7 @@ spec:
           type: RuntimeDefault
       containers:
         - name: webhook
-          image: ghcr.io/shokohsc/vpn-egress-gateway:ed9ce66
+          image: ghcr.io/shokohsc/vpn-egress-gateway:1518642
           securityContext:
             allowPrivilegeEscalation: false
             readOnlyRootFilesystem: true
@@ -100,11 +98,9 @@ spec:
             - name: GATEWAY_CIDR
               value: 172.16.0.0/24
             - name: VPN_SERVER_IP
-              valueFrom:
-                fieldRef:
-                  fieldPath: status.podIP
+              value: 10.97.237.172
             - name: ROUTING_INIT_IMAGE
-              value: ghcr.io/shokohsc/routing-init:ed9ce66
+              value: ghcr.io/shokohsc/routing-init:1518642
           ports:
             - containerPort: 8443
               name: https
@@ -116,7 +112,7 @@ spec:
               port: http
           readinessProbe:
             httpGet:
-              path: /
+              path: /healthz
               port: http
           resources:
             limits:
