@@ -180,7 +180,7 @@ spec:
               mountPath: /data/scripts/entry.sh
               subPath: entry.sh
             - name: tun-device
-              mountPath: /dev/net/tun
+              mountPath: /dev/net
               readOnly: true
             - name: profile
               mountPath: /data/vpn
@@ -239,7 +239,7 @@ spec:
         # https://stackoverflow.com/questions/70089374/openvpn-client-in-kubernetes-pod
         - name: tun-device
           hostPath:
-            path: /dev/net/tun
+            path: /dev/net
         - name: profile
           emptyDir:
             medium: Memory
