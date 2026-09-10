@@ -131,7 +131,7 @@ spec:
             - name: VXLAN_NET
               value: 10.255.0.0/16
             - name: GATEWAY_IP
-              value: vpn-egress-gateway.vpn-egress-gateway.svc.cluster.local
+              value: 10.244.4.110
             - name: CLUSTER_SERVICES_CIDR
               value: 10.96.0.0/12
             - name: CLUSTER_CIDR
