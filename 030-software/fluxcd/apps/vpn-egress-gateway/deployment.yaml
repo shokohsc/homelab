@@ -20,7 +20,7 @@ spec:
       automountServiceAccountToken: false
       initContainers:
         - name: fetchconfig
-          image: ghcr.io/shokohsc/gateway:b140c0a
+          image: ghcr.io/shokohsc/gateway:1a40d68
           command: ["/usr/local/bin/fetchconfig.sh"]
           env:
             - name: CONFIG_URL
@@ -30,10 +30,16 @@ spec:
               mountPath: /etc/openvpn
       containers:
         - name: gateway
-          image: ghcr.io/shokohsc/gateway:b140c0a
+          image: ghcr.io/shokohsc/gateway:1a40d68
           securityContext:
             privileged: true
           env:
+            - name: VXLAN_ID
+              value: "42"
+            - name: VXLAN_PORT
+              value: "4789"
+            - name: VXLAN_NET
+              value: 10.255.0.0/16
             - name: CLUSTER_CIDR
               value: 10.244.0.0/16
             - name: GATEWAY_CIDR
@@ -83,7 +89,7 @@ spec:
           type: RuntimeDefault
       containers:
         - name: webhook
-          image: ghcr.io/shokohsc/vpn-egress-gateway:b140c0a
+          image: ghcr.io/shokohsc/vpn-egress-gateway:1a40d68
           securityContext:
             allowPrivilegeEscalation: false
             readOnlyRootFilesystem: true
@@ -98,8 +104,14 @@ spec:
               value: /etc/webhook/tls/tls.key
             - name: LISTEN_ADDR
               value: ":8443"
+            - name: VXLAN_ID
+              value: "42"
+            - name: VXLAN_PORT
+              value: "4789"
+            - name: VXLAN_NET
+              value: 10.255.0.0/16
             - name: GATEWAY_IP
-              value: 10.97.237.172
+              value: vpn-egress-gateway.vpn-egress-gateway.svc.cluster.local
             - name: CLUSTER_CIDR
               value: 10.244.0.0/16
             - name: GATEWAY_CIDR
@@ -107,7 +119,7 @@ spec:
             - name: VPN_SERVER_IP
               value: 10.97.237.172
             - name: ROUTING_INIT_IMAGE
-              value: ghcr.io/shokohsc/routing-init:b140c0a
+              value: ghcr.io/shokohsc/routing-init:1a40d68
             - name: ANNOTATION_KEY
               value: "routed-gateway"
           ports:
