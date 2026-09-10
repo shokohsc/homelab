@@ -58,19 +58,19 @@ spec:
           name: nfs-downloads
         - mountPath: /watch
           name: nfs-shared
-        - mountPath: /config/core.conf
+        - mountPath: /defaults/core.conf
           name: settings
           subPath: core.conf
-        - mountPath: /config/web.conf
+        - mountPath: /defaults/web.conf
           name: settings
           subPath: web.conf
-        - mountPath: /config/autoadd.conf
+        - mountPath: /defaults/autoadd.conf
           name: settings
           subPath: autoadd.conf
-        - mountPath: /config/hostlist.conf
+        - mountPath: /defaults/hostlist.conf
           name: settings
           subPath: hostlist.conf
-        - mountPath: /config/auth
+        - mountPath: /defaults/auth
           name: creds
           subPath: auth
           readOnly: true
