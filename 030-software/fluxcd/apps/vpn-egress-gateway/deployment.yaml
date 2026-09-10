@@ -47,6 +47,13 @@ spec:
               mountPath: /etc/openvpn
             - name: tun-device
               mountPath: /dev/net
+          resources:
+            limits:
+              cpu: 1000m
+              memory: 2048M
+            requests:
+              cpu: 10m
+              memory: 64M
       volumes:
         - name: openvpn
           emptyDir: {}
