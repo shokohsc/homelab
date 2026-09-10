@@ -18,9 +18,18 @@ spec:
         seccompProfile:
           type: RuntimeDefault
       automountServiceAccountToken: false
-      initContainers:
+      containers:
         - name: fetchconfig
           image: ghcr.io/shokohsc/gateway:779ee29
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            runAsUser: 1000
+            runAsGroup: 1000
+            runAsNonRoot: true
+            capabilities:
+              drop:
+                - ALL
           command: ["/usr/local/bin/fetchconfig.sh"]
           env:
             - name: CONFIG_URL
@@ -28,7 +37,6 @@ spec:
           volumeMounts:
             - name: openvpn
               mountPath: /etc/openvpn
-      containers:
         - name: gateway
           image: ghcr.io/shokohsc/gateway:779ee29
           securityContext:
