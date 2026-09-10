@@ -99,7 +99,7 @@ spec:
             - name: LISTEN_ADDR
               value: ":8443"
             - name: GATEWAY_IP
-              value: vpn-egress-gateway.vpn-egress-gateway.svc.cluster.local
+              value: 10.97.237.172
             - name: CLUSTER_CIDR
               value: 10.244.0.0/16
             - name: GATEWAY_CIDR
