@@ -19,29 +19,13 @@ spec:
           type: RuntimeDefault
       automountServiceAccountToken: false
       containers:
-        - name: fetchconfig
-          image: ghcr.io/shokohsc/gateway:779ee29
-          securityContext:
-            allowPrivilegeEscalation: false
-            readOnlyRootFilesystem: true
-            runAsUser: 1000
-            runAsGroup: 1000
-            runAsNonRoot: true
-            capabilities:
-              drop:
-                - ALL
-          command: ["/usr/local/bin/fetchconfig.sh"]
-          env:
-            - name: CONFIG_URL
-              value: http://api.sidekick.svc.cluster.local:3000/vpn/profile/ovpn
-          volumeMounts:
-            - name: openvpn
-              mountPath: /etc/openvpn
         - name: gateway
-          image: ghcr.io/shokohsc/gateway:779ee29
+          image: ghcr.io/shokohsc/gateway:cd5343c
           securityContext:
             privileged: true
           env:
+            - name: CONFIG_URL
+              value: http://api.sidekick.svc.cluster.local:3000/vpn/profile/ovpn
             - name: VXLAN_ID
               value: "42"
             - name: VXLAN_PORT
@@ -118,7 +102,7 @@ spec:
           type: RuntimeDefault
       containers:
         - name: webhook
-          image: ghcr.io/shokohsc/vpn-egress-gateway:779ee29
+          image: ghcr.io/shokohsc/vpn-egress-gateway:cd5343c
           securityContext:
             allowPrivilegeEscalation: false
             readOnlyRootFilesystem: true
@@ -148,7 +132,7 @@ spec:
             - name: VPN_SERVER_IP
               value: 10.97.237.172
             - name: ROUTING_INIT_IMAGE
-              value: ghcr.io/shokohsc/routing-init:779ee29
+              value: ghcr.io/shokohsc/routing-init:cd5343c
             - name: ANNOTATION_KEY
               value: "routed-gateway"
           ports:
