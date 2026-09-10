@@ -21,7 +21,7 @@ webhooks:
         name: vpn-egress-webhook
         namespace: vpn-egress-gateway
         path: /mutate
-        port: https
+        port: 443
     admissionReviewVersions: ["v1"]
     sideEffects: None
     failurePolicy: Fail
