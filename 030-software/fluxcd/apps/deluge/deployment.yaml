@@ -74,6 +74,8 @@ spec:
           name: creds
           subPath: auth
           readOnly: true
+        - mountPath: /tmp
+          name: temp
         startupProbe:
           tcpSocket:
             port: http
@@ -114,3 +116,5 @@ spec:
       - name: creds
         secret:
           secretName: auth
+      - name: temp
+        emptyDir: {}
