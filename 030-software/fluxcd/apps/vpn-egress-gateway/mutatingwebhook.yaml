@@ -6,10 +6,8 @@ metadata:
   annotations:
     cert-manager.io/inject-ca-from: vpn-egress-gateway/vpn-egress-gateway-webhook-ca
 webhooks:
-  - name: vpn-egress.svc.cluster.local
-    namespaceSelector:
-      matchLabels:
-        routed-gateway: "true"
+  - name: vpn-egress.shokohsc.com
+    namespaceSelector: {}
     rules:
       - apiGroups: [""]
         apiVersions: ["v1"]
