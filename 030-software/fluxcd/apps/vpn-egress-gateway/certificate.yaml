@@ -30,3 +30,4 @@ spec:
   - vpn-egress-gateway-webhook.vpn-egress-gateway.svc
   - vpn-egress-gateway-webhook.vpn-egress-gateway.svc.cluster
   - vpn-egress-gateway-webhook.vpn-egress-gateway.svc.cluster.local
+  - vpn-egress-webhook.vpn-egress-gateway.svc
