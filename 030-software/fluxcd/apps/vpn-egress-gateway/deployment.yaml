@@ -104,6 +104,8 @@ spec:
           ports:
             - containerPort: 8443
               name: https
+            - containerPort: 8080
+              name: healthz
           startupProbe:
             tcpSocket:
               port: http
@@ -113,7 +115,7 @@ spec:
           readinessProbe:
             httpGet:
               path: /healthz
-              port: http
+              port: healthz
           resources:
             limits:
               cpu: 1000m
