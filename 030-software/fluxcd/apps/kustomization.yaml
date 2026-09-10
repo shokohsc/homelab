@@ -55,6 +55,6 @@ resources:
   - victoria-logs-collector
   - victoria-metrics
   - vpn-egress-gateway
-  - vuio
+  # - vuio
   # - whoami
   - zipkin
