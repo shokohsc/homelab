@@ -39,7 +39,9 @@ spec:
             - name: GATEWAY_CIDR
               value: 172.16.0.0/24
             - name: VPN_SERVER_IP
-              value: ""
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.podIP
             - name: TUN_IF
               value: tunl0"
           volumeMounts:
