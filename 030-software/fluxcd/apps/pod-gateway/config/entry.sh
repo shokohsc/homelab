@@ -212,7 +212,7 @@ EOF
                 log "    IP: $address PORT: $port PROTOCOL: $protocol"
                 nft_rule output "oif eth0 ip daddr $address $protocol dport $port accept" "${header} Allow $protocol to $address:$port"
             else
-                for ip in $(dig -4 +short "$address"); do
+                for ip in $(nslookup "$address" 2>/dev/null | awk '/^Name:/{f=1}f && /^Address/{print $2}'); do
                     log "    $address (IP: $ip PORT: $port PROTOCOL: $protocol)"
                     nft_rule output "oif eth0 ip daddr $ip $protocol dport $port accept" "${header} Allow $protocol to $ip:$port"
                     printf '%s %s\n' "$ip" "$address" >> /etc/hosts
@@ -220,6 +220,8 @@ EOF
             fi
         fi
     done
+
+    ip link show
 
     log "Allowing connections over VPN interface..."
     nft_rule input "iif tun0 accept" "${header} Allow VPN input"

@@ -50,7 +50,7 @@ echo $HOSTNAME_REAL
 
 # Derived settings
 K8S_DNS_IP="$(cut -d ' ' -f 1 <<< "$K8S_DNS_IPS")"
-GATEWAY_IP="$(dig +short "$GATEWAY_NAME" "@${K8S_DNS_IP}")"
+GATEWAY_IP="$(nslookup "$GATEWAY_NAME" "$K8S_DNS_IP" 2>/dev/null | awk '/^Name:/{f=1}f && /^Address/{print $2}')"
 NAT_ENTRY="$(grep "^$HOSTNAME_REAL " /config/nat.conf || true)"
 VXLAN_GATEWAY_IP="${VXLAN_IP_NETWORK}.1"
 
