@@ -13,7 +13,7 @@ webhooks:
         apiVersions: ["v1"]
         resources: ["pods"]
         operations: ["CREATE"]
-        scope: Namespaced
+        scope: '*'
     clientConfig:
       service:
         name: vpn-egress-webhook
