@@ -69,9 +69,23 @@ spec:
       labels:
         app: vpn-egress-webhook
     spec:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        seccompProfile:
+          type: RuntimeDefault
       containers:
         - name: webhook
           image: ghcr.io/shokohsc/vpn-egress-gateway:ed9ce66
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+            capabilities:
+              drop:
+                - ALL
           env:
             - name: TLS_CERT_FILE
               value: /etc/webhook/tls/tls.crt
