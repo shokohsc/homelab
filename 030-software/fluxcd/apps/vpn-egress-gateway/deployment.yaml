@@ -106,6 +106,23 @@ spec:
           ports:
             - containerPort: 8443
               name: https
+          startupProbe:
+            tcpSocket:
+              port: http
+          livenessProbe:
+            tcpSocket:
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+          resources:
+            limits:
+              cpu: 1000m
+              memory: 1024M
+            requests:
+              cpu: 10m
+              memory: 64M
           volumeMounts:
             - name: webhook-tls
               mountPath: /etc/webhook/tls
