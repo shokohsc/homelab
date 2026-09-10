@@ -13,7 +13,7 @@ resources:
   - external-dns
   - external-services
   # - fan-control
-  - ferretdb
+  # - ferretdb
   # - freellmapi
   - gatekeeper
   - grafana

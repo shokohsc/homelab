@@ -8,4 +8,4 @@ resources:
   - mutatingwebhook.yaml
   - certificate.yaml
   - issuer.yaml
-  - cilium-network-policy.yaml
+  # - cilium-network-policy.yaml
