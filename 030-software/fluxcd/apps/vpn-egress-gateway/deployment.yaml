@@ -20,7 +20,7 @@ spec:
       automountServiceAccountToken: false
       containers:
         - name: gateway
-          image: ghcr.io/shokohsc/gateway:cd5343c
+          image: ghcr.io/shokohsc/gateway:4106119
           securityContext:
             privileged: true
           env:
@@ -102,7 +102,7 @@ spec:
           type: RuntimeDefault
       containers:
         - name: webhook
-          image: ghcr.io/shokohsc/vpn-egress-gateway:cd5343c
+          image: ghcr.io/shokohsc/vpn-egress-gateway:4106119
           securityContext:
             allowPrivilegeEscalation: false
             readOnlyRootFilesystem: true
@@ -132,7 +132,7 @@ spec:
             - name: VPN_SERVER_IP
               value: 10.97.237.172
             - name: ROUTING_INIT_IMAGE
-              value: ghcr.io/shokohsc/routing-init:cd5343c
+              value: ghcr.io/shokohsc/routing-init:4106119
             - name: ANNOTATION_KEY
               value: "routed-gateway"
           ports:
