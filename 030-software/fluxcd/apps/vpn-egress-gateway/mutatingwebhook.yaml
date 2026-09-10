@@ -1,0 +1,28 @@
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingWebhookConfiguration
+metadata:
+  name: vpn-egress-webhook
+  annotations:
+    cert-manager.io/inject-ca-from: vpn-egress-gateway/vpn-egress-gateway-webhook-ca
+webhooks:
+  - name: vpn-egress.svc.cluster.local
+    namespaceSelector:
+      matchLabels:
+        routed-gateway: "true"
+    rules:
+      - apiGroups: [""]
+        apiVersions: ["v1"]
+        resources: ["pods"]
+        operations: ["CREATE"]
+        scope: Namespaced
+    clientConfig:
+      service:
+        name: vpn-egress-webhook
+        namespace: vpn-egress-gateway
+        path: /mutate
+        port: https
+    admissionReviewVersions: ["v1"]
+    sideEffects: None
+    failurePolicy: Fail
+    reinvocationPolicy: IfNeeded

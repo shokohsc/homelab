@@ -1,0 +1,100 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vpn-egress-gateway
+spec:
+  revisionHistoryLimit: 0
+  selector:
+    matchLabels:
+      app: vpn-egress-gateway
+  template:
+    metadata:
+      labels:
+        app: vpn-egress-gateway
+        policy.gatekeeper.sh/ignore: "true"
+    spec:
+      securityContext:
+        seccompProfile:
+          type: RuntimeDefault
+      automountServiceAccountToken: false
+      initContainers:
+        - name: fetchconfig
+          image: ghcr.io/shokohsc/gateway:f7e2719
+          command: ["/usr/local/bin/fetchconfig.sh"]
+          env:
+            - name: CONFIG_URL
+              value: http://api.sidekick.svc.cluster.local:3000/vpn/profile/ovpn
+          volumeMounts:
+            - name: openvpn
+              mountPath: /etc/openvpn
+      containers:
+        - name: gateway
+          image: ghcr.io/shokohsc/gateway:f7e2719
+          securityContext:
+            privileged: true
+          env:
+            - name: CLUSTER_CIDR
+              value: 10.244.0.0/16
+            - name: GATEWAY_CIDR
+              value: 172.16.0.0/24
+            - name: VPN_SERVER_IP
+              value: ""
+            - name: TUN_IF
+              value: tunl0"
+          volumeMounts:
+            - name: openvpn
+              mountPath: /etc/openvpn
+            - name: devices-net
+              mountPath: /dev/net
+      volumes:
+        - name: openvpn
+          emptyDir: {}
+        - name: tun-device
+          hostPath:
+            path: /dev/net
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vpn-egress-webhook
+spec:
+  selector:
+    matchLabels:
+      app: vpn-egress-webhook
+  template:
+    metadata:
+      labels:
+        app: vpn-egress-webhook
+    spec:
+      containers:
+        - name: webhook
+          image: ghcr.io/shokohsc/vpn-egress-gateway:f7e2719
+          env:
+            - name: TLS_CERT_FILE
+              value: /etc/webhook/tls/tls.crt
+            - name: TLS_KEY_FILE
+              value: /etc/webhook/tls/tls.key
+            - name: LISTEN_ADDR
+              value: ":8443"
+            - name: GATEWAY_IP
+              value: {{ .Values.gatewayIP | quote }}
+            - name: CLUSTER_CIDR
+              value: 10.244.0.0/16
+            - name: GATEWAY_CIDR
+              value: 172.16.0.0/24
+            - name: VPN_SERVER_IP
+              value: ""
+            - name: ROUTING_INIT_IMAGE
+              value: ghcr.io/shokohsc/routing-init:f7e2719
+          ports:
+            - containerPort: 8443
+              name: https
+          volumeMounts:
+            - name: webhook-tls
+              mountPath: /etc/webhook/tls
+              readOnly: true
+      volumes:
+        - name: webhook-tls
+          secret:
+            secretName: vpn-egress-gateway-webhook-tls

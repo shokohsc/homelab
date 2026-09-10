@@ -1,0 +1,30 @@
+---
+# Generate a CA Certificate used to sign certificates for the webhook
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: vpn-egress-gateway-webhook-ca
+spec:
+  secretName: vpn-egress-gateway-webhook-ca
+  duration: 43800h # 5y
+  issuerRef:
+    name: vpn-egress-gateway-webhook-selfsign
+    kind: Issuer
+  commonName: "ca.vpn-egress-gateway.cert-manager"
+  isCA: true
+---
+# Finally, generate a serving certificate for the webhook to use
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: vpn-egress-gateway-webhook-tls
+spec:
+  secretName: vpn-egress-gateway-webhook-tls
+  duration: 8760h # 1y
+  issuerRef:
+    name: vpn-egress-gateway-webhook-ca
+    kind: Issuer
+  dnsNames:
+  - vpn-egress-gateway-webhook
+  - vpn-egress-gateway-webhook.vpn-egress-gateway
+  - vpn-egress-gateway-webhook.vpn-egress-gateway.svc

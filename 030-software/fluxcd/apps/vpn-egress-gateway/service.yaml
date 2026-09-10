@@ -1,0 +1,29 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: vpn-egress-gateway
+  labels:
+    app: vpn-egress-gateway
+spec:
+  type: ClusterIP
+  selector:
+    app: vpn-egress-gateway
+  ports:
+    - port: 1194
+      name: vpn
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: vpn-egress-webhook
+  labels:
+    app: vpn-egress-webhook
+spec:
+  type: ClusterIP
+  selector:
+    app: vpn-egress-webhook
+  ports:
+    - port: 443
+      targetPort: 8443
+      name: https

@@ -33,7 +33,7 @@ resources:
   # - omniroute
   - plex
   - pocket-id
-  - pod-gateway
+  # - pod-gateway
   - proxmox
   # - pyload
   # - radio
@@ -54,6 +54,7 @@ resources:
   - victoria-logs
   - victoria-logs-collector
   - victoria-metrics
+  - vpn-egress-gateway
   - vuio
   # - whoami
   - zipkin
