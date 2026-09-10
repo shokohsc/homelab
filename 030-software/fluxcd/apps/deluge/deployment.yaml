@@ -26,16 +26,16 @@ spec:
           type: RuntimeDefault
       containers:
       - name: deluge
-        image: lib42/deluge:2.1.1
-        securityContext:
-          allowPrivilegeEscalation: false
-          readOnlyRootFilesystem: true
-          runAsUser: 1000
-          runAsGroup: 1000
-          runAsNonRoot: true
-          capabilities:
-            drop:
-              - ALL
+        image: linuxserver/deluge:2.2.0-libtorrentv1
+        # securityContext:
+        #   allowPrivilegeEscalation: false
+        #   readOnlyRootFilesystem: true
+        #   runAsUser: 1000
+        #   runAsGroup: 1000
+        #   runAsNonRoot: true
+        #   capabilities:
+        #     drop:
+        #       - ALL
         env:
         - name: PGID
           value: "1000"
