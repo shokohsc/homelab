@@ -17,6 +17,7 @@ spec:
       labels:
         app: deluge
         policy.gatekeeper.sh/ignore: "true"
+      annotations:
         routed-gateway: "true"
     spec:
       automountServiceAccountToken: false
