@@ -78,7 +78,7 @@ spec:
             - name: LISTEN_ADDR
               value: ":8443"
             - name: GATEWAY_IP
-              value: {{ .Values.gatewayIP | quote }}
+              value: vpn-egress-gateway.vpn-egress-gateway.svc.cluster.local
             - name: CLUSTER_CIDR
               value: 10.244.0.0/16
             - name: GATEWAY_CIDR
