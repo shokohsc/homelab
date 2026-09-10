@@ -224,8 +224,8 @@ EOF
     ip link show
 
     log "Allowing connections over VPN interface..."
-    nft_rule input "iif tun0 accept" "${header} Allow VPN input"
-    nft_rule output "oif tun0 accept" "${header} Allow VPN output"
+    nft_rule input "iif tunl0 accept" "${header} Allow VPN input"
+    nft_rule output "oif tunl0 accept" "${header} Allow VPN output"
 
     # log "Allowing traffic to port 8080 for kubelet readiness probe..."
     # nft add rule ip killswitch input tcp dport 8080 accept comment "${header} Allow traffic to port 8080 for kubelet readiness probe"
