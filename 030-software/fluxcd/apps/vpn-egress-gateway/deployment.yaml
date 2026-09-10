@@ -48,6 +48,27 @@ spec:
               value: 10.97.237.172
             - name: TUN_IF
               value: tun0"
+          startupProbe:
+            exec:
+              command:
+                - ip
+                - a
+                - s
+                - tun0
+          readinessProbe:
+            exec:
+              command:
+                - ip
+                - a
+                - s
+                - tun0
+          livenessProbe:
+            exec:
+              command:
+                - nc
+                - -zv
+                - google.com
+                - "443"
           volumeMounts:
             - name: openvpn
               mountPath: /etc/openvpn
