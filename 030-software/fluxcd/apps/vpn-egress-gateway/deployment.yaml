@@ -20,7 +20,7 @@ spec:
       automountServiceAccountToken: false
       initContainers:
         - name: fetchconfig
-          image: ghcr.io/shokohsc/gateway:f7e2719
+          image: ghcr.io/shokohsc/gateway:ed9ce66
           command: ["/usr/local/bin/fetchconfig.sh"]
           env:
             - name: CONFIG_URL
@@ -30,7 +30,7 @@ spec:
               mountPath: /etc/openvpn
       containers:
         - name: gateway
-          image: ghcr.io/shokohsc/gateway:f7e2719
+          image: ghcr.io/shokohsc/gateway:ed9ce66
           securityContext:
             privileged: true
           env:
@@ -71,7 +71,7 @@ spec:
     spec:
       containers:
         - name: webhook
-          image: ghcr.io/shokohsc/vpn-egress-gateway:f7e2719
+          image: ghcr.io/shokohsc/vpn-egress-gateway:ed9ce66
           env:
             - name: TLS_CERT_FILE
               value: /etc/webhook/tls/tls.crt
@@ -88,7 +88,7 @@ spec:
             - name: VPN_SERVER_IP
               value: ""
             - name: ROUTING_INIT_IMAGE
-              value: ghcr.io/shokohsc/routing-init:f7e2719
+              value: ghcr.io/shokohsc/routing-init:ed9ce66
           ports:
             - containerPort: 8443
               name: https
