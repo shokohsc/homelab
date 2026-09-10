@@ -41,7 +41,7 @@ spec:
             - name: VPN_SERVER_IP
               value: 10.97.237.172
             - name: TUN_IF
-              value: tunl0"
+              value: tun0"
           volumeMounts:
             - name: openvpn
               mountPath: /etc/openvpn
