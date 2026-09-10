@@ -115,10 +115,10 @@ spec:
               name: healthz
           startupProbe:
             tcpSocket:
-              port: http
+              port: healthz
           livenessProbe:
             tcpSocket:
-              port: http
+              port: healthz
           readinessProbe:
             httpGet:
               path: /healthz
