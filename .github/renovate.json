@@ -29,11 +29,15 @@
       "matchUpdateTypes": ["minor", "patch"]
     },
     {
+      "automerge": true,
+      "ignoreTests": true,
       "labels": ["renovate/patch"],
       "matchCurrentVersion": "!/^0/",
       "matchUpdateTypes": ["patch"]
     },
     {
+      "automerge": true,
+      "ignoreTests": true,
       "labels": ["renovate/minor"],
       "matchCurrentVersion": "!/^0/",
       "matchUpdateTypes": ["minor"]
