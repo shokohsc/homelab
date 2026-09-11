@@ -25,12 +25,6 @@
     {
       "automerge": true,
       "ignoreTests": true,
-      "matchCurrentVersion": "!/^0/",
-      "matchUpdateTypes": ["minor", "patch"]
-    },
-    {
-      "automerge": true,
-      "ignoreTests": true,
       "labels": ["renovate/patch"],
       "matchCurrentVersion": "!/^0/",
       "matchUpdateTypes": ["patch"]
