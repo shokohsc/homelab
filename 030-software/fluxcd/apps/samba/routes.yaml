@@ -10,7 +10,7 @@ spec:
       sectionName: netbios
   rules:
     - backendRefs:
-        - name: netbios
+        - name: samba
           port: 139
 ---
 apiVersion: gateway.networking.k8s.io/v1
@@ -24,5 +24,5 @@ spec:
       sectionName: smb
   rules:
     - backendRefs:
-        - name: smb
+        - name: samba
           port: 445
