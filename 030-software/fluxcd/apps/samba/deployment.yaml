@@ -74,7 +74,11 @@ spec:
             - name: nfs-hanzo
               mountPath: /public/nfs/hanzo
             - name: temp
+              mountPath: /etc/samba
+            - name: data
               mountPath: /homes
+            - name: logs
+              mountPath: /var/log/samba
           startupProbe:
             tcpSocket:
               port: netbios
@@ -100,5 +104,9 @@ spec:
           nfs:
             path: /
             server: hanzo.home.arpa
+        - name: data
+          emptyDir: {}
         - name: temp
+          emptyDir: {}
+        - name: logs
           emptyDir: {}
