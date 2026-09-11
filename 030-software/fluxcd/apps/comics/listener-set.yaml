@@ -1,0 +1,32 @@
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: ListenerSet
+metadata:
+  name: comics
+spec:
+  parentRef:
+    namespace: cilium
+    name: cilium
+    kind: Gateway
+    group: gateway.networking.k8s.io
+  listeners:
+  - name: api
+    hostname: api.comics.${domain}
+    protocol: HTTPS
+    port: 443
+    tls:
+      mode: Terminate
+      certificateRefs:
+      - kind: Secret
+        group: ""
+        name: api-cert
+  - name: apollo
+    hostname: apollo.comics.${domain}
+    protocol: HTTPS
+    port: 443
+    tls:
+      mode: Terminate
+      certificateRefs:
+      - kind: Secret
+        group: ""
+        name: apollo-cert

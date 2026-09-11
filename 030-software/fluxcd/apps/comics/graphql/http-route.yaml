@@ -7,8 +7,10 @@ spec:
   hostnames:
   - apollo.comics.${domain}
   parentRefs:
-  - name: cilium
-    namespace: cilium
+  - name: comics
+    kind: ListenerSet
+    group: gateway.networking.k8s.io
+    sectionName: apollo
   rules:
   - backendRefs:
     - name: graphql
