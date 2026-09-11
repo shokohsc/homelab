@@ -57,8 +57,8 @@ spec:
               name: nfs-genji
             - mountPath: /var/lib/sftpgo/nfs/hanzo
               name: nfs-hanzo
-            # - mountPath: /var/lib/sftpgo/nfs/downloads
-            #   name: nfs-downloads
+            - mountPath: /var/lib/sftpgo/nfs/downloads
+              name: nfs-downloads
           startupProbe:
             tcpSocket:
               port: ssh
@@ -93,7 +93,7 @@ spec:
           nfs:
             path: /
             server: hanzo.home.arpa
-        # - name: nfs-downloads
-        #   nfs:
-        #     path: /
-        #     server: nfs-downloads.nfs-downloads.svc.cluster.local
+        - name: nfs-downloads
+          nfs:
+            path: /
+            server: 10.102.22.211
