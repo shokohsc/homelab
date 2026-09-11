@@ -18,8 +18,8 @@ spec:
         app: plex
         nfs-genji: "true"
         policy.gatekeeper.sh/ignore-container-must-have-limits: "true"
-        # policy.gatekeeper.sh/ignore-psp-readonlyrootfilesystem: "true"
-        # policy.gatekeeper.sh/ignore-psp-pods-allowed-user-ranges: "true"
+        policy.gatekeeper.sh/ignore-psp-readonlyrootfilesystem: "true"
+        policy.gatekeeper.sh/ignore-psp-pods-allowed-user-ranges: "true"
     spec:
       automountServiceAccountToken: false
       # dnsConfig:
@@ -27,19 +27,20 @@ spec:
       #     - name: ndots
       #       value: "1"
       securityContext:
-        runAsNonRoot: true
-        runAsUser: 1000
-        runAsGroup: 1000
+        # runAsNonRoot: true
+        # runAsUser: 1000
+        # runAsGroup: 1000
         fsGroup: 1000
         seccompProfile:
           type: RuntimeDefault
       containers:
         - name: plex
-          image: ghcr.io/11notes/plex:1.43.4-nobody
+          # image: ghcr.io/11notes/plex:1.43.4-nobody
+          image: plexinc/pms-docker:1.43.4.10903-e5521bd8c
           securityContext:
             allowPrivilegeEscalation: false
-            readOnlyRootFilesystem: true
-            runAsNonRoot: true
+            # readOnlyRootFilesystem: true
+            # runAsNonRoot: true
             capabilities:
               drop:
                 - ALL
@@ -73,10 +74,11 @@ spec:
               protocol: UDP
           volumeMounts:
             - name: config
-              mountPath: /plex/etc
+              # mountPath: /plex/etc
+              mountPath: /config
             # - mountPath: /etc/services.d/plex/run
-            #   name: s6-plex
-            #   subPath: s6-plex.sh
+              # name: s6-plex
+              # subPath: s6-plex.sh
             # - mountPath: /usr/lib/plexmediaserver/Resources/Profiles/Chromecast.xml
             #   name: chromecast
             #   subPath: Chromecast.xml

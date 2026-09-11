@@ -29,7 +29,7 @@ resources:
   - nats
   - nfs-downloads
   # - omniroute
-  # - plex
+  - plex
   - pocket-id
   - proxmox
   # - radio
