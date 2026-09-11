@@ -16,7 +16,6 @@ spec:
         app: samba
         nfs-genji: "true"
         nfs-hanzo: "true"
-        policy.gatekeeper.sh/ignore-psp-readonlyrootfilesystem: "true"
         policy.gatekeeper.sh/ignore-psp-capabilities-baseline: "true"
         policy.gatekeeper.sh/ignore-psp-pods-allowed-user-ranges: "true"
         policy.gatekeeper.sh/ignore-psp-readonlyrootfilesystem: "true"
