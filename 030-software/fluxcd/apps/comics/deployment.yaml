@@ -42,8 +42,8 @@ spec:
               value: apollo.comics.${domain}
             - name: GRAPHQL_CACHE_TTL
               value: "600"
-            # - name: USE_SENTRY
-            #   value: "true"
+            - name: USE_SENTRY
+              value: "false"
             # - name: SENTRY_DSN
             #   value: https://a8a984e25f134ddfae31c6e88ed3b4d8\@glitchtip.${domain}/2
           ports:
