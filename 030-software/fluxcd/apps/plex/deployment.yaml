@@ -20,6 +20,7 @@ spec:
         policy.gatekeeper.sh/ignore-container-must-have-limits: "true"
         policy.gatekeeper.sh/ignore-psp-readonlyrootfilesystem: "true"
         policy.gatekeeper.sh/ignore-psp-pods-allowed-user-ranges: "true"
+        policy.gatekeeper.sh/ignore-psp-privileged-container: "true"
     spec:
       automountServiceAccountToken: false
       # dnsConfig:
@@ -30,7 +31,7 @@ spec:
         # runAsNonRoot: true
         # runAsUser: 1000
         # runAsGroup: 1000
-        fsGroup: 1000
+        # fsGroup: 1000
         seccompProfile:
           type: RuntimeDefault
       containers:
@@ -38,7 +39,7 @@ spec:
           # image: ghcr.io/11notes/plex:1.43.4-nobody
           image: plexinc/pms-docker:1.43.4.10903-e5521bd8c
           securityContext:
-            allowPrivilegeEscalation: false
+            # allowPrivilegeEscalation: false
             # readOnlyRootFilesystem: true
             # runAsNonRoot: true
             capabilities:
