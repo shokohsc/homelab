@@ -27,6 +27,10 @@ spec:
 
     config:
       enableGatewayAPI: true
+      enableListenerSet: true
+
+    featureGates:
+      ListenerSets: true
 
     resources:
       requests:
