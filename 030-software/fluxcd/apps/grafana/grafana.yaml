@@ -163,17 +163,17 @@ spec:
           #     postgresVersion: 1200
           #   secureJsonData:
           #     password: mattermost
-          # - name: sidekick-postgres
-          #   type: postgres
-          #   access: proxy
-          #   url: postgresql.postgresql
-          #   user: sidekick
-          #   database: sidekick
-          #   jsonData:
-          #     sslmode: disable
-          #     postgresVersion: 1200
-          #   secureJsonData:
-          #     password: sidekick
+          - name: sidekick-postgres
+            type: postgres
+            access: proxy
+            url: postgresql.postgresql
+            user: sidekick
+            database: sidekick
+            jsonData:
+              sslmode: disable
+              postgresVersion: 1200
+            secureJsonData:
+              password: sidekick
           # - name: blocky-postgres
           #   type: postgres
           #   access: proxy
@@ -219,71 +219,60 @@ spec:
 
     dashboards:
       external:
-        1-node-exporter:
-          gnetId: 11074
-          revision: 9
-          datasource: VictoriMetrics
-        node-exporter-full:
-          gnetId: 1860
-          revision: 30
-          datasource: VictoriMetrics
-        openwrt:
-          gnetId: 11147
-          revision: 1
-          datasource: VictoriMetrics
-        ceph-cluster:
-          gnetId: 2842
-          revision: 16
-          datasource: VictoriMetrics
-        ceph-osd:
-          gnetId: 5336
-          revision: 9
-          datasource: VictoriMetrics
-        ceph-pools:
-          gnetId: 5342
-          revision: 9
-          datasource: VictoriMetrics
-        flux-cluster:
-          url: https://raw.githubusercontent.com/fluxcd/flux2-monitoring-example/main/monitoring/configs/dashboards/cluster.json
-          datasource: VictoriMetrics
+        # 1-node-exporter:
+        #   gnetId: 11074
+        #   revision: 9
+        #   datasource: Prometheus
+        # node-exporter-full:
+        #   gnetId: 1860
+        #   revision: 30
+        #   datasource: Prometheus
+        # openwrt:
+        #   gnetId: 11147
+        #   revision: 1
+        #   datasource: Prometheus
+        # ceph-cluster:
+        #   gnetId: 2842
+        #   revision: 16
+        #   datasource: Prometheus
+        # ceph-osd:
+        #   gnetId: 5336
+        #   revision: 9
+        #   datasource: Prometheus
+        # ceph-pools:
+        #   gnetId: 5342
+        #   revision: 9
+        #   datasource: Prometheus
+        # flux-cluster:
+        #   url: https://raw.githubusercontent.com/fluxcd/flux2-monitoring-example/main/monitoring/configs/dashboards/cluster.json
+        #   datasource: Prometheus
         flux-control-plane:
           url: https://raw.githubusercontent.com/fluxcd/flux2-monitoring-example/main/monitoring/configs/dashboards/control-plane.json
-          datasource: VictoriMetrics
-        flux-logs:
-          url: https://raw.githubusercontent.com/fluxcd/flux2-monitoring-example/main/monitoring/configs/dashboards/logs.json
-          datasource: VictoriMetrics
-        nginx-dashboard:
-          url: https://raw.githubusercontent.com/kubernetes/ingress-nginx/main/deploy/grafana/dashboards/nginx.json
-          datasource: VictoriMetrics
-        weave-net:
-          gnetId: 11804
-          revision: 3
-          datasource: VictoriMetrics
+          datasource: Prometheus
+        # flux-logs:
+        #   url: https://raw.githubusercontent.com/fluxcd/flux2-monitoring-example/main/monitoring/configs/dashboards/logs.json
+        #   datasource: Prometheus
         k8s-volumes:
           gnetId: 11455
           revision: 6
-          datasource: VictoriMetrics
-        coredns:
-          gnetId: 14981
-          revision: 2
-          datasource: VictoriMetrics
+          datasource: Prometheus
+        # coredns:
+        #   gnetId: 14981
+        #   revision: 2
+        #   datasource: Prometheus
         # blocky:
         #   url: https://github.com/0xERR0R/blocky/raw/refs/heads/main/docs/blocky-grafana.json
-        #   datasource: VictoriMetrics
-        blocky-query:
-          url: https://raw.githubusercontent.com/0xERR0R/blocky/main/docs/blocky-query-grafana-postgres.json
-          datasource: blocky-postgres
-        kubernetes-event-exporter:
-          gnetId: 17882
-          revision: 2
-          datasource: VictoriLogs
-        # haproxy:
-        #   gnetId: 12693
-        #   revision: 5
-        #   datasource: VictoriMetrics
+        #   datasource: Prometheus
+        # blocky-query:
+        #   url: https://raw.githubusercontent.com/0xERR0R/blocky/main/docs/blocky-query-grafana-postgres.json
+        #   datasource: blocky-postgres
+        # kubernetes-event-exporter:
+        #   gnetId: 17882
+        #   revision: 2
+        #   datasource: VictoriLogs
         # windows-exporter:
         #   gnetId: 14499
-        #   datasource: VictoriMetrics
+        #   datasource: Prometheus
         # proxmox-prometheus:
         #   gnetId: 10347
-        #   datasource: VictoriMetrics
+        #   datasource: Prometheus

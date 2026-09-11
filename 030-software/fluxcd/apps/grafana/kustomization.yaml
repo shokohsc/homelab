@@ -8,18 +8,18 @@ configMapGenerator:
 - name: dashboards
   files:
   # - ./dashboards/blocky.json
-  - ./dashboards/external-disks.json
+  # - ./dashboards/external-disks.json
   - ./dashboards/global-cluster-view.json
-  - ./dashboards/intel-prometheus.json
-  - ./dashboards/kubernetes-events.json
-  - ./dashboards/loki-promtail.json
-  - ./dashboards/nfs.json
+  # - ./dashboards/intel-prometheus.json
+  # - ./dashboards/kubernetes-events.json
+  # - ./dashboards/loki-promtail.json
+  # - ./dashboards/nfs.json
   # - ./dashboards/open-weather-map.json
   - ./dashboards/profiles-requests.json
   - ./dashboards/pvc-usage.json
-  - ./dashboards/squid-dashboard.json
+  # - ./dashboards/squid-dashboard.json
   # - ./dashboards/storage-io-statistics.json
-  - ./dashboards/pod-spread.json
+  # - ./dashboards/pod-spread.json
   # - ./dashboards/cert-manager.json
 
 generatorOptions:
