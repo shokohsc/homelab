@@ -11,6 +11,17 @@ portSelector:
   protocol: tcp
 ingress:
   - subnet: $TALOS_SUBNET.0/24
+  - subnet: 10.244.0.0/16
+---
+apiVersion: v1alpha1
+kind: NetworkRuleConfig
+name: cilium-envoy-metrics
+portSelector:
+  ports:
+    - 9964
+  protocol: tcp
+ingress:
+  - subnet: 10.244.0.0/0
 ---
 apiVersion: v1alpha1
 kind: NetworkRuleConfig
@@ -103,6 +114,16 @@ portSelector:
 ingress:
   - subnet: 10.244.0.0/0
   - subnet: 10.42.20.0/0
+---
+apiVersion: v1alpha1
+kind: NetworkRuleConfig
+name: cilium-operator-metrics
+portSelector:
+  ports:
+    - 9963
+  protocol: tcp
+ingress:
+  - subnet: 10.244.0.0/0
 ---
 apiVersion: v1alpha1
 kind: NetworkRuleConfig

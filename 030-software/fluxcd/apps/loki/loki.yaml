@@ -61,7 +61,7 @@ spec:
           cpu: 1000m
           memory: 128Mi
       persistence:
-        size: 1Gi
+        size: 5Gi
 
     loki:
       auth_enabled: false
