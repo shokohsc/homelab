@@ -13,6 +13,7 @@ spec:
         app: comics
         policy.gatekeeper.sh/ignore-psp-readonlyrootfilesystem: "true"
         policy.gatekeeper.sh/ignore-psp-pods-allowed-user-ranges: "true"
+        policy.gatekeeper.sh/ignore-psp-capabilities-baseline: "true"
     spec:
       automountServiceAccountToken: false
       securityContext:
@@ -29,9 +30,9 @@ spec:
             allowPrivilegeEscalation: false
             # readOnlyRootFilesystem: true
             # runAsNonRoot: true
-            capabilities:
-              drop:
-                - ALL
+            # capabilities:
+            #   drop:
+            #     - ALL
           env:
             - name: ENV
               value: production
