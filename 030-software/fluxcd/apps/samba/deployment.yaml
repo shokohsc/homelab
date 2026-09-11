@@ -32,10 +32,11 @@ spec:
         - 101
       containers:
         - name: samba
-          image: jamp/samba:2.2.0
+          image: dperson/samba:latest
+          imagePullPolicy: Always
           securityContext:
             allowPrivilegeEscalation: false
-            # readOnlyRootFilesystem: true
+            readOnlyRootFilesystem: false
             # runAsNonRoot: true
             capabilities:
               drop:
@@ -49,19 +50,16 @@ spec:
                 - FOWNER
                 - SYS_CHROOT
                 - NET_RAW
+          args:
+            - -s
+            - shared;/mnt;yes;no;yes;all;none
           env:
-            - name: USERS
-              value: "dummy:dummy"
-            - name: ENABLE_PUBLIC
-              value: "true"
-            - name: ENABLE_TIMEMACHINE
-              value: "false"
-            - name: WORKGROUP
-              value: "homelab"
-            - name: NETBIOS_NAME
-              value: "samba.home.arpa"
+            - name: "GROUPID"
+              value: "1000"
             - name: "TZ"
               value: "UTC"
+            - name: "USERID"
+              value: "1000"
           ports:
             - name: netbios
               containerPort: 139
@@ -71,15 +69,9 @@ spec:
               protocol: TCP
           volumeMounts:
             - name: nfs-genji
-              mountPath: /public/nfs/genji
+              mountPath: /mnt/nfs/genji
             - name: nfs-hanzo
-              mountPath: /public/nfs/hanzo
-            - name: temp
-              mountPath: /etc/samba
-            - name: data
-              mountPath: /homes
-            - name: logs
-              mountPath: /var/log/samba
+              mountPath: /mnt/nfs/hanzo
           startupProbe:
             tcpSocket:
               port: netbios
@@ -105,9 +97,3 @@ spec:
           nfs:
             path: /
             server: hanzo.home.arpa
-        - name: data
-          emptyDir: {}
-        - name: temp
-          emptyDir: {}
-        - name: logs
-          emptyDir: {}
