@@ -20,6 +20,7 @@ spec:
         policy.gatekeeper.sh/ignore-container-must-have-limits: "true"
         policy.gatekeeper.sh/ignore-psp-readonlyrootfilesystem: "true"
         policy.gatekeeper.sh/ignore-psp-pods-allowed-user-ranges: "true"
+        policy.gatekeeper.sh/ignore-psp-capabilities-baseline: "true"
         policy.gatekeeper.sh/ignore-psp-allow-privilege-escalation-container: "true"
     spec:
       automountServiceAccountToken: false
@@ -42,9 +43,9 @@ spec:
             # allowPrivilegeEscalation: false
             # readOnlyRootFilesystem: true
             # runAsNonRoot: true
-            capabilities:
-              drop:
-                - ALL
+            # capabilities:
+            #   drop:
+            #     - ALL
           env:
             - name: ADVERTISE_IP
               value: "http://${vip}:32400,https://plex.${domain}"
