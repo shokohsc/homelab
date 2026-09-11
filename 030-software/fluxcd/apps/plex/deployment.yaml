@@ -24,28 +24,12 @@ spec:
         policy.gatekeeper.sh/ignore-psp-allow-privilege-escalation-container: "true"
     spec:
       automountServiceAccountToken: false
-      # dnsConfig:
-      #   options:
-      #     - name: ndots
-      #       value: "1"
       securityContext:
-        # runAsNonRoot: true
-        # runAsUser: 1000
-        # runAsGroup: 1000
-        # fsGroup: 1000
         seccompProfile:
           type: RuntimeDefault
       containers:
         - name: plex
-          # image: ghcr.io/11notes/plex:1.43.4-nobody
           image: plexinc/pms-docker:1.43.4.10903-e5521bd8c
-          # securityContext: 
-            # allowPrivilegeEscalation: false
-            # readOnlyRootFilesystem: true
-            # runAsNonRoot: true
-            # capabilities:
-            #   drop:
-            #     - ALL
           env:
             - name: ADVERTISE_IP
               value: "http://${vip}:32400,https://plex.${domain}"
@@ -76,14 +60,13 @@ spec:
               protocol: UDP
           volumeMounts:
             - name: config
-              # mountPath: /plex/etc
               mountPath: /config
-            # - mountPath: /etc/services.d/plex/run
-              # name: s6-plex
-              # subPath: s6-plex.sh
-            # - mountPath: /usr/lib/plexmediaserver/Resources/Profiles/Chromecast.xml
-            #   name: chromecast
-            #   subPath: Chromecast.xml
+            - mountPath: /etc/services.d/plex/run
+              name: s6-plex
+              subPath: s6-plex.sh
+            - mountPath: /usr/lib/plexmediaserver/Resources/Profiles/Chromecast.xml
+              name: chromecast
+              subPath: Chromecast.xml
             - name: transcode
               mountPath: /plex/tmp
             - name: movies
@@ -112,7 +95,6 @@ spec:
           securityContext:
             allowPrivilegeEscalation: false
             readOnlyRootFilesystem: true
-            # runAsNonRoot: true
             capabilities:
               drop:
                 - ALL
@@ -140,14 +122,14 @@ spec:
         - name: config
           persistentVolumeClaim:
             claimName: config
-        # - name: s6-plex
-        #   configMap:
-        #     name: s6-plex
-        #     defaultMode: 0755
-        # - name: chromecast
-        #   configMap:
-        #     name: chromecast
-        #     defaultMode: 0644
+        - name: s6-plex
+          configMap:
+            name: s6-plex
+            defaultMode: 0755
+        - name: chromecast
+          configMap:
+            name: chromecast
+            defaultMode: 0644
         - name: transcode
           emptyDir:
             sizeLimit: 20Gi
