@@ -61,9 +61,9 @@ spec:
           volumeMounts:
             - name: config
               mountPath: /config
-            - mountPath: /etc/services.d/plex/run
-              name: s6-plex
-              subPath: s6-plex.sh
+            # - mountPath: /etc/services.d/plex/run
+            #   name: s6-plex
+            #   subPath: s6-plex.sh
             - mountPath: /usr/lib/plexmediaserver/Resources/Profiles/Chromecast.xml
               name: chromecast
               subPath: Chromecast.xml
