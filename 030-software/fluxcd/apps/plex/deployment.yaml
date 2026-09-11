@@ -39,7 +39,7 @@ spec:
         - name: plex
           # image: ghcr.io/11notes/plex:1.43.4-nobody
           image: plexinc/pms-docker:1.43.4.10903-e5521bd8c
-          securityContext:
+          # securityContext: 
             # allowPrivilegeEscalation: false
             # readOnlyRootFilesystem: true
             # runAsNonRoot: true
