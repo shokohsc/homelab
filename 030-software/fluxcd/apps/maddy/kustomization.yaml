@@ -12,7 +12,6 @@ resources:
   - routes.yaml
   - rbac.yaml
   - secret.yaml
-  # - tekton.yaml
 configMapGenerator:
 - name: config
   files:

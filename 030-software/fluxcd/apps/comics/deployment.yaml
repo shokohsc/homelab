@@ -1,0 +1,52 @@
+---
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: comics
+spec:
+  selector:
+    matchLabels:
+      app: comics
+  template:
+    metadata:
+      labels:
+        app: comics
+    spec:
+      automountServiceAccountToken: false
+      containers:
+        - name: comics
+          image: shokohsc/ouistity:b8ba4de
+          env:
+            - name: ENV
+              value: production
+            - name: API_GATEWAY_HOST
+              value: api.comics.${domain}
+            - name: GRAPHQL_GATEWAY_HOST
+              value: apollo.comics.${domain}
+            - name: GRAPHQL_CACHE_TTL
+              value: "600"
+            - name: USE_SENTRY
+              value: "true"
+            - name: SENTRY_DSN
+              value: https://a8a984e25f134ddfae31c6e88ed3b4d8\@glitchtip.${domain}/2
+          ports:
+            - name: http
+              containerPort: 80
+              protocol: TCP
+          startupProbe:
+            tcpSocket:
+              port: http
+          livenessProbe:
+            tcpSocket:
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+          resources:
+            requests:
+              cpu: 1m
+              memory: 5M
+            limits:
+              cpu: 3m
+              memory: 10M

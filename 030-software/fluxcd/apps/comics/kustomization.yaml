@@ -1,0 +1,16 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: comics
+resources:
+  - namespace.yaml
+  - deployment.yaml
+  - service.yaml
+  - http-route.yaml
+
+  - api/
+  - graphql/
+  - marvel/
+
+images:
+  - name: shokohsc/moleculer-ouistity
+    newTag: '13415df'

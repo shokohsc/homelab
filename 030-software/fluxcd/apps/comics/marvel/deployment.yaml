@@ -1,0 +1,67 @@
+---
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: marvel
+spec:
+  revisionHistoryLimit: 0
+  selector:
+    matchLabels:
+      app: marvel
+  template:
+    metadata:
+      labels:
+        app: marvel
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/path: /metrics
+        prometheus.io/port: "5050"
+    spec:
+      automountServiceAccountToken: false
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: marvel
+          image: shokohsc/moleculer-ouistity
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+            capabilities:
+              drop:
+                - ALL
+          env:
+            - name: APP_NATS_HOSTNAME
+              value: nats.nats
+            - name: APP_REDIS_HOSTNAME
+              value: valkey.valkey
+            - name: APP_GLOBAL_GATEWAY_URL
+              value: https://api.ouistity.${domain}
+          args:
+            - services/marvel/*.service.js
+          ports:
+            - name: metrics
+              containerPort: 5050
+              protocol: TCP
+          startupProbe:
+            tcpSocket:
+              port: metrics
+          livenessProbe:
+            tcpSocket:
+              port: metrics
+          readinessProbe:
+            httpGet:
+              path: /metrics
+              port: metrics
+          resources:
+            requests:
+              cpu: 10m
+              memory: 34Mi
+            limits:
+              cpu: 100m
+              memory: 256Mi

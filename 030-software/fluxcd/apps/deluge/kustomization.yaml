@@ -10,9 +10,6 @@ resources:
   # - networkpolicy.yaml
   - secret.yaml
 configMapGenerator:
-- name: pod-gateway
-  files:
-  - ./pod-gateway/settings.sh
 - name: settings
   files:
   - ./settings/autoadd.conf

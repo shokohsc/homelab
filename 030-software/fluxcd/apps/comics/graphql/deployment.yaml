@@ -1,0 +1,76 @@
+---
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: graphql
+spec:
+  revisionHistoryLimit: 0
+  selector:
+    matchLabels:
+      app: graphql
+  template:
+    metadata:
+      labels:
+        app: graphql
+        nfs-wd-zarya: "true"
+    spec:
+      automountServiceAccountToken: false
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: graphql
+          image: shokohsc/moleculer-ouistity
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+            capabilities:
+              drop:
+                - ALL
+          env:
+            - name: APP_NATS_HOSTNAME
+              value: nats.nats
+            - name: APP_REDIS_HOSTNAME
+              value: valkey.valkey
+          args:
+            - services/graphql-gateway.service.js
+          ports:
+            - name: http
+              containerPort: 7000
+              protocol: TCP
+          startupProbe:
+            tcpSocket:
+              port: http
+          livenessProbe:
+            tcpSocket:
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /.well-known/apollo/server-health
+              port: http
+          resources:
+            requests:
+              cpu: 100m
+              memory: 42Mi
+            limits:
+              cpu: 200m
+              memory: 256Mi
+          volumeMounts:
+            - name: weekly
+              mountPath: /usr/app/assets/data/archives/weekly
+            - name: comics
+              mountPath: /usr/app/assets/data/archives/comics
+      volumes:
+        - name: comics
+          nfs:
+            path: /comics
+            server: genji.home.arpa
+        - name: weekly
+          nfs:
+            path: /shared/weekly
+            server: genji.home.arpa

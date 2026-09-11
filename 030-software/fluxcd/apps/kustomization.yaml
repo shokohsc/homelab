@@ -8,6 +8,7 @@ resources:
   - cert-manager
   - cloudflared
   - cloudnativepg
+  - comics
   - commander
   - deluge
   - external-dns

@@ -1,0 +1,92 @@
+---
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: api
+spec:
+  revisionHistoryLimit: 0
+  selector:
+    matchLabels:
+      app: api
+  template:
+    metadata:
+      labels:
+        app: api
+        nfs-wd-zarya: "true"
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/path: /metrics
+        prometheus.io/port: "5050"
+    spec:
+      automountServiceAccountToken: false
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: api
+          image: shokohsc/moleculer-ouistity
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+            capabilities:
+              drop:
+                - ALL
+          env:
+            - name: APP_GLOBAL_GATEWAY_URL
+              value: http://api.comics.${domain}
+            - name: APP_MOLECULER_APOLLO_HOSTNAME
+              value: apollo.comics.${domain}
+            - name: APP_NATS_HOSTNAME
+              value: nats.nats
+            - name: APP_REDIS_HOSTNAME
+              value: valkey.valkey
+          args:
+            - services/api-gateway.service.js
+          ports:
+            - name: http
+              containerPort: 5000
+              protocol: TCP
+            - name: metrics
+              containerPort: 5050
+              protocol: TCP
+          startupProbe:
+            tcpSocket:
+              port: http
+          livenessProbe:
+            tcpSocket:
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /status/readiness
+              port: http
+          resources:
+            requests:
+              cpu: 100m
+              memory: 40Mi
+            limits:
+              cpu: 100m
+              memory: 256Mi
+          volumeMounts:
+            - name: temp
+              mountPath: /tmp
+            - name: weekly
+              mountPath: /usr/app/assets/data/archives/weekly
+            - name: comics
+              mountPath: /usr/app/assets/data/archives/comics
+      volumes:
+        - name: temp
+          emptyDir:
+            medium: Memory
+        - name: comics
+          nfs:
+            path: /comics
+            server: genji.home.arpa
+        - name: weekly
+          nfs:
+            path: /shared/weekly
+            server: genji.home.arpa
