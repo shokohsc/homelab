@@ -8,12 +8,16 @@
   "timezone": "Europe/Paris",
   "extends": ["github>home-operations/renovate-presets"],
   "includePaths": [
-    "020-hardware/hanzo/**",
     "020-hardware/genji/**",
+    "020-hardware/hanzo/**",
     "020-hardware/mikrotik/**",
     "020-hardware/roadhog/**",
+    "020-hardware/shared/**",
     "020-hardware/tplink/**",
     "030-software/fluxcd/apps/**",
+    "030-software/fluxcd/crossplane-definitions/**",
+    "030-software/fluxcd/crossplane-provider/**",
+    "030-software/fluxcd/infrastructure/**",
     "030-software/fluxcd/requirements/**",
     "030-software/talos/**"
   ],
