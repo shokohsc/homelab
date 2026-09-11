@@ -12,18 +12,16 @@ resources:
   - deluge
   - external-dns
   - external-services
-  # - fan-control
   # - ferretdb
   # - freellmapi
   - gatekeeper
   - grafana
-  # - headlamp
   - loki
   - alloy
   - http-echo
   - jellyfin
   - kaniko
-  # - konflate
+  - konflate
   - kube-state-metrics
   - kube-system
   - maddy
@@ -31,30 +29,25 @@ resources:
   - nats
   - nfs-downloads
   # - omniroute
-  - plex
+  # - plex
   - pocket-id
-  # - pod-gateway
   - proxmox
-  # - pyload
   # - radio
   - rathole
   - redisinsight
   - reloader
   - renovate
   # - rustfs
-  # - samba
+  - samba
   - sftpgo
   - sidekick
-  # - sign-pdf
   - syslog
   - tailscale
   - valkey
   - vaultwarden
-  # - vaultwarden-kubernetes-secrets
   - victoria-logs
   - victoria-logs-collector
   - victoria-metrics
   - vpn-egress-gateway
-  # - vuio
-  # - whoami
+  - whoami
   - zipkin
