@@ -5,7 +5,7 @@ metadata:
   name: api
 spec:
   hostnames:
-  - api.${domain}
+  - api.comics.${domain}
   parentRefs:
   - name: cilium
     namespace: cilium
