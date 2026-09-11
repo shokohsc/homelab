@@ -24,6 +24,8 @@ spec:
   values:
     nameOverride: "vms"
     server:
+      scrape:
+        enabled: true
       route:
         enabled: true
         parentRefs:
