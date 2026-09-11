@@ -11,6 +11,7 @@ spec:
     metadata:
       labels:
         app: comics
+        policy.gatekeeper.sh/ignore-psp-readonlyrootfilesystem: "true"
     spec:
       automountServiceAccountToken: false
       securityContext:
@@ -25,7 +26,7 @@ spec:
           image: shokohsc/ouistity:b8ba4de
           securityContext:
             allowPrivilegeEscalation: false
-            readOnlyRootFilesystem: true
+            # readOnlyRootFilesystem: true
             runAsNonRoot: true
             capabilities:
               drop:
