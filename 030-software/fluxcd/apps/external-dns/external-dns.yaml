@@ -119,4 +119,5 @@ spec:
       - --ignore-ingress-tls-spec
       - --managed-record-types=A
       - --managed-record-types=CNAME
-      - --gateway-listener-sets
+
+    enableGatewayListenerSets: true
