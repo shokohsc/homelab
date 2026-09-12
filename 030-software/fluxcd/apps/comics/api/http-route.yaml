@@ -35,9 +35,6 @@ spec:
         - If-Modified-Since
         - Cache-Control
         - Content-Type
-        exposeHeaders:
-        - "x-header-3"
-        - "x-header-4"
         allowCredentials: false
         maxAge: 3600
       type: CORS
