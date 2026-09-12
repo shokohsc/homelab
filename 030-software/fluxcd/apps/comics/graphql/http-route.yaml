@@ -19,3 +19,25 @@ spec:
     - path:
         type: PathPrefix
         value: /
+    filters:
+    - cors:
+        allowOrigins:
+        - https://comics.${domain}
+        allowMethods:
+        - GET
+        - OPTIONS
+        allowHeaders:
+        - DNT
+        - X-CustomHeader
+        - Keep-Alive
+        - User-Agent
+        - X-Requested-With
+        - If-Modified-Since
+        - Cache-Control
+        - Content-Type
+        exposeHeaders:
+        - "x-header-3"
+        - "x-header-4"
+        allowCredentials: false
+        maxAge: 3600
+      type: CORS
