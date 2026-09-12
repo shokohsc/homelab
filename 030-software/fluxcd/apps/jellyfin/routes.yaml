@@ -3,6 +3,8 @@ apiVersion: gateway.networking.k8s.io/v1
 kind: TCPRoute
 metadata:
   name: jellyfin
+  annotations:
+    external-dns.kubernetes.io/hostname: jellyfin.${domain}
 spec:
   parentRefs:
     - name: cilium

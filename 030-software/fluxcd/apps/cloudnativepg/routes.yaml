@@ -3,6 +3,8 @@ apiVersion: gateway.networking.k8s.io/v1
 kind: TCPRoute
 metadata:
   name: postgres
+  annotations:
+    external-dns.kubernetes.io/hostname: postgres.${domain}
 spec:
   parentRefs:
     - name: cilium

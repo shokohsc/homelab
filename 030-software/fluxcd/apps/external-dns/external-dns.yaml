@@ -26,7 +26,7 @@ spec:
     logFormat: text
 
     interval: 5s
-    sources: ["gateway-httproute"]
+    sources: ["gateway-httproute", "gateway-tcproute", "gateway-udproute"]
     registry: txt
     txtOwnerId: default
     txtPrefix: k8s.
@@ -119,3 +119,4 @@ spec:
       - --ignore-ingress-tls-spec
       - --managed-record-types=A
       - --managed-record-types=CNAME
+      - --gateway-listener-sets
