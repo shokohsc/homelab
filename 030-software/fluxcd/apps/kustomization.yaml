@@ -33,7 +33,8 @@ resources:
   - plex
   - pocket-id
   - proxmox
-  # - radio
+  # - radarr
+  - radio
   - rathole
   - redisinsight
   - reloader
@@ -42,6 +43,7 @@ resources:
   - samba
   - sftpgo
   - sidekick
+  # - sonarr
   - syslog
   - tailscale
   - valkey

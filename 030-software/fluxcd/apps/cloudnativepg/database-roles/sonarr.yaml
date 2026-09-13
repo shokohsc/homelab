@@ -1,0 +1,34 @@
+apiVersion: postgresql.cnpg.io/v1
+kind: Database
+metadata:
+  name: sonarr-main
+spec:
+  name: sonarr-main
+  owner: sonarr
+  cluster:
+    name: main
+---
+apiVersion: postgresql.cnpg.io/v1
+kind: Database
+metadata:
+  name: sonarr-logs
+spec:
+  name: sonarr-logs
+  owner: sonarr
+  cluster:
+    name: main
+---
+apiVersion: postgresql.cnpg.io/v1
+kind: DatabaseRole
+metadata:
+  name: sonarr
+spec:
+  cluster:
+    name: main
+  name: sonarr
+  login: true
+  superuser: false
+  createdb: false
+  createrole: false
+  passwordSecret:
+    name: sonarr

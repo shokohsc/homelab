@@ -22,7 +22,7 @@ spec:
           type: RuntimeDefault
       containers:
         - name: radio-server
-          image: ghcr.io/shokohsc/radio-server:latest
+          image: ghcr.io/shokohsc/radio-server:sha-1ab71f5
           securityContext:
             allowPrivilegeEscalation: false
             readOnlyRootFilesystem: true
@@ -80,6 +80,7 @@ spec:
     metadata:
       labels:
         app: radio-ui
+        policy.gatekeeper.sh/ignore-psp-volume-types: "true"
     spec:
       securityContext:
         runAsNonRoot: true
@@ -90,7 +91,9 @@ spec:
           type: RuntimeDefault
       containers:
         - name: radio-ui
-          image: ghcr.io/shokohsc/radio-ui:latest
+          image: busybox:1.38
+          args: ["busybox", "httpd", "-f", "-v", "-p", "8080"]
+          workingDir: /assets
           securityContext:
             allowPrivilegeEscalation: false
             readOnlyRootFilesystem: true
@@ -120,9 +123,9 @@ spec:
               cpu: 100m
               memory: 64M
           volumeMounts:
-            - name: cache
-              mountPath: /var/cache/nginx
+            - name: assets
+              mountPath: /assets
       volumes:
-        - name: cache
-          emptyDir:
-            medium: Memory
+        - name: assets
+          image:
+            reference: ghcr.io/shokohsc/radio-ui:sha-1ab71f5
