@@ -8,6 +8,7 @@ metadata:
     secret.reloader.stakater.com/reload: sonarr
     configmap.reloader.stakater.com/reload: config
 spec:
+  revisionHistoryLimit: 0
   selector:
     matchLabels:
       app: sonarr
@@ -80,30 +81,18 @@ spec:
           volumeMounts:
             - name: tmp
               mountPath: /config
-            - name: 4to-lucio
-              mountPath: /mnt/4to-lucio
-            - name: 4to-sombra
-              mountPath: /mnt/4to-sombra
-            - name: 4to-zarya
-              mountPath: /mnt/4to-zarya
+            - name: tvshows
+              mountPath: /mnt/tvshows
             - name: downloads
               mountPath: /mnt/downloads
       volumes:
         - name: tmp
           emptyDir: {}
-        - name: 4to-lucio
+        - name: tvshows
           nfs:
-            server: nfs-4t-lucio.nfs-wd-lucio.svc.cluster.local
-            path: /tvshows
-        - name: 4to-zarya
-          nfs:
-            server: nfs-4t-zarya.nfs-wd-zarya.svc.cluster.local
-            path: /tvshows
-        - name: 4to-sombra
-          nfs:
-            server: nfs-4t-sombra.nfs-wd-sombra.svc.cluster.local
+            server: genji.home.arpa
             path: /tvshows
         - name: downloads
           nfs:
-            server: nfs-downloads.nfs-downloads.svc.cluster.local
+            server: 10.102.22.211
             path: /

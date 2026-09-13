@@ -1,19 +1,17 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: radarr
+  name: prowlarr
   annotations:
-    secret.reloader.stakater.com/reload: radarr
-    configmap.reloader.stakater.com/reload: config
+    secret.reloader.stakater.com/reload: prowlarr
 spec:
-  revisionHistoryLimit: 0
   selector:
     matchLabels:
-      app: radarr
+      app: prowlarr
   template:
     metadata:
       labels:
-        app: radarr
+        app: prowlarr
     spec:
       automountServiceAccountToken: false
       securityContext:
@@ -25,8 +23,8 @@ spec:
           type: RuntimeDefault
         fsGroupChangePolicy: OnRootMismatch
       containers:
-        - name: radarr
-          image: ghcr.io/home-operations/radarr:6.4.3
+        - name: prowlarr
+          image: ghcr.io/home-operations/prowlarr:2.6.3
           securityContext:
             allowPrivilegeEscalation: false
             readOnlyRootFilesystem: true
@@ -37,27 +35,9 @@ spec:
           env:
             - name: TZ
               value: ${timezone}
-            - name: RADARR__AUTH__APIKEY
-              valueFrom:
-                secretKeyRef:
-                  key: api-key
-                  name: radarr
-            - name: RADARR__POSTGRES__USER
-              valueFrom:
-                secretKeyRef:
-                  key: database-user
-                  name: radarr
-            - name: RADARR__POSTGRES__PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  key: database-password
-                  name: radarr
-          envFrom:
-            - configMapRef:
-                name: config
           ports:
             - name: http
-              containerPort: 7878
+              containerPort: 9696
               protocol: TCP
           startupProbe:
             tcpSocket:
@@ -67,7 +47,7 @@ spec:
               port: http
           readinessProbe:
             httpGet:
-              path: /ping
+              path: /
               port: http
           resources:
             limits:
@@ -79,18 +59,13 @@ spec:
           volumeMounts:
             - name: tmp
               mountPath: /config
-            - name: movies
-              mountPath: /mnt/movies
-            - name: downloads
-              mountPath: /mnt/downloads
+            - name: prowlarr
+              mountPath: /config/config.xml
+              subPath: config.xml
       volumes:
         - name: tmp
           emptyDir: {}
-        - name: movies
-          nfs:
-            server: genji.home.arpa
-            path: /movies
-        - name: downloads
-          nfs:
-            server: 10.102.22.211
-            path: /
+        - name: prowlarr
+          secret:
+            defaultMode: 0644
+            secretName: prowlarr
