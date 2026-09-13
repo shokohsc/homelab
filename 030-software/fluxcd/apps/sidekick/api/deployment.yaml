@@ -70,13 +70,12 @@ spec:
           resources:
             requests:
               cpu: 10m
-              memory: 64M
+              memory: 64Mi
             limits:
               cpu: 1000m
-              memory: 256M
+              memory: 512Mi
       volumes:
         - name: shared
-          emptyDir: {}
-          # nfs:
-          #   server: nfs-shared.nfs-shared.svc.cluster.local
-          #   path: /wallpapers
+          nfs:
+            server: genji.home.arpa
+            path: /shared/wallpapers

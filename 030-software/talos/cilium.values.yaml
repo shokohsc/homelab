@@ -98,7 +98,7 @@ hubble:
           memory: 64Mi
         limits:
           cpu: 100m
-          memory: 64Mi
+          memory: 128Mi
     frontend:
       resources:
         requests:

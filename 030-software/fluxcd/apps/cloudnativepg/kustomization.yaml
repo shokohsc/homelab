@@ -14,6 +14,8 @@ resources:
   - database-roles/maddy.yaml
   - database-roles/miniflux.yaml
   - database-roles/pocket-id.yaml
+  - database-roles/radarr.yaml
+  - database-roles/sonarr.yaml
   - database-roles/prowlarr.yaml
   - database-roles/sftpgo.yaml
   - database-roles/vaultwarden.yaml

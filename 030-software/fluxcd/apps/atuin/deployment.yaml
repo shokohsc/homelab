@@ -49,6 +49,8 @@ spec:
               value: "8888"
             - name: ATUIN_OPEN_REGISTRATION
               value: "false"
+            - name: RUST_LOG
+              value: info,atuin_server=debug
           ports:
             - name: http
               containerPort: 8888

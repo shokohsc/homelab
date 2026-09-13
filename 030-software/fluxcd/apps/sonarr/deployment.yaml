@@ -1,0 +1,109 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sonarr
+  labels:
+    app: sonarr
+  annotations:
+    secret.reloader.stakater.com/reload: sonarr
+    configmap.reloader.stakater.com/reload: config
+spec:
+  selector:
+    matchLabels:
+      app: sonarr
+  template:
+    metadata:
+      labels:
+        app: sonarr
+    spec:
+      automountServiceAccountToken: false
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        seccompProfile:
+          type: RuntimeDefault
+        fsGroupChangePolicy: OnRootMismatch
+      containers:
+        - name: sonarr
+          image: ghcr.io/home-operations/sonarr:4.0.19
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+            capabilities:
+              drop:
+                - ALL
+          env:
+            - name: TZ
+              value: ${timezone}
+            - name: SONARR__AUTH__APIKEY
+              valueFrom:
+                secretKeyRef:
+                  key: api-key
+                  name: sonarr
+            - name: SONARR__POSTGRES__USER
+              valueFrom:
+                secretKeyRef:
+                  key: database-user
+                  name: sonarr
+            - name: SONARR__POSTGRES__PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: database-password
+                  name: sonarr
+          envFrom:
+            - configMapRef:
+                name: config
+          ports:
+            - name: http
+              containerPort: 8989
+              protocol: TCP
+          startupProbe:
+            tcpSocket:
+              port: http
+          livenessProbe:
+            tcpSocket:
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /ping
+              port: http
+          resources:
+            limits:
+              cpu: 1000m
+              memory: 1024M
+            requests:
+              cpu: 100m
+              memory: 128M
+          volumeMounts:
+            - name: tmp
+              mountPath: /config
+            - name: 4to-lucio
+              mountPath: /mnt/4to-lucio
+            - name: 4to-sombra
+              mountPath: /mnt/4to-sombra
+            - name: 4to-zarya
+              mountPath: /mnt/4to-zarya
+            - name: downloads
+              mountPath: /mnt/downloads
+      volumes:
+        - name: tmp
+          emptyDir: {}
+        - name: 4to-lucio
+          nfs:
+            server: nfs-4t-lucio.nfs-wd-lucio.svc.cluster.local
+            path: /tvshows
+        - name: 4to-zarya
+          nfs:
+            server: nfs-4t-zarya.nfs-wd-zarya.svc.cluster.local
+            path: /tvshows
+        - name: 4to-sombra
+          nfs:
+            server: nfs-4t-sombra.nfs-wd-sombra.svc.cluster.local
+            path: /tvshows
+        - name: downloads
+          nfs:
+            server: nfs-downloads.nfs-downloads.svc.cluster.local
+            path: /

@@ -168,15 +168,15 @@ spec:
       resources:
         requests:
           cpu: 100m
-          memory: 64M
+          memory: 64Mi
         limits:
           cpu: 1000m
-          memory: 128M
+          memory: 256Mi
     configReloader:
       resources:
         requests:
           cpu: 10m
-          memory: 64M
+          memory: 64Mi
         limits:
           cpu: 100m
-          memory: 64M
+          memory: 64Mi
