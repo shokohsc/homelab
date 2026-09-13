@@ -13,7 +13,7 @@ spec:
     group: gateway.networking.k8s.io
   listeners:
   - name: radio
-    hostname: radio.home.arpa
+    hostname: radio.${domain}
     protocol: HTTPS
     port: 443
     tls:
@@ -23,7 +23,7 @@ spec:
         group: ""
         name: radio-cert
   - name: api
-    hostname: api.radio.home.arpa
+    hostname: api.radio.${domain}
     protocol: HTTPS
     port: 443
     tls:

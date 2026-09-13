@@ -5,7 +5,7 @@ metadata:
   name: radio
 spec:
   hostnames:
-  - radio.home.arpa
+  - radio.${domain}
   parentRefs:
   - name: radio
     kind: ListenerSet
@@ -26,7 +26,7 @@ metadata:
   name: api
 spec:
   hostnames:
-  - api.radio.home.arpa
+  - api.radio.${domain}
   parentRefs:
   - name: radio
     kind: ListenerSet
@@ -43,7 +43,7 @@ spec:
     filters:
     - cors:
         allowOrigins:
-        - https://radio.home.arpa
+        - https://radio.${domain}
         allowMethods:
         - GET
         - OPTIONS
