@@ -1,0 +1,80 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: shell2http
+  annotations:
+    configmap.reloader.stakater.com/reload: scripts
+spec:
+  revisionHistoryLimit: 0
+  selector:
+    matchLabels:
+      app: shell2http
+  template:
+    metadata:
+      labels:
+        app: shell2http
+    spec:
+      serviceAccountName: shell2http
+      containers:
+        - name: shell2http
+          image: msoap/shell2http:1.17.0
+          args:
+            - -export-all-vars
+            - '-500'
+            - -form
+
+            - /vpn-egress-gateway/restart
+            - /bin/restart-vpn-egress-gateway.sh
+
+            - /vpn-egress-gateway/dl-rate
+            - /bin/get-vpn-egress-gateway-average-download-rate.sh
+
+            - /trackers
+            - /bin/get-trackers.sh
+
+            - /trackers/add
+            - /bin/add-trackers.sh
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+          startupProbe:
+            tcpSocket:
+              port: http
+          livenessProbe:
+            tcpSocket:
+              port: http
+          readinessProbe:
+            httpGet:
+              port: http
+              path: /
+          resources:
+            requests:
+              cpu: 10m
+              memory: 64M
+            limits:
+              cpu: 100m
+              memory: 64M
+          lifecycle:
+            postStart:
+              exec:
+                command: ["/bin/sh", "-c", "apk add --no-cache kubectl jq curl"]
+          volumeMounts:
+            - name: scripts
+              mountPath: /bin/restart-vpn-egress-gateway.sh
+              subPath: restart-vpn-egress-gateway.sh
+            - name: scripts
+              mountPath: /bin/get-trackers.sh
+              subPath: get-trackers.sh
+            - name: scripts
+              mountPath: /bin/add-trackers.sh
+              subPath: add-trackers.sh
+            - name: scripts
+              mountPath: /bin/get-vpn-egress-gateway-average-download-rate.sh
+              subPath: get-vpn-egress-gateway-average-download-rate.sh
+      volumes:
+        - name: scripts
+          configMap:
+            defaultMode: 365
+            name: scripts

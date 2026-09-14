@@ -1,0 +1,27 @@
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: shell2http
+  annotations:
+    kubernetes.io/ingress.class: ${ingressClass}
+    cert-manager.io/cluster-issuer: ca-cluster-issuer
+    dashboard.${domain}/name: shell2http
+    dashboard.${domain}/url: https://shell2http.${domain}
+    dashboard.${domain}/icon: wrench
+spec:
+  rules:
+  - host: shell2http.${domain}
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: shell2http
+            port:
+              number: 80
+  tls:
+  - hosts:
+    - shell2http.${domain}
+    secretName: shell2http-cert

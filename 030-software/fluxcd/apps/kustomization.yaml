@@ -13,6 +13,7 @@ resources:
   - code-server
   - comics
   - commander
+  - dashboard
   - deluge
   - external-dns
   - external-services
@@ -49,6 +50,7 @@ resources:
   # - rustfs
   - samba
   - sftpgo
+  - shell2http
   - sidekick
   - sonarr
   - storm

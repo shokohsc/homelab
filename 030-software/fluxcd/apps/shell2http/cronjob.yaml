@@ -1,0 +1,40 @@
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: webhook-trigger
+spec:
+  schedule: "*/15 * * * *"
+  successfulJobsHistoryLimit: 0
+  failedJobsHistoryLimit: 1
+  concurrencyPolicy: Forbid
+  jobTemplate:
+    spec:
+      backoffLimit: 0
+      template:
+        spec:
+          containers:
+            - name: webhook-trigger
+              image: badouralix/curl-jq:alpine
+              command:
+                - /bin/monitor-vpn-egress-gateway-bandwidth.sh
+              env:
+                - name: THRESHOLD_KBPS
+                  value: "200"
+              resources:
+                requests:
+                  cpu: 10m
+                  memory: 64M
+                limits:
+                  cpu: 100m
+                  memory: 64M
+              volumeMounts:
+                - name: scripts
+                  mountPath: /bin/monitor-vpn-egress-gateway-bandwidth.sh
+                  subPath: monitor-vpn-egress-gateway-bandwidth.sh
+          restartPolicy: OnFailure
+          volumes:
+            - name: scripts
+              configMap:
+                defaultMode: 365
+                name: scripts

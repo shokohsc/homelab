@@ -1,0 +1,63 @@
+---
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: dashboard
+spec:
+  revisionHistoryLimit: 0
+  selector:
+    matchLabels:
+      app: dashboard
+  template:
+    metadata:
+      labels:
+        app: dashboard
+        policy.gatekeeper.sh/ignore-psp-volume-types: "true"
+    spec:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: dashboard
+          image: busybox:1.38
+          args: ["busybox", "httpd", "-f", "-v", "-p", "8080"]
+          workingDir: /assets
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+            capabilities:
+              drop:
+                - ALL
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+          startupProbe:
+            tcpSocket:
+              port: http
+          livenessProbe:
+            tcpSocket:
+              port: http
+          readinessProbe:
+            httpGet:
+              port: http
+              path: /
+          resources:
+            requests:
+              cpu: 10m
+              memory: 64M
+            limits:
+              cpu: 100m
+              memory: 64M
+          volumeMounts:
+            - name: assets
+              mountPath: /assets
+      volumes:
+        - name: assets
+          image:
+            reference: shokohsc/k8s-ingress-dashboard:9931023
