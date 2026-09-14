@@ -1,54 +1,19 @@
 ---
-apiVersion: networking.k8s.io/v1
-kind: Ingress
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
 metadata:
   name: storm
-  annotations:
-    cert-manager.io/cluster-issuer: ca-cluster-issuer
-    dashboard.${domain}/icon: magnet
-    dashboard.${domain}/name: storm
-    dashboard.${domain}/url: https://storm.${domain}
-    kubernetes.io/ingress.class: ${ingressClass}
 spec:
-  tls:
-    - hosts:
-        - "storm.${domain}"
-      secretName: storm-cert
+  hostnames:
+  - storm.${domain}
+  parentRefs:
+  - name: cilium
+    namespace: cilium
   rules:
-    - host: "storm.${domain}"
-      http:
-        paths:
-          - path: "/"
-            pathType: Prefix
-            backend:
-              service:
-                name: storm
-                port:
-                  number: 80
-# ---
-# apiVersion: keda.sh/v1alpha1
-# kind: ScaledObject
-# metadata:
-#   name: storm
-#   labels:
-#     deploymentName: storm
-# spec:
-#   scaleTargetRef:
-#     name: storm
-#   pollingInterval: ${pollingInterval}
-#   cooldownPeriod: ${cooldownPeriod}
-#   minReplicaCount: 0
-#   maxReplicaCount: 1
-#   triggers:
-#   - type: prometheus
-#     metadata:
-#       serverAddress: http://prometheus-server.prometheus
-#       metricName: connection_refused
-#       threshold: '1'
-#       query: sum(increase(vector_ingress_nginx_connection_refused{host="storm.${domain}"}[30s]))
-#   - type: prometheus
-#     metadata:
-#       serverAddress: http://prometheus-server.prometheus
-#       metricName: access_frequency
-#       threshold: '1'
-#       query: sum(increase(nginx_ingress_controller_requests{ingress="storm",namespace="storm"}[2m]))
+  - backendRefs:
+    - name: storm
+      port: 80
+    matches:
+    - path:
+        type: PathPrefix
+        value: /
