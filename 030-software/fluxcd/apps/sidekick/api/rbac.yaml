@@ -22,6 +22,6 @@ kind: ClusterRole
 metadata:
   name: sidekick:api
 rules:
-- apiGroups: ["networking.k8s.io"]
-  resources: ["ingresses"]
+- apiGroups: ["gateway.networking.k8s.io"]
+  resources: ["httproutes"]
   verbs: ["get", "list", "watch"]
