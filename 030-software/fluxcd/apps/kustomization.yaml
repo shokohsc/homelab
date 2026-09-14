@@ -61,5 +61,4 @@ resources:
   - victoria-metrics
   - vpn-egress-gateway
   - whoami
-  - yaade
   - zipkin
