@@ -92,6 +92,7 @@ kind: Deployment
 metadata:
   name: vpn-egress-webhook
 spec:
+  revisionHistoryLimit: 0
   selector:
     matchLabels:
       app: vpn-egress-webhook

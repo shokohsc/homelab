@@ -5,6 +5,7 @@ metadata:
   annotations:
     secret.reloader.stakater.com/reload: prowlarr
 spec:
+  revisionHistoryLimit: 0
   selector:
     matchLabels:
       app: prowlarr

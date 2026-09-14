@@ -4,6 +4,7 @@ apiVersion: apps/v1
 metadata:
   name: comics
 spec:
+  revisionHistoryLimit: 0
   selector:
     matchLabels:
       app: comics

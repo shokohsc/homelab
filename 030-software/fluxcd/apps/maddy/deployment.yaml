@@ -6,6 +6,7 @@ metadata:
   annotations:
     configmap.reloader.stakater.com/reload: "config,scripts"
 spec:
+  revisionHistoryLimit: 0
   strategy:
     type: Recreate
   selector:
