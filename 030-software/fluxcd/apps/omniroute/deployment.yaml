@@ -39,6 +39,11 @@ spec:
             capabilities:
               drop:
                 - ALL
+          envFrom:
+            - secretRef:
+              name: variables
+            - configMapRef:
+              name: config
           ports:
             - containerPort: 20128
               name: http
