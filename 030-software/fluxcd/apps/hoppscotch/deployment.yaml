@@ -101,6 +101,9 @@ spec:
             requests:
               cpu: 10m
               memory: 64Mi
+          volumeMounts:
+            - name: temp
+              mountPath: /tmp
         - name: backend
           image: hoppscotch/hoppscotch-backend:2026.8.1
           securityContext:
@@ -183,6 +186,9 @@ spec:
             requests:
               cpu: 10m
               memory: 64Mi
+          volumeMounts:
+            - name: temp
+              mountPath: /tmp
       volumes:
         - name: temp
           emptyDir: {}
