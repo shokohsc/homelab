@@ -70,12 +70,12 @@ spec:
               drop:
                 - ALL
           ports:
-            - containerPort: 3000
+            - containerPort: 8000
               name: frontend
               protocol: TCP
           env:
             - name: HOPP_ALTERNATE_PORT
-              value: "3000"
+              value: "8000"
             - name: DATABASE_URL
               valueFrom:
                 secretKeyRef:
@@ -111,12 +111,12 @@ spec:
               drop:
                 - ALL
           ports:
-            - containerPort: 3170
+            - containerPort: 8170
               name: backend
               protocol: TCP
           env:
             - name: HOPP_ALTERNATE_PORT
-              value: "3170"
+              value: "8170"
             - name: DATABASE_URL
               valueFrom:
                 secretKeyRef:
@@ -152,12 +152,12 @@ spec:
               drop:
                 - ALL
           ports:
-            - containerPort: 3100
+            - containerPort: 8100
               name: admin
               protocol: TCP
           env:
             - name: HOPP_ALTERNATE_PORT
-              value: "3100"
+              value: "8100"
             - name: DATABASE_URL
               valueFrom:
                 secretKeyRef:
