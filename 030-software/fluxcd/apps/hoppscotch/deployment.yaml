@@ -75,7 +75,7 @@ spec:
               protocol: TCP
           env:
             - name: HOPP_ALTERNATE_PORT
-              value: 3000
+              value: "3000"
             - name: DATABASE_URL
               valueFrom:
                 secretKeyRef:
@@ -116,7 +116,7 @@ spec:
               protocol: TCP
           env:
             - name: HOPP_ALTERNATE_PORT
-              value: 3170
+              value: "3170"
             - name: DATABASE_URL
               valueFrom:
                 secretKeyRef:
@@ -157,7 +157,7 @@ spec:
               protocol: TCP
           env:
             - name: HOPP_ALTERNATE_PORT
-              value: 3100
+              value: "3100"
             - name: DATABASE_URL
               valueFrom:
                 secretKeyRef:
