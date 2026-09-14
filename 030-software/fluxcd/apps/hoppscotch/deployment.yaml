@@ -25,7 +25,7 @@ spec:
       automountServiceAccountToken: false
       initContainers:
         - name: 00-migrate
-          image: hoppscotch/hoppscotch-backend:2026.8.0
+          image: hoppscotch/hoppscotch-backend:2026.8.1
           securityContext:
             allowPrivilegeEscalation: false
             readOnlyRootFilesystem: true
@@ -88,7 +88,7 @@ spec:
               cpu: 10m
               memory: 64Mi
         - name: backend
-          image: hoppscotch/hoppscotch-backend:2026.8.0
+          image: hoppscotch/hoppscotch-backend:2026.8.1
           securityContext:
             allowPrivilegeEscalation: false
             readOnlyRootFilesystem: true
