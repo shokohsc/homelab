@@ -3,23 +3,28 @@ kind: Kustomization
 resources:
   - adminer
   - atuin
+  # - backrest
   # - blocky
   - browserless
+  - byparr
   - cert-manager
   - cloudflared
   - cloudnativepg
+  - code-server
   - comics
   - commander
   - deluge
   - external-dns
   - external-services
   # - ferretdb
+  - flaresolverr
   # - freellmapi
   - gatekeeper
   - grafana
   - loki
   - alloy
   - http-echo
+  - hoppscotch
   - jellyfin
   - kaniko
   - konflate
@@ -27,6 +32,8 @@ resources:
   - kube-system
   - maddy
   - metrics-server
+  - miniflux
+  - motrix
   - nats
   - nfs-downloads
   # - omniroute
@@ -45,6 +52,7 @@ resources:
   - sftpgo
   - sidekick
   - sonarr
+  - storm
   - syslog
   - tailscale
   - valkey

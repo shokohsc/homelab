@@ -2,16 +2,17 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: whoami
+  name: motrix
 spec:
-  revisionHistoryLimit: 0
+  strategy:
+    type: Recreate
   selector:
     matchLabels:
-      app: whoami
+      app: motrix
   template:
     metadata:
       labels:
-        app: whoami
+        app: motrix
     spec:
       securityContext:
         runAsNonRoot: true
@@ -20,19 +21,10 @@ spec:
         fsGroup: 1000
         seccompProfile:
           type: RuntimeDefault
-      affinity:
-        podAntiAffinity:
-          preferredDuringSchedulingIgnoredDuringExecution:
-            - weight: 100
-              podAffinityTerm:
-                topologyKey: "kubernetes.io/hostname"
-                labelSelector:
-                  matchLabels:
-                    app: whoami
       automountServiceAccountToken: false
       containers:
-        - name: whoami
-          image: ghcr.io/traefik/whoami:v1.12
+        - name: motrix
+          image: ghcr.io/agalwood/motrix-server:2.0.0-beta.38
           securityContext:
             allowPrivilegeEscalation: false
             readOnlyRootFilesystem: true
@@ -40,11 +32,13 @@ spec:
             capabilities:
               drop:
                 - ALL
-          args:
-            - --port=8080
+          env:
+            MOTRIX_PUBLIC_URL: motrix.${domain}
+            MOTRIX_MDXP_HOST: 0.0.0.0
           ports:
-            - containerPort: 8080
-              name: http
+            - name: http
+              containerPort: 8080
+              protocol: TCP
           startupProbe:
             tcpSocket:
               port: http
@@ -55,10 +49,27 @@ spec:
             httpGet:
               path: /
               port: http
+          volumeMounts:
+            - name: data
+              mountPath: /data
+            - name: downloads
+              mountPath: /downloads
+            - name: temp
+              mountPath: /tmp
           resources:
             requests:
               cpu: 10m
               memory: 64Mi
             limits:
-              cpu: 100m
-              memory: 64Mi
+              cpu: 1000m
+              memory: 128Mi
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: data
+        - name: downloads
+          nfs:
+            server: 10.102.22.211
+            path: /motrix
+        - name: temp
+          emptyDir: {}

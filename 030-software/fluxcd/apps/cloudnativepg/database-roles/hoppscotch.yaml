@@ -1,0 +1,24 @@
+apiVersion: postgresql.cnpg.io/v1
+kind: Database
+metadata:
+  name: hoppscotch
+spec:
+  name: hoppscotch
+  owner: hoppscotch
+  cluster:
+    name: main
+---
+apiVersion: postgresql.cnpg.io/v1
+kind: DatabaseRole
+metadata:
+  name: hoppscotch
+spec:
+  cluster:
+    name: main
+  name: hoppscotch
+  login: true
+  superuser: false
+  createdb: false
+  createrole: false
+  passwordSecret:
+    name: hoppscotch

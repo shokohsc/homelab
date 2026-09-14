@@ -1,0 +1,97 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backrest
+spec:
+  revisionHistoryLimit: 0
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: backrest
+  template:
+    metadata:
+      labels:
+        app: backrest
+        nfs-genji: "true"
+    spec:
+      automountServiceAccountToken: false
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: backrest
+          image: garethgeorge/backrest:latest-alpine
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+            capabilities:
+              drop:
+                - ALL
+          args:
+            - /backrest
+            - -bind-address
+            - :9898
+          env:
+            - name: BACKREST_DATA
+              value: /data
+            - name: BACKREST_CONFIG
+              value: /config/config.json
+            - name: XDG_CACHE_HOME
+              value: /cache
+          ports:
+            - name: http
+              containerPort: 9898
+              protocol: TCP
+          volumeMounts:
+            - name: data
+              mountPath: /data
+            - name: config
+              mountPath: /config
+            - name: cache
+              mountPath: /cache
+            - name: nfs-wd-lucio
+              mountPath: /mnt/lucio
+            - name: nfs-shared
+              mountPath: /mnt/shared
+          startupProbe:
+            tcpSocket:
+              port: http
+          livenessProbe:
+            tcpSocket:
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+          resources:
+            limits:
+              cpu: 1000m
+              memory: 1024M
+            requests:
+              cpu: 1m
+              memory: 10M
+      volumes:
+        - name: config
+          persistentVolumeClaim:
+            claimName: config
+        - name: data
+          persistentVolumeClaim:
+            claimName: data
+        - name: cache
+          persistentVolumeClaim:
+            claimName: cache
+        - name: backups
+          nfs:
+            server: genji.home.arpa
+            path: /backups
+        - name: shared
+          nfs:
+            server: genji.home.arpa
+            path: /shared

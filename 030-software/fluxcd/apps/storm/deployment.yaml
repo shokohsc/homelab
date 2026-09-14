@@ -1,0 +1,67 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: storm
+  labels:
+    app: storm
+spec:
+  revisionHistoryLimit: 0
+  selector:
+    matchLabels:
+      app: storm
+  template:
+    metadata:
+      labels:
+        app: storm
+    spec:
+      automountServiceAccountToken: false
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+      - name: storm
+        image: ghcr.io/relvacode/storm:v1.3.0
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+            capabilities:
+              drop:
+                - ALL
+        env:
+        - name: DELUGE_RPC_HOSTNAME
+          value: deluge.deluge
+        - name: DELUGE_RPC_PORT
+          value: "58846"
+        - name: DELUGE_RPC_USERNAME
+          value: flood
+        - name: DELUGE_RPC_PASSWORD
+          value: flood
+        - name: DELUGE_RPC_VERSION
+          value: v2
+        ports:
+        - name: http
+          containerPort: 8221
+          protocol: TCP
+        startupProbe:
+          tcpSocket:
+            port: http
+        livenessProbe:
+          tcpSocket:
+            port: http
+        readinessProbe:
+          httpGet:
+            path: /
+            port: http
+        resources:
+          limits:
+            cpu: 100m
+            memory: 256Mi
+          requests:
+            cpu: 10m
+            memory: 64Mi

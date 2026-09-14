@@ -2,17 +2,21 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: whoami
+  name: code-server
 spec:
   revisionHistoryLimit: 0
+  strategy:
+    type: Recreate
   selector:
     matchLabels:
-      app: whoami
+      app: code-server
   template:
     metadata:
       labels:
-        app: whoami
+        app: code-server
+        policy.gatekeeper.sh/ignore-container-must-have-limits: "true"
     spec:
+      serviceAccountName: code-server-admin
       securityContext:
         runAsNonRoot: true
         runAsUser: 1000
@@ -20,19 +24,9 @@ spec:
         fsGroup: 1000
         seccompProfile:
           type: RuntimeDefault
-      affinity:
-        podAntiAffinity:
-          preferredDuringSchedulingIgnoredDuringExecution:
-            - weight: 100
-              podAffinityTerm:
-                topologyKey: "kubernetes.io/hostname"
-                labelSelector:
-                  matchLabels:
-                    app: whoami
-      automountServiceAccountToken: false
       containers:
-        - name: whoami
-          image: ghcr.io/traefik/whoami:v1.12
+        - name: code-server
+          image: codercom/code-server:4.137.0
           securityContext:
             allowPrivilegeEscalation: false
             readOnlyRootFilesystem: true
@@ -41,10 +35,12 @@ spec:
               drop:
                 - ALL
           args:
-            - --port=8080
+            - --auth
+            - none
           ports:
-            - containerPort: 8080
-              name: http
+            - name: http
+              containerPort: 8080
+              protocol: TCP
           startupProbe:
             tcpSocket:
               port: http
@@ -55,10 +51,23 @@ spec:
             httpGet:
               path: /
               port: http
+          volumeMounts:
+            - name: data
+              mountPath: /home/coder/data
+            - name: shared
+              mountPath: /home/coder/shared
           resources:
             requests:
-              cpu: 10m
-              memory: 64Mi
-            limits:
               cpu: 100m
-              memory: 64Mi
+              memory: 128Mi
+            limits:
+              cpu: 3000m
+              memory: 4096Mi
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: code-server
+        - name: shared
+          nfs:
+            server: genji.home.arpa
+            path: /shared

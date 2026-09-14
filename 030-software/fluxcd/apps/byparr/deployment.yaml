@@ -2,17 +2,18 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: whoami
+  name: byparr
 spec:
   revisionHistoryLimit: 0
   selector:
     matchLabels:
-      app: whoami
+      app: byparr
   template:
     metadata:
       labels:
-        app: whoami
+        app: byparr
     spec:
+      automountServiceAccountToken: false
       securityContext:
         runAsNonRoot: true
         runAsUser: 1000
@@ -20,19 +21,9 @@ spec:
         fsGroup: 1000
         seccompProfile:
           type: RuntimeDefault
-      affinity:
-        podAntiAffinity:
-          preferredDuringSchedulingIgnoredDuringExecution:
-            - weight: 100
-              podAffinityTerm:
-                topologyKey: "kubernetes.io/hostname"
-                labelSelector:
-                  matchLabels:
-                    app: whoami
-      automountServiceAccountToken: false
       containers:
-        - name: whoami
-          image: ghcr.io/traefik/whoami:v1.12
+        - name: byparr
+          image: ghcr.io/thephaseless/byparr:v3.0.4
           securityContext:
             allowPrivilegeEscalation: false
             readOnlyRootFilesystem: true
@@ -40,11 +31,10 @@ spec:
             capabilities:
               drop:
                 - ALL
-          args:
-            - --port=8080
           ports:
-            - containerPort: 8080
-              name: http
+            - name: http
+              containerPort: 8191
+              protocol: TCP
           startupProbe:
             tcpSocket:
               port: http
@@ -60,5 +50,13 @@ spec:
               cpu: 10m
               memory: 64Mi
             limits:
-              cpu: 100m
-              memory: 64Mi
+              cpu: 1000m
+              memory: 2048Mi
+          volumeMounts:
+            - name: shm
+              mountPath: /dev/shm
+      volumes:
+        - name: shm
+          emptyDir:
+            medium: Memory
+            sizeLimit: 2G
