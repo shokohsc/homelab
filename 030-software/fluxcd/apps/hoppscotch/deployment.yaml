@@ -74,6 +74,8 @@ spec:
               name: frontend
               protocol: TCP
           env:
+            - name: HOPP_ALTERNATE_PORT
+              value: 3000
             - name: DATABASE_URL
               valueFrom:
                 secretKeyRef:
@@ -113,6 +115,8 @@ spec:
               name: backend
               protocol: TCP
           env:
+            - name: HOPP_ALTERNATE_PORT
+              value: 3170
             - name: DATABASE_URL
               valueFrom:
                 secretKeyRef:
@@ -152,6 +156,8 @@ spec:
               name: admin
               protocol: TCP
           env:
+            - name: HOPP_ALTERNATE_PORT
+              value: 3100
             - name: DATABASE_URL
               valueFrom:
                 secretKeyRef:
