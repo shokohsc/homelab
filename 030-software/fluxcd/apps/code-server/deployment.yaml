@@ -26,7 +26,7 @@ spec:
           type: RuntimeDefault
       containers:
         - name: code-server
-          image: codercom/code-server:4.137.0
+          image: ghcr.io/coder/code-server:4.137.0
           securityContext:
             allowPrivilegeEscalation: false
             readOnlyRootFilesystem: true
@@ -52,6 +52,8 @@ spec:
               path: /
               port: http
           volumeMounts:
+            - name: temp
+              mountPath: /home/coder
             - name: data
               mountPath: /home/coder/data
             - name: shared
@@ -64,6 +66,8 @@ spec:
               cpu: 3000m
               memory: 4096Mi
       volumes:
+        - name: temp
+          emptyDir: {}
         - name: data
           persistentVolumeClaim:
             claimName: code-server

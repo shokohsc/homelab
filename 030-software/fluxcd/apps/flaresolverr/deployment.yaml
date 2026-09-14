@@ -55,3 +55,9 @@ spec:
             limits:
               cpu: 1000m
               memory: 2048Mi
+          volumeMounts:
+            - mountPath: /tmp
+              name: temp
+      volumes:
+        - name: temp
+          emptyDir: {}

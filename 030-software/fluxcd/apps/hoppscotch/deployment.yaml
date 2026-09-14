@@ -47,6 +47,13 @@ spec:
             - -c
             - |
               pnpx prisma migrate deploy
+          resources:
+            limits:
+              cpu: 1000m
+              memory: 512Mi
+            requests:
+              cpu: 10m
+              memory: 64Mi
       containers:
         - name: frontend
           image: hoppscotch/hoppscotch-frontend:2026.8.0
