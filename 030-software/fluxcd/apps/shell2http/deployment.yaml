@@ -16,9 +16,23 @@ spec:
         app: shell2http
     spec:
       serviceAccountName: shell2http
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        seccompProfile:
+          type: RuntimeDefault
       containers:
         - name: shell2http
           image: msoap/shell2http:1.17.0
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+            capabilities:
+              drop:
+                - ALL
           args:
             - -export-all-vars
             - '-500'
