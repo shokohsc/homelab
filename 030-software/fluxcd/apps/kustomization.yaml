@@ -24,7 +24,6 @@ resources:
   - loki
   - alloy
   - http-echo
-  - hoppscotch
   - jellyfin
   - kaniko
   - konflate
@@ -62,4 +61,5 @@ resources:
   - victoria-metrics
   - vpn-egress-gateway
   - whoami
+  - yaade
   - zipkin

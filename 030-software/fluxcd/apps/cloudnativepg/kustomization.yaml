@@ -11,7 +11,6 @@ resources:
   - secret.yaml
   - database-roles/atuin.yaml
   - database-roles/ferretdb.yaml
-  - database-roles/hoppscotch.yaml
   - database-roles/maddy.yaml
   - database-roles/miniflux.yaml
   - database-roles/pocket-id.yaml
