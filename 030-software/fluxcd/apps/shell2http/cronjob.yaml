@@ -46,9 +46,13 @@ spec:
                 - name: scripts
                   mountPath: /bin/monitor-vpn-egress-gateway-bandwidth.sh
                   subPath: monitor-vpn-egress-gateway-bandwidth.sh
+                - name: temp
+                  mountPath: /tmp
           restartPolicy: OnFailure
           volumes:
             - name: scripts
               configMap:
                 defaultMode: 365
                 name: scripts
+            - name: temp
+              emptyDir: {}

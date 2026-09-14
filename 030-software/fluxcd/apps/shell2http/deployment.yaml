@@ -14,12 +14,11 @@ spec:
     metadata:
       labels:
         app: shell2http
+        policy.gatekeeper.sh/ignore-psp-pods-allowed-user-ranges: "true"
+        policy.gatekeeper.sh/ignore-psp-readonlyrootfilesystem: "true"
     spec:
       serviceAccountName: shell2http
       securityContext:
-        runAsNonRoot: true
-        runAsUser: 1000
-        runAsGroup: 1000
         fsGroup: 1000
         seccompProfile:
           type: RuntimeDefault
@@ -28,8 +27,6 @@ spec:
           image: msoap/shell2http:1.17.0
           securityContext:
             allowPrivilegeEscalation: false
-            readOnlyRootFilesystem: true
-            runAsNonRoot: true
             capabilities:
               drop:
                 - ALL
@@ -66,10 +63,10 @@ spec:
           resources:
             requests:
               cpu: 10m
-              memory: 64M
+              memory: 64Mi
             limits:
-              cpu: 100m
-              memory: 64M
+              cpu: 1000m
+              memory: 128Mi
           lifecycle:
             postStart:
               exec:
