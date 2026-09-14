@@ -46,7 +46,7 @@ spec:
             - /bin/sh
             - -c
             - |
-              pnpx prisma migrate deploy
+              pnpm exec prisma migrate deploy
           resources:
             limits:
               cpu: 1000m
