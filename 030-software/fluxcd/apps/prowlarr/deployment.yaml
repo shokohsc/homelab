@@ -4,6 +4,7 @@ metadata:
   name: prowlarr
   annotations:
     secret.reloader.stakater.com/reload: prowlarr
+    configmap.reloader.stakater.com/reload: config
 spec:
   revisionHistoryLimit: 0
   selector:
