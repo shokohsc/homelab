@@ -127,7 +127,7 @@ spec:
               cpu: 10m
               memory: 64Mi
         - name: admin
-          image: hoppscotch/hoppscotch-admin:2026.8.0
+          image: hoppscotch/hoppscotch-admin:2026.8.1
           securityContext:
             allowPrivilegeEscalation: false
             readOnlyRootFilesystem: true
