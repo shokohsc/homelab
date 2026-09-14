@@ -61,7 +61,7 @@ spec:
               mountPath: /tmp
       containers:
         - name: frontend
-          image: hoppscotch/hoppscotch-frontend:2026.8.0
+          image: hoppscotch/hoppscotch-frontend:2026.8.1
           securityContext:
             allowPrivilegeEscalation: false
             readOnlyRootFilesystem: true
