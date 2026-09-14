@@ -57,6 +57,8 @@ spec:
           volumeMounts:
             - name: temp
               mountPath: /.cache
+            - name: temp
+              mountPath: /tmp
       containers:
         - name: frontend
           image: hoppscotch/hoppscotch-frontend:2026.8.0
