@@ -26,13 +26,13 @@ spec:
       containers:
       - name: storm
         image: ghcr.io/relvacode/storm:v1.3.0
-          securityContext:
-            allowPrivilegeEscalation: false
-            readOnlyRootFilesystem: true
-            runAsNonRoot: true
-            capabilities:
-              drop:
-                - ALL
+        securityContext:
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: true
+          runAsNonRoot: true
+          capabilities:
+            drop:
+              - ALL
         env:
         - name: DELUGE_RPC_HOSTNAME
           value: deluge.deluge
