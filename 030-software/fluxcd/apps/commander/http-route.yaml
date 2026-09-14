@@ -5,7 +5,7 @@ metadata:
   name: commander
   annotations:
     dashboard.${domain}/name: commander
-    dashboard.${domain}/url: https://commander.${domain}/mnt/
+    dashboard.${domain}/url: https://commander.${domain}/fs/mnt/
     dashboard.${domain}/icon: folder
 spec:
   hostnames:
