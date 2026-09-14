@@ -10,5 +10,5 @@ spec:
       protocol: TCP
       name: http
   selector:
-    app.kubernetes.io/name: motrix
+    app: motrix
   type: ClusterIP

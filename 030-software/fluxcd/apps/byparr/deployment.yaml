@@ -57,7 +57,11 @@ spec:
               mountPath: /dev/shm
             - name: cache
               mountPath: /cache
+            - mountPath: /tmp
+              name: temp
       volumes:
+        - name: temp
+          emptyDir: {}
         - name: shm
           emptyDir:
             medium: Memory
