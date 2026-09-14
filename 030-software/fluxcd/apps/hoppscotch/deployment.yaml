@@ -54,6 +54,9 @@ spec:
             requests:
               cpu: 10m
               memory: 64Mi
+          volumeMounts:
+            - name: temp
+              mountPath: /.cache
       containers:
         - name: frontend
           image: hoppscotch/hoppscotch-frontend:2026.8.0
@@ -172,3 +175,6 @@ spec:
             requests:
               cpu: 10m
               memory: 64Mi
+      volumes:
+        - name: temp
+          emptyDir: {}

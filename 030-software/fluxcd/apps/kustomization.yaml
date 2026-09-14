@@ -6,7 +6,7 @@ resources:
   # - backrest
   # - blocky
   - browserless
-  - byparr
+  # - byparr
   - cert-manager
   - cloudflared
   - cloudnativepg
@@ -17,7 +17,7 @@ resources:
   - external-dns
   - external-services
   # - ferretdb
-  - flaresolverr
+  # - flaresolverr
   # - freellmapi
   - gatekeeper
   - grafana
