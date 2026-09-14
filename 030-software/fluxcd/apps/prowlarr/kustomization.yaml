@@ -7,3 +7,8 @@ resources:
   - service.yaml
   - http-route.yaml
   - secret.yaml
+configMapGenerator:
+- name: config
+  env: ./config/radarr.env
+generatorOptions:
+  disableNameSuffixHash: true
