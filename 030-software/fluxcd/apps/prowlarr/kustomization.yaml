@@ -9,6 +9,6 @@ resources:
   - secret.yaml
 configMapGenerator:
 - name: config
-  env: ./config/radarr.env
+  env: ./config/prowlarr.env
 generatorOptions:
   disableNameSuffixHash: true
