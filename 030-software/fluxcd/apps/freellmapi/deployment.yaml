@@ -43,9 +43,9 @@ spec:
                 - ALL
           envFrom:
             - secretRef:
-              name: variables
+                name: variables
             - configMapRef:
-              name: config
+                name: config
           ports:
             - containerPort: 3001
               name: http
