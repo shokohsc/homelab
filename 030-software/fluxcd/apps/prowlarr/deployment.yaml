@@ -57,14 +57,14 @@ spec:
               cpu: 100m
               memory: 128M
           volumeMounts:
-            - name: tmp
-              mountPath: /config
+            # - name: tmp
+            #   mountPath: /config
             - name: prowlarr
               mountPath: /config/config.xml
               subPath: config.xml
       volumes:
-        - name: tmp
-          emptyDir: {}
+        # - name: tmp
+        #   emptyDir: {}
         - name: prowlarr
           secret:
             defaultMode: 0644
