@@ -33,8 +33,10 @@ spec:
               drop:
                 - ALL
           env:
-            MOTRIX_PUBLIC_URL: motrix.${domain}
-            MOTRIX_MDXP_HOST: 0.0.0.0
+            - name: MOTRIX_PUBLIC_URL
+              value: motrix.${domain}
+            - name: MOTRIX_MDXP_HOST
+              value: 0.0.0.0
           ports:
             - name: http
               containerPort: 8080
