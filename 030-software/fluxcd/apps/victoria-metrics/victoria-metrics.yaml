@@ -33,6 +33,10 @@ spec:
             namespace: cilium
         hostnames:
           - victoria-metrics.${domain}
+        annotations:
+          dashboard.${domain}/name: victoria-metrics
+          dashboard.${domain}/url: https://victoria-metrics.${domain}
+          dashboard.${domain}/icon: chart-line
       persistentVolume:
         size: 1Gi
       resources:

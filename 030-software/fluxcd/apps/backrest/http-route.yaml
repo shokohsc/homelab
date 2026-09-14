@@ -3,6 +3,10 @@ apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
 metadata:
   name: backrest
+  annotations:
+    dashboard.${domain}/name: backrest
+    dashboard.${domain}/url: https://backrest.${domain}
+    dashboard.${domain}/icon: harddisk
 spec:
   hostnames:
   - backrest.${domain}

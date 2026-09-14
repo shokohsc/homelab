@@ -3,6 +3,10 @@ apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
 metadata:
   name: sftpgo
+  annotations:
+    dashboard.${domain}/icon:  folder-key-network
+    dashboard.${domain}/name: sftpgo
+    dashboard.${domain}/url: https://sftpgo.${domain}
 spec:
   hostnames:
   - sftpgo.${domain}

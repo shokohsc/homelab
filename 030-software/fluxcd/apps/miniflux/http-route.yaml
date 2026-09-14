@@ -3,6 +3,10 @@ apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
 metadata:
   name: miniflux
+  annotations:
+    dashboard.${domain}/icon: rss
+    dashboard.${domain}/name: miniflux
+    dashboard.${domain}/url: https://miniflux.${domain}
 spec:
   hostnames:
   - miniflux.${domain}

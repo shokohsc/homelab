@@ -3,6 +3,10 @@ apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
 metadata:
   name: motrix
+  annotations:
+    dashboard.${domain}/name: motrix
+    dashboard.${domain}/url: https://motrix.${domain}
+    dashboard.${domain}/icon: download
 spec:
   hostnames:
   - motrix.${domain}

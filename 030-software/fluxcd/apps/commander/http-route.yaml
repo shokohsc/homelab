@@ -3,6 +3,10 @@ apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
 metadata:
   name: commander
+  annotations:
+    dashboard.${domain}/name: commander
+    dashboard.${domain}/url: https://commander.${domain}/mnt/
+    dashboard.${domain}/icon: folder
 spec:
   hostnames:
   - commander.home.arpa
