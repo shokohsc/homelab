@@ -17,3 +17,22 @@ spec:
         - path:
             type: PathPrefix
             value: /
+      filters:
+        - cors:
+            allowOrigins:
+            - https://dashboard.${domain}
+            allowMethods:
+            - GET
+            - OPTIONS
+            allowHeaders:
+            - DNT
+            - X-CustomHeader
+            - Keep-Alive
+            - User-Agent
+            - X-Requested-With
+            - If-Modified-Since
+            - Cache-Control
+            - Content-Type
+            allowCredentials: false
+            maxAge: 3600
+          type: CORS
