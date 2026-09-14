@@ -12,5 +12,5 @@ spec:
       sectionName: postgres
   rules:
     - backendRefs:
-        - name: main-rw
+        - name: main-ro
           port: 5432
