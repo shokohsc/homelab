@@ -36,7 +36,7 @@ spec:
                     app: freellmapi
       containers:
         - name: freellmapi
-          image: ghcr.io/tashfeenahmed/freellmapi:v0.9.9
+          image: ghcr.io/tashfeenahmed/freellmapi:v0.10.0
           securityContext:
             allowPrivilegeEscalation: false
             readOnlyRootFilesystem: true
