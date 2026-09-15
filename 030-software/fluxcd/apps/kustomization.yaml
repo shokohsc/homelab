@@ -19,7 +19,7 @@ resources:
   - external-services
   # - ferretdb
   # - flaresolverr
-  - freellmapi
+  # - freellmapi
   - gatekeeper
   - grafana
   - loki
@@ -36,7 +36,7 @@ resources:
   - motrix
   - nats
   - nfs-downloads
-  - omniroute
+  # - omniroute
   - plex
   - pocket-id
   - prowlarr
