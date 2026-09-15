@@ -60,3 +60,9 @@ spec:
             limits:
               cpu: 100m
               memory: 64Mi
+          volumeMouns:
+            - name: data
+              mountPath: /home/node
+      volumnes:
+        - name: data
+          emptyDir: {}
