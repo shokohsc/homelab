@@ -7,13 +7,6 @@ spec:
   owner: ferretdb
   cluster:
     name: main
-  # extensions:
-  #   - name: pg_cron
-  #     version: "<VERSION>"
-  #   - name: pg_documentdb_core
-  #     version: "<VERSION>"
-  #   - name: pg_documentdb
-  #     version: "<VERSION>"
 ---
 apiVersion: postgresql.cnpg.io/v1
 kind: DatabaseRole
