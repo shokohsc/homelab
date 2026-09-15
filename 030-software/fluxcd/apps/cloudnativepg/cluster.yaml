@@ -21,7 +21,7 @@ spec:
   superuserSecret:
     name: postgres
   storage:
-    size: 1Gi
+    size: 2Gi
   resources:
     requests:
       memory: "512Mi"
