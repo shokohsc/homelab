@@ -3,6 +3,10 @@ apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
 metadata:
   name: restfox
+  annotations:
+    dashboard.${domain}/name: restfox
+    dashboard.${domain}/url: https://restfox.${domain}
+    dashboard.${domain}/icon: api
 spec:
   hostnames:
   - restfox.${domain}
