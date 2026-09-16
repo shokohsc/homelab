@@ -67,8 +67,8 @@ spec:
               cpu: 10m
               memory: 64Mi
             limits:
-              cpu: 100m
-              memory: 64Mi
+              cpu: 1000m
+              memory: 256Mi
           volumeMounts:
             - mountPath: /app/server/data
               name: data
