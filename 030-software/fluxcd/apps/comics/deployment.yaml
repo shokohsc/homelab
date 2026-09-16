@@ -12,44 +12,31 @@ spec:
     metadata:
       labels:
         app: comics
-        policy.gatekeeper.sh/ignore-psp-readonlyrootfilesystem: "true"
-        policy.gatekeeper.sh/ignore-psp-pods-allowed-user-ranges: "true"
-        policy.gatekeeper.sh/ignore-psp-capabilities-baseline: "true"
+        policy.gatekeeper.sh/ignore-psp-volume-types: "true"
     spec:
       automountServiceAccountToken: false
       securityContext:
-        # runAsNonRoot: true
-        # runAsUser: 1000
-        # runAsGroup: 1000
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
         fsGroup: 1000
         seccompProfile:
           type: RuntimeDefault
       containers:
         - name: comics
-          image: shokohsc/ouistity:b8ba4de
+          image: busybox:1.38
+          args: ["busybox", "httpd", "-f", "-v", "-p", "8080"]
+          workingDir: /assets
           securityContext:
             allowPrivilegeEscalation: false
-            # readOnlyRootFilesystem: true
-            # runAsNonRoot: true
-            # capabilities:
-            #   drop:
-            #     - ALL
-          env:
-            - name: ENV
-              value: production
-            - name: API_GATEWAY_HOST
-              value: api.comics.${domain}
-            - name: GRAPHQL_GATEWAY_HOST
-              value: apollo.comics.${domain}
-            - name: GRAPHQL_CACHE_TTL
-              value: "600"
-            - name: USE_SENTRY
-              value: "false"
-            # - name: SENTRY_DSN
-            #   value: https://a8a984e25f134ddfae31c6e88ed3b4d8\@glitchtip.${domain}/2
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+            capabilities:
+              drop:
+                - ALL
           ports:
             - name: http
-              containerPort: 80
+              containerPort: 8080
               protocol: TCP
           startupProbe:
             tcpSocket:
@@ -59,12 +46,19 @@ spec:
               port: http
           readinessProbe:
             httpGet:
-              path: /
               port: http
+              path: /
           resources:
             requests:
               cpu: 10m
-              memory: 64Mi
+              memory: 64M
             limits:
               cpu: 100m
-              memory: 64Mi
+              memory: 64M
+          volumeMounts:
+            - name: assets
+              mountPath: /assets
+      volumes:
+        - name: assets
+          image:
+            reference: shokohsc/ouistity:d282bb5
