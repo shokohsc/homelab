@@ -22,6 +22,8 @@ spec:
     filters:
     - cors:
         allowOrigins:
+        - https://preview.comics.${domain}
+        - https://dev.comics.${domain}
         - https://comics.${domain}
         allowMethods:
         - GET
