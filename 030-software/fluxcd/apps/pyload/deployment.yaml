@@ -53,7 +53,7 @@ spec:
             - name: config
               mountPath: /config
             - name: pyload
-              mountPath: /config/settings/pyload.cfg
+              mountPath: /defaults/pyload.cfg
               subPath: pyload.cfg
             - name: downloads
               mountPath: /downloads
