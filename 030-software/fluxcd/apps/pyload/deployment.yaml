@@ -2,18 +2,20 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: motrix
+  name: pyload
 spec:
+  revisionHistoryLimit: 0
   strategy:
     type: Recreate
   selector:
     matchLabels:
-      app: motrix
+      app: pyload
   template:
     metadata:
       labels:
-        app: motrix
+        app: pyload
     spec:
+      automountServiceAccountToken: false
       securityContext:
         runAsNonRoot: true
         runAsUser: 1000
@@ -21,10 +23,9 @@ spec:
         fsGroup: 1000
         seccompProfile:
           type: RuntimeDefault
-      automountServiceAccountToken: false
       containers:
-        - name: motrix
-          image: ghcr.io/agalwood/motrix-server:2.0.0-beta.38
+        - name: pyload
+          image: ghcr.io/home-operations/pyload-ng:0.5.0
           securityContext:
             allowPrivilegeEscalation: false
             readOnlyRootFilesystem: true
@@ -32,14 +33,9 @@ spec:
             capabilities:
               drop:
                 - ALL
-          env:
-            - name: MOTRIX_PUBLIC_URL
-              value: motrix.${domain}
-            - name: MOTRIX_MDXP_HOST
-              value: 0.0.0.0
           ports:
             - name: http
-              containerPort: 8080
+              containerPort: 8000
               protocol: TCP
           startupProbe:
             tcpSocket:
@@ -52,26 +48,29 @@ spec:
               path: /
               port: http
           volumeMounts:
-            - name: data
-              mountPath: /data
+            - name: config
+              mountPath: /config
+            - name: pyload
+              mountPath: /config/settings/pyload.cfg
+              subPath: pyload.cfg
             - name: downloads
               mountPath: /downloads
-            - name: temp
-              mountPath: /tmp
           resources:
             requests:
               cpu: 10m
-              memory: 64Mi
+              memory: 64M
             limits:
               cpu: 1000m
-              memory: 128Mi
+              memory: 128M
       volumes:
-        - name: data
+        - name: config
           persistentVolumeClaim:
-            claimName: data
+            claimName: config
+        - name: pyload
+          configMap:
+            defaultMode: 0644
+            name: pyload
         - name: downloads
           nfs:
             server: 10.102.22.211
-            path: /motrix
-        - name: temp
-          emptyDir: {}
+            path: /pyload

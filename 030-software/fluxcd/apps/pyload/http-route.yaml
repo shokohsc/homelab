@@ -2,20 +2,20 @@
 apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
 metadata:
-  name: freellmapi
+  name: pyload
   annotations:
-    dashboard.${domain}/icon: robot
-    dashboard.${domain}/name: freellmapi
-    dashboard.${domain}/url: https://freellmapi.${domain}
+    dashboard.${domain}/name: pyload
+    dashboard.${domain}/url: https://pyload.${domain}
+    dashboard.${domain}/icon: download
 spec:
   hostnames:
-  - freellmapi.${domain}
+  - pyload.${domain}
   parentRefs:
   - name: cilium
     namespace: cilium
   rules:
   - backendRefs:
-    - name: freellmapi
+    - name: pyload
       port: 80
     matches:
     - path:

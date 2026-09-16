@@ -19,7 +19,6 @@ resources:
   - external-services
   # - ferretdb
   # - flaresolverr
-  - freellmapi
   - gatekeeper
   - grafana
   - loki
@@ -33,14 +32,13 @@ resources:
   - maddy
   - metrics-server
   - miniflux
-  - motrix
   - nats
   - nfs-downloads
-  # - omniroute
   - plex
   - pocket-id
   - prowlarr
   - proxmox
+  - pyload
   - radarr
   - radio
   - rathole
