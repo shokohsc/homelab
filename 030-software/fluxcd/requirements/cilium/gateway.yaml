@@ -21,7 +21,7 @@ spec:
       hostname: "*.${domain}"
       allowedRoutes:
         namespaces:
-          from: All
+          from: Same
     - name: https
       port: 443
       protocol: HTTPS
@@ -218,3 +218,23 @@ spec:
           selector:
             matchLabels:
               app: samba
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: http-to-https
+  namespace: cilium
+spec:
+  parentRefs:
+    - name: cilium
+      sectionName: http
+  rules:
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /
+      filters:
+        - type: RequestRedirect
+          requestRedirect:
+            scheme: https
+            statusCode: 301
