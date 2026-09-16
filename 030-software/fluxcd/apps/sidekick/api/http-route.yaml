@@ -21,6 +21,7 @@ spec:
         - cors:
             allowOrigins:
             - https://dev.dashboard.${domain}
+            - https://preview.dashboard.${domain}
             - https://dashboard.${domain}
             allowMethods:
             - GET
