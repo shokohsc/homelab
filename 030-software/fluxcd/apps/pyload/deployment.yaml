@@ -48,6 +48,8 @@ spec:
               path: /
               port: http
           volumeMounts:
+            - name: temp
+              mountPath: /tmp
             - name: config
               mountPath: /config
             - name: pyload
@@ -63,6 +65,8 @@ spec:
               cpu: 1000m
               memory: 128M
       volumes:
+        - name: temp
+          emptyDir: {}
         - name: config
           persistentVolumeClaim:
             claimName: config
