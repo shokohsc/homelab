@@ -54,7 +54,7 @@ resources:
   - radarr
   - radio
   - rathole
-  # - reactflux
+  - reactflux
   - redisinsight
   - reloader
   - renovate
