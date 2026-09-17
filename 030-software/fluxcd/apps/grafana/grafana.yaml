@@ -155,7 +155,7 @@ spec:
           # - name: mattermost-postgres
           #   type: postgres
           #   access: proxy
-          #   url: postgresql.postgresql
+          #   url: main-ro.cnpg-system
           #   user: mattermost
           #   database: mattermost
           #   jsonData:
@@ -166,7 +166,7 @@ spec:
           - name: sidekick-postgres
             type: postgres
             access: proxy
-            url: postgresql.postgresql
+            url: main-ro.cnpg-system
             user: sidekick
             database: sidekick
             jsonData:
@@ -177,7 +177,7 @@ spec:
           # - name: blocky-postgres
           #   type: postgres
           #   access: proxy
-          #   url: postgresql.postgresql
+          #   url: main-ro.cnpg-system
           #   user: blocky
           #   database: blocky
           #   jsonData:
