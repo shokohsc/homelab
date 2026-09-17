@@ -17,7 +17,7 @@ spec:
             app: descheduler
         spec:
           priorityClassName: system-cluster-critical
-          serviceAccountName: descheduler
+          serviceAccountName: descheduler-sa
           securityContext:
             runAsNonRoot: true
             runAsUser: 1000
