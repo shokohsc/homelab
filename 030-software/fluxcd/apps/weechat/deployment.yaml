@@ -41,7 +41,7 @@ spec:
             - -r
             - |-
               /set relay.network.password weechat
-              /relay add api 9001
+              /relay add weechat 9001
               /set xfer.file.auto_accept_files on
           env:
             - name: RELAY_PORT
