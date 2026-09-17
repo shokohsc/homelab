@@ -8,7 +8,7 @@ resources:
   - browserless
   # - byparr
   - cert-manager
-  # - city-roads
+  - city-roads
   - cloudflared
   - cloudnativepg
   - code-server
@@ -18,7 +18,7 @@ resources:
   - dashboard
   - deluge
   - descheduler
-  # - excalidraw
+  - excalidraw
   - external-dns
   - external-services
   # - ferretdb
@@ -26,7 +26,7 @@ resources:
   - gatekeeper
   - grafana
   - grist
-  # - iptvnator
+  - iptvnator
   - jsoncrack
   - libreddit
   - loki

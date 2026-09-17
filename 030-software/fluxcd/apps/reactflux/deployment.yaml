@@ -36,7 +36,7 @@ spec:
                 - ALL
           ports:
             - name: http
-              containerPort: 2000
+              containerPort: 8080
               protocol: TCP
           startupProbe:
             tcpSocket:
