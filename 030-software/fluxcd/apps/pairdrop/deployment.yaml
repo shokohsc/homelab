@@ -63,7 +63,7 @@ spec:
       #     volumeMounts:
       #       - name: assets
       #         mountPath: /assets
-      #         subPath: /app/paridrop/public
+      #         subPath: app/paridrop/public
       # volumes:
       #   - name: assets
       #     image:

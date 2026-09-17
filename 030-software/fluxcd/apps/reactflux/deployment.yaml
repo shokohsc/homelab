@@ -58,7 +58,7 @@ spec:
       volumeMounts:
             - name: assets
               mountPath: /assets
-              subPath: /srv
+              subPath: srv
       volumes:
         - name: assets
           image:

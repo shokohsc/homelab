@@ -35,6 +35,9 @@ spec:
             capabilities:
               drop:
                 - ALL
+          env:
+            - name: GRIST_IN_SERVICE
+              value: "true"
           ports:
             - name: http
               containerPort: 8484
