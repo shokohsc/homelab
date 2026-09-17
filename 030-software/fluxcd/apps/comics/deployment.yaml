@@ -51,10 +51,10 @@ spec:
           resources:
             requests:
               cpu: 10m
-              memory: 64M
+              memory: 64Mi
             limits:
               cpu: 100m
-              memory: 64M
+              memory: 64Mi
           volumeMounts:
             - name: assets
               mountPath: /assets
