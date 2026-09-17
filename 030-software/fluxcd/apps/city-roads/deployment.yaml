@@ -26,7 +26,7 @@ spec:
         - name: city-roads
           image: busybox:1.38
           args: ["busybox", "httpd", "-f", "-v", "-p", "8080"]
-          workingDir: /assets/usr/share/nginx/html
+          workingDir: /assets
           securityContext:
             allowPrivilegeEscalation: false
             readOnlyRootFilesystem: true
