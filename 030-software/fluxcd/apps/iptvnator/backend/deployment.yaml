@@ -56,3 +56,10 @@ spec:
             limits:
               cpu: 1000m
               memory: 256Mi
+          volumeMounts:
+            - name: temp
+              mountPath: /home/node/.npm
+      volumes:
+        - name: temp
+          emptyDir:
+            medium: Memory

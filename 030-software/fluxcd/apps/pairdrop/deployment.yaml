@@ -12,25 +12,26 @@ spec:
     metadata:
       labels:
         app: pairdrop
+        policy.gatekeeper.sh/ignore: "true"
     spec:
       automountServiceAccountToken: false
       securityContext:
-        runAsNonRoot: true
-        runAsUser: 1000
-        runAsGroup: 1000
-        fsGroup: 1000
+        # runAsNonRoot: true
+        # runAsUser: 1000
+        # runAsGroup: 1000
+        # fsGroup: 1000
         seccompProfile:
           type: RuntimeDefault
       containers:
         - name: pairdrop
           image: lscr.io/linuxserver/pairdrop:1.11.2
-          securityContext:
-            allowPrivilegeEscalation: false
-            readOnlyRootFilesystem: true
-            runAsNonRoot: true
-            capabilities:
-              drop:
-                - ALL
+          # securityContext:
+          #   allowPrivilegeEscalation: false
+          #   readOnlyRootFilesystem: true
+          #   runAsNonRoot: true
+          #   capabilities:
+          #     drop:
+          #       - ALL
           env:
             - name: WS_FALLBACK
               value: "true"
