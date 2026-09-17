@@ -14,7 +14,6 @@ spec:
     metadata:
       labels:
         app: weechat
-        policy.gatekeeper.sh/ignore-psp-capabilities-baseline: "true"
     spec:
       automountServiceAccountToken: false
       securityContext:
@@ -44,11 +43,11 @@ spec:
               /set relay.network.password weechat
               /relay add weechat 9001
               /set xfer.file.auto_accept_files on
-          # env:
-          #   - name: RELAY_PORT
-          #     value: "9001"
-          #   - name: SERVER_NAME
-          #     value: localhost
+          env:
+            - name: RELAY_PORT
+              value: "9001"
+            - name: SERVER_NAME
+              value: localhost
           ports:
             - name: relay
               containerPort: 9001

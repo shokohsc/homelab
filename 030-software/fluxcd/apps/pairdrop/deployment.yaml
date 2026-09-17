@@ -12,34 +12,36 @@ spec:
     metadata:
       labels:
         app: pairdrop
-        policy.gatekeeper.sh/ignore-psp-volume-types: "true"
+        policy.gatekeeper.sh/ignore: "true"
+        # policy.gatekeeper.sh/ignore-psp-volume-types: "true"
     spec:
       automountServiceAccountToken: false
       securityContext:
-        runAsNonRoot: true
-        runAsUser: 1000
-        runAsGroup: 1000
-        fsGroup: 1000
+        # runAsNonRoot: true
+        # runAsUser: 1000
+        # runAsGroup: 1000
+        # fsGroup: 1000
         seccompProfile:
           type: RuntimeDefault
       containers:
         - name: pairdrop
-          image: busybox:1.38
-          args: ["busybox", "httpd", "-f", "-v", "-p", "8080"]
-          workingDir: /assets
-          securityContext:
-            allowPrivilegeEscalation: false
-            readOnlyRootFilesystem: true
-            runAsNonRoot: true
-            capabilities:
-              drop:
-                - ALL
+          image: lscr.io/linuxserver/pairdrop:1.11.2
+          # image: busybox:1.38
+          # args: ["busybox", "httpd", "-f", "-v", "-p", "8080"]
+          # workingDir: /assets
+          # securityContext:
+          #   allowPrivilegeEscalation: false
+          #   readOnlyRootFilesystem: true
+          #   runAsNonRoot: true
+          #   capabilities:
+          #     drop:
+          #       - ALL
           env:
             - name: WS_FALLBACK
               value: "true"
           ports:
             - name: http
-              containerPort: 8080
+              containerPort: 3000
               protocol: TCP
           startupProbe:
             tcpSocket:
@@ -58,12 +60,12 @@ spec:
             limits:
               cpu: 100m
               memory: 64Mi
-          volumeMounts:
-            - name: assets
-              mountPath: /assets
-              subPath: app/pairdrop/public
-      volumes:
-        - name: assets
-          image:
-            reference: lscr.io/linuxserver/pairdrop:1.11.2
-            pullPolicy: Always
+      #     volumeMounts:
+      #       - name: assets
+      #         mountPath: /assets
+      #         subPath: app/pairdrop/public
+      # volumes:
+      #   - name: assets
+      #     image:
+      #       reference: lscr.io/linuxserver/pairdrop:1.11.2
+      #       pullPolicy: Always
