@@ -61,7 +61,7 @@ spec:
           volumeMounts:
             - name: assets
               mountPath: /assets
-              subPath: app/paridrop/public
+              subPath: app/pairdrop/public
       volumes:
         - name: assets
           image:
