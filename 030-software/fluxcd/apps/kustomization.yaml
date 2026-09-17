@@ -41,6 +41,7 @@ resources:
   - maddy
   - metrics-server
   - miniflux
+  - motrix
   - nats
   - nfs-downloads
   - paint

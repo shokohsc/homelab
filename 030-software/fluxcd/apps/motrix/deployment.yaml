@@ -1,0 +1,77 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: motrix
+spec:
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: motrix
+  template:
+    metadata:
+      labels:
+        app: motrix
+    spec:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        seccompProfile:
+          type: RuntimeDefault
+      automountServiceAccountToken: false
+      containers:
+        - name: motrix
+          image: ghcr.io/agalwood/motrix-server:2.0.0-beta.39
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+            capabilities:
+              drop:
+                - ALL
+          env:
+            - name: MOTRIX_PUBLIC_URL
+              value: motrix.${domain}
+            - name: MOTRIX_MDXP_HOST
+              value: 0.0.0.0
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+          startupProbe:
+            tcpSocket:
+              port: http
+          livenessProbe:
+            tcpSocket:
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+          volumeMounts:
+            - name: data
+              mountPath: /data
+            - name: downloads
+              mountPath: /downloads
+            - name: temp
+              mountPath: /tmp
+          resources:
+            requests:
+              cpu: 10m
+              memory: 64Mi
+            limits:
+              cpu: 1000m
+              memory: 128Mi
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: data
+        - name: downloads
+          nfs:
+            server: 10.102.22.211
+            path: /motrix
+        - name: temp
+          emptyDir: {}

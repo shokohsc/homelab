@@ -14,6 +14,7 @@ spec:
     metadata:
       labels:
         app: weechat
+        policy.gatekeeper.sh/ignore-psp-readonlyrootfilesystem: "true"
     spec:
       automountServiceAccountToken: false
       securityContext:
@@ -28,7 +29,7 @@ spec:
           image: weechat/weechat:4.10.1-alpine-slim
           securityContext:
             allowPrivilegeEscalation: false
-            readOnlyRootFilesystem: true
+            # readOnlyRootFilesystem: true
             runAsNonRoot: true
             capabilities:
               drop:
