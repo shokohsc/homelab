@@ -54,6 +54,9 @@ spec:
           volumeMounts:
             - name: data
               mountPath: /data
+            - name: token
+              mountPath: /data/operator-token
+              subPath: operator-token
             - name: downloads
               mountPath: /downloads
             - name: temp
@@ -63,8 +66,8 @@ spec:
               cpu: 10m
               memory: 64Mi
             limits:
-              cpu: 1000m
-              memory: 128Mi
+              cpu: 2000m
+              memory: 2048Mi
       volumes:
         - name: data
           persistentVolumeClaim:
@@ -75,3 +78,6 @@ spec:
             path: /motrix
         - name: temp
           emptyDir: {}
+        - name: token
+          secret:
+            secretName: motrix
