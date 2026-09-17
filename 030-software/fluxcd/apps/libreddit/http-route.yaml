@@ -1,0 +1,23 @@
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: libreddit
+  annotations:
+    dashboard.${domain}/name: libreddit
+    dashboard.${domain}/url: https://libreddit.${domain}/r/selfhosted
+    dashboard.${domain}/icon: reddit
+spec:
+  hostnames:
+  - libreddit.${domain}
+  parentRefs:
+  - name: cilium
+    namespace: cilium
+  rules:
+  - backendRefs:
+    - name: libreddit
+      port: 80
+    matches:
+    - path:
+        type: PathPrefix
+        value: /

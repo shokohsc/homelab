@@ -1,0 +1,42 @@
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: irc
+  annotations:
+    dashboard.${domain}/name: weechat
+    dashboard.${domain}/url: https://irc.${domain}/#host=weechat.${domain}&password=weechat&port=443&autoconnect=true
+    dashboard.${domain}/icon: forum
+spec:
+  hostnames:
+  - irc.${domain}
+  parentRefs:
+  - name: cilium
+    namespace: cilium
+  rules:
+  - backendRefs:
+    - name: weechat
+      port: 80
+    matches:
+    - path:
+        type: PathPrefix
+        value: /
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: weechat
+spec:
+  hostnames:
+  - weechat.${domain}
+  parentRefs:
+  - name: cilium
+    namespace: cilium
+  rules:
+  - backendRefs:
+    - name: weechat
+      port: 9001
+    matches:
+    - path:
+        type: PathPrefix
+        value: /

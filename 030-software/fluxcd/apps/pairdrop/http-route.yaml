@@ -1,0 +1,23 @@
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: pairdrop
+  annotations:
+    dashboard.${domain}/name: pairdrop
+    dashboard.${domain}/url: https://pairdrop.${domain}
+    dashboard.${domain}/icon: monitor-share
+spec:
+  hostnames:
+  - pairdrop.${domain}
+  parentRefs:
+  - name: cilium
+    namespace: cilium
+  rules:
+  - backendRefs:
+    - name: pairdrop
+      port: 80
+    matches:
+    - path:
+        type: PathPrefix
+        value: /

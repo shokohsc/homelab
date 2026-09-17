@@ -1,0 +1,90 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: whoogle
+  annotations:
+    configmap.reloader.stakater.com/reload: "css"
+spec:
+  revisionHistoryLimit: 0
+  selector:
+    matchLabels:
+      app: whoogle
+  template:
+    metadata:
+      labels:
+        app: whoogle
+    spec:
+      automountServiceAccountToken: false
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: whoogle
+          image: benbusby/whoogle-search:1.2.4
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+            capabilities:
+              drop:
+                - ALL
+          env:
+            - name: WHOOGLE_CONFIG_THEME
+              value: "dark"
+            - name: WHOOGLE_RESULTS_PER_PAGE
+              value: "20"
+            - name: WHOOGLE_CONFIG_DISABLE
+              value: "true"
+            - name: WHOOGLE_CONFIG_URL
+              value: "https://whoogle.${domain}"
+            - name: WHOOGLE_CONFIG_TOR
+              value: "0"
+            - name: WHOOGLE_AUTOCOMPLETE
+              value: "0"
+            - name: WHOOGLE_MINIMAL
+              value: "true"
+            - name: WHOOGLE_CONFIG_NEW_TAB
+              value: "true"
+            - name: WHOOGLE_CONFIG_STYLE
+              valueFrom:
+                configMapKeyRef:
+                  name: css
+                  key: style.css
+          ports:
+            - name: http
+              containerPort: 5000
+              protocol: TCP
+          startupProbe:
+            tcpSocket:
+              port: http
+          livenessProbe:
+            tcpSocket:
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+          resources:
+            requests:
+              cpu: 10m
+              memory: 128Mi
+            limits:
+              cpu: 1000m
+              memory: 1024Mi
+          # volumeMounts:
+          #   - name: scripts
+          #     mountPath: /whoogle/misc/tor/start-tor.sh
+          #     subPath: start-tor.sh
+
+      volumes:
+        - name: profile
+          emptyDir: {}
+        # - name: scripts
+        #   configMap:
+        #     name: scripts
+        #     defaultMode: 0755

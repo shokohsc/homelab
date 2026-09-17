@@ -8,19 +8,27 @@ resources:
   - browserless
   # - byparr
   - cert-manager
+  - city-roads
   - cloudflared
   - cloudnativepg
   - code-server
   - comics
   - commander
+  - cyberchef
   - dashboard
   - deluge
+  - descheduler
+  - excalidraw
   - external-dns
   - external-services
   # - ferretdb
   # - flaresolverr
   - gatekeeper
   - grafana
+  - grist
+  - iptvnator
+  - jsoncrack
+  - libreddit
   - loki
   - alloy
   - http-echo
@@ -35,6 +43,9 @@ resources:
   - miniflux
   - nats
   - nfs-downloads
+  - paint
+  - pairdrop
+  - passed
   - plex
   - pocket-id
   - prowlarr
@@ -43,24 +54,32 @@ resources:
   - radarr
   - radio
   - rathole
+  - reactflux
   - redisinsight
   - reloader
   - renovate
   - restfox
   # - rustfs
+  - rustpad
   - samba
   - sftpgo
   # - shell2http
   - sidekick
   - sonarr
+  - stackedit
   - storm
   - syslog
   - tailscale
+  - thelounge
   - valkey
   - vaultwarden
   - victoria-logs
   - victoria-logs-collector
   - victoria-metrics
   - vpn-egress-gateway
+  - web-check
+  - weechat
   - whoami
+  - whoogle
+  - ws-screenshot
   - zipkin

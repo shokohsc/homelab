@@ -1,0 +1,23 @@
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: stackedit
+  annotations:
+    dashboard.${domain}/name: stackedit
+    dashboard.${domain}/url: https://stackedit.${domain}
+    dashboard.${domain}/icon: language-markdown
+spec:
+  hostnames:
+  - stackedit.${domain}
+  parentRefs:
+  - name: cilium
+    namespace: cilium
+  rules:
+  - backendRefs:
+    - name: stackedit
+      port: 80
+    matches:
+    - path:
+        type: PathPrefix
+        value: /

@@ -1,0 +1,23 @@
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: rustpad
+  annotations:
+    dashboard.${domain}/name: rustpad
+    dashboard.${domain}/url: https://rustpad.${domain}
+    dashboard.${domain}/icon: file-code
+spec:
+  hostnames:
+  - rustpad.${domain}
+  parentRefs:
+  - name: cilium
+    namespace: cilium
+  rules:
+  - backendRefs:
+    - name: rustpad
+      port: 80
+    matches:
+    - path:
+        type: PathPrefix
+        value: /

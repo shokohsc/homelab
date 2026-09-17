@@ -1,0 +1,106 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web-check
+spec:
+  revisionHistoryLimit: 0
+  selector:
+    matchLabels:
+      app: web-check
+  template:
+    metadata:
+      labels:
+        app: web-check
+    spec:
+      automountServiceAccountToken: false
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: web-check
+          image: lissy93/web-check:latest
+          imagePullPolicy: Always
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+            capabilities:
+              drop:
+                - ALL
+          env:
+            - name: GOOGLE_CLOUD_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: web-check
+                  key: GOOGLE_CLOUD_API_KEY
+            - name: REACT_APP_SHODAN_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: web-check
+                  key: REACT_APP_SHODAN_API_KEY
+            - name: REACT_APP_WHO_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: web-check
+                  key: REACT_APP_WHO_API_KEY
+            - name: SECURITY_TRAILS_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: web-check
+                  key: SECURITY_TRAILS_API_KEY
+            - name: CLOUDMERSIVE_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: web-check
+                  key: CLOUDMERSIVE_API_KEY
+            - name: TRANCO_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: web-check
+                  key: TRANCO_USERNAME
+            - name: TRANCO_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: web-check
+                  key: TRANCO_API_KEY
+            - name: URL_SCAN_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: web-check
+                  key: URL_SCAN_API_KEY
+            - name: BUILT_WITH_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: web-check
+                  key: BUILT_WITH_API_KEY
+            - name: TORRENT_IP_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: web-check
+                  key: TORRENT_IP_API_KEY
+          ports:
+            - name: http
+              containerPort: 3000
+              protocol: TCP
+          startupProbe:
+            tcpSocket:
+              port: http
+          livenessProbe:
+            tcpSocket:
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+          resources:
+            requests:
+              cpu: 10m
+              memory: 64Mi
+            limits:
+              cpu: 1000m
+              memory: 256Mi

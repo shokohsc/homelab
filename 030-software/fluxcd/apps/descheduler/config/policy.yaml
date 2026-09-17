@@ -1,0 +1,45 @@
+apiVersion: descheduler/v1alpha1
+kind: DeschedulerPolicy
+strategies:
+  LowNodeUtilization:
+    enabled: true
+    params:
+      nodeResourceUtilizationThresholds:
+        targetThresholds:
+          cpu: 50
+          memory: 50
+          pods: 50
+        thresholds:
+          cpu: 20
+          memory: 20
+          pods: 20
+  RemoveDuplicates:
+    enabled: true
+  RemovePodsHavingTooManyRestarts:
+    enabled: true
+    params:
+      podsHavingTooManyRestarts:
+        includingInitContainers: true
+        podRestartThreshold: 10
+      namespaces:
+        exclude:
+          - deluge
+  RemovePodsViolatingInterPodAntiAffinity:
+    enabled: true
+  RemovePodsViolatingNodeAffinity:
+    enabled: true
+    params:
+      nodeAffinityType:
+        - requiredDuringSchedulingIgnoredDuringExecution
+  RemovePodsViolatingNodeTaints:
+    enabled: true
+  PodLifeTime:
+    enabled: true
+    params:
+      podLifeTime:
+        maxPodLifeTimeSeconds: 86400
+        states:
+          - "Completed"
+      namespaces:
+        include:
+          - kaniko

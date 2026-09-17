@@ -1,0 +1,14 @@
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: thelounge-config
+  labels:
+    app.kubernetes.io/name: thelounge
+    app.kubernetes.io/instance: thelounge
+spec:
+  accessModes:
+    - "ReadWriteOnce"
+  resources:
+    requests:
+      storage: "100Mi"

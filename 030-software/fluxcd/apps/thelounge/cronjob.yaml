@@ -1,0 +1,53 @@
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: backup
+spec:
+  schedule: "0 5 * * *"
+  successfulJobsHistoryLimit: 0
+  failedJobsHistoryLimit: 1
+  jobTemplate:
+    spec:
+      backoffLimit: 0
+      template:
+        spec:
+          restartPolicy: OnFailure
+          securityContext:
+            fsGroup: 1000
+          automountServiceAccountToken: false
+          containers:
+          - name: backup
+            image: offen/docker-volume-backup:v2.49.0@sha256:ca882e494b409297885a8429af2c311e627d69dc8897857159a84ef5efc1a05b
+            command:
+              - backup
+            env:
+              - name: BACKUP_RETENTION_DAYS
+                value: '1'
+            volumeMounts:
+              - name: data
+                mountPath: /backup
+              - name: shared
+                mountPath: /archive
+          volumes:
+            - name: data
+              persistentVolumeClaim:
+                claimName: thelounge-config
+            - name: shared
+              nfs:
+                server: nfs-shared.nfs-shared.svc.cluster.local
+                path: /backups/thelounge
+          affinity:
+            podAffinity:
+              requiredDuringSchedulingIgnoredDuringExecution:
+              - labelSelector:
+                  matchExpressions:
+                  - key: app.kubernetes.io/name
+                    operator: In
+                    values:
+                    - thelounge
+                  - key: app.kubernetes.io/instance
+                    operator: In
+                    values:
+                    - thelounge
+                topologyKey: kubernetes.io/hostname

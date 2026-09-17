@@ -1,0 +1,23 @@
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: reactflux
+  annotations:
+    dashboard.${domain}/name: reactflux
+    dashboard.${domain}/url: https://reactflux.${domain}/today
+    dashboard.${domain}/icon: rss
+spec:
+  hostnames:
+  - reactflux.${domain}
+  parentRefs:
+  - name: cilium
+    namespace: cilium
+  rules:
+  - backendRefs:
+    - name: reactflux
+      port: 80
+    matches:
+    - path:
+        type: PathPrefix
+        value: /

@@ -1,0 +1,60 @@
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: descheduler
+spec:
+  schedule: "*/5 * * * *"
+  successfulJobsHistoryLimit: 0
+  failedJobsHistoryLimit: 1
+  concurrencyPolicy: Forbid
+  jobTemplate:
+    spec:
+      template:
+        metadata:
+          name: descheduler
+          labels:
+            app: descheduler
+        spec:
+          priorityClassName: system-cluster-critical
+          serviceAccountName: descheduler
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 1000
+            runAsGroup: 1000
+            fsGroup: 1000
+            seccompProfile:
+              type: RuntimeDefault
+          restartPolicy: OnFailure
+          containers:
+            - name: descheduler
+              image: k8s.gcr.io/descheduler/descheduler:v0.36.0
+              securityContext:
+                allowPrivilegeEscalation: false
+                readOnlyRootFilesystem: true
+                runAsNonRoot: true
+                capabilities:
+                  drop:
+                    - ALL
+              command:
+                - "/bin/descheduler"
+              args:
+                - "--policy-config-file"
+                - "/policy-dir/policy.yaml"
+                - "--v"
+                - "3"
+              resources:
+                limits:
+                  cpu: 500m
+                  memory: 256Mi
+                requests:
+                  cpu: 200m
+                  memory: 128Mi
+              volumeMounts:
+                - mountPath: /policy-dir/policy.yaml
+                  subPath: policy.yaml
+                  name: policy-volume
+          volumes:
+          - name: policy-volume
+            configMap:
+              name: config

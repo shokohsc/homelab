@@ -1,0 +1,24 @@
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: ListenerSet
+metadata:
+  name: iptvnator
+  annotations:
+    cert-manager.io/cluster-issuer: ca-cluster-issuer
+spec:
+  parentRef:
+    namespace: cilium
+    name: cilium
+    kind: Gateway
+    group: gateway.networking.k8s.io
+  listeners:
+  - name: api
+    hostname: api.iptvnator.${domain}
+    protocol: HTTPS
+    port: 443
+    tls:
+      mode: Terminate
+      certificateRefs:
+      - kind: Secret
+        group: ""
+        name: api-cert

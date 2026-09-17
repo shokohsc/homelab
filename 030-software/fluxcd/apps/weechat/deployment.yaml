@@ -1,0 +1,117 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: weechat
+spec:
+  revisionHistoryLimit: 0
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: weechat
+  template:
+    metadata:
+      labels:
+        app: weechat
+    spec:
+      automountServiceAccountToken: false
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: weechat
+          image: weechat/weechat:4.10-slim
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+            capabilities:
+              drop:
+                - ALL
+          args:
+            - weechat-headless
+            - --stdout
+            - --dir
+            - /weechat
+            - -r
+            - |-
+              /set relay.network.password weechat
+              /relay add weechat 9001
+              /set xfer.file.auto_accept_files on
+          env:
+            - name: RELAY_PORT
+              value: "9001"
+            - name: SERVER_NAME
+              value: localhost
+          ports:
+            - name: relay
+              containerPort: 9001
+              protocol: TCP
+          startupProbe:
+            tcpSocket:
+              port: relay
+          livenessProbe:
+            tcpSocket:
+              port: relay
+          readinessProbe:
+            tcpSocket:
+              port: relay
+          volumeMounts:
+            - name: data
+              mountPath: /weechat
+            - name: nfs-downloads
+              mountPath: /weechat/xfer
+          resources:
+            requests:
+              cpu: 10m
+              memory: 64Mi
+            limits:
+              cpu: 100m
+              memory: 64Mi
+        - name: glowing-bear
+          image: j33r/glowing-bear:latest
+          imagePullPolicy: Always
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+            capabilities:
+              drop:
+                - ALL
+          env:
+            - name: TZ
+              value: ${timezone}
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+          startupProbe:
+            tcpSocket:
+              port: http
+          livenessProbe:
+            tcpSocket:
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+          resources:
+            requests:
+              cpu: 10m
+              memory: 64Mi
+            limits:
+              cpu: 100m
+              memory: 64Mi
+      volumes:
+      - name: data
+        persistentVolumeClaim:
+          claimName: config
+      - name: nfs-downloads
+        nfs:
+          server: 10.102.22.211
+          path: /weechat
