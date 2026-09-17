@@ -29,6 +29,7 @@ resources:
   - konflate
   - kube-state-metrics
   - kube-system
+  - kubeopencode
   - maddy
   - metrics-server
   - miniflux

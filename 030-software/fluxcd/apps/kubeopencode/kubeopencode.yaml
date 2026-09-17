@@ -1,0 +1,67 @@
+---
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: OCIRepository
+metadata:
+  name: kubeopencode
+spec:
+  interval: ${interval}
+  url: oci://ghcr.io/kubeopencode/helm-charts/kubeopencode
+  layerSelector:
+    mediaType: "application/vnd.cncf.helm.chart.content.v1.tar+gzip"
+    operation: copy
+  ref:
+    semver: "^v0.1.9"
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: kubeopencode
+spec:
+  interval: ${interval}
+  chartRef:
+    kind: OCIRepository
+    name: kubeopencode
+  values:
+    controller:
+      podSecurityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        seccompProfile:
+          type: RuntimeDefault
+      securityContext:
+        allowPrivilegeEscalation: false
+        readOnlyRootFilesystem: true
+        runAsNonRoot: true
+        capabilities:
+          drop:
+            - ALL
+
+    server:
+      route:
+        main:
+          enabled: true
+          annotations:
+            dashboard.${domain}/name: kubeopencode
+            dashboard.${domain}/url: https://kubeopencode.${domain}
+            dashboard.${domain}/icon: robot
+          parentRefs:
+            - name: cilium
+              namespace: cilium
+          hostnames:
+            - kubeopencode.${domain}
+      podSecurityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        seccompProfile:
+          type: RuntimeDefault
+      securityContext:
+        allowPrivilegeEscalation: false
+        readOnlyRootFilesystem: true
+        runAsNonRoot: true
+        capabilities:
+          drop:
+            - ALL
