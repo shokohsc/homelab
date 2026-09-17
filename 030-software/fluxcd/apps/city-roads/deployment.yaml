@@ -12,6 +12,7 @@ spec:
     metadata:
       labels:
         app: city-roads
+        policy.gatekeeper.sh/ignore-psp-volume-types: "true"
     spec:
       automountServiceAccountToken: false
       securityContext:

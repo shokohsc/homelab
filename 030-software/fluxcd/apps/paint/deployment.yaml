@@ -12,6 +12,7 @@ spec:
     metadata:
       labels:
         app: paint
+        policy.gatekeeper.sh/ignore-psp-volume-types: "true"
     spec:
       automountServiceAccountToken: false
       securityContext:
@@ -23,7 +24,9 @@ spec:
           type: RuntimeDefault
       containers:
         - name: paint
-          image: shokohsc/mini-paint:latest
+          image: busybox:1.38
+          args: ["busybox", "httpd", "-f", "-v", "-p", "8080"]
+          workingDir: /assets
           securityContext:
             allowPrivilegeEscalation: false
             readOnlyRootFilesystem: true
@@ -53,9 +56,11 @@ spec:
               cpu: 100m
               memory: 64Mi
           volumeMounts:
-            - name: cache
-              mountPath: /var/cache/nginx
+            - name: assets
+              mountPath: /assets
+              subPath: /usr/share/nginx/html
       volumes:
-        - name: cache
-          emptyDir:
-            medium: Memory
+        - name: assets
+          image:
+            reference: shokohsc/mini-paint:latest
+            imagePullPolicy: Always

@@ -12,6 +12,7 @@ spec:
     metadata:
       labels:
         app: iptvnator
+        policy.gatekeeper.sh/ignore-psp-volume-types: "true"
     spec:
       automountServiceAccountToken: false
       securityContext:
@@ -23,8 +24,9 @@ spec:
           type: RuntimeDefault
       containers:
         - name: iptvnator
-          image: 4gray/iptvnator:latest
-          imagePullPolicy: Always
+          image: busybox:1.38
+          args: ["busybox", "httpd", "-f", "-v", "-p", "8080"]
+          workingDir: /assets
           securityContext:
             allowPrivilegeEscalation: false
             readOnlyRootFilesystem: true
@@ -57,9 +59,11 @@ spec:
               cpu: 100m
               memory: 64Mi
           volumeMounts:
-            - name: conf
-              mountPath: /etc/nginx/http.d
+            - name: assets
+              mountPath: /assets
+              subPath: /usr/share/nginx/html
       volumes:
-        - name: conf
-          emptyDir:
-            medium: Memory
+        - name: assets
+          image:
+            reference: 4gray/iptvnator:latest
+            imagePullPolicy: Always

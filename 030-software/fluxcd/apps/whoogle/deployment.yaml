@@ -76,13 +76,15 @@ spec:
             limits:
               cpu: 1000m
               memory: 1024Mi
-          # volumeMounts:
+          volumeMounts:
+            - name: css
+              mountPath: /whoogle/app/static/build
           #   - name: scripts
           #     mountPath: /whoogle/misc/tor/start-tor.sh
           #     subPath: start-tor.sh
 
       volumes:
-        - name: profile
+        - name: css
           emptyDir: {}
         # - name: scripts
         #   configMap:

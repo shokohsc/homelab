@@ -13,6 +13,7 @@ spec:
       labels:
         app: pairdrop
         policy.gatekeeper.sh/ignore: "true"
+        # policy.gatekeeper.sh/ignore-psp-volume-types: "true"
     spec:
       automountServiceAccountToken: false
       securityContext:
@@ -25,6 +26,9 @@ spec:
       containers:
         - name: pairdrop
           image: lscr.io/linuxserver/pairdrop:1.11.2
+          # image: busybox:1.38
+          # args: ["busybox", "httpd", "-f", "-v", "-p", "8080"]
+          # workingDir: /assets
           # securityContext:
           #   allowPrivilegeEscalation: false
           #   readOnlyRootFilesystem: true
@@ -56,3 +60,12 @@ spec:
             limits:
               cpu: 100m
               memory: 64Mi
+      #     volumeMounts:
+      #       - name: assets
+      #         mountPath: /assets
+      #         subPath: /app/paridrop/public
+      # volumes:
+      #   - name: assets
+      #     image:
+      #       reference: lscr.io/linuxserver/pairdrop:1.11.2
+      #       imagePullPolicy: Always

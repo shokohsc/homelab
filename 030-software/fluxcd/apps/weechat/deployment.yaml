@@ -107,11 +107,16 @@ spec:
             limits:
               cpu: 100m
               memory: 64Mi
+          volumeMounts:
+            - name: temp
+              mountPath: /tmp
       volumes:
-      - name: data
-        persistentVolumeClaim:
-          claimName: config
-      - name: nfs-downloads
-        nfs:
-          server: 10.102.22.211
-          path: /weechat
+        - name: temp:
+          emptyDir: {}
+        - name: data
+          persistentVolumeClaim:
+            claimName: config
+        - name: nfs-downloads
+          nfs:
+            server: 10.102.22.211
+            path: /weechat

@@ -12,23 +12,25 @@ spec:
     metadata:
       labels:
         app: reactflux
-        policy.gatekeeper.sh/ignore-psp-pods-allowed-user-ranges: "true"
+        policy.gatekeeper.sh/ignore-psp-volume-types: "true"
     spec:
       automountServiceAccountToken: false
       securityContext:
-        # runAsNonRoot: true
-        # runAsUser: 1000
-        # runAsGroup: 1000
-        # fsGroup: 1000
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
         seccompProfile:
           type: RuntimeDefault
       containers:
         - name: reactflux
-          image: electh/reactflux:2025-08-19
+          image: busybox:1.38
+          args: ["busybox", "httpd", "-f", "-v", "-p", "8080"]
+          workingDir: /assets
           securityContext:
             allowPrivilegeEscalation: false
             readOnlyRootFilesystem: true
-            # runAsNonRoot: true
+            runAsNonRoot: true
             capabilities:
               drop:
                 - ALL
@@ -53,3 +55,11 @@ spec:
             limits:
               cpu: 100m
               memory: 64Mi
+      volumeMounts:
+            - name: assets
+              mountPath: /assets
+              subPath: /srv
+      volumes:
+        - name: assets
+          image:
+            reference: electh/reactflux:2025-08-19
