@@ -43,7 +43,7 @@ resources:
   - miniflux
   - nats
   - nfs-downloads
-  # - paint
+  - paint
   - pairdrop
   - passed
   - plex

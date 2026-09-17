@@ -52,12 +52,12 @@ spec:
             - name: relay
               containerPort: 9001
               protocol: TCP
-          startupProbe:
-            tcpSocket:
-              port: relay
-          livenessProbe:
-            tcpSocket:
-              port: relay
+          # startupProbe:
+          #   tcpSocket:
+          #     port: relay
+          # livenessProbe:
+          #   tcpSocket:
+          #     port: relay
           readinessProbe:
             tcpSocket:
               port: relay
