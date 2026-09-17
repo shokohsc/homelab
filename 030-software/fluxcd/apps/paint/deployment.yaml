@@ -58,7 +58,7 @@ spec:
           volumeMounts:
             - name: assets
               mountPath: /assets
-              subPath: /usr/share/nginx/html
+              # subPath: /usr/share/nginx/html
       volumes:
         - name: assets
           image:
