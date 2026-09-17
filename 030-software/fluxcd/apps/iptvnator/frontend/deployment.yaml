@@ -66,4 +66,4 @@ spec:
         - name: assets
           image:
             reference: 4gray/iptvnator:latest
-            imagePullPolicy: Always
+            pullPolicy: Always

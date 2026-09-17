@@ -68,4 +68,4 @@ spec:
       #   - name: assets
       #     image:
       #       reference: lscr.io/linuxserver/pairdrop:1.11.2
-      #       imagePullPolicy: Always
+      #       pullPolicy: Always

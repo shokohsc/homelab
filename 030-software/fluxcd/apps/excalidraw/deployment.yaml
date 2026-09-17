@@ -63,4 +63,4 @@ spec:
         - name: assets
           image:
             reference: excalidraw/excalidraw:latest
-            imagePullPolicy: Always
+            pullPolicy: Always
