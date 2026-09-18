@@ -27,7 +27,7 @@ spec:
           type: RuntimeDefault
       containers:
         - name: sftpgo
-          image: ghcr.io/drakkan/sftpgo:v2.7.5-distroless-slim
+          image: ghcr.io/drakkan/sftpgo:v2.7.6-distroless-slim
           securityContext:
             allowPrivilegeEscalation: false
             readOnlyRootFilesystem: true
