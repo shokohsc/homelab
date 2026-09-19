@@ -23,7 +23,7 @@ spec:
           type: RuntimeDefault
       containers:
         - name: cyberchef
-          image: mpepping/cyberchef:v11.4.0
+          image: mpepping/cyberchef:v11.5.0
           securityContext:
             allowPrivilegeEscalation: false
             readOnlyRootFilesystem: true
