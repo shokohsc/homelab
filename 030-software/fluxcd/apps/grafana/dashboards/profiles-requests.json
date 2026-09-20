@@ -85,7 +85,7 @@
               "options": {
                 "mode": "exclude",
                 "names": [
-                  "pod-gateway"
+                  "vpn-egress-gateway"
                 ],
                 "prefix": "All except:",
                 "readOnly": true
@@ -135,7 +135,7 @@
           },
           "editorMode": "code",
           "exemplar": false,
-          "expr": "avg(rate(container_network_receive_bytes_total{namespace=\"pod-gateway\", pod=~\"$identifier\", pod!=\"\",interface=\"tun0\"}[5m])) by (namespace, pod)",
+          "expr": "avg(rate(container_network_receive_bytes_total{namespace=\"vpn-egress-gateway\", pod=~\"$identifier\", pod!=\"\",interface=\"tun0\"}[5m])) by (namespace, pod)",
           "format": "time_series",
           "hide": false,
           "interval": "",
@@ -149,7 +149,7 @@
             "uid": "PBFA97CFB590B2093"
           },
           "editorMode": "code",
-          "expr": "avg by (namespace) (rate(container_network_receive_bytes_total{namespace=\"pod-gateway\", pod=~\"pod-gateway.*\", pod!~\"pod-gateway-webhook.*\",interface=\"tun0\"}[5m:1m]))",
+          "expr": "avg by (namespace) (rate(container_network_receive_bytes_total{namespace=\"vpn-egress-gateway\", pod=~\"vpn-egress-gateway.*\", pod!~\"vpn-egress-webhook.*\",interface=\"tun0\"}[5m:1m]))",
           "hide": false,
           "instant": false,
           "legendFormat": "{{namespace}}",
