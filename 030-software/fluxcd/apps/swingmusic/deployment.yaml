@@ -60,11 +60,15 @@ spec:
               cpu: 100m
               memory: 128M
           volumeMounts:
+            - name: temp
+              mountPath: /tmp
             - name: data
               mountPath: /config
             - name: genji
               mountPath: /music
       volumes:
+        - name: temp
+          emptyDir: {}
         - name: data
           persistentVolumeClaim:
             claimName: data
