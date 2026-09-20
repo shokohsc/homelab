@@ -168,8 +168,8 @@ spec:
             access: proxy
             url: main-ro.cnpg-system
             user: sidekick
-            database: sidekick
             jsonData:
+              database: sidekick
               sslmode: disable
               postgresVersion: 1200
             secureJsonData:
