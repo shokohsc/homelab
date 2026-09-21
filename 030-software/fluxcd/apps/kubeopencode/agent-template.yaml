@@ -75,9 +75,11 @@ spec:
       policy.gatekeeper.sh/ignore-psp-readonlyrootfilesystem: "true"
     securityContext:
       runAsNonRoot: true
-      runAsUser: 1000
-      runAsGroup: 1000
-      fsGroup: 1000
+      allowPrivilegeEscalation: false
+      readOnlyRootFilesystem: true
+      capabilities:
+        drop:
+          - ALL
       seccompProfile:
         type: RuntimeDefault
 
