@@ -7,6 +7,7 @@ spec:
   executorImage: ghcr.io/kubeopencode/kubeopencode-agent-devbox:latest
   attachImage: ghcr.io/kubeopencode/kubeopencode-agent-attach:latest
   workspaceDir: /workspace
+  serviceAccountName: kubeopencode-agent
   command: ["opencode", "serve"]
 
   contexts:
@@ -29,7 +30,7 @@ spec:
         path: 030-software/fluxcd/apps/kubeopencode/skills/golang/
         names:
           - golang
-    - name: golang-skills
+    - name: javascript-skills
       git:
         repository: https://github.com/shokohsc/homelab.git
         ref: main
