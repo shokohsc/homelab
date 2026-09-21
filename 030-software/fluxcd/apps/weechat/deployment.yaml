@@ -40,6 +40,7 @@ spec:
             - /weechat
             - -r
             - |-
+              /plugin load relay
               /set relay.network.password weechat
               /relay add weechat 9001
               /set xfer.file.auto_accept_files on
