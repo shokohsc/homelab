@@ -1,0 +1,27 @@
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: deluge
+spec:
+  endpointSelector:
+    matchLabels:
+      app: deluge
+  egress:
+    - toEndpoints:
+        - matchLabels:
+            io.kubernetes.pod.namespace: kube-system
+            k8s-app: kube-dns
+      toPorts:
+        - ports:
+            - port: "53"
+              protocol: UDP
+          rules:
+            dns:
+              - matchPattern: "*"
+    - toEndpoints:
+        - matchLabels:
+            app: vpn-egress-gateway
+            io.kubernetes.pod.namespace: vpn-egress-gateway
+      toPorts:
+        - ports:
+            - port: "4789"

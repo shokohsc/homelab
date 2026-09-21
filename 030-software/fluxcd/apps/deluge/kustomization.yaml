@@ -8,6 +8,7 @@ resources:
   - service.yaml
   - http-route.yaml
   # - networkpolicy.yaml
+  - cilium-network-policy.yaml
   - secret.yaml
 configMapGenerator:
 - name: settings
