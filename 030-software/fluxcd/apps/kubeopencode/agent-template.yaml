@@ -1,0 +1,73 @@
+apiVersion: kubeopencode.io/v1alpha1
+kind: AgentTemplate
+metadata:
+  name: main
+spec:
+  agentImage: ghcr.io/kubeopencode/kubeopencode-agent-opencode:latest
+  executorImage: ghcr.io/kubeopencode/kubeopencode-agent-devbox:latest
+  attachImage: ghcr.io/kubeopencode/kubeopencode-agent-attach:latest
+  workspaceDir: /workspace
+  command: ["opencode", "serve"]
+
+  contexts:
+    - name: coding-standards
+      type: Text
+      text: "You're running inside a container's pod in a talos cluster with a strict pod security policy."
+
+  credentials:
+    - name: github-token
+      secretRef:
+        name: github-pat
+        key: token
+      env: GITHUB_TOKEN
+
+  skills:
+    - name: homelab-skills
+      git:
+        repository: https://github.com/shokohsc/homelab.git
+        ref: main
+        path: 030-software/fluxcd/apps/kubeopencode/skills/
+        names:
+          - golang
+          - javascript
+    # - name: anthropic-skills
+    #   git:
+    #     repository: https://github.com/anthropics/skills.git
+    #     ref: main
+    #     path: skills/
+    #     names:
+    #       - frontend-design
+    #       - webapp-testing
+
+  plugins:
+    - name: cc-safety-net
+    - name: "@dietrichgebert/ponytail"
+    - name: opencode-helicone-session
+    - name: "@tarquinen/opencode-dcp"
+    - name: opencode-pty
+    - name: "superpowers@git+https://github.com/obra/superpowers.git"
+
+  config:
+    $schema: https://opencode.ai/config.json
+
+  caBundle:
+    configMapRef:
+      name: homelab-ca-cm
+      key: ca-certs.pem
+
+  podSpec:
+    labels:
+      policy.gatekeeper.sh/ignore-container-must-have-limits: "true"
+      policy.gatekeeper.sh/ignore-psp-readonlyrootfilesystem: "true"
+    securityContext:
+      runAsNonRoot: true
+      runAsUser: 1000
+      runAsGroup: 1000
+      fsGroup: 1000
+      seccompProfile:
+        type: RuntimeDefault
+
+  maxConcurrentTasks: 5
+  quota:
+    maxTaskStarts: 20
+    windowSeconds: 3600

@@ -4,4 +4,5 @@ resources:
   - ceph-csi
   - cloudnativepg
   - crossplane
+  - kubeopencode
   - talos-proxmox-autoscaler

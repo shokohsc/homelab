@@ -1,0 +1,29 @@
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: workspace
+spec:
+  endpointSelector:
+    matchLabels:
+      app: workspace
+  egress:
+    - toEndpoints:
+        - matchLabels:
+            io.kubernetes.pod.namespace: kube-system
+            k8s-app: kube-dns
+      toPorts:
+        - ports:
+            - port: "53"
+              protocol: UDP
+          rules:
+            dns:
+              - matchPattern: "*"
+    - toEndpoints:
+        - matchLabels:
+            app: kubeopencode
+            io.kubernetes.pod.namespace: kubeopencode
+      toPorts:
+        - ports:
+            - port: "2746"
+    - toEntities:
+        - world
