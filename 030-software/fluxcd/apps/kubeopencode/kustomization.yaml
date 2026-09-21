@@ -4,6 +4,7 @@ namespace: workspace
 resources:
   - namespace.yaml
   - secret.yaml
+  - rbac.yaml
   - agent-template.yaml
   - cilium-network-policy.yaml
 # configMapGenerator:
