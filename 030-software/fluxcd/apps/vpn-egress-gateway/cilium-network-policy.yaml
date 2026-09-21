@@ -21,6 +21,13 @@ spec:
               - matchPattern: "*"
     - toEndpoints:
         - matchLabels:
+            app: deluge
+            io.kubernetes.pod.namespace: deluge
+      toPorts:
+        - ports:
+            - port: "4789"
+    - toEndpoints:
+        - matchLabels:
             app: api
             io.kubernetes.pod.namespace: sidekick
       toPorts:
