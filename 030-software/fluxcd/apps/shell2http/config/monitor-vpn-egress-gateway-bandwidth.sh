@@ -46,7 +46,7 @@ THRESHOLD_BPS=$((THRESHOLD_KBPS * 1000))
 
 # Prometheus query to calculate average download rate over the last 5 minutes
 # QUERY='avg by (namespace, pod) (rate(container_network_receive_bytes_total{namespace="deluge", pod=~"deluge.*", pod!="", interface="vxlan0"}[5m:1m]))'
-QUERY='avg by (namespace) (rate(container_network_receive_bytes_total{namespace="vpn-egress-gateway", pod=~"vpn-egress-gateway.*", pod!~"vpn-egress-gateway-webhook.*",interface="tun0"}[5m:1m]))'
+QUERY='avg by (namespace) (rate(container_network_receive_bytes_total{namespace="vpn-egress-gateway", pod=~"vpn-egress-gateway.*", pod!~"vpn-egress-webhook.*",interface="tun0"}[5m:1m]))'
 # Execute the Prometheus query
 RESPONSE=$(curl --connect-timeout 2 -s -G --data-urlencode "query=$QUERY" "$PROMETHEUS_SERVER/api/v1/query")
 

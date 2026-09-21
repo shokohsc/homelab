@@ -64,7 +64,7 @@ resources:
   - rustpad
   - samba
   - sftpgo
-  # - shell2http
+  - shell2http
   - sidekick
   - sonarr
   - stackedit

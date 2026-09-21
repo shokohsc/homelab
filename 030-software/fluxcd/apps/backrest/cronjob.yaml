@@ -21,7 +21,8 @@ spec:
           serviceAccountName: backup
           containers:
             - name: backup-secrets
-              image: public.ecr.aws/bitnami/kubectl:1.36.1
+              image: bitnami/kubectl:latest
+              imagePullPolicy: Always
               command:
               - /usr/bin/backup.sh
               resources:
