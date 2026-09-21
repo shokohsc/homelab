@@ -83,6 +83,12 @@ spec:
           - ALL
       seccompProfile:
         type: RuntimeDefault
+    extraVolumes:
+      - name: temp
+        emptyDir: {}
+    extraVolumeMounts:
+      - name: temp
+        mountPath: /tmp
 
   maxConcurrentTasks: 5
   quota:
