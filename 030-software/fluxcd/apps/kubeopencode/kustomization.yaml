@@ -5,7 +5,7 @@ resources:
   - namespace.yaml
   - secret.yaml
   - agent-template.yaml
-  - cilium-network-policy
+  - cilium-network-policy.yaml
 configMapGenerator:
 - name: skills
   files:
