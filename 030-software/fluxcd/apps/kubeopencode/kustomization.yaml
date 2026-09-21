@@ -6,13 +6,17 @@ resources:
   - secret.yaml
   - agent-template.yaml
   - cilium-network-policy.yaml
-configMapGenerator:
-- name: skills
-  files:
-  - ./skills/golang/SKILL.md
-  - ./skills/javascript/SKILL.md
-  - ./skills/self-improving/SKILL.md
-  - ./skills/self-improving/learned-rules.md
-  - ./skills/self-improving/CHANGELOG.md
-generatorOptions:
-  disableNameSuffixHash: true
+# configMapGenerator:
+# - name: skills-golang
+#   files:
+#   - ./skills/golang/SKILL.md
+# - name: skills-javascript
+#   files:
+#   - ./skills/javascript/SKILL.md
+# - name: skills-self-improving
+#   files:
+#   - ./skills/self-improving/SKILL.md
+#   - ./skills/self-improving/learned-rules.md
+#   - ./skills/self-improving/CHANGELOG.md
+# generatorOptions:
+#   disableNameSuffixHash: true

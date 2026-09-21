@@ -22,14 +22,28 @@ spec:
       env: GITHUB_TOKEN
 
   skills:
-    - name: homelab-skills
+    - name: golang-skills
       git:
         repository: https://github.com/shokohsc/homelab.git
         ref: main
-        path: 030-software/fluxcd/apps/kubeopencode/skills/
+        path: 030-software/fluxcd/apps/kubeopencode/skills/golang/
         names:
           - golang
+          - 
+    - name: golang-skills
+      git:
+        repository: https://github.com/shokohsc/homelab.git
+        ref: main
+        path: 030-software/fluxcd/apps/kubeopencode/skills/javascript/
+        names:
           - javascript
+    - name: self-improving-skills
+      git:
+        repository: https://github.com/shokohsc/homelab.git
+        ref: main
+        path: 030-software/fluxcd/apps/kubeopencode/skills/self-improving/
+        names:
+          - self-improve
     # - name: anthropic-skills
     #   git:
     #     repository: https://github.com/anthropics/skills.git
