@@ -29,7 +29,6 @@ spec:
         path: 030-software/fluxcd/apps/kubeopencode/skills/golang/
         names:
           - golang
-          - 
     - name: golang-skills
       git:
         repository: https://github.com/shokohsc/homelab.git
