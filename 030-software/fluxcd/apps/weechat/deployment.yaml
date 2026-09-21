@@ -33,19 +33,17 @@ spec:
             capabilities:
               drop:
                 - ALL
-          command: ["sleep"]
           args:
-            - "120"
-            # - weechat-headless
-            # - --stdout
-            # - --dir
-            # - /weechat
-            # - -r
-            # - |-
-            #   /plugin load relay
-            #   /set relay.network.password weechat
-            #   /relay add weechat 9001
-            #   /set xfer.file.auto_accept_files on
+            - weechat-headless
+            - --stdout
+            - --dir
+            - /weechat
+            - -r
+            - "/set relay.network.password weechat"
+            - -r
+            - "/relay add weechat 9001"
+            - -r
+            - "/set xfer.file.auto_accept_files on"
           env:
             - name: RELAY_PORT
               value: "9001"
