@@ -6,7 +6,7 @@ metadata:
   annotations:
     dashboard.${domain}/icon: radio
     dashboard.${domain}/name: swingmusic
-    dashboard.${domain}/url: https://swingmusic.${domain}
+    dashboard.${domain}/url: https://swingmusic.${domain}/#/
 spec:
   hostnames:
   - swingmusic.${domain}
