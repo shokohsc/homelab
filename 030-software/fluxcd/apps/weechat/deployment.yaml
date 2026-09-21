@@ -33,7 +33,7 @@ spec:
             capabilities:
               drop:
                 - ALL
-          command: sleep
+          command: ["sleep"]
           args:
             - "120"
             # - weechat-headless
