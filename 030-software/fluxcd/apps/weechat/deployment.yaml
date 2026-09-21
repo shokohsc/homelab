@@ -14,8 +14,6 @@ spec:
     metadata:
       labels:
         app: weechat
-        policy.gatekeeper.sh/ignore-psp-readonlyrootfilesystem: "true"
-        policy.gatekeeper.sh/ignore-psp-pods-allowed-user-ranges: "true"
     spec:
       automountServiceAccountToken: false
       securityContext:
@@ -30,24 +28,24 @@ spec:
           image: weechat/weechat:4.10.1-alpine-slim
           securityContext:
             allowPrivilegeEscalation: false
-            runAsUser: 0
-            runAsGroup: 0
-            # readOnlyRootFilesystem: true
+            readOnlyRootFilesystem: true
             runAsNonRoot: false
             capabilities:
               drop:
                 - ALL
+          command: sleep
           args:
-            - weechat-headless
-            - --stdout
-            - --dir
-            - /weechat
-            - -r
-            - |-
-              /plugin load relay
-              /set relay.network.password weechat
-              /relay add weechat 9001
-              /set xfer.file.auto_accept_files on
+            - "120"
+            # - weechat-headless
+            # - --stdout
+            # - --dir
+            # - /weechat
+            # - -r
+            # - |-
+            #   /plugin load relay
+            #   /set relay.network.password weechat
+            #   /relay add weechat 9001
+            #   /set xfer.file.auto_accept_files on
           env:
             - name: RELAY_PORT
               value: "9001"
