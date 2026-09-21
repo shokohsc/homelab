@@ -28,7 +28,6 @@ resources:
   - grist
   - iptvnator
   - jsoncrack
-  - libreddit
   - loki
   - alloy
   - http-echo
