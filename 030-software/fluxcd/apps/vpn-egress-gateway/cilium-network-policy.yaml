@@ -1,8 +1,8 @@
----
 apiVersion: cilium.io/v2
 kind: CiliumNetworkPolicy
 metadata:
   name: vpn-egress-gateway
+  namespace: vpn-egress-gateway
 spec:
   endpointSelector:
     matchLabels:
@@ -23,7 +23,8 @@ spec:
         - matchLabels:
             app: api
             io.kubernetes.pod.namespace: sidekick
-    - toEndpoints:
-        - {}
+      toPorts:
+        - ports:
+            - port: "3000"
     - toEntities:
         - world
