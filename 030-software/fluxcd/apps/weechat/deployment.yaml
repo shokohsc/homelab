@@ -15,6 +15,7 @@ spec:
       labels:
         app: weechat
         policy.gatekeeper.sh/ignore-psp-readonlyrootfilesystem: "true"
+        policy.gatekeeper.sh/ignore-psp-pods-allowed-user-ranges: "true"
     spec:
       automountServiceAccountToken: false
       securityContext:
@@ -29,8 +30,10 @@ spec:
           image: weechat/weechat:4.10.1-alpine-slim
           securityContext:
             allowPrivilegeEscalation: false
+            runAsUser: 0
+            runAsGroup: 0
             # readOnlyRootFilesystem: true
-            runAsNonRoot: true
+            runAsNonRoot: false
             capabilities:
               drop:
                 - ALL
