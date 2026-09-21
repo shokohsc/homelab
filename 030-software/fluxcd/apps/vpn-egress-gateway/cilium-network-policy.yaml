@@ -25,6 +25,8 @@ spec:
       toPorts:
         - ports:
             - port: "4789"
+        - ports:
+            - port: "8112"
     - toEndpoints:
         - matchLabels:
             app: api
