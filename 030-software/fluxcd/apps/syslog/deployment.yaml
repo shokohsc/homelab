@@ -9,11 +9,11 @@ spec:
   revisionHistoryLimit: 0
   selector:
     matchLabels:
-      app.kubernetes.io/name: syslog
+      app: syslog
   template:
     metadata:
       labels:
-        app.kubernetes.io/name: syslog
+        app: syslog
     spec:
       automountServiceAccountToken: false
       securityContext:

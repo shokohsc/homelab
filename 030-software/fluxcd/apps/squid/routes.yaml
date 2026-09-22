@@ -1,0 +1,14 @@
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: TCPRoute
+metadata:
+  name: squid
+spec:
+  parentRefs:
+    - name: cilium
+      namespace: cilium
+      sectionName: squid
+  rules:
+    - backendRefs:
+        - name: squid
+          port: 3128

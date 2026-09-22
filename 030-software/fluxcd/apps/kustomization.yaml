@@ -50,7 +50,7 @@ resources:
   - pocket-id
   - prowlarr
   - proxmox
-  # - pyload
+  - pyload
   - radarr
   - radio
   - rathole
@@ -66,12 +66,13 @@ resources:
   - shell2http
   - sidekick
   - sonarr
+  - squid
   - stackedit
   - storm
   - swingmusic
   - syslog
   - tailscale
-  # - thelounge
+  - thelounge
   - valkey
   - vaultwarden
   - victoria-logs

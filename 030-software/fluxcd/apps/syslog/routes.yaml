@@ -1,0 +1,14 @@
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: TCPRoute
+metadata:
+  name: syslog
+spec:
+  parentRefs:
+    - name: cilium
+      namespace: cilium
+      sectionName: syslog
+  rules:
+    - backendRefs:
+        - name: syslog
+          port: 601

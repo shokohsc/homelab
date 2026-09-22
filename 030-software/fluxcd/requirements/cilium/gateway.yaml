@@ -35,17 +35,29 @@ spec:
           - kind: Secret
             name: gateway-tls
 
-    # - name: syslog
-    #   port: 601
-    #   protocol: TCP
-    #   allowedRoutes:
-    #     kinds:
-    #       - kind: TCPRoute
-    #     namespaces:
-    #       from: Selector
-    #       selector:
-    #         matchLabels:
-    #           app: syslog
+    - name: syslog
+      port: 601
+      protocol: TCP
+      allowedRoutes:
+        kinds:
+          - kind: TCPRoute
+        namespaces:
+          from: Selector
+          selector:
+            matchLabels:
+              app: syslog
+
+    - name: squid
+      port: 3128
+      protocol: TCP
+      allowedRoutes:
+        kinds:
+          - kind: TCPRoute
+        namespaces:
+          from: Selector
+          selector:
+            matchLabels:
+              app: squid
 
     - name: postgres
       port: 5432

@@ -1,0 +1,21 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: squid
+resources:
+  - deployment.yaml
+  - namespace.yaml
+  - service.yaml
+  - http-route.yaml
+  - routes.yaml
+  - pvc.yaml
+configMapGenerator:
+- name: config
+  files:
+  - ./config/nginx.conf
+  - ./config/proxy.pac
+  - ./config/squid.conf
+  - ./config/acl-dstdomain-localnetsites.cfg
+generatorOptions:
+  disableNameSuffixHash: true
+  # annotations:
+  #   kustomize.toolkit.fluxcd.io/substitute: disabled

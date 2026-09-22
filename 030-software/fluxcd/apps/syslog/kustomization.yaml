@@ -4,6 +4,7 @@ namespace: syslog
 resources:
   - namespace.yaml
   - deployment.yaml
+  - routes.yaml
   - service.yaml
 configMapGenerator:
 - name: config

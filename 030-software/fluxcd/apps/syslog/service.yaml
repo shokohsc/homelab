@@ -3,14 +3,12 @@ apiVersion: v1
 kind: Service
 metadata:
   name: syslog
-  labels:
-    vlan: lb
 spec:
-  type: LoadBalancer
+  type: ClusterIP
   ports:
     - port: 601
       targetPort: syslog
       protocol: TCP
       name: syslog
   selector:
-    app.kubernetes.io/name: syslog
+    app: syslog

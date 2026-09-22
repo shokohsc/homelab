@@ -14,12 +14,14 @@ spec:
     metadata:
       labels:
         app: pyload
+        policy.gatekeeper.sh/ignore-psp-readonlyrootfilesystem: "true"
+        policy.gatekeeper.sh/ignore-psp-pods-allowed-user-ranges: "true"
     spec:
       automountServiceAccountToken: false
       securityContext:
-        runAsNonRoot: true
-        runAsUser: 1000
-        runAsGroup: 1000
+        # runAsNonRoot: true
+        # runAsUser: 1000
+        # runAsGroup: 1000
         fsGroup: 1000
         fsGroupChangePolicy: OnRootMismatch
         seccompProfile:
@@ -29,7 +31,8 @@ spec:
           image: ghcr.io/home-operations/pyload-ng:0.5.0
           securityContext:
             allowPrivilegeEscalation: false
-            readOnlyRootFilesystem: true
+            # readOnlyRootFilesystem: true
+            # runAsNonRoot: true
             capabilities:
               drop:
                 - ALL
