@@ -23,6 +23,13 @@ spec:
       env: GITHUB_TOKEN
 
   skills:
+    - name: kubernetes-skills
+      git:
+        repository: https://github.com/shokohsc/homelab.git
+        ref: main
+        path: 030-software/fluxcd/apps/kubeopencode/skills/kubernetes/
+        names:
+          - kubernetes
     - name: golang-skills
       git:
         repository: https://github.com/shokohsc/homelab.git
