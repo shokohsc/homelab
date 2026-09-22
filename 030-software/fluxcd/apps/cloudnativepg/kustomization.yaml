@@ -20,4 +20,5 @@ resources:
   - database-roles/sftpgo.yaml
   - database-roles/vaultwarden.yaml
   - database-roles/sidekick.yaml
+  - database-roles/kubeopencode.yaml
   # - pooler.yaml

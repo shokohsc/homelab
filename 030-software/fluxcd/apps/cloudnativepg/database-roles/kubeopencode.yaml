@@ -1,0 +1,24 @@
+apiVersion: postgresql.cnpg.io/v1
+kind: Database
+metadata:
+  name: kubeopencode
+spec:
+  name: kubeopencode
+  owner: kubeopencode
+  cluster:
+    name: main
+---
+apiVersion: postgresql.cnpg.io/v1
+kind: DatabaseRole
+metadata:
+  name: kubeopencode
+spec:
+  cluster:
+    name: main
+  name: kubeopencode
+  login: true
+  superuser: false
+  createdb: false
+  createrole: false
+  passwordSecret:
+    name: kubeopencode

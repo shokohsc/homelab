@@ -18,7 +18,7 @@ spec:
   credentials:
     - name: github-token
       secretRef:
-        name: github-pat
+        name: crdentials
         key: token
       env: GITHUB_TOKEN
 
@@ -45,6 +45,7 @@ spec:
 
   plugins:
     - name: cc-safety-net
+    - name: opencode-database-plugin
     - name: "@dietrichgebert/ponytail"
     - name: opencode-helicone-session
     - name: "@tarquinen/opencode-dcp"
@@ -59,26 +60,46 @@ spec:
       name: homelab-ca-cm
       key: ca-certs.pem
 
+  # proxy:
+  #   httpProxy: "http://proxy.corp.example.com:8080"
+  #   httpsProxy: "http://proxy.corp.example.com:8080"
+  #   noProxy: "localhost,127.0.0.1,.svc,.cluster.local"
+
   podSpec:
     labels:
       policy.gatekeeper.sh/ignore-container-must-have-limits: "true"
-      policy.gatekeeper.sh/ignore-psp-readonlyrootfilesystem: "true"
-      policy.gatekeeper.sh/ignore-psp-pods-allowed-user-ranges: "true"
-    securityContext:
+      # policy.gatekeeper.sh/ignore-psp-readonlyrootfilesystem: "true"
+      # policy.gatekeeper.sh/ignore-psp-pods-allowed-user-ranges: "true"
+    podSecurityContext:
       runAsNonRoot: true
+      runAsUser: 1000
+      runAsGroup: 1000
+      fsGroup: 1000
+      seccompProfile:
+        type: RuntimeDefault
+    securityContext:
       allowPrivilegeEscalation: false
       readOnlyRootFilesystem: true
+      runAsNonRoot: true
       capabilities:
         drop:
           - ALL
-      seccompProfile:
-        type: RuntimeDefault
+    extraEnv:
+      - name: OPENCODE_DATABASE_URL
+        valueFrom:
+          secretKeyRef:
+            name: credentials
+            key: postgres-url
     extraVolumes:
       - name: temp
+        emptyDir: {}
+      - name: home
         emptyDir: {}
     extraVolumeMounts:
       - name: temp
         mountPath: /tmp
+      - name: home
+        mountPath: /home/agent
 
   maxConcurrentTasks: 5
   quota:

@@ -15,8 +15,3 @@ spec:
   #       repository: https://github.com/your-org/frontend.git
   #       ref: main
   #     mountPath: frontend/
-  persistence:
-    sessions:
-      size: "1Gi"
-  # standby:
-  #   idleTimeout: "1h"
