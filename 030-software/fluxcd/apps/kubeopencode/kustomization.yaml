@@ -6,4 +6,5 @@ resources:
   - secret.yaml
   - rbac.yaml
   - agent-template.yaml
+  - agent.yaml
   - cilium-network-policy.yaml

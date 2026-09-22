@@ -11,7 +11,7 @@ spec:
   command: ["opencode", "serve"]
 
   contexts:
-    - name: coding-standards
+    - name: main
       type: Text
       text: "You're running inside a container's pod in a talos cluster with a strict pod security policy."
 
@@ -23,42 +23,25 @@ spec:
       env: GITHUB_TOKEN
 
   skills:
-    - name: kubernetes-skills
+    - name: homelab-skills
       git:
         repository: https://github.com/shokohsc/homelab.git
         ref: main
-        path: 030-software/fluxcd/apps/kubeopencode/skills/kubernetes/
+        path: 030-software/fluxcd/apps/kubeopencode/skills/
         names:
           - kubernetes
-    - name: golang-skills
-      git:
-        repository: https://github.com/shokohsc/homelab.git
-        ref: main
-        path: 030-software/fluxcd/apps/kubeopencode/skills/golang/
-        names:
           - golang
-    - name: javascript-skills
-      git:
-        repository: https://github.com/shokohsc/homelab.git
-        ref: main
-        path: 030-software/fluxcd/apps/kubeopencode/skills/javascript/
-        names:
           - javascript
-    - name: self-improving-skills
-      git:
-        repository: https://github.com/shokohsc/homelab.git
-        ref: main
-        path: 030-software/fluxcd/apps/kubeopencode/skills/self-improving/
-        names:
           - self-improve
-    # - name: anthropic-skills
-    #   git:
-    #     repository: https://github.com/anthropics/skills.git
-    #     ref: main
-    #     path: skills/
-    #     names:
-    #       - frontend-design
-    #       - webapp-testing
+    - name: anthropic-skills
+      git:
+        repository: https://github.com/anthropics/skills.git
+        ref: main
+        path: skills/
+        names:
+          - frontend-design
+          - skill-creator
+          - webapp-testing
 
   plugins:
     - name: cc-safety-net

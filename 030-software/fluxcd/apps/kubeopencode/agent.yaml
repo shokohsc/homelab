@@ -1,0 +1,22 @@
+---
+apiVersion: kubeopencode.io/v1alpha1
+kind: Agent
+metadata:
+  name: main
+spec:
+  templateRef:
+    name: main
+  profile: "Homelab Devops specialist"
+  # Override or extend template settings
+  # contexts:
+  #   - name: frontend-repo
+  #     type: Git
+  #     git:
+  #       repository: https://github.com/your-org/frontend.git
+  #       ref: main
+  #     mountPath: frontend/
+  persistence:
+    sessions:
+      size: "1Gi"
+  # standby:
+  #   idleTimeout: "1h"
