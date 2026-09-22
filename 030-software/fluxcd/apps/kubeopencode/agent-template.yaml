@@ -68,8 +68,8 @@ spec:
   podSpec:
     labels:
       policy.gatekeeper.sh/ignore-container-must-have-limits: "true"
-      # policy.gatekeeper.sh/ignore-psp-readonlyrootfilesystem: "true"
-      # policy.gatekeeper.sh/ignore-psp-pods-allowed-user-ranges: "true"
+      policy.gatekeeper.sh/ignore-psp-readonlyrootfilesystem: "true"
+      policy.gatekeeper.sh/ignore-psp-pods-allowed-user-ranges: "true"
     podSecurityContext:
       runAsNonRoot: true
       runAsUser: 1000
