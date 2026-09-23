@@ -50,6 +50,8 @@ spec:
               containerPort: 9898
               protocol: TCP
           volumeMounts:
+            - name: temp
+              mountPath: /tmp
             - name: data
               mountPath: /data
             - name: config
@@ -78,6 +80,8 @@ spec:
               cpu: 10m
               memory: 64Mi
       volumes:
+        - name: temp
+          emptyDir: {}
         - name: config
           persistentVolumeClaim:
             claimName: config
