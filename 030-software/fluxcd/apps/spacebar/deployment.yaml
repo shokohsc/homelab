@@ -2,19 +2,18 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: backrest
+  name: spacebar
 spec:
   revisionHistoryLimit: 0
   strategy:
     type: Recreate
   selector:
     matchLabels:
-      app: backrest
+      app: spacebar
   template:
     metadata:
       labels:
-        app: backrest
-        nfs-genji: "true"
+        app: spacebar
     spec:
       automountServiceAccountToken: false
       securityContext:
@@ -25,8 +24,9 @@ spec:
         seccompProfile:
           type: RuntimeDefault
       containers:
-        - name: backrest
-          image: ghcr.io/garethgeorge/backrest:v1.14.1-alpine
+        - name: spacebar
+          image: ghcr.io/spacebarchat/server:latest
+          imagePullPolicy: Always
           securityContext:
             allowPrivilegeEscalation: false
             readOnlyRootFilesystem: true
@@ -34,32 +34,21 @@ spec:
             capabilities:
               drop:
                 - ALL
-          args:
-            - /backrest
-            - -bind-address
-            - :9898
           env:
-            - name: BACKREST_DATA
-              value: /data
-            - name: BACKREST_CONFIG
-              value: /config/config.json
-            - name: XDG_CACHE_HOME
-              value: /cache
+            - name: DATABASE
+              valueFrom:
+                secretKeyRef:
+                  name: spacebar
+                  key: postgres-url
+            - name: CONFIG_PATH
+              value: config.json
           ports:
             - name: http
-              containerPort: 9898
+              containerPort: 3001
               protocol: TCP
           volumeMounts:
             - name: data
               mountPath: /data
-            - name: config
-              mountPath: /config
-            - name: cache
-              mountPath: /cache
-            - name: backups
-              mountPath: /mnt/backups
-            - name: shared
-              mountPath: /mnt/shared
           startupProbe:
             tcpSocket:
               port: http
@@ -76,22 +65,8 @@ spec:
               memory: 1024Mi
             requests:
               cpu: 10m
-              memory: 64Mi
+              memory: 10Mi
       volumes:
-        - name: config
-          persistentVolumeClaim:
-            claimName: config
         - name: data
           persistentVolumeClaim:
             claimName: data
-        - name: cache
-          persistentVolumeClaim:
-            claimName: cache
-        - name: backups
-          nfs:
-            server: genji.home.arpa
-            path: /backups
-        - name: shared
-          nfs:
-            server: genji.home.arpa
-            path: /shared

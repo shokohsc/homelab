@@ -67,10 +67,10 @@ spec:
               port: http
           resources:
             limits:
-              cpu: 100m
+              cpu: 1000m
               memory: 64M
             requests:
-              cpu: 1m
+              cpu: 10m
               memory: 10M
           volumeMounts:
             - mountPath: /config

@@ -66,6 +66,7 @@ resources:
   - shell2http
   - sidekick
   - sonarr
+  - spacebar
   # - squid
   - stackedit
   - storm
