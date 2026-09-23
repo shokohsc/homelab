@@ -21,5 +21,4 @@ resources:
   - database-roles/vaultwarden.yaml
   - database-roles/sidekick.yaml
   - database-roles/kubeopencode.yaml
-  - database-roles/spacebar.yaml
   # - pooler.yaml
