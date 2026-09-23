@@ -58,6 +58,7 @@ spec:
 
   config:
     $schema: https://opencode.ai/config.json
+    model: opencode/big-pickle
   # configRef:
   #   configMapRef:
   #     name: config
