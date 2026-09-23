@@ -23,7 +23,7 @@ spec:
           type: RuntimeDefault
       containers:
         - name: adminer
-          image: adminer:6.0.1-standalone
+          image: adminer:6.1.0-standalone
           securityContext:
             allowPrivilegeEscalation: false
             readOnlyRootFilesystem: true
