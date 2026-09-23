@@ -8,3 +8,7 @@ resources:
   - agent-template.yaml
   - agent.yaml
   - cilium-network-policy.yaml
+configMapGenerator:
+- name: config
+  files:
+  - ./config/opencode.json

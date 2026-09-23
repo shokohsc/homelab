@@ -7,6 +7,10 @@ spec:
   templateRef:
     name: main
   profile: "Homelab Devops specialist"
+  share:
+    enabled: true
+    allowedIPs:
+      - 10.42.10.0/24
   # Override or extend template settings
   # contexts:
   #   - name: frontend-repo

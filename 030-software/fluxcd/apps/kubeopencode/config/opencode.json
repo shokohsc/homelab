@@ -1,0 +1,14 @@
+{
+    "$schema": "https://opencode.ai/config.json",
+    "provider": {
+        "llama.cpp": {
+            "npm": "@ai-sdk/openai-compatible",
+            "name": "llama CPP (local)",
+            "options": {
+                "baseURL": "http://llama-cpp.${domain}:11434/v1"
+            },
+            "models": {
+            }
+        }
+    }
+}
