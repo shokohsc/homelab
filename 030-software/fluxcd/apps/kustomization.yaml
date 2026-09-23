@@ -3,7 +3,7 @@ kind: Kustomization
 resources:
   - adminer
   - atuin
-  # - backrest
+  - backrest
   # - blocky
   - browserless
   # - byparr

@@ -26,7 +26,7 @@ spec:
           type: RuntimeDefault
       containers:
         - name: backrest
-          image: garethgeorge/backrest:latest-alpine
+          image: ghcr.io/garethgeorge/backrest:v1.14.1-alpine
           securityContext:
             allowPrivilegeEscalation: false
             readOnlyRootFilesystem: true
@@ -73,10 +73,10 @@ spec:
           resources:
             limits:
               cpu: 1000m
-              memory: 1024M
+              memory: 1024Mi
             requests:
               cpu: 1m
-              memory: 10M
+              memory: 10Mi
       volumes:
         - name: config
           persistentVolumeClaim:
