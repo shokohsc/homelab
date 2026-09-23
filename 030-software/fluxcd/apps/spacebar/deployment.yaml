@@ -41,14 +41,11 @@ spec:
                   name: spacebar
                   key: postgres-url
             - name: CONFIG_PATH
-              value: config.json
+              value: /config/config.json
           ports:
             - name: http
               containerPort: 3001
               protocol: TCP
-          volumeMounts:
-            - name: data
-              mountPath: /data
           startupProbe:
             tcpSocket:
               port: http
@@ -66,7 +63,16 @@ spec:
             requests:
               cpu: 10m
               memory: 10Mi
+          volumeMounts:
+            - name: data
+              mountPath: /data
+            - name: config
+              mountPath: /config/config.json
+              subPath: config.json
       volumes:
         - name: data
           persistentVolumeClaim:
             claimName: data
+        - name: config
+          configMap:
+            name: config
