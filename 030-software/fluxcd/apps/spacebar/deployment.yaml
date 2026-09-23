@@ -67,12 +67,14 @@ spec:
             - name: data
               mountPath: /data
             - name: config
-              mountPath: /config/config.json
-              subPath: config.json
+              mountPath: /config
+              # mountPath: /config/config.json
+              # subPath: config.json
       volumes:
         - name: data
           persistentVolumeClaim:
             claimName: data
         - name: config
-          configMap:
-            name: config
+          emptyDir: {}
+          # configMap:
+          #   name: config
