@@ -10,6 +10,7 @@ resources:
   - secret.yaml
 configMapGenerator:
 - name: config
-  env: ./config/config.json
+  files:
+  - ./config/config.json
 generatorOptions:
   disableNameSuffixHash: true
