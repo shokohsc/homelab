@@ -40,7 +40,7 @@ resources:
   - maddy
   - metrics-server
   - miniflux
-  - motrix
+  # - motrix
   - nats
   - nfs-downloads
   - paint
@@ -72,7 +72,7 @@ resources:
   - swingmusic
   - syslog
   - tailscale
-  - thelounge
+  # - thelounge
   - valkey
   - vaultwarden
   - victoria-logs
