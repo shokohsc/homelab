@@ -25,7 +25,7 @@ spec:
           type: RuntimeDefault
       containers:
         - name: talos-proxmox-autoscaler
-          image: ghcr.io/shokohsc/talos-proxmox-autoscaler:4d5db57
+          image: ghcr.io/shokohsc/talos-proxmox-autoscaler:0cf1bb7
           securityContext:
             allowPrivilegeEscalation: false
             readOnlyRootFilesystem: true
@@ -42,16 +42,6 @@ spec:
               value: debug
             - name: PROXMOX_API_URL
               value: "https://proxmox.home.arpa"
-              # valueFrom:
-              #   configMapKeyRef:
-              #     name: autoscaler-config
-              #     key: proxmox_api_url
-            # - name: PROXMOX_INSECURE
-            #   valueFrom:
-            #     configMapKeyRef:
-            #       name: autoscaler-config
-            #       key: proxmox_insecure
-            #       optional: true
             - name: BASE_VMID
               valueFrom:
                 configMapKeyRef:
@@ -75,12 +65,3 @@ spec:
         - name: secrets
           secret:
             secretName: talos-proxmox-autoscaler-credentials
-      # nodeSelector:
-      #   kubernetes.io/os: linux
-      # topologySpreadConstraints:
-      #   - maxSkew: 1
-      #     topologyKey: kubernetes.io/hostname
-      #     whenUnsatisfiable: ScheduleAnyway
-      #     labelSelector:
-      #       matchLabels:
-      #         app: talos-proxmox-autoscaler

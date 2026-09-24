@@ -23,4 +23,33 @@ data:
   worker_prefix: "worker-vm"
   gpu_prefix: "worker-vm-gpu"
   worker_nodes: '[{"name":"worker-vm"}]'
-  worker_gpu_nodes: '[{"type":"tesla-p4","nodes":["genji","hanzo"],"pci_devices":[{"id":"0000:0c:00.0","pcie":true,"gpu":true}]},{"type":"tesla-p40","nodes":["roadhog"],"pci_devices":[{"id":"0000:83:00.0","pcie":true,"gpu":true}]}]'
+  worker_gpu_nodes: |
+    [
+        {
+            "type": "tesla-p4",
+            "nodes": [
+                "genji",
+                "hanzo"
+            ],
+            "pci_devices": [
+                {
+                    "id": "0000:0c:00.0",
+                    "pcie": true,
+                    "gpu": true
+                }
+            ]
+        },
+        {
+            "type": "tesla-p40",
+            "nodes": [
+                "roadhog"
+            ],
+            "pci_devices": [
+                {
+                    "id": "0000:83:00.0",
+                    "pcie": true,
+                    "gpu": true
+                }
+            ]
+        }
+    ]
