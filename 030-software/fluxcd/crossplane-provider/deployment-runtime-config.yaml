@@ -44,6 +44,8 @@ spec:
                   name: temp
                 - mountPath: /tofu
                   name: work
+                - mountPath: /tofu/cache
+                  name: cache
           volumes:
             - name: tls
               configMap:
@@ -52,6 +54,8 @@ spec:
             - name: temp
               emptyDir:
                 medium: Memory
+            - name: cache
+              emptyDir: {}
             - name: work
               emptyDir:
                 medium: Memory

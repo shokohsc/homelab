@@ -3,7 +3,7 @@ kind: AgentTemplate
 metadata:
   name: main
 spec:
-  agentImage: ghcr.io/kubeopencode/kubeopencode-agent-opencode:latest
+  agentImage: shokohsc/kubeopencode-agent-opencode:latest
   executorImage: ghcr.io/kubeopencode/kubeopencode-agent-devbox:latest
   attachImage: ghcr.io/kubeopencode/kubeopencode-agent-attach:latest
   workspaceDir: /workspace
