@@ -84,6 +84,7 @@ spec:
               memory: 1024Mi
             requests:
               cpu: 100m
+              memory: 64Mi
       volumes:
         - name: nfs-genji
           nfs:

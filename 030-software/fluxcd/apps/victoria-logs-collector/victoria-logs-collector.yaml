@@ -41,6 +41,7 @@ spec:
         memory: 2048Mi
       requests:
         cpu: 500m
+        memory: 64Mi
     podSecurityContext:
       seccompProfile:
         type: RuntimeDefault

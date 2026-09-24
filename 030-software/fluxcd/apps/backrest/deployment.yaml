@@ -76,6 +76,7 @@ spec:
             limits:
               memory: 1024Mi
             requests:
+              memory: 64Mi
               cpu: 100m
       volumes:
         - name: temp

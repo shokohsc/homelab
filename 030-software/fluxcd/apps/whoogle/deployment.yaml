@@ -72,8 +72,9 @@ spec:
           resources:
             requests:
               cpu: 100m
+              memory: 64Mi
             limits:
-              memory: 1024Mi
+              memory: 2048Mi
           volumeMounts:
             - name: css
               mountPath: /whoogle/app/static/build

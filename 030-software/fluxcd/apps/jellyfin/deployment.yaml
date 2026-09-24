@@ -15,6 +15,7 @@ spec:
       labels:
         app: jellyfin
         nfs-genji: "true"
+        policy.gatekeeper.sh/ignore-container-must-have-limits: "true"
     spec:
       automountServiceAccountToken: false
       securityContext:
@@ -85,6 +86,7 @@ spec:
               memory: 4096Mi
             requests:
               cpu: 100m
+              memory: 1024Mi
       volumes:
         - name: data
           persistentVolumeClaim:

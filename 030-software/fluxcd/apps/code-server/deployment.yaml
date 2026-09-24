@@ -14,6 +14,7 @@ spec:
     metadata:
       labels:
         app: code-server
+        policy.gatekeeper.sh/ignore-container-must-have-limits: "true"
     spec:
       serviceAccountName: code-server-admin
       securityContext:
@@ -60,6 +61,7 @@ spec:
           resources:
             requests:
               cpu: 100m
+              memory: 64Mi
             limits:
               memory: 4096Mi
       volumes:

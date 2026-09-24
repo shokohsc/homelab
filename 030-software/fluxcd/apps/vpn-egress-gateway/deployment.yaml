@@ -75,7 +75,7 @@ spec:
               mountPath: /dev/net
           resources:
             limits:
-              memory: 2048Mi
+              memory: 64Mi
             requests:
               cpu: 100m
       volumes:
@@ -158,7 +158,7 @@ spec:
               port: healthz
           resources:
             limits:
-              memory: 1024Mi
+              memory: 64Mi
             requests:
               cpu: 100m
           volumeMounts:

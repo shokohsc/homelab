@@ -73,6 +73,7 @@ spec:
             limits:
               memory: 2048Mi
             requests:
+              memory: 256Mi
               cpu: 100m
           volumeMounts:
             - name: tmp

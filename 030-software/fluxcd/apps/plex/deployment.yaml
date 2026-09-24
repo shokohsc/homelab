@@ -17,6 +17,7 @@ spec:
       labels:
         app: plex
         nfs-genji: "true"
+        policy.gatekeeper.sh/ignore-container-must-have-limits: "true"
         policy.gatekeeper.sh/ignore-psp-readonlyrootfilesystem: "true"
         policy.gatekeeper.sh/ignore-psp-pods-allowed-user-ranges: "true"
         policy.gatekeeper.sh/ignore-psp-capabilities-baseline: "true"
@@ -84,8 +85,9 @@ spec:
               port: http
           resources:
             limits:
-              memory: 2048Mi
+              memory: 4096Mi
             requests:
+              memory: 1024Mi
               cpu: 100m
         - name: vector
           image: timberio/vector:0.58.0-alpine
