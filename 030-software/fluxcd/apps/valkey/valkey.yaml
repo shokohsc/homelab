@@ -25,6 +25,7 @@ spec:
     dataStorage:
       enabled: true
       requestedSize: 10Gi
+    deploymentStrategy: Recreate
     auth:
       enabled: false
     metrics:
