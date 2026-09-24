@@ -5,6 +5,8 @@ metadata:
   annotations:
     secret.reloader.stakater.com/reload: pocket-id
 spec:
+  strategy:
+    type: Recreate
   revisionHistoryLimit: 0
   selector:
     matchLabels:
