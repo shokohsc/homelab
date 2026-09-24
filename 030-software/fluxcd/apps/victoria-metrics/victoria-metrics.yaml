@@ -41,7 +41,7 @@ spec:
         size: 2Gi
       resources:
         limits:
-          memory: 512Mi
+          memory: 1024Mi
         requests:
           cpu: 500m
       podSecurityContext:
