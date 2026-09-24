@@ -54,8 +54,9 @@ spec:
           resources:
             requests:
               cpu: 100m
-            limits:
               memory: 64Mi
+            limits:
+              memory: 1024Mi
           volumeMounts:
             - name: genji
               mountPath: /music
