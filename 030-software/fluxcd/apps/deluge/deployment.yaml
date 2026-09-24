@@ -85,11 +85,9 @@ spec:
             port: http
         resources:
           limits:
-            cpu: 1000m
-            memory: 1024M
+            memory: 1024Mi
           requests:
-            cpu: 10m
-            memory: 64M
+            cpu: 100m
 
       volumes:
       - name: config

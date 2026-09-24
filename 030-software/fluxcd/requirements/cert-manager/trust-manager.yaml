@@ -24,7 +24,6 @@ spec:
   values:
     resources:
       limits:
-        cpu: 100m
         memory: 128Mi
     tolerations:
       - key: "node.kubernetes.io/nuc"
@@ -34,7 +33,6 @@ spec:
     defaultPackage:
       resources:
         limits:
-          cpu: 100m
           memory: 128Mi
 
     secretTargets:

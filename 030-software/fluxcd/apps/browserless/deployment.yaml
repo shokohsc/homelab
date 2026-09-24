@@ -65,10 +65,8 @@ spec:
           resources:
             requests:
               cpu: 100m
-              memory: 128M
             limits:
-              cpu: 3
-              memory: 4096M
+              memory: 4096Mi
           volumeMounts:
             - mountPath: /tmp
               name: data

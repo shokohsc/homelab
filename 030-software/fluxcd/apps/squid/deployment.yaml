@@ -71,10 +71,8 @@ spec:
           resources:
             requests:
               cpu: 100m
-              memory: 64M
             limits:
-              cpu: 200m
-              memory: 512M
+              memory: 512Mi
         - name: squid-exporter
           image: boynux/squid-exporter:v1.13.0
           securityContext:
@@ -107,10 +105,8 @@ spec:
           resources:
             requests:
               cpu: 100m
-              memory: 64M
             limits:
-              cpu: 1000m
-              memory: 2048M
+              memory: 2048Mi
       volumes:
         - name: data
           persistentVolumeClaim:
@@ -181,11 +177,9 @@ spec:
               port: http
           resources:
             limits:
-              cpu: 100m
-              memory: 64M
+              memory: 64Mi
             requests:
-              cpu: 10m
-              memory: 64M
+              cpu: 100m
       volumes:
         - name: config
           configMap:

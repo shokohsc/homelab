@@ -41,11 +41,9 @@ spec:
         size: 2Gi
       resources:
         limits:
-          cpu: 500m
           memory: 512Mi
         requests:
           cpu: 500m
-          memory: 512Mi
       podSecurityContext:
         runAsNonRoot: true
         runAsUser: 1000

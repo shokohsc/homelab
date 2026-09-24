@@ -24,11 +24,9 @@ spec:
     size: 2Gi
   resources:
     requests:
-      memory: "512Mi"
       cpu: "1"
     limits:
       memory: "1Gi"
-      cpu: "2"
   # affinity:
   #   enablePodAntiAffinity: true
   #   topologyKey: topology.kubernetes.io/zone

@@ -38,11 +38,9 @@ spec:
           medium: Memory
     resources:
       limits:
-        cpu: 500m
         memory: 2048Mi
       requests:
         cpu: 500m
-        memory: 1024Mi
     podSecurityContext:
       seccompProfile:
         type: RuntimeDefault

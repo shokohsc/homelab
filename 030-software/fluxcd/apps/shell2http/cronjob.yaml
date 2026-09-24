@@ -37,11 +37,9 @@ spec:
                   value: "200"
               resources:
                 requests:
-                  cpu: 10m
-                  memory: 64M
-                limits:
                   cpu: 100m
-                  memory: 64M
+                limits:
+                  memory: 64Mi
               volumeMounts:
                 - name: scripts
                   mountPath: /bin/monitor-vpn-egress-gateway-bandwidth.sh

@@ -43,10 +43,8 @@ spec:
 
     resources:
       requests:
-        cpu: 10m
-        memory: 64Mi
-      limits:
         cpu: 100m
+      limits:
         memory: 64Mi
 
     provider:
@@ -103,7 +101,6 @@ spec:
           timeoutSeconds: 5
         resources:
           limits:
-            cpu: 100m
             memory: 64Mi
         extraVolumeMounts:
           - mountPath: /etc/ssl/certs

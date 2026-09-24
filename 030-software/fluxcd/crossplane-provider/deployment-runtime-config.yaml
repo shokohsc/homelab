@@ -31,10 +31,8 @@ spec:
                       key: password
               resources:
                 requests:
-                  cpu: 10m
-                  memory: 64Mi
+                  cpu: 100m
                 limits:
-                  cpu: 1000m
                   memory: 512Mi
               volumeMounts:
                 - mountPath: /etc/ssl/certs/ca-certs.pem

@@ -70,11 +70,9 @@ spec:
               port: ssh
           resources:
             limits:
-              cpu: 1000m
-              memory: 1024M
+              memory: 1024Mi
             requests:
               cpu: 100m
-              memory: 64M
       volumes:
         - name: temp
           emptyDir:

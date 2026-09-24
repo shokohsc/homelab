@@ -37,18 +37,14 @@ spec:
             - loki.${domain}
       resources:
         requests:
-          cpu: 10m
-          memory: 64Mi
-        limits:
           cpu: 100m
+        limits:
           memory: 128Mi
       metrics:
         resources:
           requests:
-            cpu: 10m
-            memory: 64Mi
-          limits:
             cpu: 100m
+          limits:
             memory: 64Mi
 
     singleBinary:
@@ -56,9 +52,7 @@ spec:
       resources:
         requests:
           cpu: 100m
-          memory: 256Mi
         limits:
-          cpu: 1000m
           memory: 512Mi
       persistence:
         size: 5Gi
@@ -116,10 +110,8 @@ spec:
         enabled: false
       resources:
         requests:
-          cpu: 10m
-          memory: 64Mi
-        limits:
           cpu: 100m
+        limits:
           memory: 64Mi
 
     write:

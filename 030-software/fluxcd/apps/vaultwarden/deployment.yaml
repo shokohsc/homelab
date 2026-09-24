@@ -69,11 +69,9 @@ spec:
               port: http
           resources:
             limits:
-              cpu: 100m
-              memory: 512M
+              memory: 512Mi
             requests:
-              cpu: 10m
-              memory: 64M
+              cpu: 100m
       volumes:
         - name: config
           persistentVolumeClaim:

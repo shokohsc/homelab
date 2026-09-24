@@ -60,9 +60,7 @@ spec:
           resources:
             requests:
               cpu: 100m
-              memory: 128Mi
             limits:
-              cpu: 3000m
               memory: 4096Mi
       volumes:
         - name: temp

@@ -54,9 +54,7 @@ spec:
           resources:
             requests:
               cpu: 100m
-              memory: 64Mi
             limits:
-              cpu: 1000m
               memory: 1024Mi
           volumeMounts:
             - name: genji
@@ -117,10 +115,8 @@ spec:
               path: /
           resources:
             requests:
-              cpu: 10m
-              memory: 64Mi
-            limits:
               cpu: 100m
+            limits:
               memory: 64Mi
           volumeMounts:
             - name: assets

@@ -132,11 +132,9 @@ spec:
               port: 143
           resources:
             limits:
-              cpu: 1000m
-              memory: 1024M
+              memory: 1024Mi
             requests:
-              cpu: 10m
-              memory: 64M
+              cpu: 100m
       volumes:
         - name: smtp
           secret:
@@ -219,10 +217,8 @@ spec:
               port: https
           resources:
             requests:
-              cpu: 10m
-              memory: 64Mi
-            limits:
               cpu: 100m
+            limits:
               memory: 64Mi
       volumes:
         - name: config

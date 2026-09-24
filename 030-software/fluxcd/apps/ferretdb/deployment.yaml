@@ -48,8 +48,6 @@ spec:
               port: ferretdb
           resources:
             limits:
-              cpu: 100m
-              memory: 64M
+              memory: 64Mi
             requests:
-              cpu: 10m
-              memory: 64M
+              cpu: 100m

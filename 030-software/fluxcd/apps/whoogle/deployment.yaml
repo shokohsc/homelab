@@ -71,10 +71,8 @@ spec:
               port: http
           resources:
             requests:
-              cpu: 10m
-              memory: 128Mi
+              cpu: 100m
             limits:
-              cpu: 1000m
               memory: 1024Mi
           volumeMounts:
             - name: css

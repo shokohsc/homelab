@@ -65,10 +65,8 @@ spec:
               mountPath: /tmp
           resources:
             requests:
-              cpu: 10m
-              memory: 64Mi
+              cpu: 100m
             limits:
-              cpu: 2000m
               memory: 2048Mi
       volumes:
         - name: data

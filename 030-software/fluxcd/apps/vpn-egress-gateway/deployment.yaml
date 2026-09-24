@@ -75,11 +75,9 @@ spec:
               mountPath: /dev/net
           resources:
             limits:
-              cpu: 1000m
-              memory: 2048M
+              memory: 2048Mi
             requests:
-              cpu: 10m
-              memory: 64M
+              cpu: 100m
       volumes:
         - name: openvpn
           emptyDir: {}
@@ -160,11 +158,9 @@ spec:
               port: healthz
           resources:
             limits:
-              cpu: 1000m
-              memory: 1024M
+              memory: 1024Mi
             requests:
-              cpu: 10m
-              memory: 64M
+              cpu: 100m
           volumeMounts:
             - name: webhook-tls
               mountPath: /etc/webhook/tls

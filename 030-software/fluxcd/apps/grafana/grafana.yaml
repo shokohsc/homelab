@@ -40,10 +40,8 @@ spec:
     downloadDashboards:
       resources:
         requests:
-          cpu: 10m
-          memory: 64Mi
-        limits:
           cpu: 100m
+        limits:
           memory: 64Mi
 
     podLabels:
@@ -56,10 +54,8 @@ spec:
     initChownData:
       resources:
         requests:
-          cpu: 10m
-          memory: 64Mi
-        limits:
           cpu: 100m
+        limits:
           memory: 64Mi
 
     grafana.ini:
@@ -85,10 +81,8 @@ spec:
 
     resources:
       requests:
-        cpu: 10m
-        memory: 64M
+        cpu: 100m
       limits:
-        cpu: 1000m
         memory: 1024Mi
 
     sidecar:
@@ -97,11 +91,9 @@ spec:
         labelValue: k8s-gitops
       resources:
         requests:
-          cpu: 10m
-          memory: 64M
-        limits:
           cpu: 100m
-          memory: 256M
+        limits:
+          memory: 256Mi
 
     datasources:
       nodegraphapi-plugin-datasource.yaml:

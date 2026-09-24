@@ -56,11 +56,9 @@ spec:
               port: syslog
           resources:
             limits:
-              cpu: 100m
               memory: 64Mi
             requests:
-              cpu: 10m
-              memory: 64Mi
+              cpu: 100m
       volumes:
         - name: data
           emptyDir:

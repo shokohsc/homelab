@@ -62,11 +62,9 @@ spec:
               mountPath: /mnt/downloads
           resources:
             requests:
-              cpu: 10m
-              memory: 128M
+              cpu: 100m
             limits:
-              cpu: 1000m
-              memory: 1024M
+              memory: 1024Mi
       volumes:
         - name: backups
           nfs:

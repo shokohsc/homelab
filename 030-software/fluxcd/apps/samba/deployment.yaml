@@ -81,11 +81,9 @@ spec:
               port: netbios
           resources:
             limits:
-              cpu: 100m
-              memory: 1024M
+              memory: 1024Mi
             requests:
-              cpu: 10m
-              memory: 64M
+              cpu: 100m
       volumes:
         - name: nfs-genji
           nfs:
