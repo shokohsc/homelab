@@ -38,10 +38,10 @@ spec:
           env:
             - name: ADMINER_PLUGINS
               value:
-            # - name: ADMINER_DESIGN
-            #   value: dracula
+            - name: ADMINER_DESIGN
+              value: dracula
             - name: ADMINER_DEFAULT_SERVER
-              value: postgresql.postgresql
+              value: main-ro.cnpg-system.svc.cluster.local
           startupProbe:
             tcpSocket:
               port: http
