@@ -10,7 +10,7 @@ operator:
     requests:
       cpu: 100m
     limits:
-      memory: 64Mi
+      memory: 1024Mi
 
 envoy:
   resources:
