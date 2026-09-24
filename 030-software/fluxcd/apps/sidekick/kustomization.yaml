@@ -3,16 +3,12 @@ kind: Kustomization
 namespace: sidekick
 resources:
   - namespace.yaml
-  # - tekton.yaml
 
   - api/
   - vpn/
-  # - changedetection/
   # - kubernetesevents/
-  # # - cmangos/
+  # - cmangos/
   # - email/
-  # # - cloudflare/
-  # - search/
 
 images:
   - name: shokohsc/moleculer-sidekick
