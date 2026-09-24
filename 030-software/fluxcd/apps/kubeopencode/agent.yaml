@@ -11,11 +11,43 @@ spec:
     enabled: true
     allowedIPs:
       - 10.42.10.0/24
-  # Override or extend template settings
-  # contexts:
-  #   - name: frontend-repo
-  #     type: Git
-  #     git:
-  #       repository: https://github.com/your-org/frontend.git
-  #       ref: main
-  #     mountPath: frontend/
+---
+apiVersion: kubeopencode.io/v1alpha1
+kind: Agent
+metadata:
+  name: homelab
+spec:
+  templateRef:
+    name: main
+  profile: "Homelab Repository agent"
+  share:
+    enabled: true
+    allowedIPs:
+      - 10.42.10.0/24
+  contexts:
+    - name: homelab-repo
+      type: Git
+      git:
+        repository: https://github.com/shokohsc/homelab.git
+        ref: main
+      mountPath: homelab/
+---
+apiVersion: kubeopencode.io/v1alpha1
+kind: Agent
+metadata:
+  name: talos-proxmox-autoscaler
+spec:
+  templateRef:
+    name: main
+  profile: "Talos Proxmox Autoscaler Repository agent"
+  share:
+    enabled: true
+    allowedIPs:
+      - 10.42.10.0/24
+  contexts:
+    - name: talos-proxmox-autoscaler-repo
+      type: Git
+      git:
+        repository: https://github.com/shokohsc/talos-proxmox-autoscaler.git
+        ref: main
+      mountPath: talos-proxmox-autoscaler/
