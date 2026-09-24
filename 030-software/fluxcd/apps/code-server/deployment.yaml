@@ -14,7 +14,6 @@ spec:
     metadata:
       labels:
         app: code-server
-        policy.gatekeeper.sh/ignore-container-must-have-limits: "true"
     spec:
       serviceAccountName: code-server-admin
       securityContext:

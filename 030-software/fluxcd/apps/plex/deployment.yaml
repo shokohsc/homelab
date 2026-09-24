@@ -17,7 +17,6 @@ spec:
       labels:
         app: plex
         nfs-genji: "true"
-        policy.gatekeeper.sh/ignore-container-must-have-limits: "true"
         policy.gatekeeper.sh/ignore-psp-readonlyrootfilesystem: "true"
         policy.gatekeeper.sh/ignore-psp-pods-allowed-user-ranges: "true"
         policy.gatekeeper.sh/ignore-psp-capabilities-baseline: "true"

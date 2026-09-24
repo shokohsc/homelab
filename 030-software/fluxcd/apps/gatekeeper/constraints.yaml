@@ -17,8 +17,7 @@ spec:
         operator: NotIn
         values: ["true"]
   parameters:
-    cpu: "2000m"
-    memory: "4096Gi"
+    memory: "2048Mi"
 ---
 apiVersion: constraints.gatekeeper.sh/v1beta1
 kind: K8sPSPHostFilesystem
