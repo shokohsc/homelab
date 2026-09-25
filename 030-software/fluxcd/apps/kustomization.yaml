@@ -6,6 +6,7 @@ resources:
   - backrest
   # - blocky
   - browserless
+  - buzz
   # - byparr
   - cert-manager
   - city-roads

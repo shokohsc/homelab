@@ -1,0 +1,161 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: buzz
+  labels:
+    app: buzz
+spec:
+  revisionHistoryLimit: 0
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: buzz
+  template:
+    metadata:
+      labels:
+        app: buzz
+    spec:
+      automountServiceAccountToken: false
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        seccompProfile:
+          type: RuntimeDefault
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              podAffinityTerm:
+                topologyKey: kubernetes.io/hostname
+                labelSelector:
+                  matchLabels:
+                    app: buzz
+      containers:
+        - name: buzz
+          image: ghcr.io/block/buzz:v0.5.2
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+            capabilities:
+              drop:
+                - ALL
+          env:
+            - name: BUZZ_BIND_ADDR
+              value: 0.0.0.0:3000
+            - name: BUZZ_HEALTH_PORT
+              value: "8080"
+            - name: BUZZ_METRICS_PORT
+              value: "9102"
+            - name: BUZZ_DOMAIN
+              value: buzz.${domain}
+            - name: RELAY_URL
+              value: wss://buzz.${domain}
+            - name: BUZZ_MEDIA_BASE_URL
+              value: https://buzz.${domain}/media
+            - name: BUZZ_MEDIA_SERVER_DOMAIN
+              value: buzz.${domain}
+            - name: BUZZ_CORS_ORIGINS
+              value: https://buzz.${domain}
+            - name: BUZZ_REQUIRE_AUTH_TOKEN
+              value: "true"
+            - name: BUZZ_REQUIRE_RELAY_MEMBERSHIP
+              value: "true"
+            - name: BUZZ_ALLOW_NIP_OA_AUTH
+              value: "true"
+            - name: BUZZ_AUTO_MIGRATE
+              value: "true"
+            - name: BUZZ_GIT_CONFORMANCE_PROBE
+              value: "true"
+            - name: BUZZ_PUSH_ENABLED
+              value: "false"
+            - name: RUST_LOG
+              value: buzz_relay=info,buzz_db=info,buzz_auth=info,buzz_pubsub=info,tower_http=info
+            - name: BUZZ_GIT_REPO_PATH
+              value: /data/git
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: buzz
+                  key: POSTGRES_PASSWORD
+            - name: DATABASE_URL
+              value: postgres://buzz:$(POSTGRES_PASSWORD)@main-rw.cnpg-system.svc.cluster.local:5432/buzz
+            - name: REDIS_URL
+              value: redis://valkey.valkey:6379
+            - name: BUZZ_S3_ENDPOINT
+              value: http://minio.buzz.svc.cluster.local
+            - name: BUZZ_S3_ADDRESSING_STYLE
+              value: path
+            - name: BUZZ_S3_BUCKET
+              value: buzz-media
+            - name: BUZZ_S3_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: buzz
+                  key: BUZZ_S3_ACCESS_KEY
+            - name: BUZZ_S3_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: buzz
+                  key: BUZZ_S3_SECRET_KEY
+            - name: BUZZ_RELAY_PRIVATE_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: buzz
+                  key: BUZZ_RELAY_PRIVATE_KEY
+            - name: RELAY_OWNER_PUBKEY
+              valueFrom:
+                secretKeyRef:
+                  name: buzz
+                  key: RELAY_OWNER_PUBKEY
+            - name: BUZZ_GIT_HOOK_HMAC_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: buzz
+                  key: BUZZ_GIT_HOOK_HMAC_SECRET
+          ports:
+            - name: http
+              containerPort: 3000
+              protocol: TCP
+            - name: health
+              containerPort: 8080
+              protocol: TCP
+            - name: metrics
+              containerPort: 9102
+              protocol: TCP
+          startupProbe:
+            httpGet:
+              path: /_liveness
+              port: health
+            periodSeconds: 5
+            failureThreshold: 60
+          livenessProbe:
+            httpGet:
+              path: /_liveness
+              port: health
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /_readiness
+              port: health
+            periodSeconds: 10
+          resources:
+            requests:
+              cpu: 100m
+            limits:
+              memory: 512Mi
+          volumeMounts:
+            - mountPath: /data/git
+              name: data
+            - mountPath: /tmp
+              name: tmp
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: data
+        - name: tmp
+          emptyDir: {}
