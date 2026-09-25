@@ -1,0 +1,26 @@
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: buzz-web
+  annotations:
+    dashboard.${domain}/name: Buzz Web
+    dashboard.${domain}/url: https://buzz.${domain}/app/
+    dashboard.${domain}/icon: chat
+spec:
+  hostnames:
+    - buzz.${domain}
+  parentRefs:
+    - name: cilium
+      namespace: cilium
+  rules:
+    - matches:
+        - path:
+            type: Exact
+            value: /app
+        - path:
+            type: PathPrefix
+            value: /app/
+      backendRefs:
+        - name: buzz-web
+          port: 80

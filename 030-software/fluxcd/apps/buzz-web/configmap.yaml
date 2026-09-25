@@ -1,0 +1,56 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: buzz-web-config
+data:
+  config.json: |
+    {
+      "communityName": "Buzz",
+      "relayUrl": "wss://buzz.${domain}",
+      "features": {
+        "projects": false,
+        "forum": false
+      },
+      "agents": []
+    }
+  Caddyfile: |
+    {
+      auto_https off
+      admin off
+    }
+
+    :8080 {
+      encode zstd gzip
+
+      header {
+        -Server
+        Content-Security-Policy "default-src 'self'; base-uri 'self'; connect-src 'self' https: wss:; font-src 'self'; form-action 'self'; frame-ancestors 'none'; frame-src 'self' blob:; img-src 'self' blob: data: https:; manifest-src 'self'; media-src 'self' blob: https:; object-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline'; worker-src 'self' blob:"
+        Permissions-Policy "camera=(), geolocation=(), microphone=(), payment=(), usb=()"
+        Referrer-Policy "no-referrer"
+        X-Content-Type-Options "nosniff"
+        X-Frame-Options "DENY"
+      }
+
+      @runtimeConfig path /app/config.json
+      header @runtimeConfig Cache-Control "no-store, no-cache, must-revalidate"
+
+      @versionedAssets path /app/assets/*
+      header @versionedAssets Cache-Control "public, max-age=31536000, immutable"
+
+      handle /app {
+        redir * /app/ 308
+      }
+
+      handle /app/healthz {
+        respond "ok" 200
+      }
+
+      handle /app/* {
+        root * /srv
+        try_files {path} /app/index.html
+        file_server
+      }
+
+      respond 404
+    }
