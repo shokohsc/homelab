@@ -2634,10 +2634,11 @@ spec:
             port: http
         resources:
           limits:
-            memory: 1024Mi
+            cpu: 1000m
+            memory: 1Gi
           requests:
+            cpu: 50m
             memory: 64Mi
-            cpu: 100m
         securityContext:
           allowPrivilegeEscalation: false
           capabilities:
@@ -3556,10 +3557,11 @@ spec:
             port: healthz
         resources:
           limits:
-            memory: 1024Mi
+            cpu: 1000m
+            memory: 1Gi
           requests:
-            memory: 64Mi
             cpu: 100m
+            memory: 64Mi
         securityContext:
           allowPrivilegeEscalation: false
           capabilities:
@@ -5151,10 +5153,11 @@ spec:
             port: healthz
         resources:
           limits:
-            memory: 1024Mi
+            cpu: 1000m
+            memory: 1Gi
           requests:
-            memory: 64Mi
             cpu: 100m
+            memory: 64Mi
         securityContext:
           allowPrivilegeEscalation: false
           capabilities:
@@ -6061,10 +6064,11 @@ spec:
             port: healthz
         resources:
           limits:
-            memory: 1024Mi
+            cpu: 1000m
+            memory: 1Gi
           requests:
-            memory: 64Mi
             cpu: 100m
+            memory: 64Mi
         securityContext:
           allowPrivilegeEscalation: false
           capabilities:
