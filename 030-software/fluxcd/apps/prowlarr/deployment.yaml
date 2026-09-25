@@ -52,6 +52,9 @@ spec:
                 secretKeyRef:
                   key: database-password
                   name: prowlarr
+          envFrom:
+            - configMapRef:
+                name: config
           ports:
             - name: http
               containerPort: 9696
