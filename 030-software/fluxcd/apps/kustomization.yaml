@@ -8,6 +8,7 @@ resources:
   - blossom
   - browserless
   - bubbles
+  - buzz
   # - byparr
   - cert-manager
   - city-roads

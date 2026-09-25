@@ -10,6 +10,7 @@ resources:
   - routes.yaml
   - secret.yaml
   - database-roles/atuin.yaml
+  - database-roles/buzz.yaml
   - database-roles/ferretdb.yaml
   - database-roles/maddy.yaml
   - database-roles/miniflux.yaml
