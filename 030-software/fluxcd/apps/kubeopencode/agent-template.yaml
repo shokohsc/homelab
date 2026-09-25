@@ -12,7 +12,13 @@ spec:
   contexts:
     - name: main
       type: Text
-      text: "You're running inside a container's pod in a talos cluster with a strict pod security policy."
+      text: |
+        You're running inside a container's pod in a talos cluster with a strict pod security policy, 
+        means read only root filesystem, non root user, user with 1000 uid and gid.
+        Available workspace is at /workspace.
+        No container runtime is available so no docker commands.
+    - name: platform-info
+      type: Runtime
 
   credentials:
     - name: github-token
@@ -49,6 +55,9 @@ spec:
     - name: opencode-helicone-session
     - name: "@tarquinen/opencode-dcp"
     - name: opencode-pty
+    # - name: "@nicholasgriffintn/opencode-plugin-otel"
+    #   options:
+    #     endpoint: "http://otel-collector:4318"
 
   config:
     $schema: https://opencode.ai/config.json
