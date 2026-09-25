@@ -5,6 +5,7 @@ resources:
   - atuin
   - backrest
   # - blocky
+  - blossom
   - browserless
   # - byparr
   - cert-manager
