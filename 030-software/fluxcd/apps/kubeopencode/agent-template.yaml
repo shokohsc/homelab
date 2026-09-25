@@ -51,8 +51,8 @@ spec:
     - name: "@tarquinen/opencode-dcp"
     - name: opencode-pty
 
-    # - name: "plugin-gentleman"
-    #   target: tui
+    - name: "plugin-gentleman"
+      target: tui
     # - name: "superpowers@git+https://github.com/obra/superpowers.git"
     #   target: tui
 
