@@ -3,9 +3,9 @@
 [Buzz](https://github.com/block/buzz) relay, deployed following
 [Run your own Buzz relay](https://engineering.block.xyz/blog/run-your-own-buzz-relay).
 
-| Piece        | Where                                                        |
-| ------------ | ------------------------------------------------------------ |
-| Relay        | `ghcr.io/block/buzz:v0.5.2`, served on `https://buzz.$domain` |
+| Piece        | Where                                                       |
+| ------------ | ----------------------------------------------------------- |
+| Relay        | `ghcr.io/block/buzz:0.2.1`, served on `https://buzz.$domain`  |
 | Database     | CloudNativePG cluster `main`, database and role `buzz`        |
 | Redis        | shared `valkey.valkey`                                       |
 | Media store  | MinIO in this namespace, bucket `buzz-media`                  |
@@ -25,7 +25,7 @@ cd 030-software/fluxcd/apps/buzz
 cp secret.example.yaml secret.yaml
 
 # relay identity: keep this private key forever, it is the relay identity
-docker run --rm --entrypoint /usr/local/bin/buzz-admin ghcr.io/block/buzz:v0.5.2 generate-key
+docker run --rm --entrypoint /usr/local/bin/buzz-admin ghcr.io/block/buzz:0.2.1 generate-key
 
 # owner pubkey is the public key of the nostr account that owns this relay
 # minio credentials, shared between minio and the relay
@@ -60,6 +60,11 @@ old key as owner, or starting over with a new relay identity.
 
 ## Upgrades
 
-Bump the image tag in `deployment.yaml` to a
-[release](https://github.com/block/buzz/releases) and let Flux roll it.
+Bump the image tag in `deployment.yaml` and let Flux roll it.
 `BUZZ_AUTO_MIGRATE=true` runs the schema migrations on start.
+
+Upstream versions the relay separately from the desktop app and publishes
+the image on `relay-v*` tags: the GitHub `v*` releases are the desktop app
+and never produce a relay image. The published relay images are therefore
+`ghcr.io/block/buzz:0.2.1` (also `latest`) and `main`; a new one shows up when
+the next `relay-v*` tag is pushed.

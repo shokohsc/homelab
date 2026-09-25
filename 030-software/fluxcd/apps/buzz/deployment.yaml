@@ -36,7 +36,7 @@ spec:
                     app: buzz
       containers:
         - name: buzz
-          image: ghcr.io/block/buzz:v0.5.2
+          image: ghcr.io/block/buzz:0.2.1
           securityContext:
             allowPrivilegeEscalation: false
             readOnlyRootFilesystem: true
