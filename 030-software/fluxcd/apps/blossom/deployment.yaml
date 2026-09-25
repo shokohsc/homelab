@@ -8,7 +8,6 @@ metadata:
   annotations:
     configmap.reloader.stakater.com/reload: config
 spec:
-  replicas: 1
   revisionHistoryLimit: 0
   strategy:
     type: Recreate

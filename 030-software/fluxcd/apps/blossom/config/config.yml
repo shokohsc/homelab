@@ -1,9 +1,9 @@
 publicDomain: "blossom.${domain}"
 
 database:
-  path: data/sqlite.db
+  path: /app/data/sqlite.db
 
 storage:
   backend: local
   local:
-    dir: ./data/blobs
+    dir: /app/data/blobs
