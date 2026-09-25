@@ -11,6 +11,7 @@ spec:
     enabled: true
     allowedIPs:
       - 10.42.10.0/24
+      - 10.42.20.0/24
 ---
 apiVersion: kubeopencode.io/v1alpha1
 kind: Agent
@@ -24,6 +25,7 @@ spec:
     enabled: true
     allowedIPs:
       - 10.42.10.0/24
+      - 10.42.20.0/24
   contexts:
     - name: homelab-repo
       type: Git
@@ -44,6 +46,7 @@ spec:
     enabled: true
     allowedIPs:
       - 10.42.10.0/24
+      - 10.42.20.0/24
   contexts:
     - name: talos-proxmox-autoscaler-repo
       type: Git
