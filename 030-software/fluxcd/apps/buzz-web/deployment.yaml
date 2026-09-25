@@ -1,0 +1,147 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: buzz-web
+  annotations:
+    configmap.reloader.stakater.com/reload: "buzz-web-config"
+spec:
+  revisionHistoryLimit: 0
+  selector:
+    matchLabels:
+      app: buzz-web
+  template:
+    metadata:
+      labels:
+        app: buzz-web
+        policy.gatekeeper.sh/ignore-psp-volume-types: "true"
+    spec:
+      automountServiceAccountToken: false
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        seccompProfile:
+          type: RuntimeDefault
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              podAffinityTerm:
+                topologyKey: kubernetes.io/hostname
+                labelSelector:
+                  matchLabels:
+                    app: buzz-web
+      initContainers:
+        - name: build
+          image: node:24-alpine@sha256:f70403e87646dc51b45295f4b8b70cdad0b63d2297c4c9899119b03f7af7a6b3
+          imagePullPolicy: IfNotPresent
+          command:
+            - /bin/sh
+            - -ec
+          args:
+            - |
+              wget -qO /tmp/buzz-web.tar.gz "https://github.com/hardy4yooz/buzz-web/archive/a6766c482533d028582d0efcfd3740769f86217c.tar.gz"
+              printf '%s  %s\n' 'f6c5a6773265f2a4750f90f8c86645e14c683aaaf40d58e880f7d2d6d11f6340' '/tmp/buzz-web.tar.gz' | sha256sum -c -
+              mkdir -p /tmp/source /src /srv/app
+              tar -xzf /tmp/buzz-web.tar.gz -C /tmp/source --strip-components=1
+              cp -a /tmp/source/web/. /src/
+              cd /src
+              npm_config_cache=/tmp/npm-cache npm ci
+              VITE_BASE_PATH=/app/ npm run build
+              cp -a dist/. /srv/app/
+          env:
+            - name: HOME
+              value: /tmp
+            - name: npm_config_cache
+              value: /tmp/npm-cache
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+            capabilities:
+              drop:
+                - ALL
+          resources:
+            requests:
+              cpu: 100m
+              memory: 256Mi
+            limits:
+              memory: 1Gi
+          volumeMounts:
+            - name: build
+              mountPath: /tmp
+            - name: source
+              mountPath: /src
+            - name: assets
+              mountPath: /srv/app
+      containers:
+        - name: buzz-web
+          image: caddy:2.10.2-alpine@sha256:4c6e91c6ed0e2fa03efd5b44747b625fec79bc9cd06ac5235a779726618e530d
+          imagePullPolicy: IfNotPresent
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+            capabilities:
+              drop:
+                - ALL
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+          startupProbe:
+            httpGet:
+              path: /app/healthz
+              port: http
+          livenessProbe:
+            httpGet:
+              path: /app/healthz
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /app/healthz
+              port: http
+          resources:
+            requests:
+              cpu: 10m
+              memory: 32Mi
+            limits:
+              memory: 128Mi
+          volumeMounts:
+            - name: assets
+              mountPath: /srv/app
+            - name: config
+              mountPath: /etc/caddy/Caddyfile
+              subPath: Caddyfile
+              readOnly: true
+            - name: config
+              mountPath: /srv/app/config.json
+              subPath: config.json
+              readOnly: true
+            - name: caddy-config
+              mountPath: /config
+            - name: caddy-data
+              mountPath: /data
+      volumes:
+        - name: assets
+          emptyDir:
+            sizeLimit: 128Mi
+        - name: build
+          emptyDir:
+            sizeLimit: 512Mi
+        - name: source
+          emptyDir:
+            sizeLimit: 1Gi
+        - name: config
+          configMap:
+            name: buzz-web-config
+        - name: caddy-config
+          emptyDir:
+            medium: Memory
+            sizeLimit: 1Mi
+        - name: caddy-data
+          emptyDir:
+            medium: Memory
+            sizeLimit: 1Mi
