@@ -8,7 +8,6 @@ spec:
   attachImage: ghcr.io/kubeopencode/kubeopencode-agent-attach:latest
   workspaceDir: /workspace
   serviceAccountName: kubeopencode-agent
-  # command: ["opencode", "serve"]
 
   contexts:
     - name: main
@@ -50,11 +49,6 @@ spec:
     - name: opencode-helicone-session
     - name: "@tarquinen/opencode-dcp"
     - name: opencode-pty
-
-    - name: "plugin-gentleman"
-      target: tui
-    # - name: "superpowers@git+https://github.com/obra/superpowers.git"
-    #   target: tui
 
   config:
     $schema: https://opencode.ai/config.json

@@ -7,6 +7,9 @@ spec:
   templateRef:
     name: main
   profile: "Homelab Devops specialist"
+  plugins:
+    - name: "superpowers@git+https://github.com/obra/superpowers.git"
+      target: tui
   share:
     enabled: true
     allowedIPs:
@@ -21,11 +24,6 @@ spec:
   templateRef:
     name: main
   profile: "Homelab Repository agent"
-  share:
-    enabled: true
-    allowedIPs:
-      - 10.42.10.0/24
-      - 10.244.0.0/16
   contexts:
     - name: homelab-repo
       type: Git
@@ -42,11 +40,6 @@ spec:
   templateRef:
     name: main
   profile: "Talos Proxmox Autoscaler Repository agent"
-  share:
-    enabled: true
-    allowedIPs:
-      - 10.42.10.0/24
-      - 10.244.0.0/16
   contexts:
     - name: talos-proxmox-autoscaler-repo
       type: Git
