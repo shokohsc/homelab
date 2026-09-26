@@ -51,9 +51,6 @@ spec:
     
     gatewayApi:
       enabled: false
-      existingGateway:
-        name: cilium
-        namespace: cilium
 
     resources:
       requests:
