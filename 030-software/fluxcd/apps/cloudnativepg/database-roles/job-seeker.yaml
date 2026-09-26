@@ -1,0 +1,24 @@
+apiVersion: postgresql.cnpg.io/v1
+kind: Database
+metadata:
+  name: job-seeker
+spec:
+  name: job-seeker
+  owner: job-seeker
+  cluster:
+    name: main
+---
+apiVersion: postgresql.cnpg.io/v1
+kind: DatabaseRole
+metadata:
+  name: job-seeker
+spec:
+  cluster:
+    name: main
+  name: job-seeker
+  login: true
+  superuser: false
+  createdb: false
+  createrole: false
+  passwordSecret:
+    name: job-seeker

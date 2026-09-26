@@ -1,0 +1,23 @@
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: job-seeker
+  annotations:
+    dashboard.${domain}/name: job-seeker
+    dashboard.${domain}/url: https://job-seeker.${domain}
+    dashboard.${domain}/icon: briefcase
+spec:
+  hostnames:
+  - job-seeker.${domain}
+  parentRefs:
+  - name: cilium
+    namespace: cilium
+  rules:
+  - backendRefs:
+    - name: job-seeker
+      port: 80
+    matches:
+    - path:
+        type: PathPrefix
+        value: /
