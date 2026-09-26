@@ -1,0 +1,117 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: boop
+  annotations:
+    secret.reloader.stakater.com/reload: boop
+spec:
+  strategy:
+    type: Recreate
+  revisionHistoryLimit: 0
+  selector:
+    matchLabels:
+      app: boop
+  template:
+    metadata:
+      labels:
+        app: boop
+    spec:
+      automountServiceAccountToken: false
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: boop
+          image: ghcr.io/shokohsc/boop:v1.3.0
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+            capabilities:
+              drop:
+                - ALL
+          env:
+            - name: BOOP_BASE_URL
+              value: "https://boop.${domain}"
+            - name: BOOP_PORT
+              value: "8080"
+            - name: BOOP_DATABASE_PATH
+              value: "/data/boop.db"
+            - name: BOOP_RETENTION_DAYS
+              value: "90"
+            - name: BOOP_LOG_LEVEL
+              value: "info"
+            # Uncomment together with secret.yaml once the sops-encrypted
+            # `boop` secret exists. Until then the admin API and /mcp are
+            # unauthenticated, which is only acceptable because the app is
+            # only reachable on the internal ${domain}.
+            # - name: BOOP_ADMIN_USER
+            #   valueFrom:
+            #     secretKeyRef:
+            #       name: boop
+            #       key: admin-user
+            # - name: BOOP_ADMIN_PASSWORD
+            #   valueFrom:
+            #     secretKeyRef:
+            #       name: boop
+            #       key: admin-password
+            # - name: BOOP_MCP_TOKEN
+            #   valueFrom:
+            #     secretKeyRef:
+            #       name: boop
+            #       key: mcp-token
+            # APNs push: the .p8 key is mounted from the same secret, see
+            # volumes below.
+            # - name: APNS_TEAM_ID
+            #   valueFrom:
+            #     secretKeyRef:
+            #       name: boop
+            #       key: apns-team-id
+            # - name: APNS_KEY_ID
+            #   valueFrom:
+            #     secretKeyRef:
+            #       name: boop
+            #       key: apns-key-id
+            # - name: APNS_BUNDLE_ID
+            #   valueFrom:
+            #     secretKeyRef:
+            #       name: boop
+            #       key: apns-bundle-id
+            # - name: APNS_PRIVATE_KEY_PATH
+            #   value: "/etc/boop/apns.p8"
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+          startupProbe:
+            tcpSocket:
+              port: http
+          livenessProbe:
+            tcpSocket:
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: http
+          resources:
+            limits:
+              memory: 256Mi
+            requests:
+              cpu: 100m
+          volumeMounts:
+            - name: data
+              mountPath: /data
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: data
+        # - name: apns
+        #   secret:
+        #     secretName: boop
+        #     items:
+        #       - key: apns.p8
+        #         path: apns.p8

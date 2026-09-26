@@ -1,0 +1,23 @@
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: boop
+  annotations:
+    dashboard.${domain}/icon: bell
+    dashboard.${domain}/name: boop
+    dashboard.${domain}/url: https://boop.${domain}
+spec:
+  hostnames:
+  - boop.${domain}
+  parentRefs:
+  - name: cilium
+    namespace: cilium
+  rules:
+  - backendRefs:
+    - name: boop
+      port: 80
+    matches:
+    - path:
+        type: PathPrefix
+        value: /
