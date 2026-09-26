@@ -70,8 +70,6 @@ spec:
               mountPath: /app/config.yml
               subPath: config.yml
               readOnly: true
-            - name: data
-              mountPath: /app/data
             - name: deno-cache
               mountPath: /deno-dir
             - name: tmp
@@ -80,9 +78,6 @@ spec:
         - name: config
           configMap:
             name: config
-        - name: data
-          persistentVolumeClaim:
-            claimName: data
         - name: deno-cache
           emptyDir: {}
         - name: tmp
