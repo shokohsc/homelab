@@ -4,6 +4,7 @@ kind: Deployment
 metadata:
   name: commander
 spec:
+  revisionHistoryLimit: 0
   selector:
     matchLabels:
       app: commander
