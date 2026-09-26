@@ -7,6 +7,7 @@ resources:
   # - blocky
   - blossom
   - browserless
+  - buzz
   # - byparr
   - cert-manager
   - city-roads
