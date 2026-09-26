@@ -6,7 +6,7 @@ resources:
   - deployment.yaml
   - service.yaml
   - http-route.yaml
-  - pvc.yaml
+  # - pvc.yaml
 configMapGenerator:
   - name: config
     files:

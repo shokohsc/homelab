@@ -1,0 +1,125 @@
+---
+apiVersion: kubeopencode.io/v1alpha1
+kind: AgentTemplate
+metadata:
+  name: talos-proxmox-autoscaler
+spec:
+  agentImage: shokohsc/kubeopencode-agent-opencode:v0.1.9
+  executorImage: ghcr.io/kubeopencode/kubeopencode-agent-devbox:latest
+  attachImage: ghcr.io/kubeopencode/kubeopencode-agent-attach:latest
+  workspaceDir: /workspace
+  serviceAccountName: kubeopencode-agent
+
+  contexts:
+    - name: main
+      type: Text
+      text: |
+        You're running inside a container's pod in a talos cluster with a strict pod security policy, 
+        means read only root filesystem, non root user, user with 1000 uid and gid.
+        Available workspace is at /workspace.
+        No container runtime is available so no docker commands.
+    - name: platform-info
+      type: Runtime
+    - name: talos-proxmox-autoscaler-repo
+      type: Git
+      git:
+        repository: https://github.com/shokohsc/talos-proxmox-autoscaler.git
+        ref: main
+      mountPath: talos-proxmox-autoscaler/
+
+  credentials:
+    - name: github-token
+      secretRef:
+        name: credentials
+        key: token
+      env: GITHUB_TOKEN
+
+  skills:
+    - name: homelab-skills
+      git:
+        repository: https://github.com/shokohsc/homelab.git
+        ref: main
+        path: 030-software/fluxcd/apps/kubeopencode/skills/
+        names:
+          - kubernetes
+          - golang
+          - javascript
+          - self-improve
+    - name: anthropic-skills
+      git:
+        repository: https://github.com/anthropics/skills.git
+        ref: main
+        path: skills/
+        names:
+          - frontend-design
+          - skill-creator
+          - webapp-testing
+
+  plugins:
+    - name: cc-safety-net
+    - name: opencode-database-plugin
+    - name: "@dietrichgebert/ponytail"
+    - name: opencode-helicone-session
+    - name: "@tarquinen/opencode-dcp"
+    - name: opencode-pty
+    # - name: "@nicholasgriffintn/opencode-plugin-otel"
+    #   options:
+    #     endpoint: "http://otel-collector:4318"
+
+  config:
+    $schema: https://opencode.ai/config.json
+    model: opencode/big-pickle
+  # configRef:
+  #   configMapRef:
+  #     name: config
+
+  caBundle:
+    configMapRef:
+      name: homelab-ca-cm
+      key: ca-certs.pem
+
+  # proxy:
+  #   httpProxy: "http://proxy.corp.example.com:8080"
+  #   httpsProxy: "http://proxy.corp.example.com:8080"
+  #   noProxy: "localhost,127.0.0.1,.svc,.cluster.local"
+
+  podSpec:
+    labels:
+      policy.gatekeeper.sh/ignore-psp-readonlyrootfilesystem: "true"
+      policy.gatekeeper.sh/ignore-psp-pods-allowed-user-ranges: "true"
+      policy.gatekeeper.sh/ignore-container-must-have-limits: "true"
+    podSecurityContext:
+      runAsNonRoot: true
+      runAsUser: 1000
+      runAsGroup: 1000
+      fsGroup: 1000
+      seccompProfile:
+        type: RuntimeDefault
+    securityContext:
+      allowPrivilegeEscalation: false
+      readOnlyRootFilesystem: true
+      runAsNonRoot: true
+      capabilities:
+        drop:
+          - ALL
+    extraEnv:
+      - name: OPENCODE_DATABASE_URL
+        valueFrom:
+          secretKeyRef:
+            name: credentials
+            key: postgres-url
+    extraVolumes:
+      - name: temp
+        emptyDir: {}
+      - name: home
+        emptyDir: {}
+    extraVolumeMounts:
+      - name: temp
+        mountPath: /tmp
+      - name: home
+        mountPath: /home/agent
+
+  maxConcurrentTasks: 5
+  quota:
+    maxTaskStarts: 20
+    windowSeconds: 3600

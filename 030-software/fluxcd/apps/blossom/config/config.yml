@@ -4,6 +4,7 @@ database:
   path: /app/data/sqlite.db
 
 storage:
-  backend: local
-  local:
-    dir: /app/data/blobs
+  # backend: local
+  # local:
+  #   dir: /app/data/blobs
+  

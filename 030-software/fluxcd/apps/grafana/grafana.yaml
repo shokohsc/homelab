@@ -129,10 +129,10 @@ spec:
             url: http://victoria-metrics-vms-server.victoria-metrics.svc.cluster.local:8428
             access: proxy
             isDefault: true
-          - name: VictoriaLogs
-            type: victoriametrics-logs-datasource
-            access: proxy
-            url: http://victoria-logs-vls-server.victoria-logs.svc.cluster.local:9428
+          # - name: VictoriaLogs
+          #   type: victoriametrics-logs-datasource
+          #   access: proxy
+          #   url: http://victoria-logs-vls-server.victoria-logs.svc.cluster.local:9428
           - name: Loki
             type: loki
             access: proxy
