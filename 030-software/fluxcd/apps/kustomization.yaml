@@ -6,6 +6,7 @@ resources:
   - backrest
   # - blocky
   - blossom
+  # - boop
   - browserless
   # - byparr
   - cert-manager
