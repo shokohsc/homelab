@@ -28,6 +28,7 @@ resources:
   - grafana
   - grist
   - iptvnator
+  - job-seeker
   - jsoncrack
   - loki
   - alloy
