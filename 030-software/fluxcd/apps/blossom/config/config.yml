@@ -8,6 +8,6 @@ storage:
   s3:
     endpoint: http://rustfs-svc.rustfs.svc.cluster.local:9000
     bucket: blossom
-    accessKey: "${S3_ACCESS_KEY}"
-    secretKey: "${S3_SECRET_KEY}"
+    accessKey: "$${S3_ACCESS_KEY}"
+    secretKey: "$${S3_SECRET_KEY}"
     tmpDir: /tmp
