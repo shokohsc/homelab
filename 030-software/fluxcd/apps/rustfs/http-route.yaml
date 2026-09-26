@@ -15,7 +15,7 @@ spec:
     namespace: cilium
   rules:
   - backendRefs:
-    - name: rustfs
+    - name: rustfs-svc
       port: 9001
     matches:
     - path:
