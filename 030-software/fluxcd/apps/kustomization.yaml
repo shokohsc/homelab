@@ -60,7 +60,7 @@ resources:
   - reloader
   - renovate
   - restfox
-  # - rustfs
+  - rustfs
   - rustpad
   - samba
   - sftpgo
@@ -76,8 +76,8 @@ resources:
   # - thelounge
   - valkey
   - vaultwarden
-  - victoria-logs
-  - victoria-logs-collector
+  # - victoria-logs
+  # - victoria-logs-collector
   - victoria-metrics
   - vpn-egress-gateway
   - web-check
