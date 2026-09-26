@@ -5,9 +5,9 @@ resources:
   - namespace.yaml
   - secret.yaml
   - rbac.yaml
-  - agent-template/main.yaml
-  - agent-template/homelab.yaml
-  - agent-template/talos-proxmox-autoscaler.yaml
+  - agent-templates/main.yaml
+  - agent-templates/homelab.yaml
+  - agent-templates/talos-proxmox-autoscaler.yaml
   - agent.yaml
   - cilium-network-policy.yaml
 configMapGenerator:
