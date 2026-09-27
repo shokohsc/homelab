@@ -74,4 +74,4 @@ spec:
       volumes:
         - name: assets
           image:
-            reference: shokohsc/k8s-ingress-dashboard:9931023
+            reference: shokohsc/k8s-ingress-dashboard:f51bda5
