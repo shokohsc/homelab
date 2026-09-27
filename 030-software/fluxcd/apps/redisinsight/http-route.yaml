@@ -3,6 +3,10 @@ apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
 metadata:
   name: redisinsight
+  annotations:
+    dashboard.${domain}/name: redisinsight
+    dashboard.${domain}/url: https://redisinsight.${domain}
+    dashboard.${domain}/icon: database
 spec:
   hostnames:
   - redisinsight.${domain}
