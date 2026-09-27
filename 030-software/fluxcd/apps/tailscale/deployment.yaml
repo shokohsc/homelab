@@ -22,6 +22,13 @@ spec:
         fsGroup: 1000
         seccompProfile:
           type: RuntimeDefault
+      topologySpreadConstraints:
+        - maxSkew: 1
+          topologyKey: kubernetes.io/hostname
+          whenUnsatisfiable: ScheduleAnyway
+          labelSelector:
+            matchLabels:
+              app: tailscale
       containers:
         - name: tailscale
           image: ghcr.io/tailscale/tailscale:v1.102.5
@@ -79,15 +86,12 @@ spec:
       affinity:
         podAntiAffinity:
           preferredDuringSchedulingIgnoredDuringExecution:
-          - weight: 1
-            podAffinityTerm:
-              labelSelector:
-                matchExpressions:
-                - key: app
-                  operator: In
-                  values:
-                  - tailscale
-              topologyKey: topology.kubernetes.io/region
+            - weight: 100
+              podAffinityTerm:
+                topologyKey: kubernetes.io/hostname
+                labelSelector:
+                  matchLabels:
+                    app: tailscale
         nodeAffinity:
           preferredDuringSchedulingIgnoredDuringExecution:
           - weight: 1

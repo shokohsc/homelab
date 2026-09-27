@@ -3,6 +3,7 @@ kind: Kustomization
 namespace: metrics-server
 resources:
   - namespace.yaml
+  - poddisruptionbudget.yaml
   - https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml
 patches:
   - patch: |
@@ -43,6 +44,33 @@ patches:
       - op: replace
         path: /spec/template/spec/containers/0/ports/0/containerPort
         value: 4443
+    target:
+      kind: Deployment
+      labelSelector: k8s-app=metrics-server
+  - patch: |
+      apiVersion: apps/v1
+      kind: Deployment
+      metadata:
+        name: all
+      spec:
+        template:
+          spec:
+            affinity:
+              podAntiAffinity:
+                preferredDuringSchedulingIgnoredDuringExecution:
+                  - weight: 100
+                    podAffinityTerm:
+                      topologyKey: kubernetes.io/hostname
+                      labelSelector:
+                        matchLabels:
+                          k8s-app: metrics-server
+            topologySpreadConstraints:
+              - maxSkew: 1
+                topologyKey: kubernetes.io/hostname
+                whenUnsatisfiable: ScheduleAnyway
+                labelSelector:
+                  matchLabels:
+                    k8s-app: metrics-server
     target:
       kind: Deployment
       labelSelector: k8s-app=metrics-server

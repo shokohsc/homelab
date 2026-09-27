@@ -3,6 +3,7 @@ kind: Kustomization
 namespace: rustpad
 resources:
   - deployment.yaml
+  - poddisruptionbudget.yaml
   - http-route.yaml
   - namespace.yaml
   - service.yaml

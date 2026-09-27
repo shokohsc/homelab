@@ -4,6 +4,7 @@ namespace: zipkin
 resources:
   - namespace.yaml
   - deployment.yaml
+  - poddisruptionbudget.yaml
   - service.yaml
 
 configMapGenerator:

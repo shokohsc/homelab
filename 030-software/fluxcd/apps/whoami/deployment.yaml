@@ -30,6 +30,13 @@ spec:
                   matchLabels:
                     app: whoami
       automountServiceAccountToken: false
+      topologySpreadConstraints:
+        - maxSkew: 1
+          topologyKey: kubernetes.io/hostname
+          whenUnsatisfiable: ScheduleAnyway
+          labelSelector:
+            matchLabels:
+              app: whoami
       containers:
         - name: whoami
           image: ghcr.io/traefik/whoami:v1.12

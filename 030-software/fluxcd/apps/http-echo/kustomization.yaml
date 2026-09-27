@@ -3,6 +3,7 @@ kind: Kustomization
 namespace: http-echo
 resources:
   - deployment.yaml
+  - poddisruptionbudget.yaml
   - namespace.yaml
   - service.yaml
   - http-route.yaml

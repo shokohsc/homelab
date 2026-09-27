@@ -4,6 +4,7 @@ namespace: grist
 resources:
   - namespace.yaml
   - deployment.yaml
+  - poddisruptionbudget.yaml
   - service.yaml
   - http-route.yaml
   - pvc.yaml

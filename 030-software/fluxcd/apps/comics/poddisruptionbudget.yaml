@@ -1,0 +1,40 @@
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: comics
+spec:
+  minAvailable: 1
+  selector:
+    matchLabels:
+      app: comics
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: api
+spec:
+  minAvailable: 1
+  selector:
+    matchLabels:
+      app: api
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: graphql
+spec:
+  minAvailable: 1
+  selector:
+    matchLabels:
+      app: graphql
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: marvel
+spec:
+  minAvailable: 1
+  selector:
+    matchLabels:
+      app: marvel

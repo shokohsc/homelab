@@ -4,4 +4,5 @@ namespace: rathole
 resources:
   - namespace.yaml
   - deployment.yaml
+  - poddisruptionbudget.yaml
   - secret.yaml

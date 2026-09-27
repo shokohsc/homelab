@@ -32,6 +32,13 @@ spec:
                 labelSelector:
                   matchLabels:
                     app: konflate
+      topologySpreadConstraints:
+        - maxSkew: 1
+          topologyKey: kubernetes.io/hostname
+          whenUnsatisfiable: ScheduleAnyway
+          labelSelector:
+            matchLabels:
+              app: konflate
       containers:
         - name: konflate
           image: ghcr.io/home-operations/konflate:0.6.4

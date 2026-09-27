@@ -10,6 +10,7 @@ resources:
   - frontend/http-route.yaml
 
   - backend/deployment.yaml
+  - poddisruptionbudget.yaml
   - backend/service.yaml
   - backend/http-route.yaml
 

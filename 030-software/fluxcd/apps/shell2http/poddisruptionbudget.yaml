@@ -1,0 +1,10 @@
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: shell2http
+spec:
+  minAvailable: 1
+  selector:
+    matchLabels:
+      app: shell2http

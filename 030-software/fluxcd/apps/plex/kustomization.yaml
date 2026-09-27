@@ -4,6 +4,7 @@ namespace: plex
 resources:
   - namespace.yaml
   - deployment.yaml
+  - poddisruptionbudget.yaml
   - service.yaml
   - secret.yaml
   - routes.yaml

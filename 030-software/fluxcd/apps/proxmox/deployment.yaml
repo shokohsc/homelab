@@ -21,6 +21,13 @@ spec:
         fsGroup: 1000
         seccompProfile:
           type: RuntimeDefault
+      topologySpreadConstraints:
+        - maxSkew: 1
+          topologyKey: kubernetes.io/hostname
+          whenUnsatisfiable: ScheduleAnyway
+          labelSelector:
+            matchLabels:
+              app: caddy
       containers:
         - name: caddy
           image: caddy:2.11.4-alpine
@@ -82,6 +89,14 @@ spec:
                 operator: In
                 values:
                 - metal
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              podAffinityTerm:
+                topologyKey: kubernetes.io/hostname
+                labelSelector:
+                  matchLabels:
+                    app: caddy
       tolerations:
         - key: "node.kubernetes.io/nuc"
           operator: "Exists"
