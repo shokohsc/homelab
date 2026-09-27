@@ -1,0 +1,184 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: job-seeker
+  annotations:
+    secret.reloader.stakater.com/reload: job-seeker
+spec:
+  revisionHistoryLimit: 0
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: job-seeker
+  template:
+    metadata:
+      labels:
+        app: job-seeker
+    spec:
+      automountServiceAccountToken: false
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        seccompProfile:
+          type: RuntimeDefault
+      initContainers:
+        - name: setup
+          image: mcr.microsoft.com/playwright:v1.63.0-noble
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+            capabilities:
+              drop:
+                - ALL
+          workingDir: /workspace
+          command:
+            - /bin/bash
+            - -c
+            - |
+              set -eu
+              if [ -d job-seeker/.git ]; then
+                git -C job-seeker fetch --depth 1 origin "$REF"
+                git -C job-seeker checkout -q FETCH_HEAD
+              else
+                git clone --depth 1 --branch "$REF" "$REPO" job-seeker
+              fi
+              cd job-seeker
+              [ -d node_modules/pg ] || npm ci --omit=dev --no-fund --no-audit
+              # playwright-cli in the repo's own devDependencies is an empty
+              # deprecation stub, the real CLI has to be installed explicitly.
+              # 0.1.19 is the release that bundles playwright 1.63.0, matching the
+              # chromium revision (1243) baked into the image above.
+              [ -d node_modules/@playwright/cli ] || npm i --no-save --no-fund --no-audit "@playwright/cli@$CLI_VERSION"
+              # Marks this directory as the playwright-cli workspace (the CLI
+              # keys its daemon/session registry on it) and seeds the default
+              # browser config.
+              [ -f .playwright/cli.config.json ] || node_modules/.bin/playwright-cli install
+              cat > .playwright/cli.config.json <<'JSON'
+              {
+                "browser": {
+                  "browserName": "chromium",
+                  "launchOptions": {
+                    "channel": "chromium",
+                    "chromiumSandbox": false
+                  }
+                }
+              }
+              JSON
+              # scripts/db.js and scripts/dashboard.js exit when .env is missing,
+              # so keep it in sync with the Secret on every start.
+              umask 077
+              printf 'DATABASE_URL=%s\nUSER_ID=%s\n' "$DATABASE_URL" "$USER_ID" > .env
+          env:
+            - name: REPO
+              value: https://github.com/galiprandi/job-seeker.git
+            - name: REF
+              value: v0.1.0
+            - name: CLI_VERSION
+              value: 0.1.19
+            - name: USER_ID
+              value: "1"
+            - name: HOME
+              value: /workspace
+            - name: PATH
+              value: /workspace/job-seeker/node_modules/.bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: job-seeker
+                  key: DATABASE_URL
+          resources:
+            limits:
+              memory: 2048Mi
+            requests:
+              cpu: 100m
+          volumeMounts:
+            - mountPath: /workspace
+              name: workspace
+      containers:
+        - name: job-seeker
+          image: mcr.microsoft.com/playwright:v1.63.0-noble
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+            capabilities:
+              drop:
+                - ALL
+          workingDir: /workspace/job-seeker
+          command:
+            - /bin/bash
+            - -c
+            - |
+              # No GPU/display in the cluster: give the headed browser Gold Rule 5
+              # asks for a virtual screen to draw on.
+              Xvfb :99 -screen 0 1920x1080x24 -nolisten tcp &
+              # Visual dashboard for the browser sessions: live screencast, tab bar
+              # and full remote control, i.e. the manual LinkedIn/Gmail login.
+              node_modules/.bin/playwright-cli show --port 7532 --host 0.0.0.0 &
+              exec node scripts/dashboard.js --port 7531
+          env:
+            - name: PATH
+              value: /workspace/job-seeker/node_modules/.bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+            # /home/pwuser sits on the read only root filesystem, but the
+            # playwright-cli session registry, the npm cache and Xvfb all want
+            # a writable HOME.
+            - name: HOME
+              value: /workspace
+            - name: PLAYWRIGHT_BROWSERS_PATH
+              value: /ms-playwright
+            - name: DISPLAY
+              value: ":99"
+            # browser.js defaults to headless, login flows must be visible.
+            - name: BROWSER_MODE
+              value: headed
+            - name: USER_ID
+              value: "1"
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: job-seeker
+                  key: DATABASE_URL
+          ports:
+            - name: http
+              containerPort: 7531
+              protocol: TCP
+            - name: sessions
+              containerPort: 7532
+              protocol: TCP
+          startupProbe:
+            tcpSocket:
+              port: http
+          livenessProbe:
+            tcpSocket:
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+          resources:
+            limits:
+              memory: 4096Mi
+            requests:
+              cpu: 100m
+          volumeMounts:
+            - mountPath: /workspace
+              name: workspace
+            - mountPath: /dev/shm
+              name: dshm
+            - mountPath: /tmp
+              name: tmp
+      volumes:
+        - name: workspace
+          persistentVolumeClaim:
+            claimName: job-seeker
+        - name: dshm
+          emptyDir:
+            medium: Memory
+            sizeLimit: 2G
+        - name: tmp
+          emptyDir: {}
