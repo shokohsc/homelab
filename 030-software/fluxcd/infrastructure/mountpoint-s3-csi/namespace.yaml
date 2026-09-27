@@ -1,0 +1,23 @@
+---
+# Driver namespace. `privileged` because the node DaemonSet runs the s3-plugin
+# container with `privileged: true` (required by Kubernetes for Bidirectional
+# mount propagation).
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: mountpoint-s3-csi
+  labels:
+    pod-security.kubernetes.io/enforce: privileged
+    pod-security.kubernetes.io/audit: privileged
+    pod-security.kubernetes.io/warn: privileged
+---
+# Namespace the driver creates the per-pod "Mountpoint Pod" in (MOUNTPOINT_NAMESPACE).
+# Those pods set seccomp RuntimeDefault, drop ALL capabilities and run non-root,
+# so they pass the `restricted` profile - no need to weaken it.
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: mount-s3
+  labels:
+    name: mount-s3
+    pod-security.kubernetes.io/enforce: restricted

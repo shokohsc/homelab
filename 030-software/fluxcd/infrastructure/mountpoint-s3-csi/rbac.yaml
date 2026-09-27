@@ -1,0 +1,201 @@
+---
+# Upstream: deploy/kubernetes/base/serviceaccount-csi-{controller,node}.yaml @ v2.8.0
+# Identical to upstream except the driver ServiceAccounts moved from `kube-system`
+# to the `mountpoint-s3-csi` namespace. `automountServiceAccountToken` is left at
+# its default (true) - both driver components talk to the API server.
+kind: ServiceAccount
+apiVersion: v1
+metadata:
+  name: s3-csi-driver-controller-sa
+  namespace: mountpoint-s3-csi
+  labels:
+    app.kubernetes.io/name: aws-mountpoint-s3-csi-driver
+    app.kubernetes.io/component: csi-driver
+
+---
+kind: ClusterRole
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: s3-csi-driver-controller-cluster-role
+  labels:
+    app.kubernetes.io/name: aws-mountpoint-s3-csi-driver
+    app.kubernetes.io/component: csi-driver
+rules:
+  - apiGroups: [""]
+    resources:
+      ["pods", "persistentvolumeclaims", "persistentvolumes", "serviceaccounts"]
+    verbs: ["get", "watch", "list"]
+  - apiGroups: ["s3.csi.aws.com"]
+    resources: ["mountpoints3podattachments"]
+    verbs: ["create", "delete", "update", "get", "watch", "list"]
+
+---
+kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: s3-csi-driver-controller-cluster-role-binding
+  labels:
+    app.kubernetes.io/name: aws-mountpoint-s3-csi-driver
+    app.kubernetes.io/component: csi-driver
+subjects:
+  - kind: ServiceAccount
+    name: s3-csi-driver-controller-sa
+    namespace: mountpoint-s3-csi
+roleRef:
+  kind: ClusterRole
+  name: s3-csi-driver-controller-cluster-role
+  apiGroup: rbac.authorization.k8s.io
+
+---
+# Grants the controller access to the per-pod "Mountpoint Pods" in `mount-s3`.
+kind: Role
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: s3-csi-driver-controller-role
+  namespace: mount-s3
+  labels:
+    app.kubernetes.io/name: aws-mountpoint-s3-csi-driver
+    app.kubernetes.io/component: csi-driver
+rules:
+  - apiGroups: [""]
+    resources: ["pods"]
+    verbs: ["get", "create", "watch", "delete", "list", "update"]
+
+---
+kind: RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: s3-csi-driver-controller-role-binding
+  namespace: mount-s3
+  labels:
+    app.kubernetes.io/name: aws-mountpoint-s3-csi-driver
+    app.kubernetes.io/component: csi-driver
+subjects:
+  - kind: ServiceAccount
+    name: s3-csi-driver-controller-sa
+    namespace: mountpoint-s3-csi
+roleRef:
+  kind: Role
+  name: s3-csi-driver-controller-role
+  apiGroup: rbac.authorization.k8s.io
+
+---
+kind: Role
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: s3-csi-driver-controller-leader-election-role
+  namespace: mountpoint-s3-csi
+  labels:
+    app.kubernetes.io/name: aws-mountpoint-s3-csi-driver
+    app.kubernetes.io/component: csi-driver
+rules:
+  - apiGroups: ["coordination.k8s.io"]
+    resources: ["leases"]
+    resourceNames: ["aws-s3-csi-controller"]
+    verbs: ["get", "update"]
+  - apiGroups: ["coordination.k8s.io"]
+    resources: ["leases"]
+    verbs: ["create"]
+  - apiGroups: [""]
+    resources: ["events"]
+    verbs: ["create", "patch"]
+
+---
+kind: RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: s3-csi-driver-controller-leader-election-role-binding
+  namespace: mountpoint-s3-csi
+  labels:
+    app.kubernetes.io/name: aws-mountpoint-s3-csi-driver
+    app.kubernetes.io/component: csi-driver
+subjects:
+  - kind: ServiceAccount
+    name: s3-csi-driver-controller-sa
+    namespace: mountpoint-s3-csi
+roleRef:
+  kind: Role
+  name: s3-csi-driver-controller-leader-election-role
+  apiGroup: rbac.authorization.k8s.io
+
+---
+kind: ServiceAccount
+apiVersion: v1
+metadata:
+  name: s3-csi-driver-sa
+  namespace: mountpoint-s3-csi
+  labels:
+    app.kubernetes.io/name: aws-mountpoint-s3-csi-driver
+    app.kubernetes.io/component: csi-driver
+
+---
+kind: ClusterRole
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: s3-csi-driver-cluster-role
+  labels:
+    app.kubernetes.io/name: aws-mountpoint-s3-csi-driver
+rules:
+  - apiGroups: [""]
+    resources: ["serviceaccounts"]
+    verbs: ["get"]
+  - apiGroups: ["apiextensions.k8s.io"]
+    resources: ["customresourcedefinitions"]
+    verbs: ["get"]
+  - apiGroups: ["s3.csi.aws.com"]
+    resources: ["mountpoints3podattachments"]
+    verbs: ["get", "list", "watch"]
+  - apiGroups: [""]
+    resources: ["nodes"]
+    verbs: ["get", "patch", "list", "watch"]
+  - apiGroups: ["storage.k8s.io"]
+    resources: ["csinodes"]
+    verbs: ["get"]
+
+---
+kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: mountpoint-s3-csi-node-binding
+  labels:
+    app.kubernetes.io/name: aws-mountpoint-s3-csi-driver
+subjects:
+  - kind: ServiceAccount
+    name: s3-csi-driver-sa
+    namespace: mountpoint-s3-csi
+roleRef:
+  kind: ClusterRole
+  name: s3-csi-driver-cluster-role
+  apiGroup: rbac.authorization.k8s.io
+
+---
+kind: Role
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: s3-csi-driver-node-mountpoint-pod-namespace-role
+  namespace: mount-s3
+  labels:
+    app.kubernetes.io/name: aws-mountpoint-s3-csi-driver
+    app.kubernetes.io/component: csi-driver
+rules:
+  - apiGroups: [""]
+    resources: ["pods"]
+    verbs: ["get", "list", "watch"]
+
+---
+kind: RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: s3-csi-driver-node-mountpoint-pod-namespace-role-binding
+  namespace: mount-s3
+  labels:
+    app.kubernetes.io/name: aws-mountpoint-s3-csi-driver
+    app.kubernetes.io/component: csi-driver
+subjects:
+  - kind: ServiceAccount
+    name: s3-csi-driver-sa
+    namespace: mountpoint-s3-csi
+roleRef:
+  kind: Role
+  name: s3-csi-driver-node-mountpoint-pod-namespace-role
+  apiGroup: rbac.authorization.k8s.io

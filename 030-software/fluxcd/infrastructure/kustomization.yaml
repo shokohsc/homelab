@@ -5,4 +5,5 @@ resources:
   - cloudnativepg
   - crossplane
   - kubeopencode
+  - mountpoint-s3-csi
   - talos-proxmox-autoscaler

@@ -1,0 +1,73 @@
+---
+# Upstream: deploy/kubernetes/base/controller.yaml @ v2.8.0
+# Differences:
+#   - namespace kube-system -> mountpoint-s3-csi
+#   - image placeholder `csi-driver` + MOUNTPOINT_IMAGE_PLACEHOLDER replaced with
+#     the pinned v2.8.0 image (upstream does this with a kustomize `replacements`
+#     in deploy/kubernetes/overlays/stable).
+#   - resources + seccompProfile added (repo convention).
+#   - MOUNTPOINT_POD_LABELS carries the two gatekeeper exemptions the generated
+#     Mountpoint Pods need - see kustomization.yaml.
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: s3-csi-controller
+  namespace: mountpoint-s3-csi
+  labels:
+    app: s3-csi-controller
+    app.kubernetes.io/name: aws-mountpoint-s3-csi-driver
+    app.kubernetes.io/component: csi-driver
+spec:
+  replicas: 1
+  revisionHistoryLimit: 0
+  selector:
+    matchLabels:
+      app: s3-csi-controller
+      app.kubernetes.io/name: aws-mountpoint-s3-csi-driver
+  template:
+    metadata:
+      labels:
+        app: s3-csi-controller
+        app.kubernetes.io/name: aws-mountpoint-s3-csi-driver
+        app.kubernetes.io/component: csi-driver
+    spec:
+      nodeSelector:
+        kubernetes.io/os: linux
+      serviceAccountName: s3-csi-driver-controller-sa
+      priorityClassName: system-cluster-critical
+      securityContext:
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: s3-csi-controller
+          image: public.ecr.aws/mountpoint-s3-csi-driver/aws-mountpoint-s3-csi-driver:v2.8.0
+          imagePullPolicy: IfNotPresent
+          command:
+            - "/bin/aws-s3-csi-controller"
+          securityContext:
+            readOnlyRootFilesystem: true
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+          resources:
+            requests:
+              cpu: 50m
+              memory: 128Mi
+            limits:
+              cpu: 500m
+              memory: 512Mi
+          env:
+            - name: MOUNTPOINT_IMAGE
+              value: public.ecr.aws/mountpoint-s3-csi-driver/aws-mountpoint-s3-csi-driver:v2.8.0
+            - name: MOUNTPOINT_IMAGE_PULL_POLICY
+              value: IfNotPresent
+            - name: MOUNTPOINT_NAMESPACE
+              value: mount-s3
+            - name: MOUNTPOINT_PRIORITY_CLASS_NAME
+              value: mount-s3-critical
+            # Added on top of upstream's "{}" (see kustomization.yaml for why).
+            - name: MOUNTPOINT_POD_LABELS
+              value: >-
+                {"policy.gatekeeper.sh/ignore-container-must-have-limits":"true",
+                "policy.gatekeeper.sh/ignore-psp-readonlyrootfilesystem":"true"}

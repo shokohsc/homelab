@@ -1,0 +1,15 @@
+---
+# tokenRequests is intentionally omitted: it only feeds EKS Pod Identity, which
+# does not exist on Talos. The driver authenticates with the `aws-secret`
+# Kubernetes secret instead (see README.md).
+apiVersion: storage.k8s.io/v1
+kind: CSIDriver
+metadata:
+  name: s3.csi.aws.com
+  labels:
+    app.kubernetes.io/name: aws-mountpoint-s3-csi-driver
+    app.kubernetes.io/component: csi-driver
+spec:
+  attachRequired: false
+  podInfoOnMount: true
+  requiresRepublish: true
