@@ -83,6 +83,6 @@ resources:
   - web-check
   - weechat
   - whoami
-  - whoogle
+  # - whoogle
   - ws-screenshot
   - zipkin
