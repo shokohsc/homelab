@@ -22,7 +22,7 @@ resources:
   - excalidraw
   - external-dns
   - external-services
-  # - ferretdb
+  - ferretdb
   # - flaresolverr
   - gatekeeper
   - grafana
