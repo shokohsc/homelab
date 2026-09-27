@@ -4,5 +4,6 @@ namespace: tailscale
 resources:
   - namespace.yaml
   - deployment.yaml
+  - poddisruptionbudget.yaml
   - rbac.yaml
   - secret.yaml

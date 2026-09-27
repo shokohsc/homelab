@@ -4,6 +4,7 @@ namespace: maddy
 resources:
   - namespace.yaml
   - deployment.yaml
+  - poddisruptionbudget.yaml
   - service.yaml
   - pvc.yaml
   # - cronjob.yaml

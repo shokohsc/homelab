@@ -1,0 +1,20 @@
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: iptvnator
+spec:
+  minAvailable: 1
+  selector:
+    matchLabels:
+      app: iptvnator
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: iptvnator-backend
+spec:
+  minAvailable: 1
+  selector:
+    matchLabels:
+      app: iptvnator-backend

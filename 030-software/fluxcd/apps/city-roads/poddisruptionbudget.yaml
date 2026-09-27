@@ -1,0 +1,10 @@
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: city-roads
+spec:
+  minAvailable: 1
+  selector:
+    matchLabels:
+      app: city-roads

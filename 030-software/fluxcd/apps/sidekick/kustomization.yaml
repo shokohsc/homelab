@@ -6,6 +6,7 @@ resources:
 
   - api/
   - vpn/
+  - poddisruptionbudget.yaml
   # - kubernetesevents/
   # - cmangos/
   # - email/

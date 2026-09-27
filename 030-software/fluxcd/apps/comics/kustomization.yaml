@@ -4,6 +4,7 @@ namespace: comics
 resources:
   - namespace.yaml
   - deployment.yaml
+  - poddisruptionbudget.yaml
   - service.yaml
   - http-route.yaml
   - listener-set.yaml

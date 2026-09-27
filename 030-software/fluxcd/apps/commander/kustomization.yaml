@@ -4,6 +4,7 @@ namespace: commander
 resources:
   - namespace.yaml
   - deployment.yaml
+  - poddisruptionbudget.yaml
   - service.yaml
   - http-route.yaml
   - netpol.yaml
