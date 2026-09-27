@@ -118,7 +118,7 @@ spec:
             - /etc/vector/vector.yaml
           resources:
             limits:
-              memory: 64Mi
+              memory: 128Mi
             requests:
               cpu: 100m
           volumeMounts:
