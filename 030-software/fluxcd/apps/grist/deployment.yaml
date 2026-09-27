@@ -73,7 +73,7 @@ spec:
               mountPath: /persist
           resources:
             requests:
-              cpu: 100m
+              cpu: 200m
             limits:
               memory: 256Mi
       volumes:
