@@ -1,6 +1,6 @@
 {
     "communityName": "Homelab",
-    "relayUrl": "wss://buzz.${domain}",
+    "relayUrl": "wss://relay.buzz.${domain}",
     "features": {
     "projects": false,
     "forum": false
