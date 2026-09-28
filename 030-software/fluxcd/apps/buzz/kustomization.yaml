@@ -6,5 +6,6 @@ resources:
   - deployment.yaml
   - service.yaml
   - http-route.yaml
+  - listener-set.yaml
   - pvc.yaml
-  - minio
+  - secret.yaml
