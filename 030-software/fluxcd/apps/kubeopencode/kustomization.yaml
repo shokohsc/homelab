@@ -8,6 +8,7 @@ resources:
   - agent-templates/main.yaml
   - agent-templates/homelab.yaml
   - agent-templates/talos-proxmox-autoscaler.yaml
+  - agent-templates/nostr-gateway.yaml
   - agent.yaml
   - cilium-network-policy.yaml
 configMapGenerator:
