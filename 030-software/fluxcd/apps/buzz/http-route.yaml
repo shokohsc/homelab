@@ -28,6 +28,7 @@ spec:
         - POST
         - OPTIONS
         allowHeaders:
+        - Authorization
         - DNT
         - X-CustomHeader
         - Keep-Alive
