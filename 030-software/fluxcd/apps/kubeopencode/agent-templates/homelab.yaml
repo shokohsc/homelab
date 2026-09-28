@@ -46,6 +46,7 @@ spec:
           - golang
           - javascript
           - self-improve
+          - devops
     - name: anthropic-skills
       git:
         repository: https://github.com/anthropics/skills.git
