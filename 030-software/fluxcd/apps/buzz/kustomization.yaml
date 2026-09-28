@@ -9,3 +9,9 @@ resources:
   - listener-set.yaml
   - pvc.yaml
   - secret.yaml
+configMapGenerator:
+  - name: config
+    files:
+      - ./config/config.json
+generatorOptions:
+  disableNameSuffixHash: true

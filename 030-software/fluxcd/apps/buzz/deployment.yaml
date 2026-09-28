@@ -238,7 +238,13 @@ spec:
           volumeMounts:
             - name: assets
               mountPath: /assets
+            - name: config
+              mountPath: /srv/app/config.json
+              subPath: config.json
       volumes:
         - name: assets
           image:
             reference: shokohsc/buzz:a6766c4-dirty
+        - name: config
+          configMap:
+            name: config
