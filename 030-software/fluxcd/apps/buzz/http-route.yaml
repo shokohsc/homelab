@@ -28,7 +28,6 @@ spec:
         - POST
         - OPTIONS
         allowHeaders:
-        - Authorization
         - DNT
         - X-CustomHeader
         - Keep-Alive
@@ -37,7 +36,7 @@ spec:
         - If-Modified-Since
         - Cache-Control
         - Content-Type
-        allowCredentials: false
+        allowCredentials: true
         maxAge: 3600
       type: CORS
 ---
