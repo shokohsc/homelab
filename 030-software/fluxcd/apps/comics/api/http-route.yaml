@@ -25,6 +25,9 @@ spec:
         - https://preview.comics.${domain}
         - https://dev.comics.${domain}
         - https://comics.${domain}
+        - https://preview.bubbles.${domain}
+        - https://dev.bubbles.${domain}
+        - https://bubbles.${domain}
         allowMethods:
         - GET
         - OPTIONS
