@@ -61,7 +61,7 @@ spec:
             - name: RELAY_URL
               value: wss://buzz.${domain}
             - name: BUZZ_MEDIA_BASE_URL
-              value: https://media.buzz.${domain}
+              value: https://buzz.${domain}/media
             - name: BUZZ_MEDIA_SERVER_DOMAIN
               value: buzz.${domain}
             - name: BUZZ_CORS_ORIGINS
