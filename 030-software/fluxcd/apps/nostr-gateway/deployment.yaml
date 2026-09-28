@@ -1,0 +1,104 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nostr-gateway
+  annotations:
+    configmap.reloader.stakater.com/reload: gateway-config
+spec:
+  revisionHistoryLimit: 0
+  # One Nostr identity, one process: the conversation map and the relay
+  # subscription live in memory, so a second replica would half-answer every
+  # message.
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: nostr-gateway
+  template:
+    metadata:
+      labels:
+        app: nostr-gateway
+    spec:
+      automountServiceAccountToken: false
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        seccompProfile:
+          type: RuntimeDefault
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              podAffinityTerm:
+                topologyKey: kubernetes.io/hostname
+                labelSelector:
+                  matchLabels:
+                    app: nostr-gateway
+      topologySpreadConstraints:
+        - maxSkew: 1
+          topologyKey: kubernetes.io/hostname
+          whenUnsatisfiable: ScheduleAnyway
+          labelSelector:
+            matchLabels:
+              app: nostr-gateway
+      containers:
+        - name: nostr-gateway
+          image: ghcr.io/shokohsc/nostr-gateway:9656caf
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+            capabilities:
+              drop:
+                - ALL
+          env:
+            - name: AGENTS_FILE
+              value: /etc/nostr-gateway/agents.json
+            # Left unset on purpose: the main agent's own AgentTemplate owns the
+            # model and the agent name, so prompt_async inherits them instead of
+            # this file drifting away from it.
+            - name: GATEWAY_ADDR
+              value: ":8080"
+            - name: GATEWAY_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: nostr-gateway
+                  key: GATEWAY_TOKEN
+            - name: MAIN_NSEC
+              valueFrom:
+                secretKeyRef:
+                  name: nostr-gateway
+                  key: MAIN_NSEC
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+          startupProbe:
+            httpGet:
+              path: /healthz
+              port: http
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: http
+          resources:
+            requests:
+              cpu: 50m
+              memory: 64Mi
+            limits:
+              memory: 256Mi
+          volumeMounts:
+            - name: config
+              mountPath: /etc/nostr-gateway
+              readOnly: true
+      volumes:
+        - name: config
+          configMap:
+            name: gateway-config

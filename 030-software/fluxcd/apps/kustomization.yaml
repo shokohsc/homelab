@@ -46,6 +46,7 @@ resources:
   # - motrix
   - nats
   - nfs-downloads
+  - nostr-gateway
   - paint
   - pairdrop
   - passed
