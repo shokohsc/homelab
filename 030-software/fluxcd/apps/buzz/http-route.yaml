@@ -6,7 +6,7 @@ metadata:
   annotations:
     dashboard.${domain}/name: buzz
     dashboard.${domain}/url: https://buzz.${domain}
-    dashboard.${domain}/icon: message-circle
+    dashboard.${domain}/icon: slack
 spec:
   hostnames:
   - buzz.${domain}
