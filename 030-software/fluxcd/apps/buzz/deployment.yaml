@@ -241,4 +241,4 @@ spec:
       volumes:
         - name: assets
           image:
-            reference: shokohsc/buzz:v0.0.0-preview.11.1-dirty
+            reference: shokohsc/buzz:a6766c4-dirty
