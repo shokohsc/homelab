@@ -1,0 +1,12 @@
+{
+    "$schema": "https://opencode.ai/config.json",
+    "model": "opencode/big-pickle",
+    "skills": {
+        "paths": [
+            "/skills/homelab-skills/kubernetes",
+            "/skills/homelab-skills/golang",
+            "/skills/homelab-skills/javascript",
+            "/skills/homelab-skills/self-improve"
+        ]
+    }
+}

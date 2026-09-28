@@ -1,0 +1,239 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: buzz-acp
+  labels:
+    app: buzz-acp
+spec:
+  replicas: 1
+  # One Nostr identity, one bridge: never run two, they would both answer the same mention.
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: buzz-acp
+  template:
+    metadata:
+      labels:
+        app: buzz-acp
+        policy.gatekeeper.sh/ignore-psp-readonlyrootfilesystem: "true"
+        policy.gatekeeper.sh/ignore-psp-pods-allowed-user-ranges: "true"
+        policy.gatekeeper.sh/ignore-container-must-have-limits: "true"
+    spec:
+      serviceAccountName: kubeopencode-agent
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        seccompProfile:
+          type: RuntimeDefault
+      initContainers:
+        - name: opencode-init
+          image: shokohsc/kubeopencode-agent-opencode:v0.1.9
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: TOOLS_DIR
+              value: /tools
+            - name: CUSTOM_CA_CERT_PATH
+              value: /etc/ssl/certs/custom-ca/tls.crt
+            - name: OPENCODE_DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: credentials
+                  key: postgres-url
+          volumeMounts:
+            - name: tools
+              mountPath: /tools
+            - name: ca-bundle
+              mountPath: /etc/ssl/certs/custom-ca
+              readOnly: true
+          resources:
+            requests:
+              cpu: 50m
+              memory: 64Mi
+            limits:
+              memory: 512Mi
+          securityContext:
+            allowPrivilegeEscalation: false
+            runAsNonRoot: true
+            capabilities:
+              drop:
+                - ALL
+        - name: git-init
+          image: ghcr.io/kubeopencode/kubeopencode:latest
+          imagePullPolicy: IfNotPresent
+          command:
+            - /kubeopencode
+            - git-init
+          env:
+            - name: GIT_REPO
+              value: https://github.com/shokohsc/homelab.git
+            - name: GIT_REF
+              value: main
+            - name: GIT_DEPTH
+              value: "1"
+            - name: GIT_ROOT
+              value: /git
+            - name: GIT_LINK
+              value: repo
+            - name: CUSTOM_CA_CERT_PATH
+              value: /etc/ssl/certs/custom-ca/tls.crt
+            - name: OPENCODE_DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: credentials
+                  key: postgres-url
+          volumeMounts:
+            - name: git-repo
+              mountPath: /git
+            - name: ca-bundle
+              mountPath: /etc/ssl/certs/custom-ca
+              readOnly: true
+          resources:
+            requests:
+              cpu: 10m
+              memory: 32Mi
+            limits:
+              memory: 256Mi
+          securityContext:
+            allowPrivilegeEscalation: false
+            runAsNonRoot: true
+            capabilities:
+              drop:
+                - ALL
+      containers:
+        - name: buzz-acp
+          image: ghcr.io/shokohsc/buzz-acp:latest
+          imagePullPolicy: Always
+          env:
+            - name: SHELL
+              value: /bin/bash
+            - name: WORKSPACE_DIR
+              value: /workspace
+            - name: GIT_CONFIG_COUNT
+              value: "1"
+            - name: GIT_CONFIG_KEY_0
+              value: safe.directory
+            - name: GIT_CONFIG_VALUE_0
+              value: "*"
+            - name: CUSTOM_CA_CERT_PATH
+              value: /etc/ssl/certs/custom-ca/tls.crt
+            # The trust bundle injected by the homelab-ca-cm cert-manager Bundle:
+            # default CAs plus the homelab root/intermediate. rustls reads this.
+            - name: SSL_CERT_FILE
+              value: /etc/ssl/certs/custom-ca/tls.crt
+            - name: GITHUB_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: credentials
+                  key: token
+            # Same model, skills and instructions as the main agent, it is a child of it.
+            - name: OPENCODE_CONFIG
+              value: /tools/opencode.json
+            - name: OPENCODE_CONFIG_CONTENT
+              value: '{"instructions":[".kubeopencode/context.md"]}'
+            - name: OPENCODE_PERMISSION
+              value: '{"*":"allow"}'
+            # Must be the public gateway hostname, not the in-cluster Service name:
+            # the relay resolves the community from the Host header (row zero, fails
+            # closed) and the bootstrapped community host is derived from RELAY_URL.
+            # The same value fixes the NIP-42 `relay` tag and the NIP-98 `u` tag the
+            # relay checks, so it has to match relay.buzz.<domain> exactly.
+            - name: BUZZ_RELAY_URL
+              value: wss://relay.buzz.${domain}
+            - name: BUZZ_PRIVATE_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: buzz-acp
+                  key: BUZZ_PRIVATE_KEY
+            - name: BUZZ_ACP_AGENT_OWNER
+              valueFrom:
+                secretKeyRef:
+                  name: buzz-acp
+                  key: BUZZ_ACP_AGENT_OWNER
+            - name: BUZZ_ACP_AGENT_COMMAND
+              value: /tools/opencode
+            - name: BUZZ_ACP_AGENT_ARGS
+              value: acp
+            - name: BUZZ_ACP_DISPLAY_NAME
+              value: main
+            - name: BUZZ_ACP_RESPOND_TO
+              value: owner-only
+            - name: BUZZ_ACP_SUBSCRIBE
+              value: mentions
+            - name: BUZZ_ACP_IDLE_TIMEOUT
+              value: "900"
+            - name: BUZZ_ACP_MAX_TURN_DURATION
+              value: "3600"
+          resources:
+            requests:
+              cpu: 100m
+              memory: 512Mi
+            limits:
+              memory: 4Gi
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+            capabilities:
+              drop:
+                - ALL
+          volumeMounts:
+            - name: tools
+              mountPath: /tools
+            - name: workspace
+              mountPath: /workspace
+            - name: git-repo
+              mountPath: /workspace/homelab
+              subPath: repo
+            - name: git-repo
+              mountPath: /skills/homelab-skills/kubernetes
+              subPath: repo/030-software/fluxcd/apps/kubeopencode/skills/kubernetes
+            - name: git-repo
+              mountPath: /skills/homelab-skills/golang
+              subPath: repo/030-software/fluxcd/apps/kubeopencode/skills/golang
+            - name: git-repo
+              mountPath: /skills/homelab-skills/javascript
+              subPath: repo/030-software/fluxcd/apps/kubeopencode/skills/javascript
+            - name: git-repo
+              mountPath: /skills/homelab-skills/self-improve
+              # The directory is self-improving, the skill inside declares itself as
+              # self-improve. Same mismatch as the main agent template, kept so the
+              # mounted path matches what the KubeOpenCode controller produces.
+              subPath: repo/030-software/fluxcd/apps/kubeopencode/skills/self-improving
+            - name: config
+              mountPath: /tools/opencode.json
+              subPath: opencode.json
+              readOnly: true
+            - name: config
+              mountPath: /workspace/.kubeopencode/context.md
+              subPath: context.md
+              readOnly: true
+            - name: ca-bundle
+              mountPath: /etc/ssl/certs/custom-ca
+              readOnly: true
+            - name: temp
+              mountPath: /tmp
+            - name: home
+              mountPath: /home/agent
+      volumes:
+        - name: tools
+          emptyDir: {}
+        - name: workspace
+          emptyDir: {}
+        - name: git-repo
+          emptyDir: {}
+        - name: temp
+          emptyDir: {}
+        - name: home
+          emptyDir: {}
+        - name: config
+          configMap:
+            name: buzz-acp-config
+        - name: ca-bundle
+          configMap:
+            name: homelab-ca-cm
+            items:
+              - key: ca-certs.pem
+                path: tls.crt
