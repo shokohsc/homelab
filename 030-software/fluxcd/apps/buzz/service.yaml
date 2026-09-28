@@ -2,7 +2,7 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: buzz
+  name: relay
 spec:
   type: ClusterIP
   ports:
@@ -14,5 +14,19 @@ spec:
       targetPort: metrics
       protocol: TCP
       name: metrics
+  selector:
+    app: relay
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: buzz
+spec:
+  type: ClusterIP
+  ports:
+    - port: 80
+      targetPort: http
+      protocol: TCP
+      name: http
   selector:
     app: buzz

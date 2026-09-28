@@ -2,18 +2,18 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: buzz
+  name: relay
 spec:
   revisionHistoryLimit: 0
   strategy:
     type: Recreate
   selector:
     matchLabels:
-      app: buzz
+      app: relay
   template:
     metadata:
       labels:
-        app: buzz
+        app: relay
     spec:
       automountServiceAccountToken: false
       securityContext:
@@ -29,7 +29,7 @@ spec:
           whenUnsatisfiable: ScheduleAnyway
           labelSelector:
             matchLabels:
-              app: buzz
+              app: relay
       affinity:
         podAntiAffinity:
           preferredDuringSchedulingIgnoredDuringExecution:
@@ -38,9 +38,9 @@ spec:
                 topologyKey: kubernetes.io/hostname
                 labelSelector:
                   matchLabels:
-                    app: buzz
+                    app: relay
       containers:
-        - name: buzz
+        - name: relay
           image: ghcr.io/block/buzz:0.2.1
           securityContext:
             allowPrivilegeEscalation: false
@@ -57,15 +57,15 @@ spec:
             - name: BUZZ_METRICS_PORT
               value: "9102"
             - name: BUZZ_DOMAIN
-              value: buzz.${domain}
+              value: relay.buzz.${domain}
             - name: RELAY_URL
-              value: wss://buzz.${domain}
+              value: wss://relay.buzz.${domain}
             - name: BUZZ_MEDIA_BASE_URL
-              value: https://buzz.${domain}/media
+              value: https://relay.buzz.${domain}/media
             - name: BUZZ_MEDIA_SERVER_DOMAIN
-              value: buzz.${domain}
+              value: relay.buzz.${domain}
             - name: BUZZ_CORS_ORIGINS
-              value: https://buzz.${domain}
+              value: https://relay.buzz.${domain}
             - name: BUZZ_REQUIRE_AUTH_TOKEN
               value: "true"
             - name: BUZZ_REQUIRE_RELAY_MEMBERSHIP
@@ -164,3 +164,81 @@ spec:
             claimName: data
         - name: tmp
           emptyDir: {}
+---
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: buzz
+spec:
+  revisionHistoryLimit: 0
+  selector:
+    matchLabels:
+      app: buzz
+  template:
+    metadata:
+      labels:
+        app: buzz
+        policy.gatekeeper.sh/ignore-psp-volume-types: "true"
+    spec:
+      automountServiceAccountToken: false
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        seccompProfile:
+          type: RuntimeDefault
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              podAffinityTerm:
+                topologyKey: kubernetes.io/hostname
+                labelSelector:
+                  matchLabels:
+                    app: buzz
+      topologySpreadConstraints:
+        - maxSkew: 1
+          topologyKey: kubernetes.io/hostname
+          whenUnsatisfiable: ScheduleAnyway
+          labelSelector:
+            matchLabels:
+              app: buzz
+      containers:
+        - name: buzz
+          image: busybox:1.38
+          args: ["busybox", "httpd", "-f", "-v", "-p", "8080"]
+          workingDir: /assets
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+            capabilities:
+              drop:
+                - ALL
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+          startupProbe:
+            tcpSocket:
+              port: http
+          livenessProbe:
+            tcpSocket:
+              port: http
+          readinessProbe:
+            httpGet:
+              port: http
+              path: /
+          resources:
+            requests:
+              cpu: 100m
+            limits:
+              memory: 64Mi
+          volumeMounts:
+            - name: assets
+              mountPath: /assets
+      volumes:
+        - name: assets
+          image:
+            reference: shokohsc/buzz:v0.0.0-preview.11.1-dirty
