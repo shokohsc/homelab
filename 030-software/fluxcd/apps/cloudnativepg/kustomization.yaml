@@ -10,15 +10,16 @@ resources:
   - routes.yaml
   - secret.yaml
   - database-roles/atuin.yaml
+  - database-roles/buzz.yaml
   - database-roles/ferretdb.yaml
+  - database-roles/kubeopencode.yaml
   - database-roles/maddy.yaml
   - database-roles/miniflux.yaml
   - database-roles/pocket-id.yaml
-  - database-roles/radarr.yaml
-  - database-roles/sonarr.yaml
   - database-roles/prowlarr.yaml
+  - database-roles/radarr.yaml
+  - database-roles/sidekick.yaml
+  - database-roles/sonarr.yaml
   - database-roles/sftpgo.yaml
   - database-roles/vaultwarden.yaml
-  - database-roles/sidekick.yaml
-  - database-roles/kubeopencode.yaml
   # - pooler.yaml
