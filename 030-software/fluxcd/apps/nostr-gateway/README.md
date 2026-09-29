@@ -1,7 +1,7 @@
 # nostr-gateway
 
 Bridges [Nostr](https://github.com/nostr-protocol/nostr) to the KubeOpenCode
-`main` agent. Messages arrive as Nostr events of kind `30078`, are NIP-44
+`nostr-gateway` agent. Messages arrive as Nostr events of kind `30078`, are NIP-44
 encrypted to the agent's key, and are turned into an OpenCode session. Replies
 are published back as encrypted events. There is also a small plain-HTTP API for
 callers that are not on Nostr.
@@ -14,10 +14,16 @@ Source: <https://github.com/shokohsc/nostr-gateway>
 its main branch (`short=${GITHUB_SHA::7}`), so the reference is immutable. Bump
 it, and this README's verification note, when upstream lands a new merge.
 
+That tag is the short SHA of the **merge commit**, so it cannot be guessed from a
+pull request branch. The NIP-42 support below is not in `9656caf`; bump to the
+merge SHA of <https://github.com/shokohsc/nostr-gateway/pull/4> once it lands.
+
 ## Topology
 
-- `main.workspace.svc.cluster.local:4096` is the KubeOpenCode server backing the
-  `main` agent. `config/agents.json` points the gateway at it.
+- `nostr-gateway.workspace.svc.cluster.local:4096` is the KubeOpenCode server
+  created from the `nostr-gateway` AgentTemplate.
+  `config/agents.json` points the gateway at it. `main` in the template is a
+  context name, not the agent name.
 - The gateway itself is ClusterIP only. Nothing is exposed through the
   `cilium` Gateway, on purpose: Nostr is the public ingress and the HTTP API is
   an in-cluster convenience.
@@ -26,43 +32,53 @@ it, and this README's verification note, when upstream lands a new merge.
   `sender` field does not get through. An empty list allows everyone — do not
   ship that.
 
-## Before merging: two manual steps
+## Setup
 
-1. Fill in the placeholders.
-2. Encrypt the secret.
+The identity, the API token and the encrypted Secret are already in place, so
+there is nothing left to fill in. What no manifest can do is enrol the agent on
+the relay: that is a Nostr event, signed by a key the relay already trusts.
 
-### 1. Generate the identity and the token
+### Enrol the agent on the Buzz relay (the one manual step)
 
-The gateway needs a Nostr keypair. Any Nostr key generator or `nostr` CLI
-works; the gateway accepts hex, `nsec1...` and `npub1...` forms.
+`apps/buzz` runs with `BUZZ_REQUIRE_RELAY_MEMBERSHIP=true`, so the relay refuses
+every REQ and every EVENT from a pubkey that is not a member — even after a
+valid NIP-42 `AUTH`. Until the agent is a member the subscription is closed with
+`auth-required: verification failed` and the gateway is deaf.
 
-```sh
-# in config/agents.json
-#   npub   -> the public key of the identity whose secret goes in the Secret
-#   allow  -> your own pubkey, so only you can drive the agent
+The pubkey to enrol is the `npub` in `config/agents.json`:
+
+```text
+613ff42687c408eb3ef8772ff967b4c1c51ed135cd9dd83fb4ab7379ea1808cc
 ```
 
-```sh
-openssl rand -hex 32   # -> GATEWAY_TOKEN in secret.yaml
-```
+Publish a NIP-43 `RELAY_ADMIN_ADD_MEMBER`: kind `9030`, empty content, a
+single `p` tag holding that pubkey hex, signed by a pubkey that is already an
+`owner` or `admin` of the relay. `RELAY_OWNER_PUBKEY` in
+`apps/buzz/secret.yaml` is the owner generated at install time. Any Nostr
+client that can sign and publish an arbitrary event will do; re-publishing is a
+no-op when the member already exists, so it is safe to repeat.
 
-Then edit:
-
-- `config/agents.json`: replace `npub1REPLACE_ME` and `REPLACE_ME_HEX_PUBKEY`.
-- `secret.yaml`: replace both `REPLACE_ME_*` values. `MAIN_NSEC` is the private
-  key matching the `npub` above.
-
-### 2. Encrypt the secret
-
-The private key and the token must not be committed in plaintext.
+With direct database access instead of a client:
 
 ```sh
-sops --encrypt --in-place 030-software/fluxcd/apps/nostr-gateway/secret.yaml
+buzz-admin add-member 613ff42687c408eb3ef8772ff967b4c1c51ed135cd9dd83fb4ab7379ea1808cc member
 ```
 
-This uses the repo's `.sops.yaml` and the operator's own PGP key, the same way
-every other app secret in this repository is handled. Flux decrypts it on
-reconcile because the `apps` Kustomization enables sops decryption.
+Neither path is wired as a manifest in this repository, so it stays a manual
+step by design.
+
+### NIP-42 needs nothing here
+
+The gateway answers the relay's `AUTH` challenge with the agent's own
+`AGENT_NSEC` — that is the image's job, not configuration. Two things must
+still line up:
+
+- `RELAY_URL` in `apps/buzz/deployment.yaml` and `NOSTR_RELAYS` here must be
+  the same URL. NIP-42 requires the `relay` tag of the `AUTH` event to match
+  the relay, and the gateway fills that tag with the URL it dialled. Both are
+  `wss://relay.buzz.${domain}`, so they agree.
+- The image must be new enough to have the auth handler. `9656caf` does not;
+  see the note under **Image**.
 
 ## Verifying after deploy
 
@@ -77,7 +93,7 @@ TOKEN=$(kubectl -n nostr-gateway get secret nostr-gateway \
   -o jsonpath='{.data.GATEWAY_TOKEN}' | base64 -d)
 
 curl -H "Authorization: Bearer $TOKEN" \
-  -d '{"agent":"main","type":"message","payload":{"text":"say hi"}}' \
+  -d '{"agent":"nostr-gateway","type":"message","payload":{"text":"say hi"}}' \
   http://nostr-gateway.nostr-gateway.svc.cluster.local/v1/messages
 
 # the reply is a JSON envelope; take its conversation id and stream it
@@ -86,6 +102,15 @@ curl -H "Authorization: Bearer $TOKEN" \
 ```
 
 `GET /healthz` is unauthenticated and is what the probes use.
+
+The HTTP API works even when the Nostr side does not, so it says nothing about
+the relay. For that, read the log — a healthy agent logs no `nostr notice` at
+all, and the two failures are distinguishable:
+
+| log line | meaning |
+| --- | --- |
+| `nostr notice ... "auth-required: authenticate before subscribing"` | the image is too old to answer NIP-42; bump it |
+| `nostr notice ... "auth-required: verification failed"` | authenticated, but the pubkey is not a relay member |
 
 ## Notes
 
@@ -97,3 +122,7 @@ curl -H "Authorization: Bearer $TOKEN" \
   matching `<NAME>_NSEC` key to the Secret; the ConfigMap has a
   `configmap.reloader.stakater.com/reload` annotation, but a restart is the
   cheap way to be sure.
+- The agent does not show up in the Buzz web client, and that is not a symptom.
+  `buzz-web` builds its Agents view from kind `10100` agent-profile events, and
+  the gateway publishes only kind `30078`. The test for the Nostr side is the
+  log, or any client that lets you send a kind `30078` to the agent's pubkey.
