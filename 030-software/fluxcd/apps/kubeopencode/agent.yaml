@@ -7,9 +7,6 @@ spec:
   templateRef:
     name: main
   profile: "Homelab Devops specialist"
-  plugins:
-    - name: "superpowers@git+https://github.com/obra/superpowers.git"
-      target: tui
   share:
     enabled: true
     allowedIPs:
@@ -38,3 +35,16 @@ spec:
 #     - path:
 #         type: PathPrefix
 #         value: /
+---
+apiVersion: kubeopencode.io/v1alpha1
+kind: Agent
+metadata:
+  name: nostr-gateway
+spec:
+  templateRef:
+    name: main
+  profile: "Homelab Devops specialist"
+  share:
+    allowedIPs:
+      - 10.244.0.0/16
+  command: ["opencode", "acp"]

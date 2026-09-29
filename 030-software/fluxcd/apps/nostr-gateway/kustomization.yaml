@@ -7,9 +7,3 @@ resources:
   - poddisruptionbudget.yaml
   - service.yaml
   - secret.yaml
-configMapGenerator:
-  - name: gateway-config
-    files:
-      - config/agents.json
-generatorOptions:
-  disableNameSuffixHash: true

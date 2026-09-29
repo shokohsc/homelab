@@ -77,12 +77,10 @@ spec:
               containerPort: 8080
               protocol: TCP
           startupProbe:
-            httpGet:
-              path: /healthz
+            tcpSocket:
               port: http
           livenessProbe:
-            httpGet:
-              path: /healthz
+            tcpSocket:
               port: http
           readinessProbe:
             httpGet:
@@ -90,15 +88,16 @@ spec:
               port: http
           resources:
             requests:
-              cpu: 50m
+              cpu: 100m
               memory: 64Mi
             limits:
               memory: 256Mi
           volumeMounts:
             - name: config
-              mountPath: /etc/nostr-gateway
+              mountPath: /etc/nostr-gateway/agents.json
+              subPath: agents.json
               readOnly: true
       volumes:
         - name: config
-          configMap:
-            name: gateway-config
+          secret:
+            name: nostr-gateway
