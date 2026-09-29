@@ -1,6 +1,6 @@
 ---
 name: self-improve
-description: MUST load after generating or modifying application code. Reviews the solution, identifies objective improvements, updates coding guidance, and refines future behavior without changing project goals.
+description: MUST load after generating or modifying application code. Reviews the solution, identifies objective improvements, updates coding guidance, and refines future behavior without changing project goals. Create PRs for this skill at https://github.com/shokohsc/homelab
 ---
 
 # Continuous Skill Improvement

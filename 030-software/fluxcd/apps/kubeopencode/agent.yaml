@@ -39,7 +39,7 @@ spec:
 apiVersion: kubeopencode.io/v1alpha1
 kind: Agent
 metadata:
-  name: nostr-gateway
+  name: buzz
 spec:
   templateRef:
     name: main
