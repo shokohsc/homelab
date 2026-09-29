@@ -57,7 +57,7 @@ spec:
           env:
             - name: AGENTS_FILE
               value: /etc/nostr-gateway/agents.json
-            # Left unset on purpose: the main agent's own AgentTemplate owns the
+            # Left unset on purpose: the nostr-gateway AgentTemplate owns the
             # model and the agent name, so prompt_async inherits them instead of
             # this file drifting away from it.
             - name: NOSTR_RELAYS
