@@ -17,7 +17,7 @@ spec:
         operator: NotIn
         values: ["true"]
   parameters:
-    cpu: "4000m"
+    cpu: "-1"
     memory: "4096Mi"
 ---
 apiVersion: constraints.gatekeeper.sh/v1beta1
