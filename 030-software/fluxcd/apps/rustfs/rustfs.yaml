@@ -73,6 +73,9 @@ spec:
       capabilities:
         drop:
           - ALL
+        add:
+          - SETGID
+          - SETUID
     
     affinity:
       podAntiAffinity:
@@ -80,3 +83,4 @@ spec:
     
     podLabels:
       policy.gatekeeper.sh/ignore-container-must-have-limits: "true"
+      policy.gatekeeper.sh/ignore-psp-capabilities-baseline: "true"
