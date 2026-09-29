@@ -1,0 +1,10 @@
+{
+    "nostr-gateway": {
+        "opencode": "http://nostr-gateway.workspace.svc.cluster.local:4096",
+        "npub": "613ff42687c408eb3ef8772ff967b4c1c51ed135cd9dd83fb4ab7379ea1808cc",
+        "nsec_env": "AGENT_NSEC",
+        "allow": [
+            "6afa1e3716332156b2a6ee2650526b448d8ae8d68df1146d619153bc44b3f69f"
+        ]
+    }
+}

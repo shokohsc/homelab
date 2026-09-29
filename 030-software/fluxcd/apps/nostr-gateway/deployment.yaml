@@ -69,11 +69,11 @@ spec:
                 secretKeyRef:
                   name: nostr-gateway
                   key: GATEWAY_TOKEN
-            - name: MAIN_NSEC
+            - name: AGENT_NSEC
               valueFrom:
                 secretKeyRef:
                   name: nostr-gateway
-                  key: MAIN_NSEC
+                  key: AGENT_NSEC
           ports:
             - name: http
               containerPort: 8080
@@ -98,13 +98,13 @@ spec:
             - name: config
               mountPath: /etc/nostr-gateway/agents.json
               subPath: agents.json
-              readOnly: true
             - mountPath: /etc/ssl/certs
               name: tls
       volumes:
         - name: config
-          secret:
-            secretName: nostr-gateway
+          configMap:
+            name: config
+            defaultMode: 0644
         - name: tls
           configMap:
             name: homelab-ca-cm
