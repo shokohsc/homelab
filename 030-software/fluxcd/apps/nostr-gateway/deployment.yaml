@@ -4,7 +4,7 @@ kind: Deployment
 metadata:
   name: nostr-gateway
   annotations:
-    configmap.reloader.stakater.com/reload: gateway-config
+    configmap.reloader.stakater.com/reload: config
 spec:
   revisionHistoryLimit: 0
   # One Nostr identity, one process: the conversation map and the relay
