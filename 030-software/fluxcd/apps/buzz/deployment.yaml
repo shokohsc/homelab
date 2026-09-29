@@ -247,6 +247,7 @@ spec:
         - name: assets
           image:
             reference: shokohsc/buzz:a6766c4-dirty
+            pullPolicy: Always
         - name: config
           configMap:
             name: config
