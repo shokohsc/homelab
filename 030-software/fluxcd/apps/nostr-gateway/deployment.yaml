@@ -60,6 +60,8 @@ spec:
             # Left unset on purpose: the main agent's own AgentTemplate owns the
             # model and the agent name, so prompt_async inherits them instead of
             # this file drifting away from it.
+            - name: NOSTR_RELAYS
+              value: "wss://relay.buzz.${domain}"
             - name: GATEWAY_ADDR
               value: ":8080"
             - name: GATEWAY_TOKEN
@@ -97,7 +99,13 @@ spec:
               mountPath: /etc/nostr-gateway/agents.json
               subPath: agents.json
               readOnly: true
+            - mountPath: /etc/ssl/certs
+              name: tls
       volumes:
         - name: config
           secret:
             secretName: nostr-gateway
+        - name: tls
+          configMap:
+            name: homelab-ca-cm
+            defaultMode: 0600
