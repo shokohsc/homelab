@@ -41,6 +41,10 @@ spec:
 
     drivesPerNode: 1
 
+    config:
+      rustfs:
+        obs_log_directory: ""
+
     storageclass:
       name: ceph-rbd
       dataStorageSize: 1Gi
@@ -73,8 +77,6 @@ spec:
       capabilities:
         drop:
           - ALL
-        add:
-          - DAC_OVERRIDE
     
     affinity:
       podAntiAffinity:
@@ -82,4 +84,3 @@ spec:
     
     podLabels:
       policy.gatekeeper.sh/ignore-container-must-have-limits: "true"
-      policy.gatekeeper.sh/ignore-psp-capabilities-baseline: "true"
