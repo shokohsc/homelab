@@ -6,15 +6,10 @@ metadata:
 spec:
   match:
     - excludedNamespaces:
-        - ceph-csi
         - cilium
-        - cnpg-system
         - flux-system
         - gatekeeper-system
         - kube-node-lease
         - kube-public
-        - kube-state-metrics
         - kube-system
-        - nfs-proxmox
-        - nfs-downloads
       processes: ["*"]
