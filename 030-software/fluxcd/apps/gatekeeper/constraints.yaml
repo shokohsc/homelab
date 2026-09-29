@@ -74,9 +74,10 @@ spec:
         operator: NotIn
         values: ["true"]
     excludedNamespaces: ["kube-system"]
-  # parameters:
-  #   exemptImages:
-  #   - "safeimages.com/*"
+  parameters:
+    exemptImages:
+    - "itsthenetwork/nfs-server-alpine:latest"
+    - "ghcr.io/shokohsc/gateway:*"
 ---
 apiVersion: constraints.gatekeeper.sh/v1beta1
 kind: K8sPSPAllowPrivilegeEscalationContainer
@@ -95,8 +96,10 @@ spec:
       - key: policy.gatekeeper.sh/ignore-psp-allow-privilege-escalation-container
         operator: NotIn
         values: ["true"]
-  # parameters:
-  #   exemptImages: ["safeimages.com/*"]
+  parameters:
+    exemptImages:
+    - "itsthenetwork/nfs-server-alpine:latest"
+    - "ghcr.io/shokohsc/gateway:*"
 ---
 apiVersion: constraints.gatekeeper.sh/v1beta1
 kind: K8sPSPReadOnlyRootFilesystem
@@ -253,11 +256,11 @@ spec:
         operator: NotIn
         values: ["true"]
   parameters:
-    exemptImages:
-    - nginx-exempt
+    # exemptImages:
+    # - nginx-exempt
     allowedProfiles:
     - RuntimeDefault
-    - Localhost
-    - not configured
-    allowedLocalhostFiles:
-    - "*"
+    # - Localhost
+    # - not configured
+    # allowedLocalhostFiles:
+    # - "*"
