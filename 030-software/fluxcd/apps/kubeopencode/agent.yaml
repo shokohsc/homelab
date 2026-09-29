@@ -45,6 +45,7 @@ spec:
     name: main
   profile: "Homelab Devops specialist"
   share:
+    enabled: false
     allowedIPs:
       - 10.244.0.0/16
   command: ["opencode", "acp"]
