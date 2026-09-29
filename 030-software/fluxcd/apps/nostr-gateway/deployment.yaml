@@ -62,6 +62,8 @@ spec:
             # this file drifting away from it.
             - name: NOSTR_RELAYS
               value: "wss://relay.buzz.${domain}"
+            - name: BUZZ_RELAYS
+              value: "wss://relay.buzz.${domain}"
             - name: GATEWAY_ADDR
               value: ":8080"
             - name: GATEWAY_TOKEN
