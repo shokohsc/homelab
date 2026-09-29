@@ -18,7 +18,7 @@ spec:
         values: ["true"]
   parameters:
     cpu: "4000m"
-    memory: "2048Mi"
+    memory: "4096Mi"
 ---
 apiVersion: constraints.gatekeeper.sh/v1beta1
 kind: K8sPSPHostFilesystem
