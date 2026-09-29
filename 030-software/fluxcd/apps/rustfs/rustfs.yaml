@@ -77,3 +77,6 @@ spec:
     affinity:
       podAntiAffinity:
         enabled: true
+    
+    podLabels:
+      policy.gatekeeper.sh/ignore-container-must-have-limits: "true"
