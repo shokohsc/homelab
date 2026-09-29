@@ -100,4 +100,4 @@ spec:
       volumes:
         - name: config
           secret:
-            name: nostr-gateway
+            secretName: nostr-gateway
