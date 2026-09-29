@@ -4,6 +4,7 @@ kind: Deployment
 metadata:
   name: redisinsight
 spec:
+  revisionHistoryLimit: 0
   selector:
     matchLabels:
       app: redisinsight

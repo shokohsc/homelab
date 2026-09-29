@@ -12,6 +12,7 @@ patches:
       metadata:
         name: all
       spec:
+        revisionHistoryLimit: 0
         template:
           spec:
             tolerations:
