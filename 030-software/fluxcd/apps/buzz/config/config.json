@@ -2,8 +2,8 @@
     "communityName": "Homelab",
     "relayUrl": "wss://relay.buzz.${domain}",
     "features": {
-    "projects": false,
-    "forum": false
+    "projects": true,
+    "forum": true
     },
     "agents": []
 }
