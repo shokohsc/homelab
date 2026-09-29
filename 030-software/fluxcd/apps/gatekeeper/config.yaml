@@ -15,6 +15,7 @@ spec:
         - kube-public
         - kube-state-metrics
         - kube-system
+        - mountpoint-s3-csi
         - nfs-proxmox
         - nfs-downloads
       processes: ["*"]

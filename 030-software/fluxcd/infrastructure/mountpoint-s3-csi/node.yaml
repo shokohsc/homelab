@@ -1,0 +1,203 @@
+---
+# Upstream: deploy/kubernetes/base/node.yaml @ v2.8.0
+# Differences:
+#   - namespace kube-system -> mountpoint-s3-csi
+#   - image placeholder `csi-driver` -> pinned v2.8.0 (upstream does this with a
+#     kustomize `replacements` in deploy/kubernetes/overlays/stable).
+#   - hostPID false -> true. Upstream leaves it off only because kustomize cannot
+#     tell whether the target is OpenShift (awslabs/mountpoint-s3-csi-driver#626).
+#     Mountpoint needs PID visibility, so it is required here.
+#   - EKS_POD_IDENTITY_AGENT_CONTAINER_CREDENTIALS_FULL_URI dropped: EKS Pod
+#     Identity does not exist on Talos.
+#   - `aws-secret` namespace made explicit (same namespace as this DaemonSet).
+#   - the EKS `eks.amazonaws.com/compute-type NotIn [fargate, hybrid]`
+#     nodeAffinity is dropped: no such nodes here, and the DaemonSet already
+#     tolerates every taint so the repo's nuc toleration patch is not needed.
+# No seccompProfile / capabilities.drop here: upstream omits them because
+# s3-plugin is privileged and a RuntimeDefault filter on top of that risks
+# breaking FUSE ioctls. `mountpoint-s3-csi` is Gatekeeper-excluded anyway.
+kind: DaemonSet
+apiVersion: apps/v1
+metadata:
+  name: s3-csi-node
+  namespace: mountpoint-s3-csi
+  labels:
+    app.kubernetes.io/name: aws-mountpoint-s3-csi-driver
+spec:
+  revisionHistoryLimit: 0
+  selector:
+    matchLabels:
+      app: s3-csi-node
+      app.kubernetes.io/name: aws-mountpoint-s3-csi-driver
+  template:
+    metadata:
+      labels:
+        app: s3-csi-node
+        app.kubernetes.io/name: aws-mountpoint-s3-csi-driver
+    spec:
+      nodeSelector:
+        kubernetes.io/os: linux
+      serviceAccountName: s3-csi-driver-sa
+      priorityClassName: system-node-critical
+      # Tolerates every taint, so the nuc (non-uniform-memory) nodes are covered.
+      tolerations:
+        - operator: Exists
+
+      # Required to support Mountpoint semantics which require PID visibility.
+      hostPID: true
+
+      containers:
+        - name: s3-plugin
+          image: public.ecr.aws/mountpoint-s3-csi-driver/aws-mountpoint-s3-csi-driver:v2.8.0
+          securityContext:
+            # `privileged: true` grants all Kernel capabilities, runs as root, etc..
+            # Required for opening FUSE device and creating mounts.
+            # It may be possible to remove this and use the `capabilities` field,
+            # but Kubernetes API validator currently enforces that this is set to `true` for bidirectional mounts.
+            # https://github.com/kubernetes/kubernetes/blob/v1.34.2/pkg/apis/core/validation/validation.go#L1410-L1413
+            privileged: true
+            seLinuxOptions:
+              user: system_u
+              type: super_t
+              role: system_r
+              level: s0
+          imagePullPolicy: IfNotPresent
+          args:
+            - --endpoint=$(CSI_ENDPOINT)
+            - --v=4
+          env:
+            - name: CSI_ENDPOINT
+              value: unix:/var/lib/kubelet/plugins/s3.csi.aws.com/csi.sock
+            - name: CSI_NODE_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: spec.nodeName
+            - name: HOST_PLUGIN_DIR
+              value: /var/lib/kubelet/plugins/s3.csi.aws.com/
+            - name: CONTAINER_KUBELET_PATH
+              value: /var/lib/kubelet
+            - name: HOST_KUBELET_PATH
+              value: /var/lib/kubelet
+            - name: SUPPORT_LEGACY_SYSTEMD_MOUNTS
+              value: "true"
+            - name: MOUNTPOINT_NAMESPACE
+              value: mount-s3
+            - name: INSTALLATION_TYPE
+              value: kustomize
+            # Only credential source available on Talos: EKS Pod Identity, IRSA
+            # and IMDS node profiles are all unavailable. Read once at startup -
+            # see README.md.
+            - name: AWS_ACCESS_KEY_ID
+              valueFrom:
+                secretKeyRef:
+                  name: aws-secret
+                  namespace: mountpoint-s3-csi
+                  key: key_id
+                  optional: true
+            - name: AWS_SECRET_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: aws-secret
+                  namespace: mountpoint-s3-csi
+                  key: access_key
+                  optional: true
+            - name: AWS_SESSION_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: aws-secret
+                  namespace: mountpoint-s3-csi
+                  key: session_token
+                  optional: true
+          volumeMounts:
+            - name: kubelet-dir
+              mountPath: /var/lib/kubelet
+              mountPropagation: Bidirectional
+          ports:
+            - name: healthz
+              containerPort: 9808
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: healthz
+            initialDelaySeconds: 10
+            timeoutSeconds: 3
+            periodSeconds: 2
+            failureThreshold: 5
+          resources:
+            limits:
+              cpu: 200m
+              memory: 256Mi
+            requests:
+              cpu: 10m
+              memory: 40Mi
+        - name: node-driver-registrar
+          image: public.ecr.aws/csi-components/csi-node-driver-registrar:v2.17.0-eksbuild.3
+          imagePullPolicy: IfNotPresent
+          securityContext:
+            readOnlyRootFilesystem: true
+            allowPrivilegeEscalation: false
+          args:
+            - --csi-address=$(ADDRESS)
+            - --kubelet-registration-path=$(DRIVER_REG_SOCK_PATH)
+          env:
+            - name: ADDRESS
+              value: /csi/csi.sock
+            - name: DRIVER_REG_SOCK_PATH
+              value: /var/lib/kubelet/plugins/s3.csi.aws.com/csi.sock
+            - name: KUBE_NODE_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: spec.nodeName
+          livenessProbe:
+            exec:
+              command:
+                - /csi-node-driver-registrar
+                - --kubelet-registration-path=$(DRIVER_REG_SOCK_PATH)
+                - --mode=kubelet-registration-probe
+            initialDelaySeconds: 30
+            timeoutSeconds: 15
+            periodSeconds: 90
+          volumeMounts:
+            - name: plugin-dir
+              mountPath: /csi
+            - name: registration-dir
+              mountPath: /registration
+          resources:
+            limits:
+              cpu: 200m
+              memory: 256Mi
+            requests:
+              cpu: 10m
+              memory: 40Mi
+        - name: liveness-probe
+          image: public.ecr.aws/csi-components/livenessprobe:v2.19.0-eksbuild.3
+          imagePullPolicy: IfNotPresent
+          securityContext:
+            readOnlyRootFilesystem: true
+            allowPrivilegeEscalation: false
+          args:
+            - --csi-address=/csi/csi.sock
+          volumeMounts:
+            - name: plugin-dir
+              mountPath: /csi
+          resources:
+            limits:
+              cpu: 200m
+              memory: 256Mi
+            requests:
+              cpu: 10m
+              memory: 40Mi
+      volumes:
+        - name: kubelet-dir
+          hostPath:
+            path: /var/lib/kubelet
+            type: Directory
+        - name: plugin-dir
+          hostPath:
+            path: /var/lib/kubelet/plugins/s3.csi.aws.com/
+            type: DirectoryOrCreate
+        - name: registration-dir
+          hostPath:
+            path: /var/lib/kubelet/plugins_registry/
+            type: Directory
