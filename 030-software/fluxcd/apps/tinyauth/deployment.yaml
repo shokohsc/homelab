@@ -56,8 +56,8 @@ spec:
               value: "true"
             - name: TINYAUTH_DATABASE_DRIVER
               value: memory
-            - name: TINYAUTH_LABELPROVIDER
-              value: kubernetes
+            # - name: TINYAUTH_LABELPROVIDER
+            #   value: kubernetes
           envFrom:
             - secretRef:
                 name: oidc
