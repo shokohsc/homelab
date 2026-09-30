@@ -6,10 +6,9 @@ resources:
 
   - api/
   - vpn/
-  - poddisruptionbudget.yaml
   # - kubernetesevents/
   # - cmangos/
-  # - email/
+  - email/
 
 images:
   - name: shokohsc/moleculer-sidekick
