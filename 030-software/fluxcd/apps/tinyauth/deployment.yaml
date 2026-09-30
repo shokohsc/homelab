@@ -52,13 +52,10 @@ spec:
           env:
             - name: TINYAUTH_APPURL
               value: "https://tiny.auth.${domain}"
-            - name: SECRET
-              valueFrom:
-                secretKeyRef:
-                  name: tinyauth
-                  key: secret-key
             - name: DISABLE_CONTINUE
               value: "true"
+            - name: TINYAUTH_DATABASE_DRIVER
+              value: memory
           envFrom:
             - secretRef:
                 name: oidc
