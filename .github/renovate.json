@@ -3,6 +3,7 @@
   "dependencyDashboardTitle": "Renovate Dashboard",
   "enabled": true,
   "commitHourlyLimit": 0,
+  "pinDigests": true,
   "prConcurrentLimit": 0,
   "prHourlyLimit": 0,
   "timezone": "Europe/Paris",
