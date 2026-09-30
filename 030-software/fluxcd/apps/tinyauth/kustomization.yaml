@@ -7,4 +7,5 @@ resources:
   - poddisruptionbudget.yaml
   - service.yaml
   - secret.yaml
+  - listener-set.yaml
   - http-route.yaml

@@ -5,10 +5,12 @@ metadata:
   name: tinyauth
 spec:
   hostnames:
-  - tinyauth.${domain}
+  - tiny.auth.${domain}
   parentRefs:
-  - name: cilium
-    namespace: cilium
+  - name: tinyauth
+    kind: ListenerSet
+    group: gateway.networking.k8s.io
+    sectionName: tinyauth
   rules:
   - backendRefs:
     - name: tinyauth

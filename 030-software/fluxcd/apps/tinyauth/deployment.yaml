@@ -51,7 +51,7 @@ spec:
                 - ALL
           env:
             - name: TINYAUTH_APPURL
-              value: "https://tinyauth.${domain}"
+              value: "https://tiny.auth.${domain}"
             - name: SECRET
               valueFrom:
                 secretKeyRef:
