@@ -1,0 +1,88 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tinyauth
+  annotations:
+    secret.reloader.stakater.com/reload: tinyauth,oidc
+spec:
+  revisionHistoryLimit: 0
+  selector:
+    matchLabels:
+      app: tinyauth
+  template:
+    metadata:
+      labels:
+        app: tinyauth
+    spec:
+      automountServiceAccountToken: false
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              podAffinityTerm:
+                topologyKey: "kubernetes.io/hostname"
+                labelSelector:
+                  matchLabels:
+                    app: tinyauth
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        seccompProfile:
+          type: RuntimeDefault
+      topologySpreadConstraints:
+        - maxSkew: 1
+          topologyKey: kubernetes.io/hostname
+          whenUnsatisfiable: ScheduleAnyway
+          labelSelector:
+            matchLabels:
+              app: tinyauth
+      containers:
+        - name: tinyauth
+          image: ghcr.io/steveiliop56/tinyauth:v5
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+            capabilities:
+              drop:
+                - ALL
+          env:
+            - name: TINYAUTH_APPURL
+              value: "https://tiny.auth.${domain}"
+            - name: DISABLE_CONTINUE
+              value: "true"
+            - name: TINYAUTH_DATABASE_DRIVER
+              value: memory
+          envFrom:
+            - secretRef:
+                name: oidc
+          ports:
+            - name: http
+              containerPort: 3000
+              protocol: TCP
+          startupProbe:
+            tcpSocket:
+              port: http
+          livenessProbe:
+            tcpSocket:
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /api/healthcheck
+              port: http
+          resources:
+            requests:
+              cpu: 100m
+            limits:
+              memory: 64Mi
+          volumeMounts:
+            - mountPath: /etc/ssl/certs
+              name: tls
+      volumes:
+        - name: tls
+          configMap:
+            name: homelab-ca-cm
+            defaultMode: 0600

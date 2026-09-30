@@ -1,0 +1,7 @@
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: tinyauth
+  labels:
+    bundle.cert-manager.io/inject-cm: enabled
