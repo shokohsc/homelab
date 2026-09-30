@@ -8,7 +8,7 @@ resources:
   # - blossom
   - browserless
   - bubbles
-  - buzz
+  # - buzz
   # - byparr
   - cert-manager
   - city-roads
@@ -46,7 +46,7 @@ resources:
   # - motrix
   - nats
   - nfs-downloads
-  - nostr-gateway
+  # - nostr-gateway
   - paint
   - pairdrop
   - passed
