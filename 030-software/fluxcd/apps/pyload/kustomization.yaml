@@ -12,3 +12,5 @@ configMapGenerator:
 - name: pyload
   files:
   - ./config/pyload.cfg
+generatorOptions:
+  disableNameSuffixHash: true

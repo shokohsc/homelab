@@ -11,3 +11,5 @@ configMapGenerator:
 - name: config
   files:
   - ./config/agents.json
+generatorOptions:
+  disableNameSuffixHash: true

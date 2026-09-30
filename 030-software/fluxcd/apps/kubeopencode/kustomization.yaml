@@ -15,3 +15,5 @@ configMapGenerator:
 - name: config
   files:
   - ./config/opencode.json
+generatorOptions:
+  disableNameSuffixHash: true
