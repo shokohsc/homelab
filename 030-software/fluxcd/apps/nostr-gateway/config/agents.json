@@ -5,6 +5,8 @@
         "nsec_env": "AGENT_NSEC",
         "allow": [
             "6afa1e3716332156b2a6ee2650526b448d8ae8d68df1146d619153bc44b3f69f"
-        ]
+        ],
+        "model": "opencode/big-pickle",
+        "opencode_agent": "build"
     }
 }
