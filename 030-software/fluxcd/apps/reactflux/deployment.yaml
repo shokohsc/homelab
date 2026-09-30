@@ -76,4 +76,4 @@ spec:
       volumes:
         - name: assets
           image:
-            reference: electh/reactflux:2025-08-19
+            reference: electh/reactflux:2025-09-30
