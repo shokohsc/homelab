@@ -41,7 +41,7 @@ spec:
               app: tinyauth
       containers:
         - name: tinyauth
-          image: ghcr.io/steveiliop56/tinyauth:v5
+          image: ghcr.io/steveiliop56/tinyauth:v5.2.0-distroless
           securityContext:
             allowPrivilegeEscalation: false
             readOnlyRootFilesystem: true
@@ -81,6 +81,8 @@ spec:
             limits:
               memory: 64Mi
           volumeMounts:
+            - mountPath: /tinyauth
+              name: temp
             - mountPath: /etc/ssl/certs
               name: tls
       volumes:
@@ -88,3 +90,5 @@ spec:
           configMap:
             name: homelab-ca-cm
             defaultMode: 0600
+        - name: temp
+          emptyDir: {}
