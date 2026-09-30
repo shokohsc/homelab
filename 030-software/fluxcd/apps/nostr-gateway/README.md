@@ -10,13 +10,17 @@ Source: <https://github.com/shokohsc/nostr-gateway>
 
 ## Image
 
-`ghcr.io/shokohsc/nostr-gateway:9656caf` — the tag upstream CI publishes from
-its main branch (`short=${GITHUB_SHA::7}`), so the reference is immutable. Bump
-it, and this README's verification note, when upstream lands a new merge.
+`ghcr.io/shokohsc/nostr-gateway:1046469` — the tag upstream CI publishes from
+its main branch (`short=${GITHUB_SHA::7}`), so the reference is immutable. It is
+the short SHA of the **merge commit**, so it cannot be guessed from a pull
+request branch. `deployment.yaml` pins the same tag: bump both, plus the
+troubleshooting table under **Verifying after deploy**, when upstream lands a new
+merge.
 
-That tag is the short SHA of the **merge commit**, so it cannot be guessed from a
-pull request branch. The NIP-42 support below is not in `9656caf`; bump to the
-merge SHA of <https://github.com/shokohsc/nostr-gateway/pull/4> once it lands.
+This image has both NIP-42 and the Buzz transport in it. The Buzz fixes in
+<https://github.com/shokohsc/nostr-gateway/pull/6> are *not* in `1046469`; bump to
+that merge SHA once it lands, or keep reading the Buzz log lines below, because
+`buzz: agent is in no channel yet` means two different things in the two images.
 
 ## Topology
 
@@ -74,11 +78,20 @@ The gateway answers the relay's `AUTH` challenge with the agent's own
 still line up:
 
 - `RELAY_URL` in `apps/buzz/deployment.yaml` and `NOSTR_RELAYS` here must be
-  the same URL. NIP-42 requires the `relay` tag of the `AUTH` event to match
-  the relay, and the gateway fills that tag with the URL it dialled. Both are
+  the same URL. NIP-42 requires the `relay` tag of the `AUTH` event to match the
+  relay, and the gateway fills that tag with the URL it dialled. Both are
   `wss://relay.buzz.${domain}`, so they agree.
-- The image must be new enough to have the auth handler. `9656caf` does not;
-  see the note under **Image**.
+- The image must be new enough to have the auth handler. `1046469` has it —
+  the pool answers the challenge with `AGENT_NSEC` and re-sends the request.
+
+`NOSTR_RELAYS` and `BUZZ_RELAYS` are the same URL here. That is deliberate — one
+relay to deploy — but it puts two subscriptions on one connection, and go-nostr
+builds *identical* auth events when two of them answer the same challenge in the
+same second. It keys the `OK` waiters by event id, so one of the two waits out
+its timeout and gives up instead of re-subscribing; the other carries on. Up to
+<https://github.com/shokohsc/nostr-gateway/pull/6> the loser was usually the Buzz
+channel discovery, which reported `buzz: agent is in no channel yet` — a wrong
+answer that cost a full minute of deafness.
 
 ## Verifying after deploy
 
@@ -112,6 +125,22 @@ all, and the two failures are distinguishable:
 | `nostr notice ... "auth-required: authenticate before subscribing"` | the image is too old to answer NIP-42; bump it |
 | `nostr notice ... "auth-required: verification failed"` | authenticated, but the pubkey is not a relay member |
 
+The Buzz side logs its own lines, and they are worth reading in order — being a
+member of the *relay* (the step above) and being in a *channel* are two different
+things, and only the second one makes a mention reach the agent:
+
+| log line | meaning |
+| --- | --- |
+| `msg="buzz channels" ... channels=<uuids>` | discovery worked; this is the healthy line, and a mention in one of those uuids reaches the agent |
+| `buzz: published agent profile` | the agent is now visible as an agent in Buzz (see the note at the end) |
+| `buzz: discovery came back with no member lists` | the channel query returned nothing, so the gateway asks again instead of believing it. Harmless on its own, and in `1046469` the line that follows is the one to read |
+| `buzz: agent is in no channel yet` | the relay *answered*, and no kind-`39002` member list on it names the agent's pubkey. It really is in no channel: add it to one, then reconcile the rosters with `buzz-admin reconcile-channels`. In `1046469` this same line also appears when the NIP-42 handshake above was lost, so read it twice before concluding anything |
+
+A mention that reaches the agent logs nothing of its own — the visible proof is
+the reply, which is a kind-`30078` event to your key and not a message in the
+channel. Channel traffic is inbound only, so no answer ever appears in the Buzz
+UI.
+
 ## Notes
 
 - Conversations live in memory only, and the deployment is `Recreate` with a
@@ -122,7 +151,13 @@ all, and the two failures are distinguishable:
   matching `<NAME>_NSEC` key to the Secret; the ConfigMap has a
   `configmap.reloader.stakater.com/reload` annotation, but a restart is the
   cheap way to be sure.
-- The agent does not show up in the Buzz web client, and that is not a symptom.
-  `buzz-web` builds its Agents view from kind `10100` agent-profile events, and
-  the gateway publishes only kind `30078`. The test for the Nostr side is the
-  log, or any client that lets you send a kind `30078` to the agent's pubkey.
+- The agent appears in Buzz's agent list through a kind-`10100` profile that the
+  gateway publishes for itself. It signs it with `AGENT_NSEC`, which is why no
+  client can do it instead, and only after a channel query has come back — that
+  is what proves NIP-42 passed, because a profile pushed onto an unauthenticated
+  connection is refused. Until the merge SHA from
+  <https://github.com/shokohsc/nostr-gateway/pull/6> is pinned here, the agent is
+  a member of the relay but shows up nowhere in Buzz's agent UI; the log line
+  `buzz: published agent profile` is the confirmation that it worked.
+- The test for the Nostr side is the log, or any client that can send a kind
+  `30078` to the agent's pubkey.
