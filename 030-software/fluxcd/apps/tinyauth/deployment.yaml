@@ -54,8 +54,10 @@ spec:
               value: "https://tiny.auth.${domain}"
             - name: DISABLE_CONTINUE
               value: "true"
-            - name: TINYAUTH_DATABASE_DRIVER
+            - name: TINYAUTH_DATABASEDRIVER
               value: memory
+            - name: TINYAUTH_LABELPROVIDER
+              value: kubernetes
           envFrom:
             - secretRef:
                 name: oidc
