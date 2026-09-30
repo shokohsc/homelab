@@ -3,11 +3,10 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: zipkin
-  labels:
-    app: zipkin
   annotations:
-    configmap.reloader.stakater.com/reload: "config"
+    configmap.reloader.stakater.com/reload: config
 spec:
+  revisionHistoryLimit: 0
   selector:
     matchLabels:
       app: zipkin
@@ -74,7 +73,7 @@ spec:
             requests:
               cpu: 100m
             limits:
-              memory: 256Mi
+              memory: 128Mi
           volumeMounts:
             - name: config
               mountPath: /etc/vector/vector.yaml
