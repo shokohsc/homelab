@@ -4,6 +4,7 @@
         "npub": "2b0b84a37dd43103555d7a2947ae2b47ce6419ab17f357b150ee54fc49ec0c65",
         "nsec_env": "AGENT_NSEC",
         "allow": [
+            "6afa1e3716332156b2a6ee2650526b448d8ae8d68df1146d619153bc44b3f69f",
             "4c72a8e0b1f2cd4d97dd431d2c787a553a518942cdbb7a0dbdc289f9feb5891b"
         ],
         "model": "opencode/big-pickle",
