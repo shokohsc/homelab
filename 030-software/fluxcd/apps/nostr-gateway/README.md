@@ -10,17 +10,17 @@ Source: <https://github.com/shokohsc/nostr-gateway>
 
 ## Image
 
-`ghcr.io/shokohsc/nostr-gateway:1046469` — the tag upstream CI publishes from
+`ghcr.io/shokohsc/nostr-gateway:cfd3a6c` — the tag upstream CI publishes from
 its main branch (`short=${GITHUB_SHA::7}`), so the reference is immutable. It is
 the short SHA of the **merge commit**, so it cannot be guessed from a pull
 request branch. `deployment.yaml` pins the same tag: bump both, plus the
 troubleshooting table under **Verifying after deploy**, when upstream lands a new
 merge.
 
-This image has both NIP-42 and the Buzz transport in it. The Buzz fixes in
-<https://github.com/shokohsc/nostr-gateway/pull/6> are *not* in `1046469`; bump to
-that merge SHA once it lands, or keep reading the Buzz log lines below, because
-`buzz: agent is in no channel yet` means two different things in the two images.
+This image has both NIP-42 and the Buzz transport in it, and it is past
+<https://github.com/shokohsc/nostr-gateway/pull/6>, so the Buzz log lines below
+mean what they say: `buzz: agent is in no channel yet` is only ever a discovery
+result, never a lost NIP-42 handshake.
 
 ## Topology
 
@@ -31,10 +31,13 @@ that merge SHA once it lands, or keep reading the Buzz log lines below, because
 - The gateway itself is ClusterIP only. Nothing is exposed through the
   `cilium` Gateway, on purpose: Nostr is the public ingress and the HTTP API is
   an in-cluster convenience.
-- `allow` in `config/agents.json` gates *Nostr* senders, not HTTP callers. It is
-  matched against the pubkey that signed the event, so an event with a forged
-  `sender` field does not get through. An empty list allows everyone — do not
-  ship that.
+- `allow` in `config/agents.json` gates *Nostr* senders **and Buzz channel
+  senders**; it does not gate HTTP callers. It is matched against the pubkey that
+  signed the event, so an event with a forged `sender` field does not get
+  through. An empty list allows everyone — do not ship that. A Buzz sender who
+  is not on the list is dropped before the relay ever delivers the event, so a
+  stale entry does not degrade, it silences the agent: see **A silent agent** at
+  the end.
 
 ## Setup
 
@@ -52,7 +55,7 @@ valid NIP-42 `AUTH`. Until the agent is a member the subscription is closed with
 The pubkey to enrol is the `npub` in `config/agents.json`:
 
 ```text
-613ff42687c408eb3ef8772ff967b4c1c51ed135cd9dd83fb4ab7379ea1808cc
+2b0b84a37dd43103555d7a2947ae2b47ce6419ab17f357b150ee54fc49ec0c65
 ```
 
 Publish a NIP-43 `RELAY_ADMIN_ADD_MEMBER`: kind `9030`, empty content, a
@@ -65,7 +68,7 @@ no-op when the member already exists, so it is safe to repeat.
 With direct database access instead of a client:
 
 ```sh
-buzz-admin add-member 613ff42687c408eb3ef8772ff967b4c1c51ed135cd9dd83fb4ab7379ea1808cc member
+buzz-admin add-member 2b0b84a37dd43103555d7a2947ae2b47ce6419ab17f357b150ee54fc49ec0c65 member
 ```
 
 Neither path is wired as a manifest in this repository, so it stays a manual
@@ -81,17 +84,17 @@ still line up:
   the same URL. NIP-42 requires the `relay` tag of the `AUTH` event to match the
   relay, and the gateway fills that tag with the URL it dialled. Both are
   `wss://relay.buzz.${domain}`, so they agree.
-- The image must be new enough to have the auth handler. `1046469` has it —
+- The image must be new enough to have the auth handler. `cfd3a6c` has it —
   the pool answers the challenge with `AGENT_NSEC` and re-sends the request.
 
 `NOSTR_RELAYS` and `BUZZ_RELAYS` are the same URL here. That is deliberate — one
-relay to deploy — but it puts two subscriptions on one connection, and go-nostr
-builds *identical* auth events when two of them answer the same challenge in the
-same second. It keys the `OK` waiters by event id, so one of the two waits out
-its timeout and gives up instead of re-subscribing; the other carries on. Up to
-<https://github.com/shokohsc/nostr-gateway/pull/6> the loser was usually the Buzz
-channel discovery, which reported `buzz: agent is in no channel yet` — a wrong
-answer that cost a full minute of deafness.
+relay to deploy — but each agent gets its own pool per role, so the kind-30078
+listener and the Buzz discovery answer a NIP-42 challenge on separate
+connections. Sharing one pool is what made the gateway deaf in
+<https://github.com/shokohsc/nostr-gateway/pull/6>: go-nostr builds *identical*
+auth events when two subscriptions answer the same challenge in the same second
+and keys its `OK` waiters by event id, so the loser waited out its timeout and
+the Buzz discovery came back empty with the member list right there.
 
 ## Verifying after deploy
 
@@ -133,13 +136,45 @@ things, and only the second one makes a mention reach the agent:
 | --- | --- |
 | `msg="buzz channels" ... channels=<uuids>` | discovery worked; this is the healthy line, and a mention in one of those uuids reaches the agent |
 | `buzz: published agent profile` | the agent is now visible as an agent in Buzz (see the note at the end) |
-| `buzz: discovery came back with no member lists` | the channel query returned nothing, so the gateway asks again instead of believing it. Harmless on its own, and in `1046469` the line that follows is the one to read |
-| `buzz: agent is in no channel yet` | the relay *answered*, and no kind-`39002` member list on it names the agent's pubkey. It really is in no channel: add it to one, then reconcile the rosters with `buzz-admin reconcile-channels`. In `1046469` this same line also appears when the NIP-42 handshake above was lost, so read it twice before concluding anything |
+| `buzz: discovery came back with no member lists` | the channel query returned nothing, so the gateway asks again instead of believing it. Harmless on its own — the line that follows is the one to read |
+| `buzz: agent is in no channel yet` | the relay *answered*, and no kind-`39002` member list on it names the agent's pubkey. It really is in no channel: add it to one, then reconcile the rosters with `buzz-admin reconcile-channels` |
 
 A mention that reaches the agent logs nothing of its own — the visible proof is
-the reply, which is a kind-`30078` event to your key and not a message in the
-channel. Channel traffic is inbound only, so no answer ever appears in the Buzz
-UI.
+the answer, which the gateway posts back into the channel as a kind-`9` signed
+with the agent's own key. So a healthy mention shows up in the Buzz UI, and its
+absence is the fault to chase. The Nostr side is the opposite: there the answer
+is a kind-`30078` envelope to your key and never appears in a channel.
+
+Every channel message the gateway *refuses* — not on the allow list, not in a
+channel the agent is in, no `@mention` in a group — is dropped before it becomes
+a prompt, and this image drops it without a word. So the absence of an answer is
+not a fault the log can point at; read the allow list instead.
+
+## A silent agent
+
+An agent that is in a channel, is a relay member, and never answers is almost
+always an `allow` list that no longer matches who is typing. Buzz mints its key
+in the browser and keeps it in local storage, so a new browser, a cleared
+profile or a second device is a *new pubkey*, and an entry written months ago
+names nobody who is in the room now. The gateway drops such a message before it
+is a prompt, so the only symptom is an agent that hears nothing: no error, no
+warning, and on the relay side nothing but a channel that has gone quiet.
+
+Ask the relay who has actually been talking to it. The ingest lines carry only a
+connection id, so the pubkey comes from the NIP-42 handshake that connection
+completed:
+
+```sh
+kubectl -n buzz logs deploy/relay --since=1h \
+  | grep '"NIP-42 auth successful"' \
+  | grep -o '"pubkey":"[0-9a-f]*"' | sort | uniq -c | sort -rn
+```
+
+Everything there except the agent's own `npub` belongs in `allow`. Then:
+
+```sh
+kubectl -n nostr-gateway rollout restart deploy/nostr-gateway
+```
 
 ## Notes
 
@@ -155,9 +190,7 @@ UI.
   gateway publishes for itself. It signs it with `AGENT_NSEC`, which is why no
   client can do it instead, and only after a channel query has come back — that
   is what proves NIP-42 passed, because a profile pushed onto an unauthenticated
-  connection is refused. Until the merge SHA from
-  <https://github.com/shokohsc/nostr-gateway/pull/6> is pinned here, the agent is
-  a member of the relay but shows up nowhere in Buzz's agent UI; the log line
-  `buzz: published agent profile` is the confirmation that it worked.
+  connection is refused. The log line `buzz: published agent profile` is the
+  confirmation that it worked.
 - The test for the Nostr side is the log, or any client that can send a kind
   `30078` to the agent's pubkey.
