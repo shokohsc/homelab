@@ -1,0 +1,23 @@
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: tweetch
+  annotations:
+    dashboard.${domain}/name: tweetch
+    dashboard.${domain}/url: https://tweetch.${domain}
+    dashboard.${domain}/icon: twitch
+spec:
+  hostnames:
+  - tweetch.${domain}
+  parentRefs:
+  - name: cilium
+    namespace: cilium
+  rules:
+  - backendRefs:
+    - name: tweetch
+      port: 80
+    matches:
+    - path:
+        type: PathPrefix
+        value: /

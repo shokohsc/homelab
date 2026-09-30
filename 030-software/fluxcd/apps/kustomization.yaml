@@ -78,6 +78,7 @@ resources:
   - tailscale
   # - thelounge
   - tinyauth
+  - tweetch
   - valkey
   - vaultwarden
   # - victoria-logs
