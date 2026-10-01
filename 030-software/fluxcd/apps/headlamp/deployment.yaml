@@ -49,6 +49,12 @@ spec:
           args:
             - "-in-cluster"
             - "-plugins-dir=/headlamp/plugins"
+          env:
+            - name: HEADLAMP_CONFIG_OIDC_USE_ACCESS_TOKEN
+              value: "true"
+          envFrom:
+            - secretRef:
+                name: oidc
           ports:
             - containerPort: 4466
               name: http

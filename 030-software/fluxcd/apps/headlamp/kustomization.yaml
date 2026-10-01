@@ -7,3 +7,4 @@ resources:
   - service.yaml
   - http-route.yaml
   - rbac.yaml
+  - secret.yaml
