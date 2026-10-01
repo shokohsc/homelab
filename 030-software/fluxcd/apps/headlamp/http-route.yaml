@@ -5,7 +5,7 @@ metadata:
   name: headlamp
   annotations:
     dashboard.${domain}/name: headlamp
-    dashboard.${domain}/url: https://headlamp.${domain}/c/main/pods?namespace=pod-gateway
+    dashboard.${domain}/url: https://headlamp.${domain}/c/main/pods?namespace=vpn-egress-gateway
 spec:
   hostnames:
   - headlamp.${domain}
