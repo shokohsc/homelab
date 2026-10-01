@@ -1,0 +1,45 @@
+## Server ##
+server_name: matrix.${domain}
+public_baseurl: https://matrix.${domain}
+# No log_config: it must be a readable file. Unset logs to stdout via StreamHandler.
+report_stats: false
+enable_metrics: false
+
+## Ports ##
+listeners:
+  - port: 8008
+    tls: false
+    bind_addresses: ["::"]
+    type: http
+    x_forwarded: true
+    resources:
+      - names: [client]
+        compress: true
+      - names: [federation]
+        compress: false
+
+## Database ##
+# ponytail: SQLite, upstream forbids it in production. Switch to the shared
+# CloudNativePG cluster once a sops key can encrypt the database role.
+database:
+  name: sqlite3
+  args:
+    database: /data/homeserver.db
+
+## Files ##
+media_store_path: /data/media
+max_upload_size: 50M
+url_preview_enabled: false
+
+## Registration ##
+# No open registration. Accounts are created with register_new_matrix_user,
+# which authenticates with registration_shared_secret_path only.
+enable_registration: false
+registration_shared_secret_path: /data/registration.shared.secret
+bcrypt_rounds: 12
+allow_guest_access: false
+
+## Signing Keys ##
+signing_key_path: /data/matrix.${domain}.signing.key
+trusted_key_servers:
+  - server_name: matrix.org

@@ -1,0 +1,112 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: synapse
+  labels:
+    app: synapse
+spec:
+  revisionHistoryLimit: 0
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: synapse
+  template:
+    metadata:
+      labels:
+        app: synapse
+    spec:
+      automountServiceAccountToken: false
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 991
+        runAsGroup: 991
+        fsGroup: 991
+        seccompProfile:
+          type: RuntimeDefault
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              podAffinityTerm:
+                topologyKey: kubernetes.io/hostname
+                labelSelector:
+                  matchLabels:
+                    app: synapse
+      topologySpreadConstraints:
+        - maxSkew: 1
+          topologyKey: kubernetes.io/hostname
+          whenUnsatisfiable: ScheduleAnyway
+          labelSelector:
+            matchLabels:
+              app: synapse
+      containers:
+        - name: synapse
+          image: matrixdotorg/synapse:v1.162.0
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+            capabilities:
+              drop:
+                - ALL
+          # start.py refuses to generate a config in run mode, so the image ships
+          # no registration secret: keep it out of git by generating it on the PVC
+          # once. Read it back to create the first account:
+          #   kubectl -n synapse exec deploy/synapse -- cat /data/registration.shared.secret
+          #   kubectl -n synapse exec deploy/synapse -- \
+          #     register_new_matrix_user -c /etc/synapse/homeserver.yaml -u admin -a -t
+          command:
+            - /bin/sh
+            - -c
+            - |
+              [ -s /data/registration.shared.secret ] || head -c 32 /dev/urandom | base64 > /data/registration.shared.secret
+              exec /start.py
+          env:
+            - name: SYNAPSE_CONFIG_PATH
+              value: /etc/synapse/homeserver.yaml
+            - name: TZ
+              value: ${timezone}
+          ports:
+            - name: http
+              containerPort: 8008
+              protocol: TCP
+          volumeMounts:
+            - name: config
+              mountPath: /etc/synapse
+              readOnly: true
+            - name: data
+              mountPath: /data
+            - name: tmp
+              mountPath: /tmp
+          startupProbe:
+            httpGet:
+              path: /health
+              port: http
+            failureThreshold: 60
+            periodSeconds: 5
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: http
+          resources:
+            requests:
+              cpu: 500m
+              memory: 512Mi
+            limits:
+              memory: 2048Mi
+      volumes:
+        - name: config
+          configMap:
+            name: config
+        - name: data
+          persistentVolumeClaim:
+            claimName: data
+        - name: tmp
+          emptyDir: {}

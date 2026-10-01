@@ -1,0 +1,23 @@
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: synapse
+  annotations:
+    dashboard.${domain}/icon: message-circle
+    dashboard.${domain}/name: matrix
+    dashboard.${domain}/url: https://matrix.${domain}
+spec:
+  hostnames:
+  - matrix.${domain}
+  parentRefs:
+  - name: cilium
+    namespace: cilium
+  rules:
+  - backendRefs:
+    - name: synapse
+      port: 80
+    matches:
+    - path:
+        type: PathPrefix
+        value: /

@@ -21,6 +21,7 @@ resources:
   - dashboard
   - deluge
   - descheduler
+  - element-web
   - excalidraw
   - external-dns
   - external-services
@@ -75,6 +76,7 @@ resources:
   - stackedit
   - storm
   - swingmusic
+  - synapse
   - syslog
   - tailscale
   - tempo
