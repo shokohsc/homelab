@@ -2,18 +2,18 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: nfs-proxmox-backups
+  name: backups
   labels:
-    app: nfs-proxmox-backups
+    app: backups
 spec:
   revisionHistoryLimit: 0
   selector:
     matchLabels:
-      app: nfs-proxmox-backups
+      app: backups
   template:
     metadata:
       labels:
-        app: nfs-proxmox-backups
+        app: backups
         policy.gatekeeper.sh/ignore: "true"
     spec:
       automountServiceAccountToken: false
@@ -73,18 +73,18 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: nfs-proxmox-content
+  name: content
   labels:
-    app: nfs-proxmox-content
+    app: content
 spec:
   revisionHistoryLimit: 0
   selector:
     matchLabels:
-      app: nfs-proxmox-content
+      app: content
   template:
     metadata:
       labels:
-        app: nfs-proxmox-content
+        app: content
         policy.gatekeeper.sh/ignore: "true"
     spec:
       automountServiceAccountToken: false
@@ -93,7 +93,7 @@ spec:
           type: RuntimeDefault
       containers:
         - name: nfs-server-alpine
-          image: itsthenetwork/nfs-server-alpine:latest@sha256:7fa99ae65c23c5af87dd4300e543a86b119ed15ba61422444207efc7abd0ba20
+          image: itsthenetwork/nfs-server-alpine:latest@sha256:7fa99ae65c23c5af87dd4300e543a86b119ed15ba61422444207efc7abd0ba20 # Find an alpine image that has nfsdcld
           securityContext:
             privileged: true
           env:

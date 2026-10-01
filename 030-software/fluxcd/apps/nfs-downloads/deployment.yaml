@@ -1,18 +1,20 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: nfs-downloads
+  name: downloads
   labels:
-    app: nfs-downloads
+    app: downloads
 spec:
   revisionHistoryLimit: 0
+  strategy:
+    type: Recreate
   selector:
     matchLabels:
-      app: nfs-downloads
+      app: downloads
   template:
     metadata:
       labels:
-        app: nfs-downloads
+        app: downloads
         policy.gatekeeper.sh/ignore: "true"
     spec:
       automountServiceAccountToken: false
@@ -27,14 +29,14 @@ spec:
                 topologyKey: kubernetes.io/hostname
                 labelSelector:
                   matchLabels:
-                    app: nfs-downloads
+                    app: downloads
       topologySpreadConstraints:
         - maxSkew: 1
           topologyKey: kubernetes.io/hostname
           whenUnsatisfiable: ScheduleAnyway
           labelSelector:
             matchLabels:
-              app: nfs-downloads
+              app: downloads
       containers:
         - name: nfs-server-alpine
           image: itsthenetwork/nfs-server-alpine:latest@sha256:7fa99ae65c23c5af87dd4300e543a86b119ed15ba61422444207efc7abd0ba20 # Find an alpine image that has nfsdcld
