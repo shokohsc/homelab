@@ -179,7 +179,7 @@ spec:
       volumes:
         - name: assets
           image:
-            reference: ghcr.io/shokohsc/radio-ui:sha-1ab71f5
+            reference: ghcr.io/element-hq/element-web:v1.12.30
         - name: config
           configMap:
             name: config
