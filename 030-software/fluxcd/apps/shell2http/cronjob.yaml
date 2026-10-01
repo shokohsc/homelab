@@ -22,7 +22,7 @@ spec:
               type: RuntimeDefault
           containers:
             - name: webhook-trigger
-              image: badouralix/curl-jq:alpine
+              image: badouralix/curl-jq:alpine@sha256:e1f1e84c4c23c24d665cd9243dcf7fa531965a0b37b89a64cabca847d834dd62
               securityContext:
                 allowPrivilegeEscalation: false
                 readOnlyRootFilesystem: true

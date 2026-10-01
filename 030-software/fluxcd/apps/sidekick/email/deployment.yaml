@@ -43,7 +43,7 @@ spec:
               app: api
       containers:
         - name: email
-          image: shokohsc/moleculer-sidekick
+          image: shokohsc/moleculer-sidekick@sha256:23483958fe0a405db03b8629df3a822602142ae174511d66cc11711cd2cb6f8b
           securityContext:
             allowPrivilegeEscalation: false
             readOnlyRootFilesystem: true

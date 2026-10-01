@@ -36,7 +36,7 @@ spec:
               app: vpn-egress-gateway
       containers:
         - name: gateway
-          image: ghcr.io/shokohsc/gateway:3c96fd6
+          image: ghcr.io/shokohsc/gateway:3c96fd6@sha256:3ee97fdca6c6c9fb02297a4f25bd33d2538a0bdb949f19d9b0f9ed7030bafa62
           securityContext:
             privileged: true
           env:
@@ -140,7 +140,7 @@ spec:
               app: vpn-egress-webhook
       containers:
         - name: webhook
-          image: ghcr.io/shokohsc/vpn-egress-gateway:3c96fd6
+          image: ghcr.io/shokohsc/vpn-egress-gateway:3c96fd6@sha256:dbb2edaa25ed8c822f6e1ed68502c90812be524d148b297eebcfba3fd242325b
           securityContext:
             allowPrivilegeEscalation: false
             readOnlyRootFilesystem: true

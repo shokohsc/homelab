@@ -40,7 +40,7 @@ spec:
               app: paint
       containers:
         - name: paint
-          image: busybox:1.38
+          image: busybox:1.38@sha256:fd7dc98638c8e305f4dc34e979f1c0fdfdcaeb0fbf8fcff77ae834b6da3d7e6e
           args: ["busybox", "httpd", "-f", "-v", "-p", "8080"]
           workingDir: /assets
           securityContext:
@@ -76,5 +76,5 @@ spec:
       volumes:
         - name: assets
           image:
-            reference: shokohsc/mini-paint:latest
+            reference: shokohsc/mini-paint:latest@sha256:a87b5c214b917e09929b76e3075053248c09a2f2dc149bc33873b7ce9636efb5
             pullPolicy: Always

@@ -45,7 +45,7 @@ spec:
               app: plex
       containers:
         - name: plex
-          image: plexinc/pms-docker:1.43.4.10903-e5521bd8c
+          image: plexinc/pms-docker:1.43.4.10903-e5521bd8c@sha256:e0ab27395614a8e1a4fdf84c6bc60ac664915cfdde70c52d030c7728a1c48e14
           env:
             - name: ADVERTISE_IP
               value: "http://${vip}:32400,https://plex.${domain}"
@@ -106,7 +106,7 @@ spec:
               memory: 2048Mi
               cpu: 100m
         - name: vector
-          image: timberio/vector:0.58.0-alpine
+          image: timberio/vector:0.58.0-alpine@sha256:5dcf67db0ee378caa87f3395cb9484ebe3e97bb0334d119f2ac33116e00c5773
           securityContext:
             allowPrivilegeEscalation: false
             readOnlyRootFilesystem: true

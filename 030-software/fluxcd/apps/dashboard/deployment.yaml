@@ -39,7 +39,7 @@ spec:
               app: dashboard
       containers:
         - name: dashboard
-          image: busybox:1.38
+          image: busybox:1.38@sha256:fd7dc98638c8e305f4dc34e979f1c0fdfdcaeb0fbf8fcff77ae834b6da3d7e6e
           args: ["busybox", "httpd", "-f", "-v", "-p", "8080"]
           workingDir: /assets
           securityContext:
@@ -74,4 +74,4 @@ spec:
       volumes:
         - name: assets
           image:
-            reference: shokohsc/k8s-ingress-dashboard:f51bda5
+            reference: shokohsc/k8s-ingress-dashboard:f51bda5@sha256:ea9fc6a95b967c377fec49fbd0d75b2db6c854b9165e1c94ca12ee64c262c1d1

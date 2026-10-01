@@ -24,7 +24,7 @@ spec:
       automountServiceAccountToken: false
       containers:
         - name: motrix
-          image: ghcr.io/agalwood/motrix-server:2.0.0-beta.41
+          image: ghcr.io/agalwood/motrix-server:2.0.0-beta.41@sha256:f19ef4cbbae5674f04223980bf9afbf5b1e52dc50abc0e01c9b77f8c0513029b
           securityContext:
             allowPrivilegeEscalation: false
             readOnlyRootFilesystem: true

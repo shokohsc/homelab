@@ -41,7 +41,7 @@ spec:
               app: syslog
       containers:
         - name: syslog
-          image: balabit/syslog-ng:4.12.0
+          image: balabit/syslog-ng:4.12.0@sha256:a64b811e134c2bf73c12f59d5bbc71e38c408a031082110a6bad248d06156af7
           securityContext:
             allowPrivilegeEscalation: false
             readOnlyRootFilesystem: true

@@ -39,7 +39,7 @@ spec:
               app: commander
       containers:
         - name: commander
-          image: ghcr.io/coderaiser/cloudcmd:19.21.1-alpine
+          image: ghcr.io/coderaiser/cloudcmd:19.21.1-alpine@sha256:b4adfd698da67859be4b388880137caf4af5b959e25fee73f70215e89df4fcba
           securityContext:
             allowPrivilegeEscalation: false
             readOnlyRootFilesystem: true

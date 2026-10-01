@@ -41,7 +41,7 @@ spec:
                     app: relay
       containers:
         - name: relay
-          image: ghcr.io/block/buzz:0.2.1
+          image: ghcr.io/block/buzz:0.2.1@sha256:4e31b7c7abb7d00b6f513dc559e58d2b980416f1dc400aa01bcf762cf2989cfc
           securityContext:
             allowPrivilegeEscalation: false
             readOnlyRootFilesystem: true
@@ -208,7 +208,7 @@ spec:
               app: buzz
       containers:
         - name: buzz
-          image: busybox:1.38
+          image: busybox:1.38@sha256:fd7dc98638c8e305f4dc34e979f1c0fdfdcaeb0fbf8fcff77ae834b6da3d7e6e
           args: ["busybox", "httpd", "-f", "-v", "-p", "8080"]
           workingDir: /assets
           securityContext:
@@ -246,7 +246,7 @@ spec:
       volumes:
         - name: assets
           image:
-            reference: shokohsc/buzz:a6766c4-dirty
+            reference: shokohsc/buzz:a6766c4-dirty@sha256:271a4b289287c919dca0d2d7f89debf6f262167ada7ca95799d80f09b3939792
             pullPolicy: Always
         - name: config
           configMap:

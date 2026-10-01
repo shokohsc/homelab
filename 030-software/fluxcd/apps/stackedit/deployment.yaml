@@ -39,7 +39,7 @@ spec:
               app: stackedit
       containers:
         - name: stackedit
-          image: benweet/stackedit:v5.15.4
+          image: benweet/stackedit:v5.15.4@sha256:b1505e5a1a56f8cbe395dd1989aa50dfa3773726c8ae763b69983d523734b0ce
           securityContext:
             allowPrivilegeEscalation: false
             readOnlyRootFilesystem: true

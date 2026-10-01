@@ -40,7 +40,7 @@ spec:
               app: city-roads
       containers:
         - name: city-roads
-          image: busybox:1.38
+          image: busybox:1.38@sha256:fd7dc98638c8e305f4dc34e979f1c0fdfdcaeb0fbf8fcff77ae834b6da3d7e6e
           args: ["busybox", "httpd", "-f", "-v", "-p", "8080"]
           workingDir: /assets
           securityContext:
@@ -79,4 +79,4 @@ spec:
       volumes:
         - name: assets
           image:
-            reference: shokohsc/city-roads:release-20210531100947-17-g84a77a5
+            reference: shokohsc/city-roads:release-20210531100947-17-g84a77a5@sha256:c45845dfeb547d5cfe64f3793cdf606473218ad51196c447a7ad03020042f3de

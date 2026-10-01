@@ -40,7 +40,7 @@ spec:
               app: swingmusic
       containers:
         - name: swingmusic
-          image: ghcr.io/swingmx/swingmusic:v3.0.0
+          image: ghcr.io/swingmx/swingmusic:v3.0.0@sha256:a49155d1809bc6ad09d87d76cc91648c149fc80146b5e10260e70fe1cfa78175
           securityContext:
             allowPrivilegeEscalation: false
             readOnlyRootFilesystem: true

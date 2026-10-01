@@ -36,7 +36,7 @@ spec:
               app: blossom
       containers:
         - name: blossom
-          image: ghcr.io/hzrd149/blossom-server:v6.4
+          image: ghcr.io/hzrd149/blossom-server:v6.4@sha256:32585bc131bcb67cc3e9af463f2e72c778cba58b5c37861f009a865b03132581
           env:
             - name: BLOSSOM_REQUIRE_CONFIG
               value: "1"

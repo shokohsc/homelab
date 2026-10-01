@@ -46,7 +46,7 @@ spec:
               app: maddy
       containers:
         - name: maddy
-          image: foxcpp/maddy:0.9.5
+          image: foxcpp/maddy:0.9.5@sha256:de42151adff6388edb5e4ee88f60334fa1ab85e309485193ecb1c2db20203315
           securityContext:
             allowPrivilegeEscalation: false
             readOnlyRootFilesystem: true
@@ -217,7 +217,7 @@ spec:
               app: caddy
       containers:
         - name: caddy
-          image: caddy:2.11.4-alpine
+          image: caddy:2.11.4-alpine@sha256:6aeddd44c3078b0f9a35206472a11420648a79c184603ef95957d0a20044cb2b
           securityContext:
             allowPrivilegeEscalation: false
             readOnlyRootFilesystem: true

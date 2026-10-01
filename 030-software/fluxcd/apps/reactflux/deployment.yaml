@@ -40,7 +40,7 @@ spec:
               app: reactflux
       containers:
         - name: reactflux
-          image: busybox:1.38
+          image: busybox:1.38@sha256:fd7dc98638c8e305f4dc34e979f1c0fdfdcaeb0fbf8fcff77ae834b6da3d7e6e
           args: ["busybox", "httpd", "-f", "-v", "-p", "8080"]
           workingDir: /assets
           securityContext:
@@ -76,4 +76,4 @@ spec:
       volumes:
         - name: assets
           image:
-            reference: electh/reactflux:2025-09-30
+            reference: electh/reactflux:2025-09-30@sha256:08588d580bc02cf2c84e25497b71310227cd0e3fa54ca24aed6d1c108531eadc

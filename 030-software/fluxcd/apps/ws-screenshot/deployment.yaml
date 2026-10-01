@@ -39,7 +39,7 @@ spec:
               app: ws-screenshot
       containers:
         - name: ws-screenshot
-          image: elestio/ws-screenshot.slim:1.2.0
+          image: elestio/ws-screenshot.slim:1.2.0@sha256:8f9c67415b155b47871a82bca79726ba152d4c5c8716caafe6f3c5f0e98783b9
           securityContext:
             allowPrivilegeEscalation: false
             readOnlyRootFilesystem: true

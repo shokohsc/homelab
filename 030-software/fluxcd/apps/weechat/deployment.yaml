@@ -41,7 +41,7 @@ spec:
               app: weechat
       containers:
         - name: weechat
-          image: weechat/weechat:4.10.1-alpine-slim
+          image: weechat/weechat:4.10.1-alpine-slim@sha256:ffe36e2d0bf3626cb99a1ae358a0987a9b55eb365ef6e6af54478775e4d5cc4f
           securityContext:
             allowPrivilegeEscalation: false
             readOnlyRootFilesystem: true
@@ -89,7 +89,7 @@ spec:
             limits:
               memory: 128Mi
         - name: glowing-bear
-          image: j33r/glowing-bear:latest
+          image: j33r/glowing-bear:latest@sha256:4d538504358593e7c49b57c6cd283f50d5822f235b6af8f3e1ec9ef6b9201713
           imagePullPolicy: Always
           securityContext:
             allowPrivilegeEscalation: false

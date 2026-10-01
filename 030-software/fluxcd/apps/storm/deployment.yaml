@@ -41,7 +41,7 @@ spec:
               app: storm
       containers:
       - name: storm
-        image: ghcr.io/relvacode/storm:v1.3.0
+        image: ghcr.io/relvacode/storm:v1.3.0@sha256:9f50d643af5a83424331a93a212e320407a1a1577f0202e6141f7f5245d2711a
         securityContext:
           allowPrivilegeEscalation: false
           readOnlyRootFilesystem: true

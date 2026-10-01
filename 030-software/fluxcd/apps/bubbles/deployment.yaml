@@ -39,7 +39,7 @@ spec:
               app: bubbles
       containers:
         - name: bubbles
-          image: busybox:1.38
+          image: busybox:1.38@sha256:fd7dc98638c8e305f4dc34e979f1c0fdfdcaeb0fbf8fcff77ae834b6da3d7e6e
           args: ["busybox", "httpd", "-f", "-v", "-p", "8080"]
           workingDir: /assets
           securityContext:
@@ -74,4 +74,4 @@ spec:
       volumes:
         - name: assets
           image:
-            reference: shokohsc/bubbles:bcd850b
+            reference: shokohsc/bubbles:bcd850b@sha256:c46677d199ec58b53dead0010d9f6ff00b0459b17b98114e728aba0085728daf

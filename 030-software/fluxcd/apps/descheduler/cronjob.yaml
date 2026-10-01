@@ -28,7 +28,7 @@ spec:
           restartPolicy: OnFailure
           containers:
             - name: descheduler
-              image: registry.k8s.io/descheduler/descheduler:v0.36.0
+              image: registry.k8s.io/descheduler/descheduler:v0.36.0@sha256:7ca92c0a7b4f1c51d306409da6b832005fcadb224e384795646376726734c6e5
               securityContext:
                 allowPrivilegeEscalation: false
                 readOnlyRootFilesystem: true

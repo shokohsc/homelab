@@ -43,7 +43,7 @@ spec:
               app: grist
       containers:
         - name: grist
-          image: gristlabs/grist:1.7.20
+          image: gristlabs/grist:1.7.20@sha256:c862d4c1ffa2a36009d69b72e7ab319155c3529da7df2de0a4e437e994cfe7f1
           securityContext:
             allowPrivilegeEscalation: false
             readOnlyRootFilesystem: true

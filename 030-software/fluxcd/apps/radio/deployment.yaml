@@ -38,7 +38,7 @@ spec:
               app: radio-server
       containers:
         - name: radio-server
-          image: ghcr.io/shokohsc/radio-server:sha-1ab71f5
+          image: ghcr.io/shokohsc/radio-server:sha-1ab71f5@sha256:da1884be35b80ed2bc7e02a3e1b9fb28c190f6b0b9f159e63d573cef5259e55c
           securityContext:
             allowPrivilegeEscalation: false
             readOnlyRootFilesystem: true
@@ -122,7 +122,7 @@ spec:
               app: radio-ui
       containers:
         - name: radio-ui
-          image: busybox:1.38
+          image: busybox:1.38@sha256:fd7dc98638c8e305f4dc34e979f1c0fdfdcaeb0fbf8fcff77ae834b6da3d7e6e
           args: ["busybox", "httpd", "-f", "-v", "-p", "8080"]
           workingDir: /assets
           securityContext:
@@ -157,4 +157,4 @@ spec:
       volumes:
         - name: assets
           image:
-            reference: ghcr.io/shokohsc/radio-ui:sha-1ab71f5
+            reference: ghcr.io/shokohsc/radio-ui:sha-1ab71f5@sha256:41d5e290a27061821cc5354b048e659d84967892fea11c06f1c177702653a4c1

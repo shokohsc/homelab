@@ -32,7 +32,7 @@ spec:
         fsGroupChangePolicy: OnRootMismatch
       containers:
         - name: squid
-          image: ubuntu/squid:latest
+          image: ubuntu/squid:latest@sha256:6a097f68bae708cedbabd6188d68c7e2e7a38cedd05a176e1cc0ba29e3bbe029
           securityContext:
             allowPrivilegeEscalation: false
             readOnlyRootFilesystem: true
@@ -74,7 +74,7 @@ spec:
             limits:
               memory: 512Mi
         - name: squid-exporter
-          image: boynux/squid-exporter:v1.13.0
+          image: boynux/squid-exporter:v1.13.0@sha256:a955565560feffccdd765da12e046f00f6410404bb9f55a055543602da2e929b
           securityContext:
             allowPrivilegeEscalation: false
             readOnlyRootFilesystem: true
@@ -147,7 +147,7 @@ spec:
         fsGroupChangePolicy: OnRootMismatch
       containers:
         - name: nginx
-          image: nginx:1.31.6-alpine
+          image: nginx:1.31.6-alpine@sha256:df221db836e1754089190208cee7eeda94f233197056426eda74a43ab1abeac2
           securityContext:
             allowPrivilegeEscalation: false
             readOnlyRootFilesystem: true

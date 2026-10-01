@@ -37,7 +37,7 @@ spec:
               app: nfs-downloads
       containers:
         - name: nfs-server-alpine
-          image: itsthenetwork/nfs-server-alpine:latest # Find an alpine image that has nfsdcld
+          image: itsthenetwork/nfs-server-alpine:latest@sha256:7fa99ae65c23c5af87dd4300e543a86b119ed15ba61422444207efc7abd0ba20 # Find an alpine image that has nfsdcld
           securityContext:
             privileged: true
           env:

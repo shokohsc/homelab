@@ -41,7 +41,7 @@ spec:
               app: tinyauth
       containers:
         - name: tinyauth
-          image: ghcr.io/tinyauthapp/tinyauth:v5.2.0-distroless
+          image: ghcr.io/tinyauthapp/tinyauth:v5.2.0-distroless@sha256:aff752a57511f9346109b4d427c132db71dfa480138698e1f42feaf335f7cda9
           securityContext:
             allowPrivilegeEscalation: false
             readOnlyRootFilesystem: true

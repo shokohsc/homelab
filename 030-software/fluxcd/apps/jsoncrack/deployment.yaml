@@ -39,7 +39,7 @@ spec:
               app: jsoncrack
       containers:
         - name: jsoncrack
-          image: shokohsc/jsoncrack:latest
+          image: shokohsc/jsoncrack:latest@sha256:9702af9d7b456946b1de335c633fd8b1f90771437ff878bef6fae693a00b372c
           imagePullPolicy: Always
           securityContext:
             allowPrivilegeEscalation: false

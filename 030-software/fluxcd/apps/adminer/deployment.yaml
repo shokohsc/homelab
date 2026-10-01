@@ -39,7 +39,7 @@ spec:
               app: adminer
       containers:
         - name: adminer
-          image: adminer:6.1.1-standalone
+          image: adminer:6.1.1-standalone@sha256:74f29c416e148b98305e84446a18db7cd2c1038264dec464359d36774ef080ce
           securityContext:
             allowPrivilegeEscalation: false
             readOnlyRootFilesystem: true

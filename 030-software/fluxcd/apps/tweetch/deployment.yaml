@@ -39,7 +39,7 @@ spec:
               app: tweetch
       containers:
         - name: tweetch
-          image: busybox:1.38
+          image: busybox:1.38@sha256:fd7dc98638c8e305f4dc34e979f1c0fdfdcaeb0fbf8fcff77ae834b6da3d7e6e
           args: ["busybox", "httpd", "-f", "-v", "-p", "8080"]
           workingDir: /assets
           securityContext:
@@ -74,4 +74,4 @@ spec:
       volumes:
         - name: assets
           image:
-            reference: shokohsc/tweetch:a6890a4
+            reference: shokohsc/tweetch:a6890a4@sha256:a2edd2becfbca12e594d76ada38a4a0e92c401a6862ef169a329db00d61cbf10

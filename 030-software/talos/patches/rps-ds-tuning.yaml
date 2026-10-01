@@ -16,7 +16,7 @@ spec:
       hostPID: true
       containers:
       - name: tuner
-        image: busybox:latest
+        image: busybox:latest@sha256:fd7dc98638c8e305f4dc34e979f1c0fdfdcaeb0fbf8fcff77ae834b6da3d7e6e
         securityContext:
           privileged: true
         command:

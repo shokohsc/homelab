@@ -42,7 +42,7 @@ spec:
               app: pocket-id
       containers:
         - name: pocket-id
-          image: ghcr.io/pocket-id/pocket-id:v2.16.0
+          image: ghcr.io/pocket-id/pocket-id:v2.16.0@sha256:9366436f3fd21619ed7e5709fa0acac88130f73414ec8ee1caf768fc487111ea
           securityContext:
             allowPrivilegeEscalation: false
             readOnlyRootFilesystem: true

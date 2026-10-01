@@ -41,7 +41,7 @@ spec:
               app: pairdrop
       containers:
         - name: pairdrop
-          image: lscr.io/linuxserver/pairdrop:1.11.2
+          image: lscr.io/linuxserver/pairdrop:1.11.2@sha256:c9fdb5defc4c155bdbd852c6e918064750cdace6ed768e6c61ebbb39d1f80a9f
           # image: busybox:1.38
           # args: ["busybox", "httpd", "-f", "-v", "-p", "8080"]
           # workingDir: /assets

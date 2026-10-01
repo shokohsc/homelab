@@ -43,7 +43,7 @@ spec:
               app: sftpgo
       containers:
         - name: sftpgo
-          image: ghcr.io/drakkan/sftpgo:v2.7.6-distroless-slim
+          image: ghcr.io/drakkan/sftpgo:v2.7.6-distroless-slim@sha256:483f4ff2e6b6c659b7ec5b4beaa11506665fde1a4528cdeb6b4f4b624c0fff6e
           securityContext:
             allowPrivilegeEscalation: false
             readOnlyRootFilesystem: true

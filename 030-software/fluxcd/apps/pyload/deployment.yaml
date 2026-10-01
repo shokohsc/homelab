@@ -44,7 +44,7 @@ spec:
               app: pyload
       containers:
         - name: pyload
-          image: ghcr.io/home-operations/pyload-ng:0.5.0
+          image: ghcr.io/home-operations/pyload-ng:0.5.0@sha256:9733ba6e8489dbb7a3ba91547cfa440ce5bbf33e6a6c30d1b5ccccc714a61d04
           securityContext:
             allowPrivilegeEscalation: false
             readOnlyRootFilesystem: true

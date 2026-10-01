@@ -40,7 +40,7 @@ spec:
               app: shell2http
       containers:
         - name: shell2http
-          image: msoap/shell2http:1.17.0
+          image: msoap/shell2http:1.17.0@sha256:9d6e15c6e91660bdc535966ae5b727ac53ce4d2ab16710a636e7b17def4d5676
           securityContext:
             allowPrivilegeEscalation: false
             capabilities:

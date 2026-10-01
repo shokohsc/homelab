@@ -40,7 +40,7 @@ spec:
               app: comics
       containers:
         - name: comics
-          image: busybox:1.38
+          image: busybox:1.38@sha256:fd7dc98638c8e305f4dc34e979f1c0fdfdcaeb0fbf8fcff77ae834b6da3d7e6e
           args: ["busybox", "httpd", "-f", "-v", "-p", "8080"]
           workingDir: /assets
           securityContext:
@@ -75,4 +75,4 @@ spec:
       volumes:
         - name: assets
           image:
-            reference: shokohsc/ouistity:d282bb5
+            reference: shokohsc/ouistity:d282bb5@sha256:c41e4ac8eb15c7d527546343c3cb53138359902a6e6240eb979d707af200e350

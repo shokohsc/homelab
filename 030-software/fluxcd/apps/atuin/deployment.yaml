@@ -41,7 +41,7 @@ spec:
               app: atuin
       containers:
         - name: atuin
-          image: ghcr.io/atuinsh/atuin:18.23.0
+          image: ghcr.io/atuinsh/atuin:18.23.0@sha256:f232feeead54a0a13132b9cd477e312c3380e9dc90f1db24c4f79ce6c8e034ea
           securityContext:
             allowPrivilegeEscalation: false
             readOnlyRootFilesystem: true

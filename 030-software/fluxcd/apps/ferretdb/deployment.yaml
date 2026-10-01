@@ -23,7 +23,7 @@ spec:
           type: RuntimeDefault
       containers:
         - name: ferretdb
-          image: ghcr.io/ferretdb/ferretdb:2.7.0
+          image: ghcr.io/ferretdb/ferretdb:2.7.0@sha256:5706414241eb84f0515512c37b46db0f1b1eac9e5ceb7e4c2523211c184b1985
           securityContext:
             allowPrivilegeEscalation: false
             readOnlyRootFilesystem: true
