@@ -1,0 +1,11 @@
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: headlamp
+spec:
+  ports:
+    - port: 80
+      targetPort: http
+  selector:
+    app: headlamp

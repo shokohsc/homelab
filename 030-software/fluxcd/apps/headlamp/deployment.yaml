@@ -1,21 +1,18 @@
 ---
-apiVersion: apps/v1
 kind: Deployment
+apiVersion: apps/v1
 metadata:
-  name: grist
+  name: headlamp
 spec:
   revisionHistoryLimit: 0
-  strategy:
-    type: Recreate
   selector:
     matchLabels:
-      app: grist
+      app: headlamp
   template:
     metadata:
       labels:
-        app: grist
+        app: headlamp
     spec:
-      automountServiceAccountToken: false
       securityContext:
         runAsNonRoot: true
         runAsUser: 1000
@@ -40,8 +37,8 @@ spec:
             matchLabels:
               app: grist
       containers:
-        - name: grist
-          image: gristlabs/grist:1.7.20
+        - name: headlamp
+          image: ghcr.io/headlamp-k8s/headlamp:v0.45.0
           securityContext:
             allowPrivilegeEscalation: false
             readOnlyRootFilesystem: true
@@ -49,13 +46,12 @@ spec:
             capabilities:
               drop:
                 - ALL
-          env:
-            - name: GRIST_IN_SERVICE
-              value: "true"
+          args:
+            - "-in-cluster"
+            - "-plugins-dir=/headlamp/plugins"
           ports:
-            - name: http
-              containerPort: 8484
-              protocol: TCP
+            - containerPort: 4466
+              name: http
           startupProbe:
             tcpSocket:
               port: http
@@ -66,15 +62,8 @@ spec:
             httpGet:
               path: /
               port: http
-          volumeMounts:
-            - name: data
-              mountPath: /persist
           resources:
             requests:
-              cpu: 200m
+              cpu: 100m
             limits:
-              memory: 256Mi
-      volumes:
-        - name: data
-          persistentVolumeClaim:
-            claimName: grist
+              memory: 64Mi

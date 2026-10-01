@@ -29,6 +29,7 @@ resources:
   - gatekeeper
   - grafana
   - grist
+  - headlamp
   - iptvnator
   - jsoncrack
   - loki
