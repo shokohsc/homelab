@@ -9,7 +9,7 @@ metadata:
     dashboard.${domain}/url: https://matrix.${domain}
 spec:
   hostnames:
-  - ematrixlement.${domain}
+  - matrix.${domain}
   parentRefs:
   - name: cilium
     namespace: cilium
