@@ -1,0 +1,54 @@
+---
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: HelmRepository
+metadata:
+  name: grafana-community
+spec:
+  interval: ${interval}
+  url: https://grafana-community.github.io/helm-charts
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: tempo
+spec:
+  interval: ${interval}
+  chart:
+    spec:
+      chart: tempo
+      version: 3.1.0
+      sourceRef:
+        kind: HelmRepository
+        name: grafana-community
+  values:
+    tempo:
+      receivers:
+        otlp:
+          protocols:
+            grpc:
+              endpoint: 0.0.0.0:4317
+        zipkin:
+
+      securityContext:
+        allowPrivilegeEscalation: false
+        readOnlyRootFilesystem: true
+        runAsNonRoot: true
+        capabilities:
+          drop:
+            - ALL
+
+      resources:
+        requests:
+          cpu: 100m
+        limits:
+          memory: 64Mi
+
+    securityContext:
+      fsGroup: 10001
+      runAsNonRoot: true
+      runAsUser: 10001
+      runAsGroup: 10001
+
+    persistence:
+      enabled: true
+      size: 100Mi

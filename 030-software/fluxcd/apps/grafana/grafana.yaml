@@ -141,10 +141,10 @@ spec:
             #   httpHeaderName1: 'X-Scope-OrgID'
             # secureJsonData:
             #   httpHeaderValue1: '1'
-          # - name: Tempo
-          #   type: tempo
-          #   access: proxy
-          #   url: http://tempo.tempo:3200
+          - name: Tempo
+            type: tempo
+            access: proxy
+            url: http://tempo.tempo.svc.cluster.local:3200
           # - name: mattermost-postgres
           #   type: postgres
           #   access: proxy

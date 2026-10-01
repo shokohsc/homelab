@@ -77,6 +77,7 @@ resources:
   - swingmusic
   - syslog
   - tailscale
+  - tempo
   # - thelounge
   - tinyauth
   - tweetch
