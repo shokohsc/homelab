@@ -11,8 +11,8 @@ spec:
     namespace: cilium
   rules:
   - backendRefs:
-    - name: squid
-      port: 3128
+    - name: nginx
+      port: 80
     matches:
     - path:
         type: PathPrefix

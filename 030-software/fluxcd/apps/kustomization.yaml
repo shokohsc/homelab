@@ -72,7 +72,7 @@ resources:
   - shell2http
   - sidekick
   - sonarr
-  # - squid
+  - squid
   - stackedit
   - storm
   - swingmusic

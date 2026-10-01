@@ -30,6 +30,22 @@ spec:
         seccompProfile:
           type: RuntimeDefault
         fsGroupChangePolicy: OnRootMismatch
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              podAffinityTerm:
+                topologyKey: "kubernetes.io/hostname"
+                labelSelector:
+                  matchLabels:
+                    app: squid
+      topologySpreadConstraints:
+        - maxSkew: 1
+          topologyKey: kubernetes.io/hostname
+          whenUnsatisfiable: ScheduleAnyway
+          labelSelector:
+            matchLabels:
+              app: squid
       containers:
         - name: squid
           image: ubuntu/squid:latest@sha256:6a097f68bae708cedbabd6188d68c7e2e7a38cedd05a176e1cc0ba29e3bbe029
@@ -60,8 +76,6 @@ spec:
           volumeMounts:
             - name: data
               mountPath: /var/spool/squid
-            - name: logs
-              mountPath: /var/log/squid
             - name: config
               mountPath: /etc/squid/squid.conf
               subPath: squid.conf
@@ -106,14 +120,11 @@ spec:
             requests:
               cpu: 100m
             limits:
-              memory: 2048Mi
+              memory: 128Mi
       volumes:
         - name: data
           persistentVolumeClaim:
             claimName: squid
-        - name: logs
-          persistentVolumeClaim:
-            claimName: logs
         - name: config
           configMap:
             name: config
@@ -166,6 +177,10 @@ spec:
             - name: config
               mountPath: /static/proxy.pac
               subPath: proxy.pac
+            - name: run
+              mountPath: /var/run
+            - name: cache
+              mountPath: /var/cache/nginx
           livenessProbe:
             tcpSocket:
               port: http
@@ -185,3 +200,7 @@ spec:
           configMap:
             name: config
             defaultMode: 0644
+        - name: run
+          emptyDir: {}
+        - name: cache
+          emptyDir: {}
