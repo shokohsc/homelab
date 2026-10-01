@@ -1,0 +1,30 @@
+receivers:
+  otlp:
+    protocols:
+      grpc:
+        endpoint: "${env:MY_POD_IP}:4317"
+
+processors:
+
+extensions:
+  health_check:
+      endpoint: ${env:MY_POD_IP}:13133
+
+exporters:
+  zipkin:
+    endpoint: http://zipkin.zipkin.svc.cluster.local:9411/api/v2/spans
+  prometheus:
+    endpoint: ${env:MY_POD_IP}:8889
+    namespace: opentelemetry
+
+service:
+  extensions: [health_check]
+  pipelines:
+    traces:
+      receivers: [otlp]
+      processors: []
+      exporters: [zipkin]
+    metrics:
+      receivers: [otlp]
+      processors: []
+      exporters: [prometheus]

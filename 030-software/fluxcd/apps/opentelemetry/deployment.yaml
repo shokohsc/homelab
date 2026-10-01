@@ -1,0 +1,91 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: opentelemetry
+spec:
+  revisionHistoryLimit: 0
+  selector:
+    matchLabels:
+      app: opentelemetry
+  template:
+    metadata:
+      labels:
+        app: opentelemetry
+      annotations:
+        prometheus.io/path: "/metrics"
+        prometheus.io/port: "8889"
+        prometheus.io/scrape: "true"
+    spec:
+      automountServiceAccountToken: false
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        seccompProfile:
+          type: RuntimeDefault
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              podAffinityTerm:
+                topologyKey: kubernetes.io/hostname
+                labelSelector:
+                  matchLabels:
+                    app: opentelemetry
+      topologySpreadConstraints:
+        - maxSkew: 1
+          topologyKey: kubernetes.io/hostname
+          whenUnsatisfiable: ScheduleAnyway
+          labelSelector:
+            matchLabels:
+              app: opentelemetry
+      containers:
+        - name: opentelemetry
+          image: otel/opentelemetry-collector:0.160.0
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+            capabilities:
+              drop:
+                - ALL
+          args:
+            - "--config=/conf/otel-collector-config.yaml"
+          ports:
+            - name: grpc
+              containerPort: 4317
+              protocol: TCP
+            - name: metrics
+              containerPort: 8889
+              protocol: TCP
+            - name: health
+              containerPort: 13133
+              protocol: TCP
+          startupProbe:
+            tcpSocket:
+              port: health
+          livenessProbe:
+            tcpSocket:
+              port: health
+          readinessProbe:
+            httpGet:
+              path: /
+              port: health
+          resources:
+            limits:
+              cpu: 1000m
+              memory: 2Gi
+            requests:
+              cpu: 200m
+              memory: 400Mi
+          volumeMounts:
+            - name: config
+              mountPath: /conf/otel-collector-config.yaml
+              subPath: otel-collector-config.yaml
+      volumes:
+        - name: config
+          configMap:
+            name: config
+            defaultMode: 0644

@@ -47,6 +47,7 @@ resources:
   - nats
   - nfs-downloads
   - nostr-gateway
+  - opentelemetry
   - paint
   - pairdrop
   - passed
