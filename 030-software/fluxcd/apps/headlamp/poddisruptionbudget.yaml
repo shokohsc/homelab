@@ -2,9 +2,9 @@
 apiVersion: policy/v1
 kind: PodDisruptionBudget
 metadata:
-  name: element-web
+  name: headlamp
 spec:
   minAvailable: 1
   selector:
     matchLabels:
-      app: element-web
+      app: headlamp
