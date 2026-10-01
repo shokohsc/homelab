@@ -173,6 +173,7 @@ spec:
           volumeMounts:
             - name: assets
               mountPath: /assets
+              subPath: app
             - name: config
               mountPath: /assets/config.json
               subPath: config.json
