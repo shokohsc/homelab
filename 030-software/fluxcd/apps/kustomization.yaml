@@ -43,6 +43,7 @@ resources:
   - kube-system
   - kubeopencode
   - maddy
+  - matrix
   - metrics-server
   - miniflux
   # - motrix

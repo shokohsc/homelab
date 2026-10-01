@@ -1,0 +1,63 @@
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: matrix
+  annotations:
+    dashboard.${domain}/icon: slack
+    dashboard.${domain}/name: matrix
+    dashboard.${domain}/url: https://matrix.${domain}
+spec:
+  hostnames:
+  - ematrixlement.${domain}
+  parentRefs:
+  - name: cilium
+    namespace: cilium
+  rules:
+  - backendRefs:
+    - name: element-web
+      port: 80
+    matches:
+    - path:
+        type: PathPrefix
+        value: /
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: synapse
+spec:
+  hostnames:
+  - synapse.matrix.${domain}
+  parentRefs:
+  - name: matrix
+    kind: ListenerSet
+    group: gateway.networking.k8s.io
+    sectionName: synapse
+  rules:
+  - backendRefs:
+    - name: synapse
+      port: 80
+    matches:
+    - path:
+        type: PathPrefix
+        value: /
+    filters:
+    - cors:
+        allowOrigins:
+        - https://matrix.${domain}
+        allowMethods:
+        - GET
+        - OPTIONS
+        allowHeaders:
+        - DNT
+        - X-CustomHeader
+        - Keep-Alive
+        - User-Agent
+        - X-Requested-With
+        - If-Modified-Since
+        - Cache-Control
+        - Content-Type
+        allowCredentials: false
+        maxAge: 3600
+      type: CORS

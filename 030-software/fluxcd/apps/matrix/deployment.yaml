@@ -1,0 +1,186 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: synapse
+spec:
+  revisionHistoryLimit: 0
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: synapse
+  template:
+    metadata:
+      labels:
+        app: synapse
+    spec:
+      automountServiceAccountToken: false
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        seccompProfile:
+          type: RuntimeDefault
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              podAffinityTerm:
+                topologyKey: kubernetes.io/hostname
+                labelSelector:
+                  matchLabels:
+                    app: synapse
+      topologySpreadConstraints:
+        - maxSkew: 1
+          topologyKey: kubernetes.io/hostname
+          whenUnsatisfiable: ScheduleAnyway
+          labelSelector:
+            matchLabels:
+              app: synapse
+      containers:
+        - name: synapse
+          image: matrixdotorg/synapse:v1.162.0
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+            capabilities:
+              drop:
+                - ALL
+          env:
+            - name: SYNAPSE_CONFIG_PATH
+              value: /etc/synapse/config.yaml
+            - name: TZ
+              value: ${timezone}
+          ports:
+            - name: http
+              containerPort: 8008
+              protocol: TCP
+          volumeMounts:
+            - name: config
+              mountPath: /etc/synapse
+              subPath: config.yaml
+              readOnly: true
+            - name: config
+              mountPath: /data/registration.shared.secret
+              subPath: registration.shared.secret
+              readOnly: true
+            - name: data
+              mountPath: /data
+            - name: tmp
+              mountPath: /tmp
+          startupProbe:
+            httpGet:
+              path: /health
+              port: http
+            failureThreshold: 60
+            periodSeconds: 5
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: http
+          resources:
+            requests:
+              cpu: 500m
+              memory: 512Mi
+            limits:
+              memory: 2048Mi
+      volumes:
+        - name: config
+          secret:
+            secretName: synapse
+        - name: data
+          persistentVolumeClaim:
+            claimName: data
+        - name: tmp
+          emptyDir: {}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: element-web
+spec:
+  revisionHistoryLimit: 0
+  selector:
+    matchLabels:
+      app: element-web
+  template:
+    metadata:
+      labels:
+        app: element-web
+    spec:
+      automountServiceAccountToken: false
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        seccompProfile:
+          type: RuntimeDefault
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              podAffinityTerm:
+                topologyKey: kubernetes.io/hostname
+                labelSelector:
+                  matchLabels:
+                    app: element-web
+      topologySpreadConstraints:
+        - maxSkew: 1
+          topologyKey: kubernetes.io/hostname
+          whenUnsatisfiable: ScheduleAnyway
+          labelSelector:
+            matchLabels:
+              app: element-web
+      containers:
+        - name: element-web
+          image: busybox:1.38
+          args: ["busybox", "httpd", "-f", "-v", "-p", "8080"]
+          workingDir: /assets
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+            capabilities:
+              drop:
+                - ALL
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+          startupProbe:
+            tcpSocket:
+              port: http
+          livenessProbe:
+            tcpSocket:
+              port: http
+          readinessProbe:
+            httpGet:
+              port: http
+              path: /
+          resources:
+            requests:
+              cpu: 100m
+            limits:
+              memory: 64Mi
+          volumeMounts:
+            - name: assets
+              mountPath: /assets
+            - name: config
+              mountPath: /assets/config.json
+              subPath: config.json
+              readOnly: true
+      volumes:
+        - name: assets
+          image:
+            reference: ghcr.io/shokohsc/radio-ui:sha-1ab71f5
+        - name: config
+          configMap:
+            name: config
