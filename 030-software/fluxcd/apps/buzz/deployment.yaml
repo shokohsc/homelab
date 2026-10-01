@@ -50,6 +50,8 @@ spec:
               drop:
                 - ALL
           env:
+            - name: RUST_LOG
+              value: debug
             - name: BUZZ_BIND_ADDR
               value: 0.0.0.0:3000
             - name: BUZZ_HEALTH_PORT

@@ -46,7 +46,7 @@ spec:
               app: nostr-gateway
       containers:
         - name: nostr-gateway
-          image: ghcr.io/shokohsc/nostr-gateway:a8fe334
+          image: ghcr.io/shokohsc/nostr-gateway:ce75829
           securityContext:
             allowPrivilegeEscalation: false
             readOnlyRootFilesystem: true
