@@ -50,8 +50,6 @@ spec:
               drop:
                 - ALL
           env:
-            - name: RUST_LOG
-              value: debug
             - name: BUZZ_BIND_ADDR
               value: 0.0.0.0:3000
             - name: BUZZ_HEALTH_PORT
@@ -81,7 +79,7 @@ spec:
             - name: BUZZ_PUSH_ENABLED
               value: "false"
             - name: RUST_LOG
-              value: buzz_relay=info,buzz_db=info,buzz_auth=info,buzz_pubsub=info,tower_http=info
+              value: buzz_relay=debug,buzz_db=info,buzz_auth=info,buzz_pubsub=info,tower_http=info
             - name: BUZZ_GIT_REPO_PATH
               value: /data/git
             - name: POSTGRES_PASSWORD
