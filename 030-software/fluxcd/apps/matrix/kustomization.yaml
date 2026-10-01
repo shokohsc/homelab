@@ -8,6 +8,7 @@ resources:
   - service.yaml
   - http-route.yaml
   - listener-set.yaml
+  - secret.yaml
   - pvc.yaml
 configMapGenerator:
   - name: config
