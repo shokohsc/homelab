@@ -76,5 +76,5 @@ spec:
       volumes:
         - name: assets
           image:
-            reference: shokohsc/mini-paint:latest
+            reference: shokohsc/mini-paint:latest@sha256:a87b5c214b917e09929b76e3075053248c09a2f2dc149bc33873b7ce9636efb5
             pullPolicy: Always

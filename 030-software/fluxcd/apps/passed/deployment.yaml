@@ -39,7 +39,7 @@ spec:
               app: passed
       containers:
         - name: passed
-          image: shokohsc/passed:latest
+          image: shokohsc/passed:latest@sha256:de8aa6b92ff53851f76b62909ff7e2743837fd373bfcba8e58be9840b7c00f61
           imagePullPolicy: Always
           securityContext:
             allowPrivilegeEscalation: false

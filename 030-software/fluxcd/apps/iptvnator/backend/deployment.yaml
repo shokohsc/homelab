@@ -39,7 +39,7 @@ spec:
               app: iptvnator-backend
       containers:
         - name: iptvnator-backend
-          image: 4gray/iptvnator-backend:latest
+          image: 4gray/iptvnator-backend:latest@sha256:c9bec994219ba85583e4c0fcbb6cf69a832ee460ade1b9aa613c0fd60c3a60f1
           imagePullPolicy: Always
           securityContext:
             allowPrivilegeEscalation: false

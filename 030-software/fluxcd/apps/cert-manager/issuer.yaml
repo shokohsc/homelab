@@ -27,9 +27,11 @@ spec:
         matchLabels:
           challenge: http01
       http01:
-        ingress:
-          serviceType: ClusterIP
-          class: nginx
+        gatewayHTTPRoute:
+          parentRefs:
+            - name: cilium
+              namespace: cilium
+              kind: Gateway
     - selector:
         matchLabels:
           challenge: dns01
@@ -54,9 +56,11 @@ spec:
         matchLabels:
           challenge: http01
       http01:
-        ingress:
-          serviceType: ClusterIP
-          class: nginx
+        gatewayHTTPRoute:
+          parentRefs:
+            - name: cilium
+              namespace: cilium
+              kind: Gateway
     - selector:
         matchLabels:
           challenge: dns01

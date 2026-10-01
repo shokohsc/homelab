@@ -76,7 +76,7 @@ spec:
     excludedNamespaces: ["kube-system"]
   parameters:
     exemptImages:
-    - "itsthenetwork/nfs-server-alpine:latest"
+    - "itsthenetwork/nfs-server-alpine:latest@sha256:7fa99ae65c23c5af87dd4300e543a86b119ed15ba61422444207efc7abd0ba20"
     - "ghcr.io/shokohsc/gateway:*"
 ---
 apiVersion: constraints.gatekeeper.sh/v1beta1
@@ -98,7 +98,7 @@ spec:
         values: ["true"]
   parameters:
     exemptImages:
-    - "itsthenetwork/nfs-server-alpine:latest"
+    - "itsthenetwork/nfs-server-alpine:latest@sha256:7fa99ae65c23c5af87dd4300e543a86b119ed15ba61422444207efc7abd0ba20"
     - "ghcr.io/shokohsc/gateway:*"
 ---
 apiVersion: constraints.gatekeeper.sh/v1beta1
