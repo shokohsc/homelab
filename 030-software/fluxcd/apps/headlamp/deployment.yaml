@@ -74,9 +74,14 @@ spec:
             limits:
               memory: 64Mi
           volumeMounts:
-            - name: temp
-              mountPath: /tmp
+            - mountPath: /tmp
+              name: temp
+            - mountPath: /etc/ssl/certs
+              name: tls
       volumes:
+        - name: tls
+          configMap:
+            name: homelab-ca-cm
+            defaultMode: 0600
         - name: temp
           emptyDir: {}
-
