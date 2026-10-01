@@ -7,4 +7,4 @@ spec:
   minAvailable: 1
   selector:
     matchLabels:
-      app.kubernetes.io/name: http-echo
+      app: http-echo
