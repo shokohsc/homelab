@@ -53,6 +53,11 @@ spec:
                 - ALL
           args:
             - "--config=/conf/otel-collector-config.yaml"
+          env:
+            - name: MY_POD_IP
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.podIP
           ports:
             - name: grpc
               containerPort: 4317
