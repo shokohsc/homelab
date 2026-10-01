@@ -60,7 +60,7 @@ spec:
               protocol: TCP
           volumeMounts:
             - name: config
-              mountPath: /etc/synapse
+              mountPath: /etc/synapse/config.yaml
               subPath: config.yaml
               readOnly: true
             - name: config
@@ -176,7 +176,6 @@ spec:
             - name: config
               mountPath: /assets/config.json
               subPath: config.json
-              readOnly: true
       volumes:
         - name: assets
           image:
@@ -184,3 +183,4 @@ spec:
         - name: config
           configMap:
             name: config
+            defaultMode: 0644
