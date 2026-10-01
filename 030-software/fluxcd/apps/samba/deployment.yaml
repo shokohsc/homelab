@@ -113,4 +113,4 @@ spec:
         - name: nfs-downloads
           nfs:
             path: /
-            server: 10.102.22.211
+            server: 10.99.242.42

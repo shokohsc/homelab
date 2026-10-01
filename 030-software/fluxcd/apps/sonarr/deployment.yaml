@@ -109,5 +109,5 @@ spec:
             path: /tvshows
         - name: downloads
           nfs:
-            server: 10.102.22.211
+            server: 10.99.242.42
             path: /
