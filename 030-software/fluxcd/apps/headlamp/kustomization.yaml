@@ -7,4 +7,5 @@ resources:
   - service.yaml
   - http-route.yaml
   - rbac.yaml
+  - poddisruptionbudget.yaml
   - secret.yaml
