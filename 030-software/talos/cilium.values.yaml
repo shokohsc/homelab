@@ -22,8 +22,9 @@ envoy:
 resources:
   requests:
     cpu: 100m
+    memory: 64Mi
   limits:
-    memory: 256Mi
+    memory: 1024Mi
 
 ipam:
   mode: kubernetes
@@ -100,7 +101,7 @@ hubble:
         requests:
           cpu: 100m
         limits:
-          memory: 128Mi
+          memory: 256Mi
     frontend:
       resources:
         requests:
