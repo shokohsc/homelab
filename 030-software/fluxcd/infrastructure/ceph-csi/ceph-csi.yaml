@@ -28,6 +28,8 @@ spec:
           - 10.42.30.10:6789
           - 10.42.30.20:6789
           - 10.42.30.30:6789
+    commonLabels:
+      policy.gatekeeper.sh/ignore: "true"
     storageClass:
       annotations:
         storageclass.kubernetes.io/is-default-class: "true"
