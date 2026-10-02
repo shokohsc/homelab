@@ -1,0 +1,77 @@
+---
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: postal
+spec:
+  revisionHistoryLimit: 0
+  selector:
+    matchLabels:
+      app: postal
+  template:
+    metadata:
+      labels:
+        app: postal
+        policy.gatekeeper.sh/ignore-psp-volume-types: "true"
+    spec:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        seccompProfile:
+          type: RuntimeDefault
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              podAffinityTerm:
+                topologyKey: kubernetes.io/hostname
+                labelSelector:
+                  matchLabels:
+                    app: postal
+      topologySpreadConstraints:
+        - maxSkew: 1
+          topologyKey: kubernetes.io/hostname
+          whenUnsatisfiable: ScheduleAnyway
+          labelSelector:
+            matchLabels:
+              app: postal
+      containers:
+        - name: postal
+          image: busybox:1.38
+          args: ["busybox", "httpd", "-f", "-v", "-p", "8080"]
+          workingDir: /assets
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+            capabilities:
+              drop:
+                - ALL
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+          startupProbe:
+            tcpSocket:
+              port: http
+          livenessProbe:
+            tcpSocket:
+              port: http
+          readinessProbe:
+            httpGet:
+              port: http
+              path: /
+          resources:
+            requests:
+              cpu: 100m
+            limits:
+              memory: 64Mi
+          volumeMounts:
+            - name: assets
+              mountPath: /assets
+      volumes:
+        - name: assets
+          image:
+            reference: shokohsc/postal:795ad9d
