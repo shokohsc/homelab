@@ -4,7 +4,6 @@ namespace: blossom
 resources:
   - namespace.yaml
   - deployment.yaml
-  - poddisruptionbudget.yaml
   - service.yaml
   - http-route.yaml
   - secret.yaml
