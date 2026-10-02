@@ -55,6 +55,8 @@ spec:
               drop:
                 - ALL
           env:
+            - name: AGENTS_FILE
+              value: /etc/nostr-gateway/agents.json
             - name: RELAYS
               value: "wss://relay.buzz.${domain}"
             - name: LOG_LEVEL
