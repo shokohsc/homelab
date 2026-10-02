@@ -1,0 +1,23 @@
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: kubeshark
+  annotations:
+    dashboard.${domain}/name: kubeshark
+    dashboard.${domain}/url: https://kubeshark.${domain}
+    dashboard.${domain}/icon: bucket
+spec:
+  hostnames:
+  - kubeshark.${domain}
+  parentRefs:
+  - name: cilium
+    namespace: cilium
+  rules:
+  - backendRefs:
+    - name: kubeshark-svc
+      port: 9001
+    matches:
+    - path:
+        type: PathPrefix
+        value: /

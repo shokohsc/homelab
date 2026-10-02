@@ -1,0 +1,116 @@
+---
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: HelmRepository
+metadata:
+  name: kubeshark
+spec:
+  interval: ${interval}
+  url: https://helm.kubeshark.com
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: kubeshark
+spec:
+  interval: ${interval}
+  chart:
+    spec:
+      chart: kubeshark
+      version: 53.4.0
+      sourceRef:
+        kind: HelmRepository
+        name: kubeshark
+      interval: ${interval}
+  values:
+    tap:
+      release:
+        namespace: kubeshark
+      persistentStorage: false
+      persistentStorageStatic: false
+      persistentStoragePvcVolumeMode: FileSystem
+      storageLimit: 1Gi
+      # dryRun: false
+      resources:
+        hub:
+          limits:
+            memory: 2048Mi
+          requests:
+            cpu: 50m
+            memory: 50Mi
+        sniffer:
+          limits:
+            memory: 2048Mi
+          requests:
+            cpu: 50m
+            memory: 50Mi
+        tracer:
+          limits:
+            memory: 2048Mi
+          requests:
+            cpu: 50m
+            memory: 50Mi
+      serviceMesh: true
+      tls: true
+      disableTlsLog: true
+      labels: {}
+      ipv6: true
+      # debug: false
+      enabledDissectors:
+      # - amqp
+      - dns
+      - http
+      # - icmp
+      # - kafka
+      # - mongodb
+      # - mysql
+      - postgresql
+      - redis
+      - ws
+      - tlsx
+      # - ldap
+      # - radius
+      # - diameter
+      - udp-flow
+      - tcp-flow
+      - udp-conn
+      - tcp-conn
+      portMapping:
+        http:
+        - 80
+        - 443
+        - 8080
+        # mongodb:
+        # - 27017
+        postgresql:
+        - 5432
+        redis:
+        - 6379
+      customMacros:
+        https: tls and (http or http2)
+      pprof:
+        enabled: false
+        port: 8000
+        view: flamegraph
+      securityContext:
+        privileged: true
+        appArmorProfile:
+          type: ""
+          localhostProfile: ""
+        seLinuxOptions:
+          level: ""
+          role: ""
+          type: ""
+          user: ""
+        capabilities:
+          networkCapture:
+          - NET_RAW
+          - NET_ADMIN
+          serviceMeshCapture:
+          - SYS_ADMIN
+          - SYS_PTRACE
+          - DAC_OVERRIDE
+          ebpfCapture:
+          - SYS_ADMIN
+          - SYS_PTRACE
+          - SYS_RESOURCE
+          - IPC_LOCK
