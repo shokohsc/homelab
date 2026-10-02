@@ -57,15 +57,10 @@ spec:
           env:
             - name: AGENTS_FILE
               value: /etc/nostr-gateway/agents.json
-            # Left unset on purpose: the nostr-gateway AgentTemplate owns the
-            # model and the agent name, so prompt_async inherits them instead of
-            # this file drifting away from it.
-            - name: NOSTR_RELAYS
-              value: "wss://relay.buzz.${domain}"
             - name: BUZZ_RELAYS
               value: "wss://relay.buzz.${domain}"
             - name: LOG_LEVEL
-              value: info
+              value: debug
             - name: GATEWAY_ADDR
               value: ":8080"
             - name: GATEWAY_TOKEN

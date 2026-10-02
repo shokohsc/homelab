@@ -42,7 +42,7 @@ metadata:
   name: buzz
 spec:
   templateRef:
-    name: main
+    name: homelab
   profile: "Homelab Devops specialist"
   share:
     enabled: false
