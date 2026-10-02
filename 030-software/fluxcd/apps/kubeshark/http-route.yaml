@@ -6,7 +6,7 @@ metadata:
   annotations:
     dashboard.${domain}/name: kubeshark
     dashboard.${domain}/url: https://kubeshark.${domain}
-    dashboard.${domain}/icon: bucket
+    dashboard.${domain}/icon: shark
 spec:
   hostnames:
   - kubeshark.${domain}
@@ -15,8 +15,8 @@ spec:
     namespace: cilium
   rules:
   - backendRefs:
-    - name: kubeshark-svc
-      port: 9001
+    - name: kubeshark-front
+      port: 80
     matches:
     - path:
         type: PathPrefix
