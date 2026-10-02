@@ -4,7 +4,6 @@ namespace: deluge
 resources:
   - namespace.yaml
   - deployment.yaml
-  - poddisruptionbudget.yaml
   - pvc.yaml
   - service.yaml
   - http-route.yaml

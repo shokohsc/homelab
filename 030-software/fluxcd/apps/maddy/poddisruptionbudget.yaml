@@ -2,16 +2,6 @@
 apiVersion: policy/v1
 kind: PodDisruptionBudget
 metadata:
-  name: maddy
-spec:
-  minAvailable: 1
-  selector:
-    matchLabels:
-      app: maddy
----
-apiVersion: policy/v1
-kind: PodDisruptionBudget
-metadata:
   name: caddy
 spec:
   minAvailable: 1

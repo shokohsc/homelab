@@ -4,7 +4,6 @@ namespace: nostr-gateway
 resources:
   - namespace.yaml
   - deployment.yaml
-  - poddisruptionbudget.yaml
   - service.yaml
   - secret.yaml
 configMapGenerator:
