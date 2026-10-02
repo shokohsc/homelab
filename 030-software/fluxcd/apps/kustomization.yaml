@@ -15,7 +15,6 @@ resources:
   - cloudflared
   - cloudnativepg
   - code-server
-  - configarr
   - comics
   - commander
   - cyberchef
