@@ -3,6 +3,5 @@ kind: Kustomization
 namespace: kubeshark
 resources:
   - namespace.yaml
-  - secret.yaml
   - kubeshark.yaml
   - http-route.yaml
