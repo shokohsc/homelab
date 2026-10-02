@@ -23,6 +23,9 @@ spec:
             - https://dev.dashboard.${domain}
             - https://preview.dashboard.${domain}
             - https://dashboard.${domain}
+            - https://dev.postal.${domain}
+            - https://preview.postal.${domain}
+            - https://postal.${domain}
             allowMethods:
             - GET
             - OPTIONS
