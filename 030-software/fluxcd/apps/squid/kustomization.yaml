@@ -8,6 +8,7 @@ resources:
   - http-route.yaml
   - routes.yaml
   - pvc.yaml
+  - poddisruptionbudget.yaml
 configMapGenerator:
 - name: config
   files:
