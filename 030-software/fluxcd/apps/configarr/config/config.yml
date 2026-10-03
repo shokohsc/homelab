@@ -4,7 +4,7 @@ recyclarrConfigUrl: https://github.com/recyclarr/config-templates
 
 sonarr:
   instance1:
-    base_url: http://sonarr.sonarr.svc.cluster.local:8989
+    base_url: http://sonarr.sonarr.svc.cluster.local
     api_key: !env SONARR_API_KEY
     quality_definition:
       type: series
@@ -30,7 +30,7 @@ sonarr:
 
 radarr:
   instance1:
-    base_url: http://radarr.radarr.svc.cluster.local:7878
+    base_url: http://radarr.radarr.svc.cluster.local
     api_key: !env RADARR_API_KEY
     quality_definition:
       type: movie

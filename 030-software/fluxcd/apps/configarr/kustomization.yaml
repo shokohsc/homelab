@@ -4,9 +4,7 @@ namespace: configarr
 resources:
   - namespace.yaml
   - cronjob.yaml
-  # Requires the sonarr/radarr api keys: create secret.yaml, fill it, then
-  # `sops --encrypt --in-place secret.yaml` and uncomment this line.
-  # - secret.yaml
+  - secret.yaml
 configMapGenerator:
 - name: config
   files:
