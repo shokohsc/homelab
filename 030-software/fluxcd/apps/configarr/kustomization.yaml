@@ -1,0 +1,13 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: configarr
+resources:
+  - namespace.yaml
+  - cronjob.yaml
+  - secret.yaml
+configMapGenerator:
+- name: config
+  files:
+  - ./config/config.yml
+generatorOptions:
+  disableNameSuffixHash: true
