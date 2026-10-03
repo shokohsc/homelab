@@ -30,7 +30,7 @@ spec:
               app: caddy
       containers:
         - name: caddy
-          image: caddy:2.11.4-alpine
+          image: caddy:2.11.6-alpine
           securityContext:
             allowPrivilegeEscalation: false
             readOnlyRootFilesystem: true
