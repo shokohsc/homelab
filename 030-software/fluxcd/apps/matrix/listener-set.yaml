@@ -12,16 +12,6 @@ spec:
     kind: Gateway
     group: gateway.networking.k8s.io
   listeners:
-  - name: matrix
-    hostname: matrix.${domain}
-    protocol: HTTPS
-    port: 443
-    tls:
-      mode: Terminate
-      certificateRefs:
-      - kind: Secret
-        group: ""
-        name: matrix-cert
   - name: synapse
     hostname: synapse.matrix.${domain}
     protocol: HTTPS
