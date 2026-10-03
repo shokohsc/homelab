@@ -158,7 +158,9 @@ spec:
         fsGroupChangePolicy: OnRootMismatch
       containers:
         - name: nginx
-          image: nginx:1.31.6-alpine
+          image: busybox:1.38
+          args: ["busybox", "httpd", "-f", "-v", "-p", "8080"]
+          workingDir: /assets
           securityContext:
             allowPrivilegeEscalation: false
             readOnlyRootFilesystem: true
@@ -170,37 +172,27 @@ spec:
             - name: http
               containerPort: 8080
               protocol: TCP
-          volumeMounts:
-            - name: config
-              mountPath: /etc/nginx/nginx.conf
-              subPath: nginx.conf
-            - name: config
-              mountPath: /static/proxy.pac
-              subPath: proxy.pac
-            - name: run
-              mountPath: /var/run
-            - name: cache
-              mountPath: /var/cache/nginx
+          startupProbe:
+            tcpSocket:
+              port: http
           livenessProbe:
             tcpSocket:
               port: http
           readinessProbe:
-            tcpSocket:
+            httpGet:
               port: http
-          startupProbe:
-            tcpSocket:
-              port: http
+              path: /
           resources:
-            limits:
-              memory: 64Mi
             requests:
               cpu: 100m
+            limits:
+              memory: 64Mi
+          volumeMounts:
+            - name: config
+              mountPath: /assets/proxy.pac
+              subPath: proxy.pac
       volumes:
         - name: config
           configMap:
             name: config
             defaultMode: 0644
-        - name: run
-          emptyDir: {}
-        - name: cache
-          emptyDir: {}
