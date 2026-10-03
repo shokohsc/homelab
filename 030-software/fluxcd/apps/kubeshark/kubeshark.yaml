@@ -29,7 +29,7 @@ spec:
   # the kubeshark namespace is already exempt from the repo's own policies.
   postRenderers:
     - kustomize:
-        patchesStrategicMerge:
+        patches:
           - |
             $patch: delete
             apiVersion: networking.k8s.io/v1
