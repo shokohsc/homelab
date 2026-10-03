@@ -181,7 +181,7 @@ spec:
           readinessProbe:
             httpGet:
               port: http
-              path: /
+              path: /proxy.pac
           resources:
             requests:
               cpu: 100m
