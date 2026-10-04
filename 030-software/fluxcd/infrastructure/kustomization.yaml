@@ -6,3 +6,4 @@ resources:
   - crossplane
   - kubeopencode
   - talos-proxmox-autoscaler
+  - pixie-operator
