@@ -46,7 +46,7 @@ spec:
               app: maddy
       containers:
         - name: maddy
-          image: foxcpp/maddy:0.9.5
+          image: foxcpp/maddy:0.9.6
           securityContext:
             allowPrivilegeEscalation: false
             readOnlyRootFilesystem: true
