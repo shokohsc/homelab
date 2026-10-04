@@ -22,6 +22,20 @@ spec:
         name: crossplane
       interval: ${interval}
   values:
+    podSecurityContextRBACManager:
+      runAsNonRoot: true
+      runAsUser: 1000
+      runAsGroup: 1000
+      fsGroup: 1000
+      seccompProfile:
+        type: RuntimeDefault
+    securityContextRBACManager:
+      allowPrivilegeEscalation: false
+      readOnlyRootFilesystem: true
+      runAsNonRoot: true
+      capabilities:
+        drop:
+          - ALL
     rbacManager:
       tolerations:
         - key: "node.kubernetes.io/nuc"
