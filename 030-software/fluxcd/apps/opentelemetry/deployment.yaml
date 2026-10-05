@@ -43,7 +43,7 @@ spec:
               app: opentelemetry
       containers:
         - name: opentelemetry
-          image: otel/opentelemetry-collector:0.160.0
+          image: otel/opentelemetry-collector:0.162.0
           securityContext:
             allowPrivilegeEscalation: false
             readOnlyRootFilesystem: true
