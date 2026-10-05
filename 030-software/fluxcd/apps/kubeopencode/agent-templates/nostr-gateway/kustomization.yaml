@@ -1,0 +1,23 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - ../base
+patches:
+  - target:
+      group: kubeopencode.io
+      version: v1alpha1
+      kind: AgentTemplate
+      name: opencode
+    patch: |-
+      - op: replace
+        path: /metadata/name
+        value: nostr-gateway
+      - op: add
+        path: /spec/contexts/-
+        value:
+          name: nostr-gateway-repo
+          type: Git
+          git:
+            repository: https://github.com/shokohsc/nostr-gateway.git
+            ref: main
+          mountPath: nostr-gateway/
