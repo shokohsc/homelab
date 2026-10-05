@@ -1,0 +1,158 @@
+apiVersion: config.talstomize.dev/v1alpha1
+kind: Talstomize
+
+clusterName: talos
+controlPlaneEndpoint: https://talos.${TALOS_DOMAIN}:6443
+kubernetesVersion: v1.36.2
+secrets: ./talsecret.sops.yaml
+additionalSubjectAltNames:
+  - talos.local
+  - talos.${TALOS_DOMAIN}
+
+installer:
+  talosVersion: v1.13.7
+  # Default schematic for bare-metal nodes (control planes), overridden per node
+  # below. Talstomize only resolves metal schematics, so the PXE-booted nocloud
+  # VMs pin their installer image directly (see worker-vm / worker-vm-gpu).
+  # \x24 escapes the $ so envsubst leaves the boot-time placeholders alone.
+  schematic:
+    customization:
+      extraKernelArgs:
+        - net.ifnames=0
+        - "talos.config=http://tracer.home.arpa:8080/metadata?h=\x24{hostname}&m=\x24{mac}&s=\x24{serial}&u=\x24{uuid}"
+      systemExtensions:
+        officialExtensions:
+          - siderolabs/intel-ucode
+          - siderolabs/gvisor
+          - siderolabs/stargz-snapshotter
+
+patches:
+  - ./patches/cluster.yaml
+  - ./patches/machine.yaml
+  - ./patches/network.yaml
+  - ./patches/firewall-common.yaml
+controlplanePatches:
+  - ./patches/controlplane.yaml
+  - ./patches/firewall-controlplane.yaml
+  # Talos keeps one machine/cluster document per patch file, so the etcd
+  # metrics endpoint (was a talhelper controlPlane patch) lives inline here.
+  - cluster:
+      etcd:
+        extraArgs:
+          listen-metrics-urls: http://0.0.0.0:2381
+workerPatches:
+  - ./patches/worker.yaml
+  - ./patches/firewall-worker.yaml
+
+nodes:
+  sombra:
+    ip: ${TALOS_SUBNET}.10
+    kind: controlplane
+    patches:
+      - machine:
+          install:
+            disk: /dev/nvme0n1
+
+  lucio:
+    ip: ${TALOS_SUBNET}.20
+    kind: controlplane
+    patches:
+      - machine:
+          install:
+            disk: /dev/nvme0n1
+
+  zarya:
+    ip: ${TALOS_SUBNET}.30
+    kind: controlplane
+    patches:
+      - machine:
+          install:
+            disk: /dev/sda
+
+  mercy:
+    ip: ${TALOS_SUBNET}.40
+    kind: worker
+    installer:
+      schematic:
+        customization:
+          systemExtensions:
+            officialExtensions:
+              - siderolabs/intel-ucode
+              - siderolabs/i915
+              - siderolabs/gvisor
+              - siderolabs/nfs-utils
+              - siderolabs/nfsd
+              - siderolabs/stargz-snapshotter
+    patches:
+      - machine:
+          nodeLabels:
+            topology.kubernetes.io/region: homelab
+            topology.kubernetes.io/zone: metal
+          install:
+            disk: /dev/sda
+          kubelet:
+            extraConfig:
+              registerWithTaints:
+                - effect: NoSchedule
+                  key: node.kubernetes.io/nuc
+                  value: mercy
+      - apiVersion: v1alpha1
+        kind: DHCPv4Config
+        name: eno1
+
+  winston:
+    ip: ${TALOS_SUBNET}.50
+    kind: worker
+    installer:
+      schematic:
+        customization:
+          extraKernelArgs:
+            - net.ifnames=0
+          systemExtensions:
+            officialExtensions:
+              - siderolabs/amd-ucode
+              - siderolabs/gvisor
+              - siderolabs/nfs-utils
+              - siderolabs/nfsd
+              - siderolabs/stargz-snapshotter
+    patches:
+      - ./patches/winston.yaml
+
+  worker-vm:
+    ip: ${TALOS_SUBNET}.255
+    kind: worker
+    # Talstomize resolves metal schematics only, so this nocloud installer image is
+    # pinned to the ID factory.talos.dev computes from:
+    #   extraKernelArgs: [net.ifnames=0, talos.config=http://tracer.home.arpa:8080/metadata?s=worker-vm, vlan=ens18.20:ens18]
+    #   officialExtensions: [amd-ucode, gvisor, nfs-utils, nfsd, qemu-guest-agent, stargz-snapshotter, uhid, uinput]
+    # Regenerate with: talosctl gen image --platform nocloud --kubernetes-version v1.13.7 --system-extensions ...
+    installer:
+      image: factory.talos.dev/nocloud-installer/715933494b0df7e5b25c9b531a3b3dc9ec9dc56882882ca4cfd7ac84a5f2641d:v1.13.7
+    patches:
+      - machine:
+          nodeLabels:
+            topology.kubernetes.io/region: homelab
+            topology.kubernetes.io/zone: vm
+          install:
+            disk: /dev/sda
+      - apiVersion: v1alpha1
+        kind: DHCPv4Config
+        name: ens18
+
+  worker-vm-gpu:
+    ip: ${TALOS_SUBNET}.255
+    kind: worker
+    # Same as worker-vm, with the NVIDIA extensions and eth0 instead of ens18.
+    installer:
+      image: factory.talos.dev/nocloud-installer/2abe951c5b317730073c2972ece772d67068d2d5bb5340c7d8cac0a6bafefc32:v1.13.7
+    patches:
+      - machine:
+          nodeLabels:
+            topology.kubernetes.io/region: homelab
+            topology.kubernetes.io/zone: vm
+            node.kubernetes.io/gpu: nvidia
+          install:
+            disk: /dev/sda
+      - apiVersion: v1alpha1
+        kind: DHCPv4Config
+        name: eth0

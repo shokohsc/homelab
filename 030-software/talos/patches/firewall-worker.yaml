@@ -1,0 +1,75 @@
+apiVersion: v1alpha1
+kind: NetworkRuleConfig
+name: http-https
+portSelector:
+  ports:
+    - 80
+    - 443
+  protocol: tcp
+ingress:
+  - subnet: 0.0.0.0/0
+---
+apiVersion: v1alpha1
+kind: NetworkRuleConfig
+name: metrics-server
+portSelector:
+  ports:
+    - 4443
+  protocol: tcp
+ingress:
+  - subnet: 10.244.0.0/0
+  - subnet: 10.42.20.0/0
+---
+apiVersion: v1alpha1
+kind: NetworkRuleConfig
+name: cilium-operator-metrics
+portSelector:
+  ports:
+    - 9963
+  protocol: tcp
+ingress:
+  - subnet: 10.244.0.0/0
+---
+apiVersion: v1alpha1
+kind: NetworkRuleConfig
+name: vpn-egress-gateway
+portSelector:
+  ports:
+    # - 8472
+    - 4789
+  protocol: udp
+ingress:
+  - subnet: 10.244.0.0/0
+  - subnet: 10.42.20.0/0
+---
+apiVersion: v1alpha1
+kind: NetworkRuleConfig
+name: syslog
+portSelector:
+  ports:
+    - 601
+  protocol: tcp
+ingress:
+  - subnet: 0.0.0.0/0
+---
+apiVersion: v1alpha1
+kind: NetworkRuleConfig
+name: dns-tcp
+portSelector:
+  ports:
+    - 53
+    - 853
+  protocol: tcp
+ingress:
+  - subnet: 0.0.0.0/0
+---
+apiVersion: v1alpha1
+kind: NetworkRuleConfig
+name: dns-udp
+portSelector:
+  ports:
+    - 53
+    - 853
+  protocol: udp
+ingress:
+  - subnet: 0.0.0.0/0
