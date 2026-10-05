@@ -1,0 +1,12 @@
+---
+# Shared base for every Agent. Overlays rename it, bind a templateRef and
+# append the per-agent bits - see ../*/kustomization.yaml.
+apiVersion: kubeopencode.io/v1alpha1
+kind: Agent
+metadata:
+  name: agent
+spec:
+  profile: "Homelab Devops specialist"
+  share:
+    allowedIPs:
+      - 10.244.0.0/16
