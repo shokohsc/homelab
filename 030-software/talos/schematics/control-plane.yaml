@@ -1,0 +1,9 @@
+customization:
+  extraKernelArgs:
+    - net.ifnames=0
+    - talos.config=http://tracer.home.arpa:8080/metadata?h=${hostname}&m=${mac}&s=${serial}&u=${uuid}
+  systemExtensions:
+    officialExtensions:
+      - siderolabs/intel-ucode
+      - siderolabs/gvisor
+      - siderolabs/stargz-snapshotter

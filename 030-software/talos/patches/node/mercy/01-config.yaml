@@ -1,0 +1,16 @@
+machine:
+  install:
+    disk: /dev/sda
+  kubelet:
+    extraConfig:
+      registerWithTaints:
+        - effect: NoSchedule
+          key: node.kubernetes.io/nuc
+          value: mercy
+  nodeLabels:
+    topology.kubernetes.io/region: "homelab"
+    topology.kubernetes.io/zone: "metal"
+---
+apiVersion: v1alpha1
+kind: DHCPv4Config
+name: eno1
