@@ -1,0 +1,8 @@
+machine:
+  kernel:
+    modules:
+      - name: br_netfilter
+        parameters:
+          - nf_conntrack_max=131072
+  nodeLabels:
+    bgp-policy: active

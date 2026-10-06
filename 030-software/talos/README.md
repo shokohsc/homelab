@@ -1,6 +1,6 @@
 # Talos Kubernetes Cluster
 
-A [Talos Linux](https://www.talos.dev/) v1.13.2 Kubernetes v1.36.1 home lab cluster managed with [talhelper](https://github.com/budimanjojo/talhelper). This repository defines the full infrastructure-as-code configuration for a multi-node bare-metal and virtual machine cluster with opinionated network tuning, GitOps bootstrapping, and hardware-specific system extensions.
+A [Talos Linux](https://www.talos.dev/) v1.13.2 Kubernetes v1.36.1 home lab cluster managed with [topf](https://github.com/postfinance/topf). This repository defines the full infrastructure-as-code configuration for a multi-node bare-metal and virtual machine cluster with opinionated network tuning, GitOps bootstrapping, and hardware-specific system extensions.
 
 ## Table of Contents
 
@@ -11,14 +11,13 @@ A [Talos Linux](https://www.talos.dev/) v1.13.2 Kubernetes v1.36.1 home lab clus
 - [Getting Started](#getting-started)
   - [1. Clone the Repository](#1-clone-the-repository)
   - [2. Install Dependencies](#2-install-dependencies)
-  - [3. Configure Environment Variables](#3-configure-environment-variables)
-  - [4. Generate Cluster Configuration](#4-generate-cluster-configuration)
-  - [5. Apply Configuration to Nodes](#5-apply-configuration-to-nodes)
-  - [6. Bootstrap the Cluster](#6-bootstrap-the-cluster)
+  - [3. Render Cluster Configuration](#3-render-cluster-configuration)
+  - [4. Apply Configuration and Bootstrap](#4-apply-configuration-and-bootstrap)
 - [Node Specifications](#node-specifications)
 - [Configuration](#configuration)
-  - [Talconfig](#talconfig)
+  - [topf.yaml](#topfyaml)
   - [Patches](#patches)
+  - [Schematics](#schematics)
   - [Secrets Management](#secrets-management)
 - [Network Tuning](#network-tuning)
 - [System Extensions](#system-extensions)
@@ -28,7 +27,7 @@ A [Talos Linux](https://www.talos.dev/) v1.13.2 Kubernetes v1.36.1 home lab clus
 
 ## Overview
 
-This repository contains everything needed to deploy and maintain a Talos Linux Kubernetes cluster in a home lab environment. It uses [talhelper](https://github.com/budimanjojo/talhelper) as the configuration management tool to generate the per-node machine configurations from a single `talconfig.yaml` file.
+This repository contains everything needed to deploy and maintain a Talos Linux Kubernetes cluster in a home lab environment. It uses [topf](https://github.com/postfinance/topf) as the configuration management tool to generate the per-node machine configurations from a single `topf.yaml` file, per-node schematics, and a directory of patches.
 
 The cluster consists of:
 
@@ -66,14 +65,13 @@ The cluster is designed to be fully reproducible through declarative configurati
 | `worker-vm` | Worker (VM) | `*.255` | Virtual Machine | QEMU guest agent, AMD ucode |
 | `worker-vm-gpu` | Worker (VM) | `*.255` | Virtual Machine | NVIDIA GPU passthrough, AMD ucode |
 
-> The IP addresses use a configurable subnet via the `TALOS_SUBNET` environment variable.
+- The IP addresses use the cluster subnet configured in `topf.yaml` (`data.subnet`).
 
 ## Prerequisites
 
 Before you begin, ensure you have the following installed on your provisioning machine:
 
-- [talhelper](https://github.com/budimanjojo/talhelper) — Configuration generation tool
-- [talosctl](https://www.talos.dev/v1.13/introduction/quickstart/) — Talos CLI
+- [topf](https://github.com/postfinance/topf) — Configuration generation and apply tool
 - [kubectl](https://kubernetes.io/docs/tasks/tools/) — Kubernetes CLI
 - [sops](https://github.com/getsops/sops) — Secrets encryption/decryption
 - A PGP key pair for SOPS encryption (the public key fingerprint is `3AFE004C7B67F70DCEA1B33187F191C9C8B81E94`)
@@ -92,64 +90,43 @@ cd talos-cluster
 Install the required CLI tools on your provisioning machine:
 
 ```bash
-# Install talhelper (see repository for latest instructions)
-# Install talosctl
-curl -sL https://talos.dev/install | sh
+# Install topf
+brew install postfinance/tap/topf
+# or: go install github.com/postfinance/topf/cmd/topf@latest
+# or download a binary from https://github.com/postfinance/topf/releases
 
 # Install sops
 # See: https://github.com/getsops/sops/releases
 ```
 
-### 3. Configure Environment Variables
+### 3. Render Cluster Configuration
 
-The configuration uses several environment variables as placeholders. Create a `.env` file or export them in your shell:
-
-```bash
-export TALOS_DOMAIN="home.arpa"        # Your domain
-export TALOS_SUBNET="10.42.20"         # Your cluster subnet
-export MGMT_SUBNET="10.42.10"         # Your management subnet
-# Optional: export CA_CERT if using custom CA certificates
-```
-
-### 4. Generate Cluster Configuration
-
-Run talhelper to generate the per-node machine configurations and the `talosconfig`:
+Run topf to generate the per-node machine configurations:
 
 ```bash
-talhelper genconfig
+topf render -o clusterconfig
 ```
 
 This produces:
 
-- `clusterconfig/talos-<hostname>.yaml` — Per-node Talos machine configuration
-- `clusterconfig/talosconfig` — Talos CLI configuration for cluster access
+- `clusterconfig/<hostname>.yaml` — Per-node Talos machine configuration
+- `topf schematic-ids` shows the resolved Talos Factory image IDs per node
 
-### 5. Apply Configuration to Nodes
+Cluster endpoint, versions, node IPs, and the cluster subnet are declared in `topf.yaml` — no environment variables are required.
 
-Apply the generated configuration to each node. Nodes should already be booted into Talos Linux (PXE or ISO install).
+### 4. Apply Configuration and Bootstrap
+
+Apply the configuration to every node (nodes should already be booted into Talos Linux via PXE or ISO). This also bootstraps etcd on the first control plane node:
 
 ```bash
-# Bootstrap a control plane node
-talosctl apply-config --insecure \
-  --nodes <node-ip> \
-  --file clusterconfig/talos-sombra.yaml
-
-# Repeat for other control plane and worker nodes
+topf apply --auto-bootstrap
 ```
 
-### 6. Bootstrap the Cluster
-
-Once the control plane nodes are configured, bootstrap etcd:
+Retrieve the kubeconfig and talosconfig:
 
 ```bash
-talosctl bootstrap \
-  --nodes 10.42.20.10 \
-  --endpoints 10.42.20.10
-
-# Retrieve the kubeconfig
-talosctl kubeconfig \
-  --nodes 10.42.20.10 \
-  --endpoints 10.42.20.10
+topf kubeconfig
+topf talosconfig
 ```
 
 After bootstrapping, Flux CD and Cilium are automatically installed via inline manifests and extra manifests defined in the cluster patches.
@@ -181,27 +158,33 @@ Workers share common configuration (e.g., `bgp-policy: active` label) with per-n
 
 ## Configuration
 
-### Talconfig
+### topf.yaml
 
-The main configuration file is `talconfig.yaml`. It defines:
+The main configuration file is `topf.yaml`. It defines:
 
-- **Cluster metadata** — Cluster name, Talos/Kubernetes versions, API server SANs
-- **Network** — Pod and service CIDRs, CNI (none — handled by Cilium)
-- **Nodes** — Hostname, role, IP, disk, labels, taints, and per-node overrides
-- **Patches** — References to patch files applied globally or per-node
-- **Inline Manifests** — Kubernetes resources created during cluster bootstrap
-- **Schematics** — System extensions and kernel arguments for each Talos node image
+- **Cluster metadata** — Cluster name, endpoint, Talos/Kubernetes versions
+- **Nodes** — Host, role, IP, platform (metal/nocloud), and per-node schematic references
+- **Data** — Shared template values (e.g. `subnet`) available to `.tpl` patches
+- **Patches/secrets** — Paths to the `patches/` directory and `talsecret.sops.yaml`
 
 ### Patches
 
-The `patches/` directory contains YAML files that are applied as configuration patches:
+The `patches/` directory contains YAML files applied as configuration patches in directory order: `all/` (every node), `control-plane/` or `worker/` (by role), then `node/<host>/` (per node). Files ending in `.yaml.tpl` are rendered as Go templates first (context: cluster values, `{{ .Data.subnet }}`, `{{ .Node.Host }}`, …):
 
 | File | Purpose |
 |------|---------|
-| `cluster.yaml` | Cluster-wide patches: API server feature gates, kube-proxy disabled (Cilium), inline namespaces for `flux-system` and `cilium`, Gateway API and Flux install manifests |
-| `machine.yaml` | Machine-level patches: cert SANs, host DNS config, kubelet feature gates, user namespaces sysctl, DHCP interface |
-| `network.yaml` | Network performance sysctl tuning: TCP buffer sizes, BBR congestion control, connection backlog, keepalive, fast open, port range, IP forwarding |
-| `rps-ds-tuning.yaml` | DaemonSet that enables Receive Packet Steering (RPS) and Receive Flow Steering (RFS) on all network interfaces |
+| `all/01-cluster.yaml` | CNI (none — handled by Cilium), pod/service CIDRs, API server feature gates, kube-proxy disabled, inline manifests (RPS tuning DaemonSet, `flux-system`/`cilium` namespaces), Gateway API and Flux install manifests |
+| `all/02-machine.yaml.tpl` | Machine cert SANs, host DNS config, kubelet feature gates, user namespaces sysctl |
+| `all/03-network.yaml` | Network performance sysctl tuning: TCP buffer sizes, BBR congestion control, connection backlog, keepalive, fast open, port range, IP forwarding |
+| `all/04-firewall-common.yaml.tpl` | Host firewall: default deny ingress, kubelet/cilium/apid/cni-vxlan/hubble rules |
+| `all/05-hostname.yaml.tpl` | `HostnameConfig` — sets the node hostname (stable hostname for the VMs) |
+| `control-plane/` | `br_netfilter`, etcd metrics, eno1 DHCP, control-plane firewall rules, API server cert SANs |
+| `worker/` | `br_netfilter`, `bgp-policy` label, worker firewall rules |
+| `node/<host>/` | Install disk, per-node interfaces (bond0 + volumes for `winston`), labels, taints, per-node firewall rules |
+
+### Schematics
+
+Each node references a Talos Factory schematic in `schematics/` (per-node `schematicId: @schematics/<name>.yaml`) defining `extraKernelArgs` and system extensions. The schematic ID is computed locally; new/changed schematics must be submitted to the factory once with `topf render --submit-to-factory`. `topf schematic-ids` prints the resolved IDs.
 
 ### Secrets Management
 
@@ -230,7 +213,7 @@ The cluster includes comprehensive network performance tuning:
 
 ### sysctl Parameters
 
-The `patches/network.yaml` file configures:
+The `patches/all/03-network.yaml` file configures:
 
 - **TCP Buffer Tuning** — Custom `tcp_rmem` and `tcp_wmem` values for high-throughput workloads
 - **Socket Buffers** — 16 MB max receive/send buffers
@@ -243,7 +226,7 @@ The `patches/network.yaml` file configures:
 
 ### RPS/RFS
 
-The `patches/rps-ds-tuning.yaml` DaemonSet automatically:
+The RPS/RFS DaemonSet is defined as an inline manifest in `patches/all/01-cluster.yaml` and automatically:
 - Enables Receive Packet Steering (RPS) on all RX queues using all available CPUs
 - Configures Receive Flow Steering (RFS) with 32,768 flow entries and 4,096 flow count per queue
 
@@ -269,7 +252,7 @@ Each node uses a customized Talos image built with specific system extensions vi
 
 ## GitOps & Add-ons
 
-The cluster is bootstrapped with GitOps and networking add-ons automatically via extra manifests defined in `patches/cluster.yaml`:
+The cluster is bootstrapped with GitOps and networking add-ons automatically via extra manifests defined in `patches/all/01-cluster.yaml`:
 
 - **[Flux CD](https://fluxcd.io/)** — Installed from the latest release manifest. Manages all cluster workloads through GitOps reconciliation.
 - **[Cilium](https://cilium.io/)** — kube-proxy replacement providing eBPF-based networking, observability, and security. The `cilium` namespace is pre-created at bootstrap.
@@ -283,7 +266,7 @@ Contributions are welcome and encouraged! Whether you're fixing a bug, improving
 
 1. **Fork the repository** and create a feature branch from `main`.
 2. **Make your changes** — Keep them focused and well-documented.
-3. **Test your configuration** by running `talhelper genconfig` to ensure no errors.
+3. **Test your configuration** by running `topf render -o clusterconfig` to ensure no errors.
 4. **Submit a pull request** with a clear description of the changes and any relevant context.
 
 ### Commit Conventions
@@ -307,7 +290,7 @@ This project is provided for educational and personal use. No license is explici
 
 ---
 
-*Built with [Talos Linux](https://www.talos.dev/), [talhelper](https://github.com/budimanjojo/talhelper), and [SOPS](https://github.com/getsops/sops).*
+*Built with [Talos Linux](https://www.talos.dev/), [topf](https://github.com/postfinance/topf), and [SOPS](https://github.com/getsops/sops).*
 
 ## References
  - https://www.roosmaa.net/blog/2024/setting-up-zfs-on-talos/

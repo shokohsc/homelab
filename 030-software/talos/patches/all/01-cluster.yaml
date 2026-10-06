@@ -1,0 +1,91 @@
+cluster:
+  apiServer:
+    extraArgs:
+      feature-gates: DynamicResourceAllocation=true
+  controllerManager:
+    extraArgs:
+      feature-gates: DynamicResourceAllocation=true
+  scheduler:
+    extraArgs:
+      feature-gates: DynamicResourceAllocation=true
+  network:
+    cni:
+      name: none
+    podSubnets:
+      - 10.244.0.0/16
+    serviceSubnets:
+      - 10.96.0.0/12
+  proxy:
+    disabled: true
+  inlineManifests:
+    - name: rps-ds-tuning
+      contents: |-
+        apiVersion: apps/v1
+        kind: DaemonSet
+        metadata:
+          name: network-tuning
+          namespace: kube-system
+        spec:
+          selector:
+            matchLabels:
+              app: network-tuning
+          template:
+            metadata:
+              labels:
+                app: network-tuning
+            spec:
+              hostNetwork: true
+              hostPID: true
+              containers:
+              - name: tuner
+                image: busybox:latest
+                securityContext:
+                  privileged: true
+                command:
+                - /bin/sh
+                - -c
+                - |
+                  #!/bin/sh
+                  # Enable RPS on all network interfaces
+                  CPUS=$(nproc)
+                  MASK=$(( (1 << CPUS) - 1 ))
+                  HEX_MASK=$(printf "%x" "$MASK")
+                  # Enable RPS on all RX queues
+                  for rx_queue in /sys/class/net/*/queues/rx-*/rps_cpus; do
+                      echo "$HEX_MASK" > "$rx_queue"
+                  done
+                  # RFS entries
+                  echo 32768 > /proc/sys/net/core/rps_sock_flow_entries
+                  for flow in /sys/class/net/*/queues/rx-*/rps_flow_cnt; do
+                      echo 4096 > "$flow"
+                  done
+                  sleep infinity
+                resources:
+                  requests:
+                    cpu: 10m
+                    memory: 64Mi
+                  limits:
+                    cpu: 100m
+                    memory: 64Mi
+              tolerations:
+                - effect: NoSchedule
+                  key: node.kubernetes.io/nuc
+                  operator: Exists
+    - name: flux-namespace
+      contents: |
+        apiVersion: v1
+        kind: Namespace
+        metadata:
+          name: flux-system
+    - name: cilium-namespace
+      contents: |
+        apiVersion: v1
+        kind: Namespace
+        metadata:
+          name: cilium
+          labels:
+            kubernetes.io/metadata.name: cilium
+            pod-security.kubernetes.io/enforce: privileged
+  extraManifests:
+    - "https://github.com/kubernetes-sigs/gateway-api/releases/download/v1.6.1/experimental-install.yaml"
+    - "https://github.com/fluxcd/flux2/releases/latest/download/install.yaml"
