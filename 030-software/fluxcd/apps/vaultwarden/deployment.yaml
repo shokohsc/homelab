@@ -44,7 +44,7 @@ spec:
               app: vaultwarden
       containers:
         - name: vaultwarden
-          image: ghcr.io/dani-garcia/vaultwarden:1.37.3
+          image: ghcr.io/dani-garcia/vaultwarden:1.37.4
           securityContext:
             allowPrivilegeEscalation: false
             readOnlyRootFilesystem: true
