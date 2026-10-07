@@ -17,7 +17,7 @@ envoy:
     requests:
       cpu: 100m
     limits:
-      memory: 64Mi
+      memory: 128Mi
 
 resources:
   requests:
