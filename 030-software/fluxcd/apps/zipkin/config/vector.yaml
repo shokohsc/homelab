@@ -21,18 +21,18 @@ transforms:
     condition: .name != "GET /api/status/readiness" && .name != "GET /status/readiness"
 
 sinks:
-  tempo:
-    type: http
-    method: post
-    inputs:
-    - 02-filter-readiness-probe
-    uri: http://tempo.tempo:9411/api/v2/spans
-    encoding:
-      codec: json
-    request:
-      headers:
-        Content-Type: application/json
-        User-Agent: timberio/vector
+  # tempo:
+  #   type: http
+  #   method: post
+  #   inputs:
+  #   - 02-filter-readiness-probe
+  #   uri: http://tempo.tempo:9411/api/v2/spans
+  #   encoding:
+  #     codec: json
+  #   request:
+  #     headers:
+  #       Content-Type: application/json
+  #       User-Agent: timberio/vector
 
   loki:
     type: loki

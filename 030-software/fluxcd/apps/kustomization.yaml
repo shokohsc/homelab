@@ -81,7 +81,7 @@ resources:
   - swingmusic
   - syslog
   - tailscale
-  - tempo
+  # - tempo
   # - thelounge
   - tinyauth
   - tweetch
