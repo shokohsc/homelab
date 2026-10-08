@@ -73,10 +73,10 @@ spec:
                 secretKeyRef:
                   name: nostr-gateway
                   key: AGENT_NSEC
-            - name: HTTP_PROXY
-              value: squid.squid.svc.cluster.local:3128
-            - name: HTTPS_PROXY
-              value: squid.squid.svc.cluster.local:3128
+            # - name: HTTP_PROXY
+            #   value: squid.squid.svc.cluster.local:3128
+            # - name: HTTPS_PROXY
+            #   value: squid.squid.svc.cluster.local:3128
           ports:
             - name: http
               containerPort: 8080
