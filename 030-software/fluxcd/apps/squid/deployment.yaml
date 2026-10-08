@@ -16,7 +16,6 @@ spec:
     metadata:
       labels:
         app: squid
-        policy.gatekeeper.sh/ignore-psp-readonlyrootfilesystem: "true"
       annotations:
         prometheus.io/scrape: "true"
         prometheus.io/path: /metrics
@@ -52,7 +51,7 @@ spec:
           image: ubuntu/squid:latest@sha256:6a097f68bae708cedbabd6188d68c7e2e7a38cedd05a176e1cc0ba29e3bbe029
           securityContext:
             allowPrivilegeEscalation: false
-            # readOnlyRootFilesystem: true
+            readOnlyRootFilesystem: true
             runAsNonRoot: true
             capabilities:
               drop:
@@ -83,6 +82,8 @@ spec:
             - name: config
               mountPath: /etc/squid/acl-dstdomain-localnetsites.cfg
               subPath: acl-dstdomain-localnetsites.cfg
+            - name: temp
+              mountPath: /tmp
           resources:
             requests:
               cpu: 100m
@@ -92,7 +93,7 @@ spec:
           image: boynux/squid-exporter:v1.13.0
           securityContext:
             allowPrivilegeEscalation: false
-            # readOnlyRootFilesystem: true
+            readOnlyRootFilesystem: true
             runAsNonRoot: true
             capabilities:
               drop:
@@ -129,6 +130,8 @@ spec:
         - name: config
           configMap:
             name: config
+        - name: temp
+          emptyDir: {}
 ---
 apiVersion: apps/v1
 kind: Deployment
