@@ -84,6 +84,8 @@ spec:
               subPath: acl-dstdomain-localnetsites.cfg
             - name: temp
               mountPath: /tmp/run
+            - mountPath: /etc/ssl/certs
+              name: tls
           resources:
             requests:
               cpu: 100m
@@ -132,6 +134,10 @@ spec:
             name: config
         - name: temp
           emptyDir: {}
+        - name: tls
+          configMap:
+            name: homelab-ca-cm
+            defaultMode: 0600
 ---
 apiVersion: apps/v1
 kind: Deployment

@@ -5,3 +5,5 @@ metadata:
   name: squid
   labels:
     app: squid
+    bundle.cert-manager.io/inject-cm: enabled
+
