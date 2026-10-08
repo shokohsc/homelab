@@ -5,17 +5,14 @@ resources:
   - atuin
   - backrest
   # - blocky
-  # - blossom
   - browserless
   - bubbles
   - buzz
-  # - byparr
   - cert-manager
   - city-roads
   - cloudflared
   - cloudnativepg
   - code-server
-  # - configarr
   - comics
   - commander
   - cyberchef
@@ -26,7 +23,6 @@ resources:
   - external-dns
   - external-services
   # - ferretdb
-  # - flaresolverr
   - gatekeeper
   - grafana
   - grist
@@ -46,7 +42,6 @@ resources:
   - matrix
   - metrics-server
   - miniflux
-  # - motrix
   - nats
   - nfs-downloads
   - nostr-gateway
@@ -82,18 +77,14 @@ resources:
   - syslog
   - tailscale
   # - tempo
-  # - thelounge
   - tinyauth
   - tweetch
   - valkey
   - vaultwarden
-  # - victoria-logs
-  # - victoria-logs-collector
   - victoria-metrics
   - vpn-egress-gateway
   - web-check
   - weechat
   - whoami
-  # - whoogle
   - ws-screenshot
   - zipkin
