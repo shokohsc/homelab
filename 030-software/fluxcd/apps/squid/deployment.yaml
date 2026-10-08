@@ -83,7 +83,7 @@ spec:
               mountPath: /etc/squid/acl-dstdomain-localnetsites.cfg
               subPath: acl-dstdomain-localnetsites.cfg
             - name: temp
-              mountPath: /tmp
+              mountPath: /tmp/run
           resources:
             requests:
               cpu: 100m
