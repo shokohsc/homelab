@@ -16,6 +16,7 @@ spec:
     metadata:
       labels:
         app: squid
+        policy.gatekeeper.sh/ignore-psp-readonlyrootfilesystem: "true"
       annotations:
         prometheus.io/scrape: "true"
         prometheus.io/path: /metrics
@@ -91,7 +92,7 @@ spec:
           image: boynux/squid-exporter:v1.13.0
           securityContext:
             allowPrivilegeEscalation: false
-            readOnlyRootFilesystem: true
+            # readOnlyRootFilesystem: true
             runAsNonRoot: true
             capabilities:
               drop:
