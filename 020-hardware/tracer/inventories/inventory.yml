@@ -14,6 +14,9 @@ all:
       network_interface: eth0
       pxe_tftp_port: 69
       http_port: 8080
+      matchbox_port: 8082
+      talos_version: v1.13.7
+      talos_factory_schematic: 376567988ad370138ad8b2698212367b8edcb69b5fd68c80be1f2ec7d603b4ba
       nerdctl_version: 2.3.1
       nerdctl_checksum: sha256:425fd2c43e91a0af32e91b7186080bf6dd12ee22d435429455085cb2204e8427
       backup_dir: /etc/backups

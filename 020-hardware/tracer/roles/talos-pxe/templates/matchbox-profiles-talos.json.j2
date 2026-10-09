@@ -1,0 +1,26 @@
+{
+  "id": "talos",
+  "name": "Talos Linux {{ talos_version }}",
+  "boot": {
+    "kernel": "http://{{ tracer_ip }}:{{ matchbox_port }}/assets/{{ talos_version }}/kernel-amd64",
+    "initrd": [
+      "http://{{ tracer_ip }}:{{ matchbox_port }}/assets/{{ talos_version }}/initramfs-amd64.xz"
+    ],
+    "args": [
+      "talos.platform=metal",
+      "console=tty0",
+      "console=ttyS0",
+      "init_on_alloc=1",
+      "slab_nomerge",
+      "pti=on",
+      "consoleblank=0",
+      "nvme_core.io_timeout=4294967295",
+      "printk.devkmsg=on",
+      "selinux=1",
+      "module.sig_enforce=1",
+      "proc_mem.force_override=never",
+      "net.ifnames=0",
+      "talos.config=http://{{ tracer_fqdn }}:{{ http_port | default(8080) }}/metadata?h=${hostname}&m=${mac}&s=${serial}&u=${uuid}"
+    ]
+  }
+}

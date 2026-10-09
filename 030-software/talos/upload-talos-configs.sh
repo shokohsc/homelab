@@ -1,5 +1,5 @@
 #!/bin/sh
-# Upload talos configuration files to booter & remote-config node.
+# Upload talos configuration files to the PXE server (remote-config).
 # Usage: ./upload-talos-configs.sh
 
 set -euo pipefail

@@ -1,0 +1,18 @@
+# Talos version and the Image Factory schematic used for the PXE kernel/initramfs.
+# The empty schematic (no extensions) is enough for network boot: system extensions
+# are applied by the installer image referenced in each machine config, not the PXE image.
+talos_version: v1.13.7
+talos_factory_schematic: 376567988ad370138ad8b2698212367b8edcb69b5fd68c80be1f2ec7d603b4ba
+
+# Address the PXE clients use to reach the tracer. Defaults to the primary IPv4 address.
+tracer_ip: "{{ ansible_default_ipv4.address | default('10.99.99.1') }}"
+tracer_fqdn: tracer.home.arpa
+
+# Proxy DHCP subnet mask (matches the /24 added to the PXE interface).
+pxe_dhcp_netmask: 255.255.255.0
+
+# matchbox serves the iPXE profiles over HTTP on this host port.
+matchbox_port: 8082
+
+# Tracer is a Raspberry Pi, so pin an arm64 tag for the dnsmasq image.
+dnsmasq_image: quay.io/poseidon/dnsmasq:v0.5.0-52-g43ac44a-arm64

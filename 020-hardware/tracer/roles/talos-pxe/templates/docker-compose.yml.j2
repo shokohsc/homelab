@@ -1,19 +1,49 @@
 services:
 
-  booter:
-    image: ghcr.io/siderolabs/booter:v0.3.1
-    container_name: booter
+  matchbox:
+    image: quay.io/poseidon/matchbox:v0.11.0
+    container_name: matchbox
     command:
-      - --extra-kernel-args
-      - talos.config=http://tracer.home.arpa:8080/metadata?{{ booter_query_parameters }}
-    cap_add:
-      - NET_BIND_SERVICE
+      - -address=0.0.0.0:8080
+      - -data-path=/var/lib/matchbox
+    ports:
+      - "{{ matchbox_port }}:8080/tcp"
+    volumes:
+      - ./matchbox:/var/lib/matchbox:ro
     logging:
       driver: journald
       options:
-        tag: "booter"
-    network_mode: host
+        tag: "matchbox"
     restart: unless-stopped
+
+  dnsmasq:
+    image: {{ dnsmasq_image }}
+    container_name: dnsmasq
+    command:
+      - -d
+      - -q
+      - "--port=0"
+      - "--dhcp-range={{ tracer_ip }},proxy,{{ pxe_dhcp_netmask }}"
+      - "--enable-tftp"
+      - "--tftp-root=/var/lib/tftpboot"
+      - "--dhcp-userclass=set:ipxe,iPXE"
+      - "--pxe-service=tag:#ipxe,x86PC,PXE chainload to iPXE,undionly.kpxe"
+      - "--pxe-service=tag:ipxe,x86PC,iPXE,http://{{ tracer_ip }}:{{ matchbox_port }}/boot.ipxe"
+      - "--pxe-service=tag:#ipxe,X86-64_EFI,PXE chainload to iPXE UEFI,ipxe.efi"
+      - "--pxe-service=tag:ipxe,X86-64_EFI,iPXE UEFI,http://{{ tracer_ip }}:{{ matchbox_port }}/boot.ipxe"
+      - "--log-queries"
+      - "--log-dhcp"
+    cap_add:
+      - NET_ADMIN
+      - NET_BIND_SERVICE
+    network_mode: host
+    logging:
+      driver: journald
+      options:
+        tag: "dnsmasq"
+    restart: unless-stopped
+    depends_on:
+      - matchbox
 
   remote-config:
     image: ghcr.io/siderolabs/talos-remote-config:latest
@@ -28,4 +58,4 @@ services:
         tag: "remote-config"
     restart: unless-stopped
     depends_on:
-      - booter
+      - matchbox

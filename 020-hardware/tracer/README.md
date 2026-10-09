@@ -7,7 +7,7 @@ This playbook manages a Raspberry Pi running as a Talos PXE boot server using **
 The playbook installs and configures:
 - **raspi-hardening**: Mounts tmpfs for /var/log, /tmp, /var/tmp; disables swap
 - **containerd-setup**: Installs containerd and nerdctl as Docker replacement
-- **talos-pxe**: Deploys Talos PXE boot containers
+- **talos-pxe**: Deploys matchbox (iPXE profiles over HTTP) and dnsmasq (proxy DHCP + TFTP) to PXE boot Talos nodes
 
 ## Requirements
 
@@ -61,10 +61,15 @@ The role also configures necessary kernel parameters (net.ipv4.ip_unprivileged_p
 
 #### talos-pxe
 Deploys Talos PXE boot services:
-- Generates docker-compose.yaml for Talos services
-- Configures PXE network interfaces
-- Generates iptables.conf template from role templates directory
-- Starts booter and remote-config containers via nerdctl
+- Downloads the Talos kernel and initramfs from the Image Factory for the configured schematic/version
+- Generates matchbox profiles and groups under `matchbox/` (served over HTTP on `matchbox_port`)
+- Generates docker-compose.yaml for matchbox, dnsmasq and remote-config
+- Configures the PXE network interface
+- Starts the containers via nerdctl
+
+The boot chain is: PXE firmware -> dnsmasq proxy DHCP/TFTP chainloads iPXE -> iPXE fetches `/boot.ipxe` from matchbox -> matchbox renders the `talos` profile (kernel/initramfs downloaded locally, so no HTTPS is required in iPXE) -> Talos fetches its per-node config from remote-config (`/metadata`).
+
+To change the Talos version, update `talos_version` in the inventory and re-run the role (assets are stored per version under `matchbox/assets/`).
 
 ## Configuration
 
@@ -82,6 +87,9 @@ docker_log_max_files: 3       # Max log files to keep
 network_interface: eth0       # Primary network interface
 pxe_tftp_port: 69             # TFTP port for PXE boot
 http_port: 8080               # HTTP port for remote configuration
+matchbox_port: 8082           # HTTP port for the matchbox iPXE profiles
+talos_version: v1.13.7        # Talos version to PXE boot
+talos_factory_schematic: ...  # Image Factory schematic for the PXE kernel/initramfs (empty by default)
 containerd_version: "2.3.1"   # Containerd version to use
 nerdctl_version: "2.3.1"     # Nerdctl version to use
 nerdctl_checksum: sha256:... # Expected SHA256 checksum for nerdctl
@@ -94,8 +102,10 @@ The playbook generates the following configuration files:
 
 - `/etc/fstab` - Updated with tmpfs and swap entries
 - `/etc/systemd/journald.conf` - Configured for volatile storage (backup created in `{{ backup_dir }}`)
-- `/home/<user>/talos-pxe/docker-compose.yaml` - Talos services configuration
-- `/home/<user>/talos-pxe/iptables.conf` - iptables configuration
+- `/home/<user>/talos-pxe/docker-compose.yaml` - matchbox, dnsmasq and remote-config services
+- `/home/<user>/talos-pxe/matchbox/profiles/talos.json` - matchbox Talos iPXE profile
+- `/home/<user>/talos-pxe/matchbox/groups/default.json` - matchbox default group (matches all machines)
+- `/home/<user>/talos-pxe/matchbox/assets/<version>/` - Talos kernel and initramfs served by matchbox
 - `/usr/local/bin/nerdctl` - Docker-compatible CLI (symlink)
 - `/usr/local/bin/iptables` - iptables symlink for easier access
 
@@ -105,8 +115,10 @@ After playbook execution:
 
 | Service     | Port   | Protocol | Description                    |
 |-------------|--------|----------|--------------------------------|
-| TFTP        | 69     | UDP      | PXE boot server                 |
-| HTTP        | 8080   | TCP      | Remote configuration interface  |
+| TFTP        | 69     | UDP      | dnsmasq TFTP (iPXE chainload)  |
+| Proxy DHCP  | 67     | UDP      | dnsmasq proxy DHCP             |
+| HTTP        | 8080   | TCP      | remote-config interface         |
+| HTTP        | 8082   | TCP      | matchbox iPXE profiles         |
 | nerdctl     | N/A    | CLI      | Container management tool       |
 
 ## Container Management
@@ -115,7 +127,7 @@ After installation, use nerdctl to manage containers:
 
 ```bash
 # Pull Talos images
-nerdctl pull ghcr.io/siderolabs/booter:v0.3.0
+nerdctl pull quay.io/poseidon/matchbox:v0.11.0
 
 # List running containers
 nerdctl ps

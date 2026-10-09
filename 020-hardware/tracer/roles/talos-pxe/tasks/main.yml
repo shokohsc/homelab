@@ -5,9 +5,42 @@
     mode: 0755
   become_user: "{{ ansible_user }}"
 
+- name: Create matchbox data directories
+  file:
+    path: "{{ item }}"
+    state: directory
+    mode: 0755
+  loop:
+    - /home/{{ ansible_user }}/talos-pxe/matchbox/profiles
+    - /home/{{ ansible_user }}/talos-pxe/matchbox/groups
+    - /home/{{ ansible_user }}/talos-pxe/matchbox/assets/{{ talos_version }}
+  become_user: "{{ ansible_user }}"
+
+- name: Download Talos kernel and initramfs from the Image Factory
+  ansible.builtin.get_url:
+    url: https://pxe.factory.talos.dev/image/{{ talos_factory_schematic }}/{{ talos_version }}/{{ item }}
+    dest: /home/{{ ansible_user }}/talos-pxe/matchbox/assets/{{ talos_version }}/{{ item }}
+    mode: 0644
+  loop:
+    - kernel-amd64
+    - initramfs-amd64.xz
+  become_user: "{{ ansible_user }}"
+
+- name: Render matchbox Talos profile
+  ansible.builtin.template:
+    src: matchbox-profiles-talos.json.j2
+    dest: /home/{{ ansible_user }}/talos-pxe/matchbox/profiles/talos.json
+    mode: 0644
+  become_user: "{{ ansible_user }}"
+
+- name: Render matchbox default group
+  ansible.builtin.template:
+    src: matchbox-groups-default.json.j2
+    dest: /home/{{ ansible_user }}/talos-pxe/matchbox/groups/default.json
+    mode: 0644
+  become_user: "{{ ansible_user }}"
+
 - name: Create docker-compose.yaml for Talos PXE services
-  vars:
-    booter_query_parameters: "h=$${hostname}&m=$${mac}&s=$${serial}&u=$${uuid}&p=$${profile}"
   ansible.builtin.template:
     src: docker-compose.yml.j2
     dest: /home/{{ ansible_user }}/talos-pxe/docker-compose.yaml
