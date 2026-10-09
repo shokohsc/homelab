@@ -1,0 +1,134 @@
+---
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: kubeshark-worker-daemon-set
+spec:
+  selector:
+    matchLabels:
+      app: worker
+  template:
+    metadata:
+      labels:
+        app: worker
+        policy.gatekeeper.sh/ignore: "true"
+    spec:
+      containers:
+        - command:
+            - /service
+            - -port
+            - '48999'
+            - -metrics-port
+            - '49100'
+            - -hub-url
+            - 'http://kubeshark-hub.kubeshark.svc.cluster.local'
+          # -hub-url targets the hub Service by its cluster FQDN (must match the
+          # namespace this chart installs into) instead of the kubeshark cloud.
+          image: 'ghcr.io/shokohsc/worker:sha-b74f7a8'
+          name: sniffer
+          ports:
+            - containerPort: 49100
+              protocol: TCP
+              name: metrics
+          env:
+          - name: POD_NAME
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.name
+          - name: POD_NAMESPACE
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.namespace
+          - name: NODE_NAME
+            valueFrom:
+              fieldRef:
+                fieldPath: spec.nodeName
+          - name: TCP_STREAM_CHANNEL_TIMEOUT_MS
+            value: '10000'
+          - name: TCP_STREAM_CHANNEL_TIMEOUT_SHOW
+            value: 'false'
+          - name: PROFILING_ENABLED
+            value: 'false'
+          - name: SENTRY_ENABLED
+            value: 'false'
+          - name: SENTRY_ENVIRONMENT
+            value: 'production'
+          - name: HUB_INTERNAL_TOKEN_PATH
+            value: /var/run/secrets/kubeshark/hub-token/token
+          resources:
+            limits:
+              memory: 5Gi
+            requests:
+              cpu: 50m
+              memory: 50Mi
+          securityContext:
+            privileged: true
+          readinessProbe:
+            periodSeconds: 5
+            failureThreshold: 3
+            successThreshold: 1
+            initialDelaySeconds: 5
+            tcpSocket:
+              port: 48999
+          livenessProbe:
+            periodSeconds: 5
+            failureThreshold: 3
+            successThreshold: 1
+            initialDelaySeconds: 5
+            tcpSocket:
+              port: 48999
+          volumeMounts:
+            - mountPath: /hostproc
+              name: proc
+              readOnly: true
+            - mountPath: /sys
+              name: sys
+              readOnly: true
+              mountPropagation: HostToContainer
+            - mountPath: /app/data
+              name: data
+            - mountPath: /var/run/secrets/kubeshark/hub-token
+              name: hub-internal-token
+              readOnly: true
+      dnsPolicy: ClusterFirstWithHostNet
+      hostNetwork: true
+      serviceAccountName: kubeshark-service-account
+      tolerations:
+        - key: 
+          operator: "Exists"
+          effect: "NoExecute"
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: kubernetes.io/os
+                operator: In
+                values:
+                - linux
+      volumes:
+        - hostPath:
+            path: /proc
+          name: proc
+        - hostPath:
+            path: /sys
+          name: sys
+        - name: lib-modules
+          hostPath:
+            path: /lib/modules
+        - hostPath:
+            path: /etc/os-release
+          name: os-release
+        - hostPath:
+            path: /
+          name: root
+        - name: data
+          emptyDir:
+            sizeLimit: 10Gi
+        - name: hub-internal-token
+          projected:
+            sources:
+              - serviceAccountToken:
+                  path: token
+                  audience: kubeshark-hub
+                  expirationSeconds: 3600

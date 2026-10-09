@@ -38,6 +38,7 @@ resources:
   - kube-state-metrics
   - kube-system
   - kubeopencode
+  - kubeshark
   - maddy
   - matrix
   - metrics-server
