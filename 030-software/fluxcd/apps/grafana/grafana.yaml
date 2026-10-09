@@ -82,8 +82,9 @@ spec:
     resources:
       requests:
         cpu: 100m
-      limits:
         memory: 1024Mi
+      limits:
+        memory: 2048Mi
 
     sidecar:
       dashboards:
