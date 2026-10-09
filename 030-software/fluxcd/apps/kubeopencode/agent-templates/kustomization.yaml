@@ -3,5 +3,6 @@ kind: Kustomization
 resources:
   - main
   - homelab
+  - kubeshark
   - talos-proxmox-autoscaler
   - nostr-gateway
