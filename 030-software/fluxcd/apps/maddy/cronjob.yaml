@@ -67,7 +67,7 @@ spec:
           automountServiceAccountToken: false
           containers:
           - name: go-imap-backup
-            image: golang:1.27.1-alpine
+            image: golang:1.27.2-alpine
             env:
             - name: IMAP_SERVER
               value: maddy.${domain}
