@@ -7,11 +7,11 @@ resources:
   # - http-route.yaml
   # - rbac.yaml
   - cluster.yaml
+  - cluster-ferretdb.yaml
   - routes.yaml
   - secret.yaml
   - database-roles/atuin.yaml
   - database-roles/buzz.yaml
-  - database-roles/ferretdb.yaml
   - database-roles/kubeopencode.yaml
   - database-roles/maddy.yaml
   - database-roles/matrix.yaml

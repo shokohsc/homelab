@@ -13,10 +13,9 @@ spec:
   #     auto_explain.log_min_duration: '10s'
   #   pg_hba:
   #     - host all all 10.244.0.0/16 md5
-    # shared_preload_libraries:
-    #   - pg_cron
-    #   - pg_documentdb_core
-    #   - pg_documentdb
+  # FerretDB (DocumentDB extension) runs on its own PostgreSQL 17 cluster, see cluster-ferretdb.yaml.
+  # PostgreSQL 18 (this image) has no pg_documentdb build: enabling shared_preload_libraries here
+  # makes every instance crash on restart and the cluster cannot recover.
   enableSuperuserAccess: true
   superuserSecret:
     name: postgres

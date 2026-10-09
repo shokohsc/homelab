@@ -1,0 +1,64 @@
+---
+# Dedicated PostgreSQL 17 cluster for FerretDB.
+# FerretDB v2 requires the DocumentDB extension (pg_documentdb), which is only
+# packaged for PostgreSQL up to 17. The main cluster runs PostgreSQL 18 and
+# cannot load it, so FerretDB gets its own cluster using the matching
+# ferretdb postgres-documentdb image (17-0.107.0-ferretdb-2.7.0 <-> ferretdb 2.7.0).
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: ferretdb
+spec:
+  instances: 3
+  imageName: ghcr.io/ferretdb/postgres-documentdb:17-0.107.0-ferretdb-2.7.0
+  # The DocumentDB image runs postgres as uid/gid 999 (CNPG default is 26).
+  postgresUID: 999
+  postgresGID: 999
+  enableSuperuserAccess: true
+  superuserSecret:
+    name: postgres
+  storage:
+    size: 2Gi
+  postgresql:
+    shared_preload_libraries:
+      - pg_cron
+      - pg_documentdb_core
+      - pg_documentdb
+    parameters:
+      cron.database_name: ferretdb
+      # Required to run FerretDB without superuser access (packaging/10-preload.sh).
+      documentdb.enableCompact: "true"
+      documentdb.enableLetAndCollationForQueryMatch: "true"
+      documentdb.enableNowSystemVariable: "true"
+      documentdb.enableSortbyIdPushDownToPrimaryKey: "true"
+      documentdb.enableSchemaValidation: "true"
+      documentdb.enableBypassDocumentValidation: "true"
+      documentdb.enableUserCrud: "true"
+      documentdb.maxUserLimit: "100"
+    pg_hba:
+      # pg_cron and DocumentDB connect via localhost.
+      - host ferretdb postgres localhost trust
+      - host ferretdb ferretdb localhost trust
+  bootstrap:
+    initdb:
+      database: ferretdb
+      owner: ferretdb
+      secret:
+        name: ferretdb
+      postInitApplicationSQL:
+        - CREATE EXTENSION IF NOT EXISTS documentdb CASCADE;
+        - CREATE EXTENSION IF NOT EXISTS pg_cron;
+        - GRANT documentdb_admin_role TO ferretdb;
+  resources:
+    requests:
+      cpu: "1"
+      memory: 256Mi
+    limits:
+      memory: 1024Mi
+  topologySpreadConstraints:
+    - maxSkew: 1
+      topologyKey: kubernetes.io/hostname
+      whenUnsatisfiable: ScheduleAnyway
+      labelSelector:
+        matchLabels:
+          cnpg.io/cluster: ferretdb
