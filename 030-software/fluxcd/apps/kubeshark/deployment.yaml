@@ -124,15 +124,14 @@ spec:
     metadata:
       labels:
         app: front
-        policy.gatekeeper.sh/ignore: "true"
     spec:
-      # securityContext:
-      #   runAsNonRoot: true
-      #   runAsUser: 1000
-      #   runAsGroup: 1000
-      #   fsGroup: 1000
-      #   seccompProfile:
-      #     type: RuntimeDefault
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        seccompProfile:
+          type: RuntimeDefault
       containers:
         - env:
             # HUB_URL is the hub Service's cluster FQDN this front proxies
@@ -175,15 +174,14 @@ spec:
               value: 'false'
             - name: REACT_APP_SENTRY_ENVIRONMENT
               value: 'production'
-          # image: 'ghcr.io/shokohsc/front:sha-b74f7a8'
-          image: kubeshark/front:v53.5
-          # securityContext:
-          #   allowPrivilegeEscalation: false
-          #   readOnlyRootFilesystem: true
-          #   runAsNonRoot: true
-          #   capabilities:
-          #     drop:
-          #       - ALL
+          image: 'ghcr.io/shokohsc/front:sha-b74f7a8'
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+            capabilities:
+              drop:
+                - ALL
           name: kubeshark-front
           livenessProbe:
             periodSeconds: 1
