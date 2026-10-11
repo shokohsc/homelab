@@ -39,7 +39,7 @@ spec:
               app: wekan
       containers:
         - name: wekan
-          image: wekanteam/wekan:v12.28
+          image: ghcr.io/wekan/wekan:v12.32
           securityContext:
             allowPrivilegeEscalation: false
             readOnlyRootFilesystem: true
