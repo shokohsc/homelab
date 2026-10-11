@@ -1,1 +1,3 @@
 - Use Recreate (not RollingUpdate) for single-replica workloads backed by a ReadWriteOnce volume; rolling updates deadlock on the claim.
+- Keep an app's heap/memory limit below the container memory limit so native allocations have headroom; setting them equal starves startup.
+- Size the startup probe window (failureThreshold x periodSeconds) above the worst-case cold start, or the app restart-loops.

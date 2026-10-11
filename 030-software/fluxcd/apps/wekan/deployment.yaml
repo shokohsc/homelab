@@ -52,13 +52,12 @@ spec:
               value: "mongodb://ferretdb.ferretdb:27017/wekan"
             - name: ROOT_URL
               value: https://wekan.${domain}
-            - name: NODE_OPTIONS
-              value: --max_old_space_size=1024
           ports:
             - name: http
               containerPort: 8080
               protocol: TCP
           startupProbe:
+            failureThreshold: 30
             tcpSocket:
               port: http
           livenessProbe:
@@ -71,8 +70,9 @@ spec:
           resources:
             requests:
               cpu: 100m
+              memory: 512Mi
             limits:
-              memory: 1024Mi
+              memory: 2Gi
           volumeMounts:
             - name: data
               mountPath: /data
