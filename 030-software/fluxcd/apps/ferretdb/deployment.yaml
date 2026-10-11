@@ -23,7 +23,7 @@ spec:
           type: RuntimeDefault
       containers:
         - name: ferretdb
-          image: ghcr.io/ferretdb/ferretdb:2.7.0
+          image: ghcr.io/wekan/ferretdb:v1.92.0
           securityContext:
             allowPrivilegeEscalation: false
             readOnlyRootFilesystem: true
@@ -31,6 +31,9 @@ spec:
             capabilities:
               drop:
                 - ALL
+          env:
+            - name: FERRETDB_TELEMETRY
+              value: disable
           envFrom:
             - secretRef:
                 name: ferretdb

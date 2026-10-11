@@ -22,7 +22,7 @@ resources:
   - excalidraw
   - external-dns
   - external-services
-  # - ferretdb
+  - ferretdb
   - gatekeeper
   - grafana
   - grist
@@ -87,6 +87,7 @@ resources:
   - vpn-egress-gateway
   - web-check
   - weechat
+  - wekan
   - whoami
   - ws-screenshot
   - zipkin

@@ -4,6 +4,7 @@ kind: Deployment
 metadata:
   name: mongoku
 spec:
+  revisionHistoryLimit: 0
   selector:
     matchLabels:
       app: mongoku
