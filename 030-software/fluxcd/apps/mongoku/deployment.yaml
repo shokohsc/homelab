@@ -49,7 +49,7 @@ spec:
                 - ALL
           env:
             - name: MONGOKU_DEFAULT_HOST
-              value: "mongodb://mongodb.mongodb.svc.cluster.local:27017"
+              value: "mongodb://ferretdb.ferretdb.svc.cluster.local:27017"
             - name: MONGOKU_SERVER_ORIGIN
               value: https://mongoku.${domain}
             - name: MONGOKU_EXCLUDE_DATABASES
