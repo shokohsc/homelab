@@ -42,6 +42,7 @@ resources:
   - matrix
   - metrics-server
   - miniflux
+  - mongodb
   - nats
   - nfs-downloads
   - nostr-gateway
