@@ -71,6 +71,18 @@ spec:
             matchLabels:
               app.kubernetes.io/name: cloudnative-pg
 
+    - name: mongodb
+      port: 27017
+      protocol: TCP
+      allowedRoutes:
+        kinds:
+          - kind: TCPRoute
+        namespaces:
+          from: Selector
+          selector:
+            matchLabels:
+              app: mongodb
+
     - name: plex
       port: 32400
       protocol: TCP

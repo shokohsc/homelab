@@ -1,0 +1,70 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mongo-gui
+spec:
+  selector:
+    matchLabels:
+      app: mongo-gui
+  template:
+    metadata:
+      labels:
+        app: mongo-gui
+    spec:
+      automountServiceAccountToken: false
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        seccompProfile:
+          type: RuntimeDefault
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              podAffinityTerm:
+                topologyKey: kubernetes.io/hostname
+                labelSelector:
+                  matchLabels:
+                    app: mongo-gui
+      topologySpreadConstraints:
+        - maxSkew: 1
+          topologyKey: kubernetes.io/hostname
+          whenUnsatisfiable: ScheduleAnyway
+          labelSelector:
+            matchLabels:
+              app: mongo-gui
+      containers:
+        - name: mongo-gui
+          image: ugleiton/mongo-gui:latest@sha256:b3f3bad95921b55d4ada02bed765e55b09c9fe65882200b6e8da6dc3ec4c5043
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+            capabilities:
+              drop:
+                - ALL
+          env:
+            - name: MONGO_URL
+              value: "mongodb://mongodb.mongodb.svc.cluster.local:27017"
+          ports:
+            - name: http
+              containerPort: 4321
+              protocol: TCP
+          startupProbe:
+            tcpSocket:
+              port: http
+          livenessProbe:
+            tcpSocket:
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+          resources:
+            limits:
+              memory: 256M
+            requests:
+              cpu: 100m
