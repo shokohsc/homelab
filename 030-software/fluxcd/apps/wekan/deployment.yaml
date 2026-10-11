@@ -70,4 +70,10 @@ spec:
             requests:
               cpu: 100m
             limits:
-              memory: 1024M
+              memory: 512Mi
+          volumeMounts:
+            - name: data
+              mountPath: /data
+      volumes:
+        - name: data
+          emptyDir: {}
