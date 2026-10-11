@@ -3,6 +3,6 @@ kind: Kustomization
 namespace: mongo-gui
 resources:
   - namespace.yaml
-  - ingress.yaml
+  - http-route.yaml
   - deployment.yaml
   - service.yaml
