@@ -1,1 +1,1 @@
-
+- Use Recreate (not RollingUpdate) for single-replica workloads backed by a ReadWriteOnce volume; rolling updates deadlock on the claim.
