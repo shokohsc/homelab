@@ -2,15 +2,15 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: mongo-gui
+  name: mongoku
 spec:
   selector:
     matchLabels:
-      app: mongo-gui
+      app: mongoku
   template:
     metadata:
       labels:
-        app: mongo-gui
+        app: mongoku
     spec:
       automountServiceAccountToken: false
       securityContext:
@@ -28,17 +28,17 @@ spec:
                 topologyKey: kubernetes.io/hostname
                 labelSelector:
                   matchLabels:
-                    app: mongo-gui
+                    app: mongoku
       topologySpreadConstraints:
         - maxSkew: 1
           topologyKey: kubernetes.io/hostname
           whenUnsatisfiable: ScheduleAnyway
           labelSelector:
             matchLabels:
-              app: mongo-gui
+              app: mongoku
       containers:
-        - name: mongo-gui
-          image: ugleiton/mongo-gui:latest@sha256:b3f3bad95921b55d4ada02bed765e55b09c9fe65882200b6e8da6dc3ec4c5043
+        - name: mongoku
+          image: huggingface/mongoku:2.11.3
           securityContext:
             allowPrivilegeEscalation: false
             readOnlyRootFilesystem: true
@@ -47,11 +47,17 @@ spec:
               drop:
                 - ALL
           env:
-            - name: MONGO_URL
+            - name: MONGOKU_DEFAULT_HOST
               value: "mongodb://mongodb.mongodb.svc.cluster.local:27017"
+            - name: MONGOKU_SERVER_ORIGIN
+              value: https://mongoku.${domain}
+            - name: MONGOKU_EXCLUDE_DATABASES
+              value: admin,config,local
+            - name: MONGOKU_DATABASE_FILE
+              value: /tmp/mongoku.db
           ports:
             - name: http
-              containerPort: 4321
+              containerPort: 3100
               protocol: TCP
           startupProbe:
             tcpSocket:
@@ -65,6 +71,12 @@ spec:
               port: http
           resources:
             limits:
-              memory: 256M
+              memory: 64M
             requests:
               cpu: 100m
+          volumeMounts:
+            - name: tmp
+              mountPath: /tmp
+      volumes:
+        - name: tmp
+          emptyDir: {}

@@ -2,20 +2,20 @@
 apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
 metadata:
-  name: mongo-gui
+  name: mongoku
   annotations:
     dashboard.${domain}/icon: database
-    dashboard.${domain}/name: mongo-gui
-    dashboard.${domain}/url: https://mongo-gui.${domain}
+    dashboard.${domain}/name: mongoku
+    dashboard.${domain}/url: https://mongoku.${domain}
 spec:
   hostnames:
-  - mongo-gui.${domain}
+  - mongoku.${domain}
   parentRefs:
   - name: cilium
     namespace: cilium
   rules:
   - backendRefs:
-    - name: mongo-gui
+    - name: mongoku
       port: 80
     matches:
     - path:
