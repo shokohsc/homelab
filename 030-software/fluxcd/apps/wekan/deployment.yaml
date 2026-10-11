@@ -53,7 +53,7 @@ spec:
             - name: ROOT_URL
               value: https://wekan.${domain}
             - name: NODE_OPTIONS
-              value: --max_old_space_size=4096
+              value: --max_old_space_size=512
           ports:
             - name: http
               containerPort: 8080
