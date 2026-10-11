@@ -3,7 +3,7 @@ function FindProxyForURL(url, host) {
         return 'DIRECT';
     }
 
-    if (isInNet(host, '10.42.0.0', '255.255.0.0')) {
+    if (isInNet(host, '10.42.10.0', '255.255.255.0')) {
         return 'DIRECT';
     }
 
