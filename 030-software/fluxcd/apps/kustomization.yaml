@@ -71,12 +71,12 @@ resources:
   - samba
   - sftpgo
   - shell2http
-  - sign-pdf
+  # - sign-pdf
   - sidekick
   - sonarr
   - squid
   - stackedit
-  - stirling-pdf
+  # - stirling-pdf
   - storm
   - swingmusic
   - syslog
