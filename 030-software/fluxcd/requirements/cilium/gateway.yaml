@@ -71,7 +71,7 @@ spec:
             matchLabels:
               app.kubernetes.io/name: cloudnative-pg
 
-    - name: mongodb
+    - name: ferretdb
       port: 27017
       protocol: TCP
       allowedRoutes:
@@ -81,7 +81,7 @@ spec:
           from: Selector
           selector:
             matchLabels:
-              app: mongodb
+              app: ferretdb
 
     - name: plex
       port: 32400
