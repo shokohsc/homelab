@@ -42,7 +42,6 @@ resources:
   - matrix
   - metrics-server
   - miniflux
-  # - mongodb
   - mongoku
   - nats
   - nfs-downloads
@@ -71,12 +70,10 @@ resources:
   - samba
   - sftpgo
   - shell2http
-  # - sign-pdf
   - sidekick
   - sonarr
   - squid
   - stackedit
-  # - stirling-pdf
   - storm
   - swingmusic
   - syslog
@@ -93,4 +90,4 @@ resources:
   - wekan
   - whoami
   - ws-screenshot
-  - zipkin
+  # - zipkin
