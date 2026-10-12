@@ -17,7 +17,6 @@ spec:
     metadata:
       labels:
         app: jellyfin
-        nfs-genji: "true"
         policy.gatekeeper.sh/ignore-container-must-have-limits: "true"
     spec:
       automountServiceAccountToken: false

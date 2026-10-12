@@ -18,8 +18,6 @@ spec:
     metadata:
       labels:
         app: sftpgo
-        nfs-genji: "true"
-        nfs-hanzo: "true"
     spec:
       automountServiceAccountToken: false
       securityContext:
