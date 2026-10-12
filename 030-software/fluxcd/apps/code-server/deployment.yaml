@@ -42,7 +42,7 @@ spec:
               app: code-server
       containers:
         - name: code-server
-          image: ghcr.io/coder/code-server:4.138.0
+          image: ghcr.io/coder/code-server:4.141.0
           securityContext:
             allowPrivilegeEscalation: false
             readOnlyRootFilesystem: true
