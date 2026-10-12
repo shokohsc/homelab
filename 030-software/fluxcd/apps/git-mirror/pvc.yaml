@@ -3,12 +3,9 @@ kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
   name: data
-  labels:
-    app.kubernetes.io/instance: git-mirror
-    app.kubernetes.io/name: git-mirror
 spec:
   accessModes:
     - "ReadWriteOnce"
   resources:
     requests:
-      storage: "20Gi"
+      storage: "1Gi"

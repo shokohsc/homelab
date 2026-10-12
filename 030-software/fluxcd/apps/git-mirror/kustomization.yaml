@@ -4,7 +4,6 @@ namespace: git-mirror
 resources:
   - namespace.yaml
   - deployment.yaml
-  - poddisruptionbudget.yaml
   - service.yaml
   - pvc.yaml
   - http-route.yaml
