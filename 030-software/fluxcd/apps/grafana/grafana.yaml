@@ -89,7 +89,7 @@ spec:
     sidecar:
       dashboards:
         enabled: true
-        labelValue: k8s-gitops
+        labelValue: homelab
       resources:
         requests:
           cpu: 100m

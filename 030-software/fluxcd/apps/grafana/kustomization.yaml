@@ -25,4 +25,4 @@ configMapGenerator:
 generatorOptions:
   disableNameSuffixHash: true
   labels:
-    grafana_dashboard: k8s-gitops
+    grafana_dashboard: homelab
