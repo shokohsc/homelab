@@ -3,6 +3,9 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: pyload
+  labels:
+    stateful: "true"
+    nfs-downloads: "true"
 spec:
   revisionHistoryLimit: 0
   strategy:
@@ -14,8 +17,6 @@ spec:
     metadata:
       labels:
         app: pyload
-        # policy.gatekeeper.sh/ignore-psp-readonlyrootfilesystem: "true"
-        # policy.gatekeeper.sh/ignore-psp-pods-allowed-user-ranges: "true"
     spec:
       automountServiceAccountToken: false
       securityContext:

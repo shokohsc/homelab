@@ -4,6 +4,8 @@ metadata:
   name: pocket-id
   annotations:
     secret.reloader.stakater.com/reload: pocket-id
+  labels:
+    stateful: "true"
 spec:
   strategy:
     type: Recreate

@@ -3,6 +3,10 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: commander
+  labels:
+    nfs-genji: "true"
+    nfs-hanzo: "true"
+    nfs-downloads: "true"
 spec:
   revisionHistoryLimit: 0
   selector:

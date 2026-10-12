@@ -5,6 +5,9 @@ metadata:
   name: plex
   annotations:
     configmap.reloader.stakater.com/reload: "vector,s6-plex"
+  labels:
+    stateful: "true"
+    nfs-genji: "true"
 spec:
   strategy:
     type: Recreate

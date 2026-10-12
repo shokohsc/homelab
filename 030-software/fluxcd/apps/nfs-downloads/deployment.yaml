@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: downloads
   labels:
-    app: downloads
+    stateful: "true"
 spec:
   revisionHistoryLimit: 0
   strategy:

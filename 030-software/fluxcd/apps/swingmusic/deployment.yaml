@@ -2,6 +2,9 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: swingmusic
+  labels:
+    stateful: "true"
+    nfs-genji: "true"
 spec:
   revisionHistoryLimit: 0
   strategy:

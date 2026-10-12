@@ -3,6 +3,8 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: deluge
+  labels:
+    stateful: "true"
   annotations:
     configmap.reloader.stakater.com/reload: "settings,scripts,pod-gateway"
 spec:

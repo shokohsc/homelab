@@ -22,6 +22,8 @@ spec:
         name: valkey
       interval: ${interval}
   values:
+    commonLabels:
+      stateful: "true"
     dataStorage:
       enabled: true
       requestedSize: 10Gi

@@ -22,7 +22,8 @@ spec:
     kind: OCIRepository
     name: loki
   values:
-    commonLabels: null
+    commonLabels:
+      stateful: "true"
 
     deploymentMode: Monolithic
 

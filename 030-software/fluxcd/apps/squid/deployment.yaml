@@ -5,6 +5,8 @@ metadata:
   name: squid
   annotations:
     configmap.reloader.stakater.com/reload: "config"
+  labels:
+    stateful: "true"
 spec:
   revisionHistoryLimit: 0
   strategy:

@@ -3,6 +3,8 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: relay
+  labels:
+    stateful: "true"
 spec:
   revisionHistoryLimit: 0
   strategy:

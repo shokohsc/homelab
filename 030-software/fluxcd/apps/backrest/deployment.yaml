@@ -3,6 +3,9 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: backrest
+  labels:
+    stateful: "true"
+    nfs-genji: "true"
 spec:
   revisionHistoryLimit: 0
   strategy:
@@ -14,7 +17,6 @@ spec:
     metadata:
       labels:
         app: backrest
-        nfs-genji: "true"
     spec:
       automountServiceAccountToken: false
       securityContext:

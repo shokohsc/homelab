@@ -5,6 +5,8 @@ metadata:
   name: maddy
   annotations:
     configmap.reloader.stakater.com/reload: "config,scripts"
+  labels:
+    stateful: "true"
 spec:
   revisionHistoryLimit: 0
   strategy:

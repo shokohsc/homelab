@@ -4,7 +4,7 @@ kind: Deployment
 metadata:
   name: vaultwarden
   labels:
-    app: vaultwarden
+    stateful: "true"
 spec:
   revisionHistoryLimit: 0
   replicas: 1

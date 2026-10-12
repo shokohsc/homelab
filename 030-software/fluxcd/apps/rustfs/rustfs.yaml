@@ -82,5 +82,8 @@ spec:
       podAntiAffinity:
         enabled: true
     
+    commonLabels:
+      stateful: "true"
+    
     podLabels:
       policy.gatekeeper.sh/ignore-container-must-have-limits: "true"

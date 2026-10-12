@@ -3,6 +3,9 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: code-server
+  labels:
+    stateful: "true"
+    nfs-genji: "true"
 spec:
   revisionHistoryLimit: 0
   strategy:
