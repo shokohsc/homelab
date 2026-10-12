@@ -1,0 +1,30 @@
+# Address the HTTP server serves the mirrors on.
+ListenAddr = ":8080"
+
+# How often each mirror is fetched. Archive mirrors do not need to be fresh.
+Interval = "1h"
+
+# Where the bare mirrors are stored, backed by the data PersistentVolumeClaim.
+BasePath = "/git-mirror"
+
+# Maximum concurrent clone/fetch connections.
+MaxConcurrentConnections = 32
+
+# Refresh the multi-pack-index (with bitmap) every N fetches for faster clones.
+MultiPackIndexInterval = 10
+
+# Repositories to mirror. Add one [[Repo]] block per remote repository.
+# A mirror is served at http://<host>/<name>; Name defaults to the host + path
+# of the Origin (e.g. github.com/shokohsc/homelab.git).
+# Public HTTPS remotes work as-is; private/SSH remotes need credentials mounted.
+#
+# [[Repo]] supports:
+#   Origin (required)  URL of the repository to mirror (HTTPS or SSH)
+#   Name   (optional)  custom name the mirror is served under
+#   Interval (optional) per-repo override of the global update interval
+
+[[Repo]]
+Origin = "https://github.com/shokohsc/homelab.git"
+
+[[Repo]]
+Origin = "https://github.com/espressif/git-mirror-server.git"
