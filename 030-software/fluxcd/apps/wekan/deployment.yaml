@@ -49,7 +49,7 @@ spec:
                 - ALL
           env:
             - name: MONGO_URL
-              value: "mongodb://ferretdb.ferretdb:27017/wekan"
+              value: "mongodb://mongodb.mongodb.svc.cluster.local:27017/wekan"
             - name: ROOT_URL
               value: https://wekan.${domain}
             # - name: NODE_OPTIONS
@@ -72,9 +72,10 @@ spec:
           resources:
             requests:
               cpu: 100m
-              memory: 512Mi
+              memory: 256Mi
             limits:
-              memory: 1024Mi
+              cpu: 1000m
+              memory: 256Mi
           volumeMounts:
             - name: data
               mountPath: /data
