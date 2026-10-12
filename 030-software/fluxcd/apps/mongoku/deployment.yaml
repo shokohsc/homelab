@@ -56,6 +56,8 @@ spec:
               value: admin,config,local
             - name: MONGOKU_DATABASE_FILE
               value: /tmp/mongoku.db
+            - name: MONGOKU_READ_ONLY_MODE
+              value: "true"
           ports:
             - name: http
               containerPort: 3100
