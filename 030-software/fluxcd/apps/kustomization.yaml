@@ -51,6 +51,7 @@ resources:
   - paint
   - pairdrop
   - passed
+  - pdfcraft
   - plex
   - pocket-id
   - postal
@@ -70,10 +71,12 @@ resources:
   - samba
   - sftpgo
   - shell2http
+  - sign-pdf
   - sidekick
   - sonarr
   - squid
   - stackedit
+  - stirling-pdf
   - storm
   - swingmusic
   - syslog
