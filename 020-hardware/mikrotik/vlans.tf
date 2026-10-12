@@ -233,36 +233,36 @@ resource "routeros_ip_pool" "pools" {
 }
 
 # ############################################
-# ##    TFTP Server for Talos PXE boot      ##
+# ##           HTTP Proxy Server            ##
 # ############################################
 
-# resource "routeros_ip_dhcp_server_option" "tftp_option" {
-#   code  = 66
-#   name  = "tftpserver-66"
-#   value = "s'${cidrhost(local.vlan_cidrs["50"], 20)}'"
+# resource "routeros_ip_dhcp_server_option" "proxy_option" {
+#   code  = 252
+#   name  = "auto-proxy-config"
+#   value = "http://squid.home.arpa/proxy.pac"
 # }
 
 # resource "routeros_ip_dhcp_server_option_sets" "lan_option_set" {
 #   name    = "lan-option-set"
-#   options = join(",", [routeros_ip_dhcp_server_option.tftp_option.name])
+#   options = join(",", [routeros_ip_dhcp_server_option.proxy_option.name])
 # }
 
-##############################################
-##             DHCP Servers               ##
-##############################################
+# ##############################################
+# ##             DHCP Servers               ##
+# ##############################################
 
-resource "routeros_ip_dhcp_server" "dhcp" {
-  for_each = routeros_interface_vlan.vlan_if
+# resource "routeros_ip_dhcp_server" "dhcp" {
+#   for_each = routeros_interface_vlan.vlan_if
 
-  name                      = "dhcp-vlan${each.key}"
-  interface                 = each.value.name
-  address_pool              = routeros_ip_pool.pools[each.key].name
-  lease_time                = "1d"
-  dynamic_lease_identifiers = "client-mac"
-  disabled                  = false
-  # dhcp_option_set           = routeros_ip_dhcp_server_option_sets.lan_option_set.name
-  comment = each.value.comment
-}
+#   name                      = "dhcp-vlan${each.key}"
+#   interface                 = each.value.name
+#   address_pool              = routeros_ip_pool.pools[each.key].name
+#   lease_time                = "1d"
+#   dynamic_lease_identifiers = "client-mac"
+#   disabled                  = false
+#   dhcp_option_set           = each.key < 100 ? "s'${routeros_ip_dhcp_server_option_sets.lan_option_set.name}" : null
+#   comment                   = each.value.comment
+# }
 
 ############################################
 ## DHCP Networks (Gateway + DNS)          ##
