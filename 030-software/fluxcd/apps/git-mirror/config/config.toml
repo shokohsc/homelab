@@ -5,7 +5,7 @@ ListenAddr = ":8080"
 Interval = "1h"
 
 # Where the bare mirrors are stored, backed by the data PersistentVolumeClaim.
-BasePath = "/git-mirror"
+BasePath = "/data"
 
 # Maximum concurrent clone/fetch connections.
 MaxConcurrentConnections = 32
