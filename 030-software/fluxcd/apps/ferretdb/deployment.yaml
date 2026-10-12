@@ -32,6 +32,8 @@ spec:
               drop:
                 - ALL
           env:
+            - name: FERRETDB_HANDLER
+              value: pg
             - name: FERRETDB_TELEMETRY
               value: disable
           envFrom:
