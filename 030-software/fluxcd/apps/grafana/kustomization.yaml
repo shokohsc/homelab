@@ -17,7 +17,7 @@ configMapGenerator:
   # - ./dashboards/open-weather-map.json
   - ./dashboards/profiles-requests.json
   - ./dashboards/pvc-usage.json
-  # - ./dashboards/squid-dashboard.json
+  - ./dashboards/squid-dashboard.json
   # - ./dashboards/storage-io-statistics.json
   # - ./dashboards/pod-spread.json
   # - ./dashboards/cert-manager.json
