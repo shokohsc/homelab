@@ -1,0 +1,75 @@
+# Address the HTTP server serves the mirrors on.
+ListenAddr = ":8080"
+
+# How often each mirror is fetched. Archive mirrors do not need to be fresh.
+Interval = "1h"
+
+# Where the bare mirrors are stored, backed by the data PersistentVolumeClaim.
+BasePath = "/git-mirror"
+
+# Maximum concurrent clone/fetch connections.
+MaxConcurrentConnections = 32
+
+# Refresh the multi-pack-index (with bitmap) every N fetches for faster clones.
+MultiPackIndexInterval = 10
+
+# Repositories to mirror. Add one [[Repo]] block per remote repository.
+# A mirror is served at http://<host>/<name>; Name defaults to the host + path
+# of the Origin (e.g. github.com/shokohsc/homelab.git).
+# Public HTTPS remotes work as-is; private/SSH remotes need credentials mounted.
+#
+# [[Repo]] supports:
+#   Origin (required)  URL of the repository to mirror (HTTPS or SSH)
+#   Name   (optional)  custom name the mirror is served under
+#   Interval (optional) per-repo override of the global update interval
+
+[[Repo]]
+Origin = "https://github.com/Free-TV/IPTV.git"
+
+[[Repo]]
+Origin = "https://github.com/shadps4-emu/shadPS4.git"
+
+[[Repo]]
+Origin = "https://gitea-production-9f32.up.railway.app/movie-web/simple-proxy.git"
+
+[[Repo]]
+Origin = "https://gitgud.io/yuv420p10le/plexmediaserver_crack.git"
+
+[[Repo]]
+Origin = "https://gitea-production-9f32.up.railway.app/movie-web/native-app.git"
+
+[[Repo]]
+Origin = "https://gitea-production-9f32.up.railway.app/movie-web/movie-web.git"
+
+[[Repo]]
+Origin = "https://gitea-production-9f32.up.railway.app/movie-web/extension.git"
+
+[[Repo]]
+Origin = "https://gitea-production-9f32.up.railway.app/movie-web/backend.git"
+
+[[Repo]]
+Origin = "https://github.com/RPCS3/rpcs3.git"
+
+[[Repo]]
+Origin = "https://github.com/wakaru44/docker-minecraft-client.git"
+
+[[Repo]]
+Origin = "https://gitea-production-9f32.up.railway.app/movie-web/docs.git"
+
+[[Repo]]
+Origin = "https://github.com/jessfraz/dockerfiles.git"
+
+[[Repo]]
+Origin = "https://github.com/Chryseus/D2R-Offline.git"
+
+[[Repo]]
+Origin = "https://gitea-production-9f32.up.railway.app/movie-web/providers-api.git"
+
+[[Repo]]
+Origin = "https://github.com/jrtashjian/cmangos-docker.git"
+
+[[Repo]]
+Origin = "https://gitea-production-9f32.up.railway.app/movie-web/providers.git"
+
+[[Repo]]
+Origin = "https://github.com/luzeadev/winactivate.git"
