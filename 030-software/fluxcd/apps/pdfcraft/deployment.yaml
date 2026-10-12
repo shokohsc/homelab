@@ -71,6 +71,7 @@ spec:
           volumeMounts:
             - name: assets
               mountPath: /assets
+              subPath: website/pdfcraft
       volumes:
         - name: assets
           image:
