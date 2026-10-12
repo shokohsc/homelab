@@ -78,7 +78,7 @@ spec:
               memory: 1024Mi
           volumeMounts:
             - name: data
-              mountPath: /git-mirror
+              mountPath: /data
             - name: config
               mountPath: /etc/git-mirror/config.toml
               subPath: config.toml
