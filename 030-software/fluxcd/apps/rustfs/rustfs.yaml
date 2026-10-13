@@ -31,6 +31,17 @@ spec:
       valuesKey: secret_key
       targetPath: secret.rustfs.secret_key
   values:
+    extraManifests:
+      - apiVersion: v1
+        kind: Secret
+        metadata:
+          name: rustfs-credentials
+          namespace: loki
+        type: Opaque
+        stringData:
+          accessKeyId: "{{ .Values.secret.rustfs.access_key }}"
+          secretAccessKey: "{{ .Values.secret.rustfs.secret_key }}"
+
     mode:
       standalone:
         enabled: true

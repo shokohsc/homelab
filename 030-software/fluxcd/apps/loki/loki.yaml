@@ -18,14 +18,26 @@ metadata:
   name: loki
 spec:
   interval: ${interval}
+  dependsOn:
+    - name: rustfs
+      namespace: rustfs
   chartRef:
     kind: OCIRepository
     name: loki
+  valuesFrom:
+    - kind: Secret
+      name: rustfs-credentials
+      valuesKey: accessKeyId
+      targetPath: loki.storage.s3.accessKeyId
+    - kind: Secret
+      name: rustfs-credentials
+      valuesKey: secretAccessKey
+      targetPath: loki.storage.s3.secretAccessKey
   values:
     commonLabels:
       stateful: "true"
 
-    deploymentMode: Monolithic
+    deploymentMode: Distributed
 
     gateway:
       route:
@@ -48,15 +60,87 @@ spec:
           limits:
             memory: 64Mi
 
-    singleBinary:
+    ingester:
       replicas: 1
       resources:
         requests:
           cpu: 100m
         limits:
           memory: 512Mi
+      zoneAwareReplication:
+        enabled: false
       persistence:
-        size: 5Gi
+        enabled: true
+        claims:
+          - name: data
+            accessModes:
+              - ReadWriteOnce
+            size: 5Gi
+
+    distributor:
+      replicas: 1
+      resources:
+        requests:
+          cpu: 100m
+        limits:
+          memory: 256Mi
+
+    querier:
+      replicas: 1
+      resources:
+        requests:
+          cpu: 100m
+        limits:
+          memory: 256Mi
+
+    queryFrontend:
+      replicas: 1
+      resources:
+        requests:
+          cpu: 100m
+        limits:
+          memory: 256Mi
+
+    queryScheduler:
+      replicas: 1
+      resources:
+        requests:
+          cpu: 100m
+        limits:
+          memory: 128Mi
+
+    indexGateway:
+      replicas: 1
+      resources:
+        requests:
+          cpu: 100m
+        limits:
+          memory: 256Mi
+
+    compactor:
+      replicas: 1
+      resources:
+        requests:
+          cpu: 100m
+        limits:
+          memory: 256Mi
+
+    ruler:
+      replicas: 1
+      resources:
+        requests:
+          cpu: 100m
+        limits:
+          memory: 256Mi
+
+    patternIngester:
+      enabled: true
+      replicas: 1
+      resources:
+        requests:
+          cpu: 100m
+        limits:
+          memory: 256Mi
 
     loki:
       auth_enabled: false
@@ -64,17 +148,22 @@ spec:
         replication_factor: 1
         ring:
           kvstore:
-            store: inmemory
+            store: memberlist
       storage:
-        type: filesystem
+        type: s3
         bucketNames:
           chunks: loki-chunks
           ruler: loki-ruler
+        s3:
+          endpoint: http://rustfs-svc.rustfs.svc.cluster.local:9000
+          region: us-east-1
+          s3ForcePathStyle: true
+          insecure: true
       schemaConfig:
         configs:
           - from: "2024-04-01"
             store: tsdb
-            object_store: filesystem
+            object_store: s3
             schema: v13
             index:
               prefix: loki_index_
