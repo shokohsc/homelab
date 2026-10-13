@@ -45,6 +45,7 @@ resources:
   - matrix
   - metrics-server
   - miniflux
+  - mitmproxy
   - mongoku
   - nats
   - nfs-downloads

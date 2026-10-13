@@ -1,0 +1,105 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mitmproxy
+spec:
+  revisionHistoryLimit: 0
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: mitmproxy
+  template:
+    metadata:
+      labels:
+        app: mitmproxy
+    spec:
+      automountServiceAccountToken: false
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        seccompProfile:
+          type: RuntimeDefault
+        fsGroupChangePolicy: OnRootMismatch
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              podAffinityTerm:
+                topologyKey: "kubernetes.io/hostname"
+                labelSelector:
+                  matchLabels:
+                    app: mitmproxy
+      topologySpreadConstraints:
+        - maxSkew: 1
+          topologyKey: kubernetes.io/hostname
+          whenUnsatisfiable: ScheduleAnyway
+          labelSelector:
+            matchLabels:
+              app: mitmproxy
+      containers:
+        - name: mitmproxy
+          image: mitmproxy/mitmproxy:12.2.3@sha256:00b77b5d8804c8ad18cb6caefbf9d5849e895e8986c5ce011f4ae30f4385962f
+          command:
+            - /usr/local/bin/mitmweb
+          args:
+            - --web-host
+            - 0.0.0.0
+            - --set
+            - confdir=/data
+            - --set
+            - ssl_verify_upstream_trusted_ca=/etc/ssl/certs/ca-certs.pem
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+            capabilities:
+              drop:
+                - ALL
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: proxy
+              containerPort: 8080
+              protocol: TCP
+            - name: web
+              containerPort: 8081
+              protocol: TCP
+          env:
+            - name: TZ
+              value: ${timezone}
+            - name: HOME
+              value: /tmp
+          startupProbe:
+            tcpSocket:
+              port: web
+          livenessProbe:
+            tcpSocket:
+              port: web
+          readinessProbe:
+            tcpSocket:
+              port: web
+          volumeMounts:
+            - name: data
+              mountPath: /data
+            - name: temp
+              mountPath: /tmp
+            - name: tls
+              mountPath: /etc/ssl/certs
+          resources:
+            requests:
+              cpu: 100m
+            limits:
+              memory: 512Mi
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: data
+        - name: temp
+          emptyDir: {}
+        - name: tls
+          configMap:
+            name: homelab-ca-cm
+            defaultMode: 0644
