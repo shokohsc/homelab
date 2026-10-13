@@ -13,6 +13,7 @@ resources:
   - database-roles/buzz.yaml
   - database-roles/ferretdb.yaml
   - database-roles/kubeopencode.yaml
+  - database-roles/lidarr.yaml
   - database-roles/maddy.yaml
   - database-roles/matrix.yaml
   - database-roles/miniflux.yaml
