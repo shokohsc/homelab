@@ -4,3 +4,4 @@ namespace: victoria-metrics
 resources:
   - namespace.yaml
   - victoria-metrics.yaml
+  - vmagent.yaml

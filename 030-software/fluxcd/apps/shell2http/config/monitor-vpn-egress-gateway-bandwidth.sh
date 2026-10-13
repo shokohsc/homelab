@@ -34,7 +34,7 @@ log () {
 }
 
 # Configuration
-PROMETHEUS_SERVER="http://victoria-metrics-vms-server.victoria-metrics.svc.cluster.local:8428"
+PROMETHEUS_SERVER="http://victoria-metrics-vms-vmselect.victoria-metrics.svc.cluster.local:8481/select/0/prometheus"
 THRESHOLD_KBPS=${THRESHOLD_KBPS:-500}  # Threshold in kilobits per second
 WEBHOOK_URL="http://shell2http.shell2http.svc.cluster.local/vpn-egress-gateway/restart"
 

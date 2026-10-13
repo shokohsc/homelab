@@ -127,7 +127,7 @@ spec:
         datasources:
           - name: Prometheus
             type: prometheus
-            url: http://victoria-metrics-vms-server.victoria-metrics.svc.cluster.local:8428
+            url: http://victoria-metrics-vms-vmselect.victoria-metrics.svc.cluster.local:8481/select/0/prometheus
             access: proxy
             isDefault: true
           # - name: VictoriaLogs

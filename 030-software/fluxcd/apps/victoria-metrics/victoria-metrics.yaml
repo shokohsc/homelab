@@ -15,19 +15,40 @@ spec:
   interval: ${interval}
   chart:
     spec:
-      chart: victoria-metrics-single
-      version: 0.49.0
+      chart: victoria-metrics-cluster
+      version: 0.53.0
       sourceRef:
         kind: HelmRepository
         name: victoria-metrics
       interval: ${interval}
   values:
     nameOverride: "vms"
-    server:
-      extraLabels:
-        stateful: "true"
-      scrape:
+
+    vminsert:
+      podSecurityContext:
         enabled: true
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        seccompProfile:
+          type: RuntimeDefault
+      securityContext:
+        enabled: true
+        allowPrivilegeEscalation: false
+        readOnlyRootFilesystem: true
+        runAsNonRoot: true
+        capabilities:
+          drop:
+            - ALL
+      resources:
+        limits:
+          memory: 512Mi
+        requests:
+          cpu: 100m
+          memory: 64Mi
+
+    vmselect:
       route:
         enabled: true
         parentRefs:
@@ -39,15 +60,8 @@ spec:
           dashboard.${domain}/name: victoria-metrics
           dashboard.${domain}/url: https://victoria-metrics.${domain}
           dashboard.${domain}/icon: chart-line
-      persistentVolume:
-        size: 2Gi
-      resources:
-        limits:
-          memory: 2048Mi
-        requests:
-          cpu: 500m
-          memory: 128Mi
       podSecurityContext:
+        enabled: true
         runAsNonRoot: true
         runAsUser: 1000
         runAsGroup: 1000
@@ -55,9 +69,104 @@ spec:
         seccompProfile:
           type: RuntimeDefault
       securityContext:
+        enabled: true
         allowPrivilegeEscalation: false
         readOnlyRootFilesystem: true
         runAsNonRoot: true
         capabilities:
           drop:
             - ALL
+      resources:
+        limits:
+          memory: 1024Mi
+        requests:
+          cpu: 100m
+          memory: 128Mi
+
+    vmstorage:
+      extraLabels:
+        stateful: "true"
+      persistentVolume:
+        size: 2Gi
+      podSecurityContext:
+        enabled: true
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        seccompProfile:
+          type: RuntimeDefault
+      securityContext:
+        enabled: true
+        allowPrivilegeEscalation: false
+        readOnlyRootFilesystem: true
+        runAsNonRoot: true
+        capabilities:
+          drop:
+            - ALL
+      resources:
+        limits:
+          memory: 2048Mi
+        requests:
+          cpu: 500m
+          memory: 128Mi
+
+      # vmstorage cannot use S3 as primary storage, so the vmstorage
+      # block storage is periodically backed up to the rustfs S3 bucket
+      # with vmbackup running as a sidecar.
+      extraVolumes:
+        - name: vmbackup-tmp
+          emptyDir: {}
+      extraContainers:
+        - name: vmbackup
+          image: victoriametrics/vmbackup:v1.154.0
+          command:
+            - /bin/sh
+            - -c
+          args:
+            - |
+              while true; do
+                /vmbackup-prod \
+                  -storageDataPath=/storage \
+                  -snapshot.createURL=http://localhost:8482/snapshot/create \
+                  -snapshot.deleteURL=http://localhost:8482/snapshot/delete \
+                  -dst=s3://vm-backups/vmstorage/$(POD_NAME) \
+                  -customS3Endpoint=http://rustfs-svc.rustfs.svc.cluster.local:9000 \
+                  -s3ForcePathStyle
+                sleep 86400
+              done
+          env:
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: AWS_ACCESS_KEY_ID
+              valueFrom:
+                secretKeyRef:
+                  name: vm-backup-credentials
+                  key: access_key
+            - name: AWS_SECRET_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: vm-backup-credentials
+                  key: secret_key
+            - name: AWS_EC2_METADATA_DISABLED
+              value: "true"
+          volumeMounts:
+            - name: vmstorage-volume
+              mountPath: /storage
+            - name: vmbackup-tmp
+              mountPath: /tmp
+          resources:
+            limits:
+              memory: 256Mi
+            requests:
+              cpu: 50m
+              memory: 64Mi
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+            capabilities:
+              drop:
+                - ALL

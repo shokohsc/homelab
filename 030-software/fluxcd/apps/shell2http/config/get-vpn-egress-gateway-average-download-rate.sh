@@ -34,7 +34,7 @@ log () {
 }
 
 # Configuration
-PROMETHEUS_SERVER="http://victoria-metrics-vms-server.victoria-metrics.svc.cluster.local:8428"
+PROMETHEUS_SERVER="http://victoria-metrics-vms-vmselect.victoria-metrics.svc.cluster.local:8481/select/0/prometheus"
 
 # Prometheus query to calculate average download rate over the last 5 minutes
 QUERY='avg by (namespace) (rate(container_network_receive_bytes_total{namespace="vpn-egress-gateway", pod=~"vpn-egress-gateway.*", pod!~"vpn-egress-webhook.*",interface="tun0"}[5m:1m]))'

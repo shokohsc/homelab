@@ -96,3 +96,17 @@ spec:
     extraVolumeMounts:
       - mountPath: /etc/ssl/certs
         name: tls
+
+    # Reuse the rustfs S3 credentials (already injected above from the
+    # encrypted `credentials` Secret) for the VictoriaMetrics vmstorage
+    # backup sidecar, so no credential is duplicated into git.
+    extraManifests:
+      - apiVersion: v1
+        kind: Secret
+        metadata:
+          name: vm-backup-credentials
+          namespace: victoria-metrics
+        type: Opaque
+        stringData:
+          access_key: '{{ .Values.secret.rustfs.access_key }}'
+          secret_key: '{{ .Values.secret.rustfs.secret_key }}'
