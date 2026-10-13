@@ -87,3 +87,12 @@ spec:
     
     podLabels:
       policy.gatekeeper.sh/ignore-container-must-have-limits: "true"
+    
+    extraVolumes:
+      - name: tls
+        configMap:
+          name: homelab-ca-cm
+          defaultMode: 0600
+    extraVolumeMounts:
+      - mountPath: /etc/ssl/certs
+        name: tls
