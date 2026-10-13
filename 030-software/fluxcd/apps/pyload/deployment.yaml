@@ -94,5 +94,5 @@ spec:
             name: pyload
         - name: downloads
           nfs:
-            server: 10.99.242.42
+            server: ${nfsDownloadsServer}
             path: /pyload

@@ -115,4 +115,4 @@ spec:
         - name: nfs-downloads
           nfs:
             path: /
-            server: 10.99.242.42
+            server: ${nfsDownloadsServer}

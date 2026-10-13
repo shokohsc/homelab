@@ -136,5 +136,5 @@ spec:
             claimName: config
         - name: nfs-downloads
           nfs:
-            server: 10.99.242.42
+            server: ${nfsDownloadsServer}
             path: /weechat

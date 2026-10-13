@@ -115,7 +115,7 @@ spec:
       - name: nfs-downloads
         nfs:
           path: /deluge
-          server: 10.99.242.42
+          server: ${nfsDownloadsServer}
       - name: nfs-shared
         nfs:
           path: /shared/watch

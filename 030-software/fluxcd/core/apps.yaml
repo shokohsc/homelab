@@ -28,6 +28,7 @@ spec:
       timezone: Europe/Paris
       pollingInterval: "2"
       cooldownPeriod: "180"
+      nfsDownloadsServer: "10.99.242.42"
   decryption:
     provider: sops
     secretRef:

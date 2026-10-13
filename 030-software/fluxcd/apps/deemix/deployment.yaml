@@ -89,5 +89,5 @@ spec:
             claimName: config
         - name: downloads
           nfs:
-            server: 10.99.242.42
+            server: ${nfsDownloadsServer}
             path: /deemix
