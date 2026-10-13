@@ -98,11 +98,11 @@ spec:
             path: /content
         - name: hanzo
           nfs:
-            server: hanzo${domain}
+            server: hanzo.${domain}
             path: /
         - name: genji
           nfs:
-            server: genji${domain}
+            server: genji.${domain}
             path: /
         - name: downloads
           nfs:

@@ -105,7 +105,7 @@ spec:
           emptyDir: {}
         - name: tvshows
           nfs:
-            server: genji${domain}
+            server: genji.${domain}
             path: /tvshows
         - name: downloads
           nfs:

@@ -91,5 +91,5 @@ spec:
             claimName: code-server
         - name: shared
           nfs:
-            server: genji${domain}
+            server: genji.${domain}
             path: /shared

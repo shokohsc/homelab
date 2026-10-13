@@ -104,7 +104,7 @@ spec:
           emptyDir: {}
         - name: movies
           nfs:
-            server: genji${domain}
+            server: genji.${domain}
             path: /movies
         - name: downloads
           nfs:

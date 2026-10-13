@@ -93,5 +93,5 @@ spec:
       volumes:
         - name: shared
           nfs:
-            server: genji${domain}
+            server: genji.${domain}
             path: /shared/wallpapers
