@@ -86,6 +86,8 @@ spec:
               mountPath: /weechat
             - name: nfs-downloads
               mountPath: /weechat/xfer
+            - name: temp
+              mountPath: /weechat/logs
           resources:
             requests:
               cpu: 100m
