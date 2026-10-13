@@ -30,6 +30,8 @@ spec:
       name: credentials
       valuesKey: secret_key
       targetPath: secret.rustfs.secret_key
+    - kind: Secret
+      name: oidc
   values:
     mode:
       standalone:
