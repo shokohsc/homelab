@@ -100,8 +100,8 @@ spec:
         - name: comics
           nfs:
             path: /comics
-            server: genji.home.arpa
+            server: genji${domain}
         - name: weekly
           nfs:
             path: /shared/weekly
-            server: genji.home.arpa
+            server: genji${domain}

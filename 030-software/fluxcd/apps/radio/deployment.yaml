@@ -81,7 +81,7 @@ spec:
       volumes:
         - name: genji
           nfs:
-            server: genji.home.arpa
+            server: genji${domain}
             path: /music/tracks
 ---
 kind: Deployment

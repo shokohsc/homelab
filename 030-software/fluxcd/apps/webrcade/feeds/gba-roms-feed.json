@@ -1,0 +1,454 @@
+[
+  {
+    "title": "Advance Wars",
+    "description": "Advance Wars",
+    "type": "gba",
+    "thumbnail": "https://fs-prod-cdn.nintendo-europe.com/media/images/06_screenshots/games_5/virtual_console_wii_u_3/wiiuvc_advancewars/WiiUVC_AdvanceWars_01.bmp",
+    "background": "https://fs-prod-cdn.nintendo-europe.com/media/images/10_share_images/games_15/game_boy_advance_7/SI_GBA_AdvanceWars_image1600w.jpg",
+    "props": {
+      "rom": "https://static-file-server.shokohsc.home/nfs-wd-sombra/roms/gba/Advance%20Wars%20%28Europe%29%20%28En%2CFr%2CDe%2CEs%29.gba",
+      "saveType": 2
+    }
+  },
+  {
+    "title": "Advance Wars 2 - Black Hole Rising",
+    "description": "Advance Wars 2 - Black Hole Rising",
+    "type": "gba",
+    "thumbnail": "https://fs-prod-cdn.nintendo-europe.com/media/images/06_screenshots/games_5/virtual_console_wii_u_3/wiiuvc_advancewars2blackholerising/WiiUVC_AdvanceWars2BlackHoleRising_01.bmp",
+    "background": "https://fs-prod-cdn.nintendo-europe.com/media/images/10_share_images/games_15/virtual_console_wii_u_7/SI_WiiUVC_AdvanceWars2BlackHoleRising_image1600w.jpg",
+    "props": {
+      "rom": "https://static-file-server.shokohsc.home/nfs-wd-sombra/roms/gba/Advance Wars 2 - Black Hole Rising (Europe) (En,Fr,De,Es,It).gba",
+      "saveType": 2
+    }
+  },
+  {
+    "title": "Castlevania",
+    "description": "Castlevania",
+    "type": "gba",
+    "thumbnail": "https://fs-prod-cdn.nintendo-europe.com/media/images/06_screenshots/games_5/virtual_console_wii_u_3/wiiuvc_castlevaniacircleofthemoon/WiiUVC_CastlevaniaCircleOfTheMoon_01.bmp",
+    "background": "https://fs-prod-cdn.nintendo-europe.com/media/images/10_share_images/games_15/game_boy_advance_7/SI_GBA_CastlevaniaCircleOfTheMoon_image1600w.jpg",
+    "props": {
+      "rom": "https://static-file-server.shokohsc.home/nfs-wd-sombra/roms/gba/Castlevania (Europe).gba",
+      "saveType": 2
+    }
+  },
+  {
+    "title": "Castlevania - Aria of Sorrow",
+    "description": "Castlevania - Aria of Sorrow",
+    "type": "gba",
+    "thumbnail": "https://fs-prod-cdn.nintendo-europe.com/media/images/06_screenshots/games_5/virtual_console_wii_u_3/wiiuvc_castlevaniaariaofsorrow/WiiUVC_CastlevaniaAriaOfSorrow_01.bmp",
+    "background": "https://fs-prod-cdn.nintendo-europe.com/media/images/10_share_images/games_15/virtual_console_wii_u_7/SI_WiiUVC_CastlevaniaAriaOfSorrow_image1600w.jpg",
+    "props": {
+      "rom": "https://static-file-server.shokohsc.home/nfs-wd-sombra/roms/gba/Castlevania - Aria of Sorrow (Europe) (En,Fr,De).gba",
+      "saveType": 2
+    }
+  },
+  {
+    "title": "Castlevania - Harmony of Dissonance",
+    "description": "Castlevania - Harmony of Dissonance",
+    "type": "gba",
+    "thumbnail": "https://fs-prod-cdn.nintendo-europe.com/media/images/06_screenshots/games_5/virtual_console_wii_u_3/wiiuvc_castlevaniaharmonyofdissonance/WiiUVC_CastlevaniaHarmonyOfDissonance_01.bmp",
+    "background": "https://fs-prod-cdn.nintendo-europe.com/media/images/10_share_images/games_15/virtual_console_wii_u_7/SI_WiiUVC_CastlevaniaHarmonyOfDissonance_image1600w.jpg",
+    "props": {
+      "rom": "https://static-file-server.shokohsc.home/nfs-wd-sombra/roms/gba/Castlevania - Harmony of Dissonance (Europe).gba",
+      "saveType": 2
+    }
+  },
+  {
+    "title": "Classic NES Series - Super Mario Bros.",
+    "description": "Classic NES Series - Super Mario Bros.",
+    "type": "gba",
+    "thumbnail": "https://i.pinimg.com/236x/5b/63/43/5b63438650a92d16a7ce3ea8623d89c8--super-mario-brothers-super-mario-bros-games.jpg",
+    "background": "https://images7.alphacoders.com/333/thumb-1920-333222.jpg",
+    "props": {
+      "rom": "https://static-file-server.shokohsc.home/nfs-wd-sombra/roms/gba/Classic NES Series - Super Mario Bros. (USA, Europe).gba",
+      "saveType": 2
+    }
+  },
+  {
+    "title": "Crash Bandicoot 2 - N-Tranced",
+    "description": "Crash Bandicoot 2 - N-Tranced",
+    "type": "gba",
+    "thumbnail": "https://www.mobygames.com/images/shots/l/144269-crash-bandicoot-2-n-tranced-game-boy-advance-screenshot-title.png",
+    "background": "https://picfiles.alphacoders.com/191/19153.jpg",
+    "props": {
+      "rom": "https://static-file-server.shokohsc.home/nfs-wd-sombra/roms/gba/Crash Bandicoot 2 - N-Tranced (Europe) (En,Fr,De,Es,It,Nl).gba",
+      "saveType": 2
+    }
+  },
+  {
+    "title": "Crash Bandicoot Fusion",
+    "description": "Crash Bandicoot Fusion",
+    "type": "gba",
+    "thumbnail": "https://r.mprd.se/GBA/titles/1543.png",
+    "background": "https://metro.co.uk/wp-content/uploads/2013/12/2013_10_crash-bandicoot-download-wallpaper-2013.jpg",
+    "props": {
+      "rom": "https://static-file-server.shokohsc.home/nfs-wd-sombra/roms/gba/Crash Bandicoot Fusion (Europe) (En,Fr,De,Es,It).gba",
+      "saveType": 2
+    }
+  },
+  {
+    "title": "Crash Bandicoot XS",
+    "description": "Crash Bandicoot XS",
+    "type": "gba",
+    "thumbnail": "https://www.mobygames.com/images/shots/l/24676-crash-bandicoot-the-huge-adventure-game-boy-advance-screenshot.jpg",
+    "background": "https://wallpaperaccess.com/full/6472387.jpg",
+    "props": {
+      "rom": "https://static-file-server.shokohsc.home/nfs-wd-sombra/roms/gba/Crash Bandicoot XS (Europe) (En,Fr,De,Es,It,Nl).gba",
+      "saveType": 2
+    }
+  },
+  {
+    "title": "Crash Nitro Kart",
+    "description": "Crash Nitro Kart",
+    "type": "gba",
+    "thumbnail": "https://static.wikia.nocookie.net/crashbandicootbeta/images/9/96/Title-screen.png/revision/latest",
+    "background": "https://images2.alphacoders.com/975/975620.jpg",
+    "props": {
+      "rom": "https://static-file-server.shokohsc.home/nfs-wd-sombra/roms/gba/Crash Nitro Kart (Europe) (En,Fr,De,Es,It,Nl).gba",
+      "saveType": 2
+    }
+  },
+  {
+    "title": "Crash of the Titans",
+    "description": "Crash of the Titans",
+    "type": "gba",
+    "thumbnail": "https://www.mobygames.com/images/shots/l/357044-crash-of-the-titans-game-boy-advance-screenshot-title-screen.png",
+    "background": "https://images8.alphacoders.com/938/938978.jpg",
+    "props": {
+      "rom": "https://static-file-server.shokohsc.home/nfs-wd-sombra/roms/gba/Crash of the Titans (Europe) (En,Fr,De,Es,It,Nl).gba",
+      "saveType": 2
+    }
+  },
+  {
+    "title": "Donkey Kong Country",
+    "description": "Donkey Kong Country",
+    "type": "gba",
+    "thumbnail": "https://www.mobygames.com/images/shots/l/101534-donkey-kong-country-game-boy-advance-screenshot-title-screen.png",
+    "background": "https://fs-prod-cdn.nintendo-europe.com/media/images/10_share_images/games_15/game_boy_advance_7/SI_GBA_DonkeyKongCountry_image1600w.jpg",
+    "props": {
+      "rom": "https://static-file-server.shokohsc.home/nfs-wd-sombra/roms/gba/Donkey Kong Country (Europe) (En,Fr,De,Es,It).gba",
+      "saveType": 2
+    }
+  },
+  {
+    "title": "Donkey Kong Country 2",
+    "description": "Donkey Kong Country 2",
+    "type": "gba",
+    "thumbnail": "https://tcrf.net/images/e/e8/DKCountry2GBA-%28US%29-Title.png",
+    "background": "https://fs-prod-cdn.nintendo-europe.com/media/images/10_share_images/games_15/game_boy_advance_7/SI_GBA_DonkeyKongCountry2_image1600w.jpg",
+    "props": {
+      "rom": "https://static-file-server.shokohsc.home/nfs-wd-sombra/roms/gba/Donkey Kong Country 2 (Europe) (En,Fr,De,Es,It).gba",
+      "saveType": 2
+    }
+  },
+  {
+    "title": "Donkey Kong Country 3",
+    "description": "Donkey Kong Country 3",
+    "type": "gba",
+    "thumbnail": "https://tcrf.net/images/b/be/DKC3_GBA_Title.png",
+    "background": "https://fs-prod-cdn.nintendo-europe.com/media/images/10_share_images/games_15/game_boy_advance_7/SI_GBA_DonkeyKongCountry3_image1600w.jpg",
+    "props": {
+      "rom": "https://static-file-server.shokohsc.home/nfs-wd-sombra/roms/gba/Donkey Kong Country 3 (Europe) (En,Fr,De,Es,It).gba",
+      "saveType": 2
+    }
+  },
+  {
+    "title": "Final Fantasy Tactics Advance",
+    "description": "Final Fantasy Tactics Advance",
+    "type": "gba",
+    "thumbnail": "https://fs-prod-cdn.nintendo-europe.com/media/images/06_screenshots/games_5/virtual_console_wii_u_3/wiiuvc_finalfantasytacticsadvance/WiiUVC_FinalFantasyTacticsAdvance_01.jpg",
+    "background": "https://fs-prod-cdn.nintendo-europe.com/media/images/10_share_images/games_15/virtual_console_wii_u_7/SI_WiiUVC_FinalFantasyTacticsAdvance_image1600w.jpg",
+    "props": {
+      "rom": "https://static-file-server.shokohsc.home/nfs-wd-sombra/roms/gba/Final Fantasy Tactics Advance (Europe) (En,Fr,De,Es,It).gba",
+      "saveType": 2
+    }
+  },
+  {
+    "title": "Fire Emblem",
+    "description": "Fire Emblem",
+    "type": "gba",
+    "thumbnail": "https://fs-prod-cdn.nintendo-europe.com/media/images/06_screenshots/games_5/virtual_console_wii_u_3/wiiuvc_fireemblem/WiiUVC_FireEmblem_01.png",
+    "background": "https://fs-prod-cdn.nintendo-europe.com/media/images/10_share_images/games_15/virtual_console_wii_u_7/SI_WiiUVC_FireEmblem_image1600w.jpg",
+    "props": {
+      "rom": "https://static-file-server.shokohsc.home/nfs-wd-sombra/roms/gba/Fire Emblem (Europe) (En,Fr,De).gba",
+      "saveType": 2
+    }
+  },
+  {
+    "title": "Golden Sun",
+    "description": "Golden Sun",
+    "type": "gba",
+    "thumbnail": "https://fs-prod-cdn.nintendo-europe.com/media/images/06_screenshots/games_5/virtual_console_wii_u_3/wiiuvc_goldensun/WiiUVC_GoldenSun_01.bmp",
+    "background": "https://fs-prod-cdn.nintendo-europe.com/media/images/10_share_images/games_15/game_boy_advance_7/SI_GBA_GoldenSun_image1600w.jpg",
+    "props": {
+      "rom": "https://static-file-server.shokohsc.home/nfs-wd-sombra/roms/gba/Golden Sun (France).gba",
+      "saveType": 2
+    }
+  },
+  {
+    "title": "Golden Sun - L'Age Perdu",
+    "description": "Golden Sun - L'Age Perdu",
+    "type": "gba",
+    "thumbnail": "https://fs-prod-cdn.nintendo-europe.com/media/images/06_screenshots/games_5/virtual_console_wii_u_3/wiiuvc_goldensunthelostage/WiiUVC_GoldenSunTheLostAge_01.bmp",
+    "background": "https://fs-prod-cdn.nintendo-europe.com/media/images/10_share_images/games_15/game_boy_advance_7/SI_GBA_GoldenSunTheLostAge_image1600w.jpg",
+    "props": {
+      "rom": "https://static-file-server.shokohsc.home/nfs-wd-sombra/roms/gba/Golden Sun - L'Age Perdu (France).gba",
+      "saveType": 2
+    }
+  },
+  {
+    "title": "King of Fighters EX2 - Howling Blood",
+    "description": "King of Fighters EX2 - Howling Blood",
+    "type": "gba",
+    "thumbnail": "https://www.gamesdatabase.org/Media/SYSTEM/Nintendo_Game_Boy_Advance/Title/big/King_of_Fighters_EX2-_Howling_Blood_-_2003_-_Atlus_Co.,_Ltd..jpg",
+    "background": "https://images8.alphacoders.com/690/690916.jpg",
+    "props": {
+      "rom": "https://static-file-server.shokohsc.home/nfs-wd-sombra/roms/gba/King of Fighters EX2, The - Howling Blood (Europe).gba",
+      "saveType": 2
+    }
+  },
+  {
+    "title": "Kirby & the Amazing Mirror",
+    "description": "Kirby & the Amazing Mirror",
+    "type": "gba",
+    "thumbnail": "https://fs-prod-cdn.nintendo-europe.com/media/images/06_screenshots/games_5/virtual_console_wii_u_3/wiiuvc_kirby_theamazingmirror/WiiUVC_KirbyTheAmazingMirror_01.bmp",
+    "background": "https://fs-prod-cdn.nintendo-europe.com/media/images/10_share_images/games_15/game_boy_advance_7/SI_GBA_KirbyAndTheAmazingMirror_image1600w.jpg",
+    "props": {
+      "rom": "https://static-file-server.shokohsc.home/nfs-wd-sombra/roms/gba/Kirby & the Amazing Mirror (Europe) (En,Fr,De,Es,It).gba",
+      "saveType": 2
+    }
+  },
+  {
+    "title": "Kirby - Nightmare in Dream Land",
+    "description": "Kirby - Nightmare in Dream Land",
+    "type": "gba",
+    "thumbnail": "https://fs-prod-cdn.nintendo-europe.com/media/images/06_screenshots/games_5/virtual_console_wii_u_3/wiiuvc_kirbynightmareindreamland/WiiUVC_KirbyNightmareInDreamLand_01.bmp",
+    "background": "https://fs-prod-cdn.nintendo-europe.com/media/images/10_share_images/games_15/game_boy_advance_7/SI_GBA_KirbyNightmareInDreamland_image1600w.jpg",
+    "props": {
+      "rom": "https://static-file-server.shokohsc.home/nfs-wd-sombra/roms/gba/Kirby - Nightmare in Dream Land (Europe) (En,Fr,De,Es,It).gba",
+      "saveType": 2
+    }
+  },
+  {
+    "title": "Legend of Zelda, The - A Link to the Past & Four Swords",
+    "description": "Legend of Zelda, The - A Link to the Past & Four Swords",
+    "type": "gba",
+    "thumbnail": "https://retroachievements.org/Images/033841.png",
+    "background": "https://www.shoshosein.com/sites/default/files/wallpapers/1281797980.jpg",
+    "props": {
+      "rom": "https://static-file-server.shokohsc.home/nfs-wd-sombra/roms/gba/Legend of Zelda, The - A Link to the Past & Four Swords (Europe) (En,Fr,De,Es,It).gba",
+      "saveType": 2
+    }
+  },
+  {
+    "title": "Legend of Zelda, The - The Minish Cap",
+    "description": "Legend of Zelda, The - The Minish Cap",
+    "type": "gba",
+    "thumbnail": "https://fs-prod-cdn.nintendo-europe.com/media/images/06_screenshots/games_5/virtual_console_wii_u_3/wiiuvc_thelegendofzeldatheminishcap/WiiUVC_TheLegendOfZeldaTheMinishCap_02.png",
+    "background": "https://fs-prod-cdn.nintendo-europe.com/media/images/10_share_images/games_15/game_boy_advance_7/SI_GBA_TheLegendOfZeldaTheMinishCap_image1600w.jpg",
+    "props": {
+      "rom": "https://static-file-server.shokohsc.home/nfs-wd-sombra/roms/gba/Legend of Zelda, The - The Minish Cap (Europe) (En,Fr,De,Es,It).gba",
+      "saveType": 2
+    }
+  },
+  {
+    "title": "Mario & Luigi - Superstar Saga",
+    "description": "Mario & Luigi - Superstar Saga",
+    "type": "gba",
+    "thumbnail": "https://fs-prod-cdn.nintendo-europe.com/media/images/06_screenshots/games_5/virtual_console_wii_u_3/wiiuvc_marioandluigisuperstarsaga/WiiUVC_MarioAndLuigiSuperstarSaga_01.bmp",
+    "background": "https://fs-prod-cdn.nintendo-europe.com/media/images/10_share_images/games_15/game_boy_advance_7/SI_GBA_MarioAndLugiSuperStarSaga_image1600w.jpg",
+    "props": {
+      "rom": "https://static-file-server.shokohsc.home/nfs-wd-sombra/roms/gba/Mario & Luigi - Superstar Saga (Europe) (En,Fr,De,Es,It).gba",
+      "saveType": 2
+    }
+  },
+  {
+    "title": "Mario Kart - Super Circuit",
+    "description": "Mario Kart - Super Circuit",
+    "type": "gba",
+    "thumbnail": "https://fs-prod-cdn.nintendo-europe.com/media/images/06_screenshots/games_5/virtual_console_wii_u_3/wiiuvc_mariokartsupercircuit/WiiUVC_MarioKartSuperCircuit_01.jpg",
+    "background": "https://fs-prod-cdn.nintendo-europe.com/media/images/10_share_images/games_15/game_boy_advance_7/SI_GBA_MarioKartSuperCircuit_image1600w.jpg",
+    "props": {
+      "rom": "https://static-file-server.shokohsc.home/nfs-wd-sombra/roms/gba/Mario Kart - Super Circuit (Europe).gba",
+      "saveType": 2
+    }
+  },
+  {
+    "title": "Metal Slug Advance",
+    "description": "Metal Slug Advance",
+    "type": "gba",
+    "thumbnail": "https://tcrf.net/images/a/a6/Metalslugadvance-title.png",
+    "background": "https://www.be-games.be/wp-content/uploads/2011/07/capsule_616x353.jpg",
+    "props": {
+      "rom": "https://static-file-server.shokohsc.home/nfs-wd-sombra/roms/gba/Metal Slug Advance (Europe).gba",
+      "saveType": 2
+    }
+  },
+  {
+    "title": "Metroid - Zero Mission",
+    "description": "Metroid - Zero Mission",
+    "type": "gba",
+    "thumbnail": "https://fs-prod-cdn.nintendo-europe.com/media/images/06_screenshots/games_5/virtual_console_wii_u_3/wiiuvc_metroidzeromission/WiiUVC_MetroidZeroMission_01.bmp",
+    "background": "https://fs-prod-cdn.nintendo-europe.com/media/images/10_share_images/games_15/game_boy_advance_7/SI_GBA_MetroidZeroMission_image1600w.jpg",
+    "props": {
+      "rom": "https://static-file-server.shokohsc.home/nfs-wd-sombra/roms/gba/Metroid - Zero Mission (Europe) (En,Fr,De,Es,It).gba",
+      "saveType": 2
+    }
+  },
+  {
+    "title": "Metroid Fusion",
+    "description": "Metroid Fusion",
+    "type": "gba",
+    "thumbnail": "https://fs-prod-cdn.nintendo-europe.com/media/images/06_screenshots/games_5/virtual_console_wii_u_3/wiiuvc_metroidfusion/WiiUVC_MetroidFusion_01.bmp",
+    "background": "https://fs-prod-cdn.nintendo-europe.com/media/images/10_share_images/games_15/game_boy_advance_7/H2x1_GBA_MetroidFusion_image1600w.jpg",
+    "props": {
+      "rom": "https://static-file-server.shokohsc.home/nfs-wd-sombra/roms/gba/Metroid Fusion (Europe) (En,Fr,De,Es,It).gba",
+      "saveType": 2
+    }
+  },
+  {
+    "title": "Onimusha Tactics",
+    "description": "Onimusha Tactics",
+    "type": "gba",
+    "thumbnail": "https://r.mprd.se/fup/up/44345-Onimusha_Tactics_(J)(Eurasia)-1541004841.png",
+    "background": "https://fs-prod-cdn.nintendo-europe.com/media/images/10_share_images/games_15/virtual_console_wii_u_7/SI_WiiUVC_OnimushaTactics_image1600w.jpg",
+    "props": {
+      "rom": "https://static-file-server.shokohsc.home/nfs-wd-sombra/roms/gba/Onimusha Tactics (Europe).gba",
+      "saveType": 1,
+      "flashSize": 131072
+    }
+  },
+  {
+    "title": "Shining Soul",
+    "description": "Shining Soul",
+    "type": "gba",
+    "thumbnail": "https://segaretro.org/images/a/a9/Ssoul1_us.png",
+    "background": "https://www.legendra.com/media/wallpapers/gba/shining_soul/wall_1.jpg",
+    "props": {
+      "rom": "https://static-file-server.shokohsc.home/nfs-wd-sombra/roms/gba/Shining Soul (Europe) (En,Fr,De,Es,It).gba",
+      "saveType": 2
+    }
+  },
+  {
+    "title": "Shining Soul II",
+    "description": "Shining Soul II",
+    "type": "gba",
+    "thumbnail": "https://tcrf.net/images/e/ef/Shining_Soul_II_Title.png",
+    "background": "https://i.jeuxactus.com/datas/jeux/s/h/shining-soul-ii/xl/shining-soul-ii-4e2625b119ebf.jpg",
+    "props": {
+      "rom": "https://static-file-server.shokohsc.home/nfs-wd-sombra/roms/gba/Shining Soul II (Europe) (En,Fr,De,Es,It).gba",
+      "saveType": 2
+    }
+  },
+  {
+    "title": "Sonic Advance",
+    "description": "Sonic Advance",
+    "type": "gba",
+    "thumbnail": "https://www.retroplace.com/pics/gba/titles/64605--sonic-advance.png",
+    "background": "https://www.planete-sonic.com/IMG/jpg/a498_4_800x600.jpg",
+    "props": {
+      "rom": "https://static-file-server.shokohsc.home/nfs-wd-sombra/roms/gba/Sonic Advance (Europe) (En,Ja,Fr,De,Es).gba",
+      "saveType": 2
+    }
+  },
+  {
+    "title": "Sonic Advance 2",
+    "description": "Sonic Advance 2",
+    "type": "gba",
+    "thumbnail": "https://www.retroplace.com/pics/gba/titles/64614--sonic-advance-2.png",
+    "background": "https://archive.org/download/advance2wallpaper/Sad2_01_L.jpg",
+    "props": {
+      "rom": "https://static-file-server.shokohsc.home/nfs-wd-sombra/roms/gba/Sonic Advance 2 (Europe) (En,Ja,Fr,De,Es,It).gba",
+      "saveType": 2
+    }
+  },
+  {
+    "title": "Sonic Battle",
+    "description": "Sonic Battle",
+    "type": "gba",
+    "thumbnail": "https://retrocdn.net/images/8/86/Sonic_Battle_title.png",
+    "background": "https://images6.alphacoders.com/932/932738.jpg",
+    "props": {
+      "rom": "https://static-file-server.shokohsc.home/nfs-wd-sombra/roms/gba/Sonic Battle (Europe) (En,Ja,Fr,De,Es,It).gba",
+      "saveType": 2
+    }
+  },
+  {
+    "title": "Super Mario Advance",
+    "description": "Super Mario Advance",
+    "type": "gba",
+    "thumbnail": "https://fs-prod-cdn.nintendo-europe.com/media/images/06_screenshots/games_5/virtual_console_wii_u_3/wiiuvc_supermarioadvance/WiiUVC_SuperMarioAdvance_01.jpg",
+    "background": "https://fs-prod-cdn.nintendo-europe.com/media/images/10_share_images/games_15/virtual_console_wii_u_7/SI_WiiUVC_SuperMarioAdvance_image1600w.jpg",
+    "props": {
+      "rom": "https://static-file-server.shokohsc.home/nfs-wd-sombra/roms/gba/Super Mario Advance (USA, Europe).gba",
+      "saveType": 2
+    }
+  },
+  {
+    "title": "Super Mario Advance 2 - Super Mario World",
+    "description": "Super Mario Advance 2 - Super Mario World",
+    "type": "gba",
+    "thumbnail": "https://fs-prod-cdn.nintendo-europe.com/media/images/06_screenshots/games_5/virtual_console_wii_u_3/wiiuvc_supermarioworldsupermarioadvance2/WiiUVC_SuperMarioWorldSuperMarioAdvance2_01.jpg",
+    "background": "https://fs-prod-cdn.nintendo-europe.com/media/images/10_share_images/games_15/virtual_console_wii_u_7/SI_WiiUVC_SuperMarioWorldSuperMarioAdvance2_image1600w.jpg",
+    "props": {
+      "rom": "https://static-file-server.shokohsc.home/nfs-wd-sombra/roms/gba/Super Mario Advance 2 - Super Mario World (Europe) (En,Fr,De,Es).gba",
+      "saveType": 2
+    }
+  },
+  {
+    "title": "Super Mario Advance 3 - Yoshi's Island",
+    "description": "Super Mario Advance 3 - Yoshi's Island",
+    "type": "gba",
+    "thumbnail": "https://fs-prod-cdn.nintendo-europe.com/media/images/06_screenshots/games_5/virtual_console_wii_u_3/wiiuvc_yoshisislandsupermarioadvance3/WiiUVC_YoshisIslandSuperMarioAdvance3_01.jpg",
+    "background": "https://fs-prod-cdn.nintendo-europe.com/media/images/10_share_images/games_15/game_boy_advance_7/SI_GBA_YoshisIslandSuperMarioAdvance3_image1600w.jpg",
+    "props": {
+      "rom": "https://static-file-server.shokohsc.home/nfs-wd-sombra/roms/gba/Super Mario Advance 3 - Yoshi's Island (Europe) (En,Fr,De,Es,It).gba",
+      "saveType": 2
+    }
+  },
+  {
+    "title": "Super Mario Advance 4 - Super Mario Bros. 3",
+    "description": "Super Mario Advance 4 - Super Mario Bros. 3",
+    "type": "gba",
+    "thumbnail": "https://fs-prod-cdn.nintendo-europe.com/media/images/06_screenshots/games_5/virtual_console_wii_u_3/wiiuvc_supermarioadvance4supermariobros3/WiiUVC_SuperMarioAdvance4SuperMarioBros3_01.jpg",
+    "background": "https://fs-prod-cdn.nintendo-europe.com/media/images/10_share_images/games_15/game_boy_advance_7/SI_GBA_SuperMarioAdvancev4SuperMarioBros3_image1600w.jpg",
+    "props": {
+      "rom": "https://static-file-server.shokohsc.home/nfs-wd-sombra/roms/gba/Super Mario Advance 4 - Super Mario Bros. 3 (Europe) (En,Fr,De,Es,It) (Rev 1).gba",
+      "saveType": 2
+    }
+  },
+  {
+    "title": "Sword of Mana",
+    "description": "Sword of Mana",
+    "type": "gba",
+    "thumbnail": "https://www.gamesdatabase.org/Media/SYSTEM/Nintendo_Game_Boy_Advance/Title/big/Sword_of_Mana_-_2003_-_Nintendo.jpg",
+    "background": "https://images5.alphacoders.com/689/689840.jpg",
+    "props": {
+      "rom": "https://static-file-server.shokohsc.home/nfs-wd-sombra/roms/gba/Sword of Mana (Europe) (Fr,De).gba",
+      "saveType": 2
+    }
+  },
+  {
+    "title": "Tekken Advance",
+    "description": "Tekken Advance",
+    "type": "gba",
+    "thumbnail": "https://www.mobygames.com/images/shots/l/119067-tekken-advance-game-boy-advance-screenshot-title-screen.png",
+    "background": "http://image.jeuxvideo.com/medias-md/148542/1485421202-7283-card.jpg",
+    "props": {
+      "rom": "https://static-file-server.shokohsc.home/nfs-wd-sombra/roms/gba/Tekken Advance (Europe).gba",
+      "saveType": 2
+    }
+  },
+  {
+    "title": "Wario Land 4",
+    "description": "Wario Land 4",
+    "type": "gba",
+    "thumbnail": "https://fs-prod-cdn.nintendo-europe.com/media/images/06_screenshots/games_5/virtual_console_wii_u_3/wiiuvc_warioland4/WiiUVC_WarioLand4_01.png",
+    "background": "https://fs-prod-cdn.nintendo-europe.com/media/images/10_share_images/games_15/virtual_console_wii_u_7/SI_WiiUVC_Warioland4_image1600w.jpg",
+    "props": {
+      "rom": "https://static-file-server.shokohsc.home/nfs-wd-sombra/roms/gba/Wario Land 4 (USA, Europe).gba",
+      "saveType": 2
+    }
+  }
+]

@@ -9,7 +9,7 @@ metadata:
     dashboard.${domain}/icon: folder
 spec:
   hostnames:
-  - commander.home.arpa
+  - commander${domain}
   parentRefs:
   - name: cilium
     namespace: cilium

@@ -156,9 +156,9 @@ spec:
             medium: Memory
         - name: movies
           nfs:
-            server: genji.home.arpa
+            server: genji${domain}
             path: /movies
         - name: tvshows
           nfs:
-            server: genji.home.arpa
+            server: genji${domain}
             path: /tvshows

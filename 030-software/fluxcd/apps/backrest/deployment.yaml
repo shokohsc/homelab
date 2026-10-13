@@ -110,9 +110,9 @@ spec:
             claimName: cache
         - name: backups
           nfs:
-            server: genji.home.arpa
+            server: genji${domain}
             path: /backups
         - name: shared
           nfs:
-            server: genji.home.arpa
+            server: genji${domain}
             path: /shared

@@ -17,6 +17,7 @@ resources:
   - commander
   - cyberchef
   - dashboard
+  - deemix
   - deluge
   - descheduler
   - excalidraw
@@ -87,6 +88,8 @@ resources:
   - victoria-metrics
   - vpn-egress-gateway
   - web-check
+  - web-indexer
+  - webrcade
   - weechat
   - wekan
   - whoami

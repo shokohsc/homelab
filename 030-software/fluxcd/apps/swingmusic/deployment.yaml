@@ -92,5 +92,5 @@ spec:
             claimName: data
         - name: genji
           nfs:
-            server: genji.home.arpa
+            server: genji${domain}
             path: /music/tracks

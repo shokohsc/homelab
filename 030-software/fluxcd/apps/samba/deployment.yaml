@@ -107,11 +107,11 @@ spec:
         - name: nfs-genji
           nfs:
             path: /
-            server: genji.home.arpa
+            server: genji${domain}
         - name: nfs-hanzo
           nfs:
             path: /
-            server: hanzo.home.arpa
+            server: hanzo${domain}
         - name: nfs-downloads
           nfs:
             path: /
