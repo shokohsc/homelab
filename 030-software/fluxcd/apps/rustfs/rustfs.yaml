@@ -32,7 +32,6 @@ spec:
       targetPath: secret.rustfs.secret_key
     - kind: Secret
       name: oidc
-      literal: true
   values:
     mode:
       standalone:
