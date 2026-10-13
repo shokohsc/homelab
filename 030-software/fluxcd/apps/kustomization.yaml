@@ -17,7 +17,7 @@ resources:
   - commander
   - cyberchef
   - dashboard
-  - deemix
+  # - deemix
   - deluge
   - descheduler
   - excalidraw
