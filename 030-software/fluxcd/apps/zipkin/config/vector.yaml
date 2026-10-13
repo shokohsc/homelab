@@ -50,3 +50,10 @@ sinks:
   #     codec: json
   #   labels:
   #     job: loki-zipkin
+
+  console:
+    type: console
+    inputs:
+      - 02-filter-readiness-probe
+    encoding:
+      codec: json

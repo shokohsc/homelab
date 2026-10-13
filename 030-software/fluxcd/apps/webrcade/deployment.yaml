@@ -71,6 +71,7 @@ spec:
           volumeMounts:
             - name: assets
               mountPath: /assets
+              subPath: var/www/html
       volumes:
         - name: assets
           image:
