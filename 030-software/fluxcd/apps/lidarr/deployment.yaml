@@ -14,7 +14,6 @@ spec:
     metadata:
       labels:
         app: lidarr
-        policy.gatekeeper.sh/ignore-container-must-have-limits: "true"
     spec:
       automountServiceAccountToken: false
       securityContext:
