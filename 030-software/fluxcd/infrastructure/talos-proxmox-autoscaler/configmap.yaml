@@ -9,7 +9,7 @@ data:
   disk_gib: "50"
   storage_pool: "local-lvm"
   network_bridge: "vmbr1"
-  proxmox_api_url: "https://proxmox.home.arpa"
+  proxmox_api_url: "https://proxmox.${domain}"
   base_vmid: "8000"
   base_gpu_vmid: "9000"
   min_cpu: "2"
