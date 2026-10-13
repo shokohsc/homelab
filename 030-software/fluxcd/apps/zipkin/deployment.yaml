@@ -60,6 +60,9 @@ spec:
             - name: vector
               containerPort: 9412
               protocol: TCP
+            - name: http
+              containerPort: 8080
+              protocol: TCP
           startupProbe:
             tcpSocket:
               port: vector
@@ -67,8 +70,9 @@ spec:
             tcpSocket:
               port: vector
           readinessProbe:
-            tcpSocket:
-              port: vector
+            httpGet:
+              path: /readyz
+              port: http
           resources:
             requests:
               cpu: 100m

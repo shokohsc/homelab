@@ -91,4 +91,4 @@ resources:
   - wekan
   - whoami
   - ws-screenshot
-  # - zipkin
+  - zipkin
