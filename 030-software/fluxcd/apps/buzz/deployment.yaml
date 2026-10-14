@@ -212,6 +212,9 @@ spec:
         - name: buzz
           image: busybox:1.38
           args: ["busybox", "httpd", "-f", "-v", "-p", "8080"]
+          env:
+            - name: VITE_RELAY_URL
+              value: wss://relay.buzz.${domain}
           workingDir: /assets
           securityContext:
             allowPrivilegeEscalation: false
@@ -245,7 +248,7 @@ spec:
               subPath: srv/buzz/web
             # - name: config
             #   mountPath: /assets/config.json
-              # subPath: config.json
+            #   subPath: config.json
       volumes:
         - name: assets
           image:
