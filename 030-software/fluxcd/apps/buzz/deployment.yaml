@@ -244,7 +244,7 @@ spec:
               mountPath: /assets
               subPath: srv
             - name: config
-              mountPath: /assets/srv/config.json
+              mountPath: /assets/config.json
               subPath: config.json
       volumes:
         - name: assets
