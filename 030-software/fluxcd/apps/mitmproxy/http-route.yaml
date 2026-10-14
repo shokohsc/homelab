@@ -6,7 +6,7 @@ metadata:
   annotations:
     dashboard.${domain}/name: mitmproxy
     dashboard.${domain}/url: https://mitmproxy.${domain}
-    dashboard.${domain}/icon: shield
+    dashboard.${domain}/icon: access-point-network
 spec:
   hostnames:
   - mitmproxy.${domain}
