@@ -50,6 +50,7 @@ resources:
   - nats
   - nfs-downloads
   - nostr-gateway
+  - nosterm
   - opentelemetry
   - paint
   - pairdrop
