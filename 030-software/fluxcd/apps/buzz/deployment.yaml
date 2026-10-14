@@ -242,10 +242,10 @@ spec:
           volumeMounts:
             - name: assets
               mountPath: /assets
-            - name: config
-              mountPath: /assets/config.json
-              # subPath: config.json
               subPath: srv/buzz/web
+            # - name: config
+            #   mountPath: /assets/config.json
+              # subPath: config.json
       volumes:
         - name: assets
           image:
