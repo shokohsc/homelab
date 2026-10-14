@@ -49,6 +49,7 @@ resources:
   - mongoku
   - nats
   - nfs-downloads
+  - nosterm
   - nostr-gateway
   - opentelemetry
   - paint

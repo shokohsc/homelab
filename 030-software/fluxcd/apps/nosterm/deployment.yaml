@@ -1,0 +1,89 @@
+---
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: nosterm
+  annotations:
+    configmap.reloader.stakater.com/reload: config
+spec:
+  revisionHistoryLimit: 0
+  selector:
+    matchLabels:
+      app: nosterm
+  template:
+    metadata:
+      labels:
+        app: nosterm
+        policy.gatekeeper.sh/ignore-psp-volume-types: "true"
+    spec:
+      automountServiceAccountToken: false
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        seccompProfile:
+          type: RuntimeDefault
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              podAffinityTerm:
+                topologyKey: kubernetes.io/hostname
+                labelSelector:
+                  matchLabels:
+                    app: nosterm
+      topologySpreadConstraints:
+        - maxSkew: 1
+          topologyKey: kubernetes.io/hostname
+          whenUnsatisfiable: ScheduleAnyway
+          labelSelector:
+            matchLabels:
+              app: nosterm
+      containers:
+        - name: nosterm
+          image: busybox:1.38
+          args: ["busybox", "httpd", "-f", "-v", "-p", "8080"]
+          workingDir: /assets
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+            capabilities:
+              drop:
+                - ALL
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+          startupProbe:
+            tcpSocket:
+              port: http
+          livenessProbe:
+            tcpSocket:
+              port: http
+          readinessProbe:
+            httpGet:
+              port: http
+              path: /
+          resources:
+            requests:
+              cpu: 100m
+            limits:
+              memory: 64Mi
+          volumeMounts:
+            - name: assets
+              mountPath: /assets
+              subPath: srv
+            - name: config
+              mountPath: /assets/config.json
+              subPath: config.json
+      volumes:
+        - name: assets
+          image:
+            reference: public.ecr.aws/k3k1z1x5/nosterm:latest@sha256:8f52832f290d76a511f844cf7b5177fe1a2b808255f8df65381afb89abc09f42
+            pullPolicy: Always
+        - name: config
+          configMap:
+            name: config
+            defaultMode: 0644

@@ -23,6 +23,7 @@ spec:
     - cors:
         allowOrigins:
         - https://buzz.${domain}
+        - https://nosterm.${domain}
         allowMethods:
         - GET
         - POST
