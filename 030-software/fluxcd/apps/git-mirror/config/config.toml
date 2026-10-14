@@ -30,22 +30,7 @@ Origin = "https://github.com/Free-TV/IPTV.git"
 Origin = "https://github.com/shadps4-emu/shadPS4.git"
 
 [[Repo]]
-Origin = "https://gitea-production-9f32.up.railway.app/movie-web/simple-proxy.git"
-
-[[Repo]]
 Origin = "https://gitgud.io/yuv420p10le/plexmediaserver_crack.git"
-
-[[Repo]]
-Origin = "https://gitea-production-9f32.up.railway.app/movie-web/native-app.git"
-
-[[Repo]]
-Origin = "https://gitea-production-9f32.up.railway.app/movie-web/movie-web.git"
-
-[[Repo]]
-Origin = "https://gitea-production-9f32.up.railway.app/movie-web/extension.git"
-
-[[Repo]]
-Origin = "https://gitea-production-9f32.up.railway.app/movie-web/backend.git"
 
 [[Repo]]
 Origin = "https://github.com/RPCS3/rpcs3.git"
@@ -70,6 +55,3 @@ Origin = "https://github.com/jrtashjian/cmangos-docker.git"
 
 [[Repo]]
 Origin = "https://gitea-production-9f32.up.railway.app/movie-web/providers.git"
-
-[[Repo]]
-Origin = "https://github.com/luzeadev/winactivate.git"
