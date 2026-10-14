@@ -68,6 +68,8 @@ spec:
               containerPort: 8081
               protocol: TCP
           env:
+            - name: PYTHONUNBUFFERED
+              value: "1"
             - name: TZ
               value: ${timezone}
             - name: HOME
