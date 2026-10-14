@@ -244,11 +244,13 @@ spec:
               mountPath: /assets
             - name: config
               mountPath: /assets/config.json
-              subPath: config.json
+              # subPath: config.json
+              subPath: srv/buzz/web
       volumes:
         - name: assets
           image:
-            reference: shokohsc/buzz:a6766c4-dirty
+            # reference: shokohsc/buzz:a6766c4-dirty
+            reference: ghcr.io/block/buzz:0.2.1
             pullPolicy: Always
         - name: config
           configMap:
