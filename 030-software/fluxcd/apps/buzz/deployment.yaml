@@ -212,9 +212,6 @@ spec:
         - name: buzz
           image: busybox:1.38
           args: ["busybox", "httpd", "-f", "-v", "-p", "8080"]
-          env:
-            - name: VITE_RELAY_URL
-              value: wss://relay.buzz.${domain}
           workingDir: /assets
           securityContext:
             allowPrivilegeEscalation: false
@@ -245,15 +242,15 @@ spec:
           volumeMounts:
             - name: assets
               mountPath: /assets
-              subPath: srv/buzz/web
-            # - name: config
-            #   mountPath: /assets/config.json
-            #   subPath: config.json
+              subPath: srv/_app
+            - name: config
+              mountPath: /assets/srv/_app/config.json
+              subPath: config.json
       volumes:
         - name: assets
           image:
             # reference: shokohsc/buzz:a6766c4-dirty
-            reference: ghcr.io/block/buzz:0.2.1
+            reference: public.ecr.aws/k3k1z1x5/nosterm:latest@sha256:8f52832f290d76a511f844cf7b5177fe1a2b808255f8df65381afb89abc09f42
             pullPolicy: Always
         - name: config
           configMap:
