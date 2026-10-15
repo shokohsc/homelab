@@ -6,3 +6,4 @@ resources:
   - crossplane
   - gatekeeper
   - nfs-proxmox
+  - kloak
