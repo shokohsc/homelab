@@ -17,7 +17,7 @@ spec:
   chart:
     spec:
       chart: kloak
-      version: 0.2.0
+      version: 0.1.2
       sourceRef:
         kind: HelmRepository
         name: kloak
@@ -108,7 +108,7 @@ spec:
       trustedServers: []
     controller:
       ebpf:
-        egressInterface: none
+        egressInterface: eth0,eth1
         tcAttachMode: auto
       resources:
         requests:
