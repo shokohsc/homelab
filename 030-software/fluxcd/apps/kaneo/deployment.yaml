@@ -1,0 +1,92 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kaneo
+spec:
+  revisionHistoryLimit: 0
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: kaneo
+  template:
+    metadata:
+      labels:
+        app: kaneo
+        # bundled nginx writes its own html/pid/temp dirs at startup
+        policy.gatekeeper.sh/ignore-psp-readonlyrootfilesystem: "true"
+    spec:
+      automountServiceAccountToken: false
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        seccompProfile:
+          type: RuntimeDefault
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              podAffinityTerm:
+                topologyKey: kubernetes.io/hostname
+                labelSelector:
+                  matchLabels:
+                    app: kaneo
+      topologySpreadConstraints:
+        - maxSkew: 1
+          topologyKey: kubernetes.io/hostname
+          whenUnsatisfiable: ScheduleAnyway
+          labelSelector:
+            matchLabels:
+              app: kaneo
+      containers:
+        - name: kaneo
+          image: ghcr.io/usekaneo/kaneo:v2.46.2
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: false
+            runAsNonRoot: true
+            capabilities:
+              drop:
+                - ALL
+          env:
+            - name: KANEO_CLIENT_URL
+              value: https://kaneo.${domain}
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: kaneo
+                  key: postgresql-database-url
+            - name: AUTH_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: kaneo
+                  key: auth-secret
+          ports:
+            - name: http
+              containerPort: 5173
+              protocol: TCP
+          startupProbe:
+            httpGet:
+              path: /api/health
+              port: http
+            periodSeconds: 5
+            failureThreshold: 60
+          livenessProbe:
+            httpGet:
+              path: /api/health
+              port: http
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /api/health
+              port: http
+            periodSeconds: 10
+          resources:
+            requests:
+              cpu: 100m
+              memory: 256Mi
+            limits:
+              memory: 1024Mi
