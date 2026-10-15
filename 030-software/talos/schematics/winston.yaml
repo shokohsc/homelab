@@ -1,0 +1,10 @@
+customization:
+  extraKernelArgs:
+    - net.ifnames=0
+  systemExtensions:
+    officialExtensions:
+      - siderolabs/amd-ucode
+      - siderolabs/gvisor
+      - siderolabs/nfs-utils
+      - siderolabs/nfsd
+      - siderolabs/stargz-snapshotter

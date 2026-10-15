@@ -1,0 +1,56 @@
+apiVersion: v1alpha1
+kind: NetworkDefaultActionConfig
+ingress: block
+---
+apiVersion: v1alpha1
+kind: NetworkRuleConfig
+name: kubelet-ingress
+portSelector:
+  ports:
+    - 10250
+  protocol: tcp
+ingress:
+  - subnet: {{ .Data.subnet }}.0/24
+  - subnet: 10.244.0.0/16
+---
+apiVersion: v1alpha1
+kind: NetworkRuleConfig
+name: cilium-envoy-metrics
+portSelector:
+  ports:
+    - 9964
+  protocol: tcp
+ingress:
+  - subnet: 10.244.0.0/0
+---
+apiVersion: v1alpha1
+kind: NetworkRuleConfig
+name: apid-ingress
+portSelector:
+  ports:
+    - 50000
+  protocol: tcp
+ingress:
+  - subnet: 10.96.0.0/12
+  - subnet: {{ .Data.subnet }}.0/24
+  - subnet: 10.42.10.0/24
+---
+apiVersion: v1alpha1
+kind: NetworkRuleConfig
+name: cni-vxlan
+portSelector:
+  ports:
+    - 8472
+  protocol: udp
+ingress:
+  - subnet: {{ .Data.subnet }}.0/24
+---
+apiVersion: v1alpha1
+kind: NetworkRuleConfig
+name: hubble-peer
+portSelector:
+  ports:
+    - 4244
+  protocol: tcp
+ingress:
+  - subnet: 10.244.0.0/16

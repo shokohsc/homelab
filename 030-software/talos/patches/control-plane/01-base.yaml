@@ -1,0 +1,16 @@
+machine:
+  kernel:
+    modules:
+      - name: br_netfilter
+        parameters:
+          - nf_conntrack_max=131072
+  nodeLabels:
+    node.kubernetes.io/exclude-from-external-load-balancers: ""
+cluster:
+  apiServer:
+    certSANs:
+      - talos.local
+      - talos.home.arpa
+  etcd:
+    extraArgs:
+      listen-metrics-urls: http://0.0.0.0:2381

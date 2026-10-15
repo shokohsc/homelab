@@ -1,0 +1,43 @@
+clusterName: talos
+clusterEndpoint: https://talos.home.arpa:6443
+kubernetesVersion: 1.36.2
+talosVersion: 1.13.7
+secretsPath: talsecret.sops.yaml
+patchesDir: patches
+data:
+  subnet: "10.42.20"
+nodes:
+  - host: sombra
+    ip: 10.42.20.10
+    role: control-plane
+    schematicId: "@schematics/control-plane.yaml"
+  - host: lucio
+    ip: 10.42.20.20
+    role: control-plane
+    schematicId: "@schematics/control-plane.yaml"
+  - host: zarya
+    ip: 10.42.20.30
+    role: control-plane
+    schematicId: "@schematics/control-plane.yaml"
+  - host: mercy
+    ip: 10.42.20.40
+    role: worker
+    schematicId: "@schematics/mercy.yaml"
+  - host: winston
+    ip: 10.42.20.50
+    role: worker
+    schematicId: "@schematics/winston.yaml"
+  - host: worker-vm
+    ip: 10.42.20.255
+    role: worker
+    platform: nocloud
+    schematicId: "@schematics/worker-vm.yaml"
+    data:
+      ignoreHostname: true
+  - host: worker-vm-gpu
+    ip: 10.42.20.255
+    role: worker
+    platform: nocloud
+    schematicId: "@schematics/worker-vm-gpu.yaml"
+    data:
+      ignoreHostname: true

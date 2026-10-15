@@ -1,12 +1,12 @@
 machine:
   certSANs:
-    - talos.${TALOS_DOMAIN}
-    - ${TALOS_SUBNET}.10
-    - ${TALOS_SUBNET}.20
-    - ${TALOS_SUBNET}.30
+    - talos.home.arpa
+    - {{ .Data.subnet }}.10
+    - {{ .Data.subnet }}.20
+    - {{ .Data.subnet }}.30
   features:
     hostDNS:
-        forwardKubeDNSToHost: false # Use the host DNS resolver as upstream for Kubernetes CoreDNS pods.
+      forwardKubeDNSToHost: false # Use the host DNS resolver as upstream for Kubernetes CoreDNS pods.
   kubelet:
     extraConfig:
       featureGates:

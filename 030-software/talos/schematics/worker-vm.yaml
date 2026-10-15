@@ -1,0 +1,15 @@
+customization:
+  extraKernelArgs:
+    - net.ifnames=0
+    - talos.config=http://tracer.home.arpa:8080/metadata?s=worker-vm
+    - vlan=ens18.20:ens18
+  systemExtensions:
+    officialExtensions:
+      - siderolabs/amd-ucode
+      - siderolabs/gvisor
+      - siderolabs/nfs-utils
+      - siderolabs/nfsd
+      - siderolabs/qemu-guest-agent
+      - siderolabs/stargz-snapshotter
+      - siderolabs/uhid
+      - siderolabs/uinput

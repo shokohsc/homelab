@@ -1,0 +1,17 @@
+customization:
+  extraKernelArgs:
+    - net.ifnames=0
+    - talos.config=http://tracer.home.arpa:8080/metadata?p=worker-vm-gpu
+    - vlan=eth0.20:eth0
+  systemExtensions:
+    officialExtensions:
+      - siderolabs/nvidia-container-toolkit-lts
+      - siderolabs/nvidia-open-gpu-kernel-modules-lts
+      - siderolabs/nonfree-kmod-nvidia-lts
+      - siderolabs/gvisor
+      - siderolabs/nfs-utils
+      - siderolabs/nfsd
+      - siderolabs/qemu-guest-agent
+      - siderolabs/stargz-snapshotter
+      - siderolabs/uhid
+      - siderolabs/uinput
