@@ -52,7 +52,7 @@ spec:
           env:
             - name: KONFLATE_REPO
               value: github://shokohsc/homelab
-            - name: KONFLATE_RERENDER_INTERVAL
+            - name: KONFLATE_REFRESH_INTERVAL
               value: 5m
             - name: KONFLATE_CLUSTER_PATH
               value: 030-software/fluxcd
