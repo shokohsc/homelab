@@ -182,7 +182,7 @@ spec:
       volumes:
         - name: assets
           image:
-            reference: ghcr.io/element-hq/element-web:v1.12.30
+            reference: ghcr.io/element-hq/element-web:v1.12.31
         - name: config
           configMap:
             name: config
