@@ -4,3 +4,4 @@ namespace: loki
 resources:
   - namespace.yaml
   - loki.yaml
+  - job.yaml

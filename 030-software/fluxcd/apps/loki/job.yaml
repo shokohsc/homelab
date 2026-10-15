@@ -1,0 +1,67 @@
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: loki-create-buckets
+spec:
+  backoffLimit: 10
+  template:
+    spec:
+      restartPolicy: OnFailure
+      automountServiceAccountToken: false
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: mc
+          image: quay.io/minio/mc:RELEASE.2025-08-13T08-35-41Z
+          command:
+            - /bin/sh
+            - -c
+            - |
+              until mc alias set rustfs "$S3_ENDPOINT" "$S3_ACCESS_KEY" "$S3_SECRET_KEY" && mc ready rustfs; do
+                sleep 5
+              done
+              mc mb --ignore-existing rustfs/loki-chunks
+              mc mb --ignore-existing rustfs/loki-ruler
+          env:
+            - name: MC_CONFIG_DIR
+              value: /tmp/mc
+            - name: HOME
+              value: /tmp
+            - name: S3_ENDPOINT
+              value: http://rustfs-svc.rustfs.svc.cluster.local:9000
+            - name: S3_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: rustfs-credentials
+                  key: accessKeyId
+            - name: S3_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: rustfs-credentials
+                  key: secretAccessKey
+          resources:
+            requests:
+              cpu: 50m
+            limits:
+              memory: 128Mi
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+            capabilities:
+              drop:
+                - ALL
+            seccompProfile:
+              type: RuntimeDefault
+          volumeMounts:
+            - name: tmp
+              mountPath: /tmp
+      volumes:
+        - name: tmp
+          emptyDir: {}
