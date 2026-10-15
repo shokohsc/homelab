@@ -18,6 +18,7 @@ metadata:
   name: kubeopencode
 spec:
   interval: ${interval}
+  maxHistory: 1
   chartRef:
     kind: OCIRepository
     name: kubeopencode

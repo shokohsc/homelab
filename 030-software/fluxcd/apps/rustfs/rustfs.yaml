@@ -13,6 +13,7 @@ metadata:
   name: rustfs
 spec:
   interval: ${interval}
+  maxHistory: 1
   chart:
     spec:
       chart: rustfs

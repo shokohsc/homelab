@@ -13,6 +13,7 @@ metadata:
   name: ceph-csi
 spec:
   interval: ${interval}
+  maxHistory: 1
   chart:
     spec:
       chart: ceph-csi-rbd

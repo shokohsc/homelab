@@ -13,6 +13,7 @@ metadata:
   name: valkey
 spec:
   interval: ${interval}
+  maxHistory: 1
   chart:
     spec:
       chart: valkey

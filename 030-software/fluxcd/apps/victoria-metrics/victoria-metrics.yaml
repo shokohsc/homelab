@@ -13,6 +13,7 @@ metadata:
   name: victoria-metrics
 spec:
   interval: ${interval}
+  maxHistory: 1
   chart:
     spec:
       chart: victoria-metrics-single
