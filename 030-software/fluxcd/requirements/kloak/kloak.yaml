@@ -109,7 +109,7 @@ spec:
     controller:
       ebpf:
         egressInterface: eth0,eth1
-        tcAttachMode: auto
+        tcAttachMode: tcx
       resources:
         requests:
           cpu: 100m
