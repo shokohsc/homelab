@@ -108,7 +108,7 @@ spec:
       trustedServers: []
     controller:
       ebpf:
-        egressInterface: eth0
+        egressInterface: none
         tcAttachMode: auto
       resources:
         requests:
