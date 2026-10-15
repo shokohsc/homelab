@@ -2,3 +2,4 @@
 - Keep an app's heap/memory limit below the container memory limit so native allocations have headroom; setting them equal starves startup.
 - Size the startup probe window (failureThreshold x periodSeconds) above the worst-case cold start, or the app restart-loops.
 - For readOnlyRootFilesystem containers, mount a writable emptyDir at /tmp and point HOME at it; tools that write to temp or $HOME crash otherwise.
+- When the secret-encryption key is unavailable, commit placeholder secret manifests plus the exact encrypt command instead of plaintext secrets or stalling the change.
