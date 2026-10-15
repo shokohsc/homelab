@@ -107,6 +107,9 @@ spec:
       # for host-based secret filtering. If empty, auto-discovers kube-dns ClusterIP.
       trustedServers: []
     controller:
+      ebpf:
+        egressInterface: eth0
+        tcAttachMode: auto
       resources:
         requests:
           cpu: 100m
