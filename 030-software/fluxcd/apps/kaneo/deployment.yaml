@@ -43,7 +43,7 @@ spec:
               app: kaneo
       containers:
         - name: kaneo
-          image: ghcr.io/usekaneo/kaneo:v2.46.2
+          image: ghcr.io/usekaneo/kaneo:2.46.2
           securityContext:
             allowPrivilegeEscalation: false
             readOnlyRootFilesystem: false
