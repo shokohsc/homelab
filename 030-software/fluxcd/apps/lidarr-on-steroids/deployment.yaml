@@ -1,0 +1,111 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: lidarr-on-steroids
+  labels:
+    stateful: "true"
+spec:
+  revisionHistoryLimit: 0
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: lidarr-on-steroids
+  template:
+    metadata:
+      labels:
+        app: lidarr-on-steroids
+        policy.gatekeeper.sh/ignore: "true"
+    spec:
+      automountServiceAccountToken: false
+      securityContext:
+        seccompProfile:
+          type: RuntimeDefault
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              podAffinityTerm:
+                topologyKey: kubernetes.io/hostname
+                labelSelector:
+                  matchLabels:
+                    app: lidarr-on-steroids
+      topologySpreadConstraints:
+        - maxSkew: 1
+          topologyKey: kubernetes.io/hostname
+          whenUnsatisfiable: ScheduleAnyway
+          labelSelector:
+            matchLabels:
+              app: lidarr-on-steroids
+      containers:
+        - name: lidarr-on-steroids
+          image: youegraillot/lidarr-on-steroids:latest@sha256:af8dd8f62ef3a0ad4cd103674ec1a8819badf7fc4bdbfdf8ac271fd00b037c0f
+          imagePullPolicy: Always
+          # securityContext:
+          #   allowPrivilegeEscalation: false
+          #   readOnlyRootFilesystem: true
+          #   runAsNonRoot: true
+          #   capabilities:
+          #     drop:
+          #       - ALL
+          env:
+            - name: PUID
+              value: "1000"
+            - name: PGID
+              value: "1000"
+            - name: TZ
+              value: ${timezone}
+            - name: AUTOCONFIG
+              value: "true"
+          ports:
+            - name: http
+              containerPort: 8686
+              protocol: TCP
+            - name: deemix
+              containerPort: 6595
+              protocol: TCP
+          startupProbe:
+            tcpSocket:
+              port: http
+          livenessProbe:
+            tcpSocket:
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /ping
+              port: http
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+            limits:
+              memory: 4096Mi
+          volumeMounts:
+            - name: config
+              mountPath: /config
+            - name: config-deemix
+              mountPath: /config_deemix
+            - name: downloads
+              mountPath: /downloads
+            - name: music
+              mountPath: /music
+            - name: tmp
+              mountPath: /tmp
+      volumes:
+        - name: config
+          persistentVolumeClaim:
+            claimName: config
+        - name: config-deemix
+          persistentVolumeClaim:
+            claimName: config-deemix
+        - name: downloads
+          nfs:
+            server: ${nfsDownloadsServer}
+            path: /lidarr
+        - name: music
+          nfs:
+            server: genji.${domain}
+            path: /lidarr
+        - name: tmp
+          emptyDir: {}
