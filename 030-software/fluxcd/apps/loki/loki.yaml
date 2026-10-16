@@ -18,6 +18,7 @@ metadata:
   name: loki
 spec:
   interval: ${interval}
+  maxHistory: 1
   chartRef:
     kind: OCIRepository
     name: loki
@@ -85,8 +86,12 @@ spec:
         allow_structured_metadata: true
         volume_enabled: true
         reject_old_samples_max_age: 12h
+        retention_period: 168h
         max_cache_freshness_per_query: 2m
         split_queries_by_interval: 15m
+      compactor:
+        retention_enabled: true
+        delete_request_store: filesystem
       rulerConfig:
         enable_api: true
       tracing:

@@ -13,6 +13,7 @@ metadata:
   name: grafana
 spec:
   interval: ${interval}
+  maxHistory: 1
   chart:
     spec:
       chart: grafana

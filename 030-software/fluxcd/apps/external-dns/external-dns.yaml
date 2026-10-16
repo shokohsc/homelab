@@ -13,6 +13,7 @@ metadata:
   name: external-dns
 spec:
   interval: ${interval}
+  maxHistory: 1
   chart:
     spec:
       chart: external-dns
