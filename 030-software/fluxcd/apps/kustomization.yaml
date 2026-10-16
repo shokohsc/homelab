@@ -36,7 +36,7 @@ resources:
   - alloy
   - http-echo
   - jellyfin
-  - kaneo
+  # - kaneo
   - kaniko
   - konflate
   - kube-state-metrics
