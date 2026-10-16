@@ -106,6 +106,10 @@ spec:
       # Trusted DNS server IPs. Only DNS responses from these servers are used
       # for host-based secret filtering. If empty, auto-discovers kube-dns ClusterIP.
       trustedServers: []
+    log:
+      dev: true
+      level: debug
+      ebpfLevel: stats
     controller:
       ebpf:
       #   egressInterface: eth0,eth1
