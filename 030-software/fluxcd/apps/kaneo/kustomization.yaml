@@ -4,5 +4,4 @@ namespace: kaneo
 resources:
   - namespace.yaml
   - kaneo.yaml
-  - http-route.yaml
   - secret.yaml

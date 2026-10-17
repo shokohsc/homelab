@@ -22,6 +22,24 @@ spec:
   chartRef:
     kind: OCIRepository
     name: kaneo
+  postRenderers:
+    - kustomize:
+        patches:
+          - patch: |
+              apiVersion: apps/v1
+              kind: Deployment
+              metadata:
+                name: all
+              spec:
+                revisionHistoryLimit: 0
+                template:
+                  metadata:
+                    labels:
+                      policy.gatekeeper.sh/ignore-psp-readonlyrootfilesystem: "true"
+                      policy.gatekeeper.sh/ignore-psp-pods-allowed-user-ranges: "true"
+            target:
+              kind: Deployment
+              labelSelector: app.kubernetes.io/name=kloak
   values:
     affinity: {}
     topologySpreadConstraints: []
