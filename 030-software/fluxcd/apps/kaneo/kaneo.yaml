@@ -41,8 +41,22 @@ spec:
               kind: Deployment
               labelSelector: app.kubernetes.io/name=kloak
   values:
-    affinity: {}
-    topologySpreadConstraints: []
+    affinity:
+      podAntiAffinity:
+        preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 100
+            podAffinityTerm:
+              topologyKey: kubernetes.io/hostname
+              labelSelector:
+                matchLabels:
+                  app.kubernetes.io/instance: kaneo
+    topologySpreadConstraints:
+      - maxSkew: 1
+        topologyKey: kubernetes.io/hostname
+        whenUnsatisfiable: ScheduleAnyway
+        labelSelector:
+          matchLabels:
+            app.kubernetes.io/instance: kaneo
     podSecurityContext:
       seccompProfile:
         type: RuntimeDefault
