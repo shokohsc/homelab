@@ -39,7 +39,7 @@ spec:
                       policy.gatekeeper.sh/ignore-psp-pods-allowed-user-ranges: "true"
             target:
               kind: Deployment
-              labelSelector: app.kubernetes.io/name=kloak
+              labelSelector: app.kubernetes.io/instance=kaneo
   values:
     affinity:
       podAntiAffinity:
