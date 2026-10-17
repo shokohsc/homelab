@@ -42,7 +42,7 @@ spec:
           dashboard.${domain}/url: https://victoria-metrics.${domain}
           dashboard.${domain}/icon: chart-line
       persistentVolume:
-        size: 2Gi
+        size: 5Gi
       resources:
         limits:
           memory: 2048Mi
