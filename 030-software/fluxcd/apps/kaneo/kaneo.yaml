@@ -43,13 +43,19 @@ spec:
   values:
     affinity: {}
     topologySpreadConstraints: []
-    podSecurityContext: {}
+    podSecurityContext:
+      seccompProfile:
+        type: RuntimeDefault
     serviceAccount:
       create: false
     postgresql:
       enabled: false
     kaneo:
-      securityContext: {}
+      securityContext:
+        allowPrivilegeEscalation: false
+        capabilities:
+          drop:
+            - ALL
       resources:
         limits:
           memory: 512Mi

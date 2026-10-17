@@ -33,6 +33,21 @@ spec:
       targetPath: secret.rustfs.secret_key
     - kind: Secret
       name: oidc
+
+  postRenderers:
+    - kustomize:
+        patches:
+          - patch: |
+              apiVersion: apps/v1
+              kind: Deployment
+              metadata:
+                name: all
+              spec:
+                revisionHistoryLimit: 0
+            target:
+              kind: Deployment
+              labelSelector: app.kubernetes.io/instance=rustfs
+
   values:
     mode:
       standalone:

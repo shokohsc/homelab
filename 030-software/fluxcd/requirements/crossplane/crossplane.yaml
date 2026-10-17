@@ -22,6 +22,19 @@ spec:
         kind: HelmRepository
         name: crossplane
       interval: ${interval}
+  postRenderers:
+    - kustomize:
+        patches:
+          - patch: |
+              apiVersion: apps/v1
+              kind: Deployment
+              metadata:
+                name: all
+              spec:
+                revisionHistoryLimit: 0
+            target:
+              kind: Deployment
+              labelSelector: app.kubernetes.io/instance=crossplane
   values:
     podSecurityContextRBACManager:
       runAsNonRoot: true
