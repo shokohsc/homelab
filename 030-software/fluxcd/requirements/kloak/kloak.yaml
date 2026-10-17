@@ -96,31 +96,17 @@ spec:
               kind: Deployment
               labelSelector: app.kubernetes.io/name=kloak
   values:
-    image:
-      tag: dev
     certificates:
       mode: certManager
       certManager:
         issuerRef:
           name: kloak-selfsigned
           kind: Issuer
-    dns:
-      # Trusted DNS server IPs. Only DNS responses from these servers are used
-      # for host-based secret filtering. If empty, auto-discovers kube-dns ClusterIP.
-      trustedServers: []
-    log:
-      dev: true
-      level: debug
-      ebpfLevel: instruction
-    controller:
-      # ebpf:
-      #   egressInterface: eth0,eth1
-      #   tcAttachMode: clsact
       resources:
         requests:
           cpu: 100m
         limits:
-          memory: 1024Mi
+          memory: 64Mi
     webhook:
       resources:
         requests:
