@@ -1,0 +1,42 @@
+apiVersion: platform.${publicDomain}/v1alpha1
+kind: ProxmoxIdentity
+metadata:
+  name: whsah
+spec:
+  user: whsah@pve
+  passwordSecretRef:
+    namespace: whsah
+    name: whsah-credentials
+    key: password
+  userGroups:
+    - whsah
+  aclPath: /
+  tokenName: whsah
+  groupName: whsah
+  roleName: whsah
+  privileges:
+    - Datastore.Allocate
+    - Datastore.AllocateSpace
+    - Datastore.AllocateTemplate
+    - Datastore.Audit
+    - Mapping.Audit
+    - Mapping.Use
+    - Sys.Audit
+    - Sys.AccessNetwork
+    - SDN.Audit
+    - SDN.Use
+    - VM.Audit
+    - VM.Allocate
+    - VM.Clone
+    - VM.Config.CDROM
+    - VM.Config.CPU
+    - VM.Config.Memory
+    - VM.Config.Disk
+    - VM.Config.Network
+    - VM.Config.HWType
+    - VM.Config.Cloudinit
+    - VM.Config.Options
+    - VM.PowerMgmt
+    - VM.GuestAgent.Audit
+  groupRoles:
+    - whsah

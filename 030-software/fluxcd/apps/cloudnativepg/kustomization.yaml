@@ -25,4 +25,5 @@ resources:
   - database-roles/sonarr.yaml
   - database-roles/sftpgo.yaml
   - database-roles/vaultwarden.yaml
+  - database-roles/whsah.yaml
   # - pooler.yaml

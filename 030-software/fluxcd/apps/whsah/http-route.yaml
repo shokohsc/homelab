@@ -1,0 +1,65 @@
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: whsah
+  annotations:
+    dashboard.${domain}/icon:  controller
+    dashboard.${domain}/name: whsah
+    dashboard.${domain}/url: https://whsah.${domain}
+spec:
+  hostnames:
+  - whsah.${domain}
+  parentRefs:
+  - name: whsah
+    kind: ListenerSet
+    group: gateway.networking.k8s.io
+    sectionName: whsah
+  rules:
+  - backendRefs:
+    - name: whsah-web
+      port: 80
+    matches:
+    - path:
+        type: PathPrefix
+        value: /
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: api
+spec:
+  hostnames:
+  - api.whsah.${domain}
+  parentRefs:
+  - name: whsah
+    kind: ListenerSet
+    group: gateway.networking.k8s.io
+    sectionName: api
+  rules:
+  - backendRefs:
+    - name: whsah-server
+      port: 80
+    matches:
+    - path:
+        type: PathPrefix
+        value: /
+    filters:
+    - cors:
+        allowOrigins:
+        - https://whsah.${domain}
+        allowMethods:
+        - GET
+        - OPTIONS
+        allowHeaders:
+        - DNT
+        - X-CustomHeader
+        - Keep-Alive
+        - User-Agent
+        - X-Requested-With
+        - If-Modified-Since
+        - Cache-Control
+        - Content-Type
+        allowCredentials: false
+        maxAge: 3600
+      type: CORS
