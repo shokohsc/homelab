@@ -58,11 +58,11 @@ spec:
               value: "https://proxmox.${domain}"
             - name: VDI_PROXMOX_NODE
               value: ""
-            - name: VDI_PROXMOX_TOKEN
-              valueFrom:
-                secretKeyRef:
-                  name: whsah-credentials
-                  key: proxmox-token
+            # - name: VDI_PROXMOX_TOKEN
+            #   valueFrom:
+            #     secretKeyRef:
+            #       name: whsah-credentials
+            #       key: proxmox-token
           ports:
             - name: http
               containerPort: 8080
