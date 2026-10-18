@@ -85,11 +85,17 @@ spec:
           volumeMounts:
             - name: hanzo
               mountPath: /mnt/games
+            - mountPath: /etc/ssl/certs
+              name: tls
       volumes:
         - name: hanzo
           nfs:
             server: hanzo.${domain}
             path: /
+        - name: tls
+          configMap:
+            name: homelab-ca-cm
+            defaultMode: 0600
 ---
 kind: Deployment
 apiVersion: apps/v1
