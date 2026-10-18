@@ -40,7 +40,7 @@ spec:
               app: whsah-server
       containers:
         - name: whsah-server
-          image: ghcr.io/shokohsc/whsah-server:sha-a740dc0
+          image: ghcr.io/shokohsc/whsah-server:sha-ce22735
           securityContext:
             allowPrivilegeEscalation: false
             readOnlyRootFilesystem: true
@@ -57,12 +57,25 @@ spec:
             - name: VDI_PROXMOX_BASE
               value: "https://proxmox.${domain}"
             - name: VDI_PROXMOX_NODE
-              value: ""
-            # - name: VDI_PROXMOX_TOKEN
-            #   valueFrom:
-            #     secretKeyRef:
-            #       name: whsah-credentials
-            #       key: proxmox-token
+              value: roadhog
+            - name: VDI_PROXMOX_AUTH_MODE
+              value: password
+            - name: VDI_LIBRARY_PATH
+              value: /mnt/games
+            - name: VDI_LOKI_URL
+              value: https://loki.${domain}
+            - name: VDI_AGENT_TOKEN
+              value: 25b7774fecb7e64f07998005316ed66177c35724ae118244b97f10d7771a3ff3
+            - name: VDI_PROXMOX_USER
+              valueFrom:
+                secretKeyRef:
+                  name: whsah-credentials
+                  key: username
+            - name: VDI_PROXMOX_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: whsah-credentials
+                  key: password
           ports:
             - name: http
               containerPort: 8080
@@ -172,4 +185,4 @@ spec:
       volumes:
         - name: assets
           image:
-            reference: ghcr.io/shokohsc/whsah-web:sha-a740dc0
+            reference: ghcr.io/shokohsc/whsah-web:sha-ce22735
