@@ -82,7 +82,7 @@ spec:
             value: debug
 
           - name: MIKROTIK_DEFAULT_TTL
-            value: "60"
+            value: "360"
           - name: MIKROTIK_DEFAULT_COMMENT
             value: Managed by ExternalDNS
 
