@@ -51,3 +51,17 @@ resource "routeros_system_user" "opentofu" {
   password = var.system_opentofu_user_password
   comment  = "Bot user for OpenTofu"
 }
+
+resource "routeros_system_logging_action" "syslog" {
+  name              = "syslog"
+  target            = "remote"
+  remote            = var.syslog_host
+  remote_port       = var.syslog_port
+  remote_protocol   = "tcp"
+  remote_log_format = "syslog"
+}
+
+# No topics = all log topics are forwarded
+resource "routeros_system_logging" "syslog" {
+  action = routeros_system_logging_action.syslog.name
+}
