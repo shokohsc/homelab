@@ -6,3 +6,4 @@ resources:
   # - kubeshark
   - talos-proxmox-autoscaler
   # - nostr-gateway
+  - whsah
