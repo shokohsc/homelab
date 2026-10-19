@@ -51,3 +51,26 @@ resource "routeros_system_user" "opentofu" {
   password = var.system_opentofu_user_password
   comment  = "Bot user for OpenTofu"
 }
+
+resource "routeros_system_logging_action" "syslog" {
+  name                = "syslog"
+  target              = "remote"
+  remote              = var.syslog_host
+  remote_port         = var.syslog_port
+  remote_protocol     = "tcp"
+  remote_log_format   = "cef"
+  cef_event_delimiter = "\n"
+}
+
+resource "routeros_system_logging" "dns" {
+  action = routeros_system_logging_action.syslog.name
+  topics = ["dns","info","!packet"]
+}
+resource "routeros_system_logging" "firewall" {
+  action = routeros_system_logging_action.syslog.name
+  topics = ["firewall","info"]
+}
+resource "routeros_system_logging" "system" {
+  action = routeros_system_logging_action.syslog.name
+  topics = ["system","info"]
+}

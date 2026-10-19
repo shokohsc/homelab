@@ -97,6 +97,8 @@ tofu apply
 | Variable | Type | Default | Description |
 |----------|------|---------|-------------|
 | `system_timezone` | string | `"UTC"` | Device timezone |
+| `syslog_host` | string | `"10.42.60.2"` | Remote syslog server (Cilium Gateway VIP) |
+| `syslog_port` | number | `601` | Remote syslog server port |
 
 ### Network Variables
 | Variable | Type | Default | Description |
@@ -341,6 +343,7 @@ The following resources are automatically generated from the variable configurat
 - MAC server and Winbox restricted to LAN
 - System identity set to "Router"
 - Timezone set to UTC with autodetect disabled
+- All log topics except DNS queries/replies forwarded over TCP (`remote_log_format = "cef"`, newline-delimited) to the syslog service via the Cilium Gateway VIP
 
 ### DHCP
 - DHCP servers per VLAN interface

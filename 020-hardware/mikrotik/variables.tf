@@ -40,6 +40,18 @@ variable "system_opentofu_user_password" {
   description = "Mikrotik router opentofu user password"
 }
 
+variable "syslog_host" {
+  type        = string
+  default     = "10.42.60.2"
+  description = "Remote syslog server (Cilium Gateway VIP)"
+}
+
+variable "syslog_port" {
+  type        = number
+  default     = 601
+  description = "Remote syslog server port"
+}
+
 # Note: This variable is deprecated - use vlan_base_network instead.
 # Kept for backward compatibility.
 variable "homelab_cidr" {
