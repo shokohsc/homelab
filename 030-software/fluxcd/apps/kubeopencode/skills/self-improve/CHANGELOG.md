@@ -18,3 +18,9 @@
   - What: provider schemas enforce value enums that fmt/review miss (routeros `add_default_route` = "yes"/"no").
   - Why: a dual-WAN mikrotik change passed fmt but `tofu validate` rejected `add_default_route = "false"`.
   - Benefit: schema-level mistakes surface in seconds locally instead of at plan/apply time.
+## 2026-10-19
+
+- learned-rules: a GitHub PAT without the `workflow` scope cannot push changes under `.github/workflows/`.
+  - What: put build-time config (e.g. `VITE_API_BASE`) in the Dockerfile/build step instead of a CI workflow edit.
+  - Why: the push was rejected until the workflow change was reverted.
+  - Benefit: deploy-time config lands without needing an elevated token scope or stalling on a rejected push.
