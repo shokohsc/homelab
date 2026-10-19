@@ -7,9 +7,9 @@
 ## 2026-10-16
 
 - learned-rules: OSS Loki and VictoriaMetrics only support time-based retention (no size cap); set retention to 1 week and size the PVC to fit.
-
 ## 2026-10-18
 
+- learned-rules: `gh pr create` in CI containers needs explicit `--head`/`--base` even after a successful `git push -u`.
 - learned-rules: always run `tofu validate` with the pinned provider after writing Terraform.
   - What: provider schemas enforce value enums that fmt/review miss (routeros `add_default_route` = "yes"/"no").
   - Why: a dual-WAN mikrotik change passed fmt but `tofu validate` rejected `add_default_route = "false"`.
