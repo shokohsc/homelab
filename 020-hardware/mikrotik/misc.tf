@@ -62,8 +62,15 @@ resource "routeros_system_logging_action" "syslog" {
   cef_event_delimiter = "\n"
 }
 
-# All log topics forwarded, except dns queries/replies
-resource "routeros_system_logging" "syslog" {
+resource "routeros_system_logging" "dns" {
   action = routeros_system_logging_action.syslog.name
-  topics = ["!dns"]
+  topics = ["dns","info","!packet"]
+}
+resource "routeros_system_logging" "firewall" {
+  action = routeros_system_logging_action.syslog.name
+  topics = ["firewall","info"]
+}
+resource "routeros_system_logging" "system" {
+  action = routeros_system_logging_action.syslog.name
+  topics = ["system","info"]
 }
