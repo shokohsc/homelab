@@ -31,7 +31,7 @@ resources:
   - headlamp
   - iptvnator
   - jsoncrack
-  - lidarr
+  # - lidarr
   - loki
   - alloy
   - http-echo
