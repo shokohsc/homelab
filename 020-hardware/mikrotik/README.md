@@ -343,7 +343,7 @@ The following resources are automatically generated from the variable configurat
 - MAC server and Winbox restricted to LAN
 - System identity set to "Router"
 - Timezone set to UTC with autodetect disabled
-- All log topics forwarded over TCP (BSD-syslog format) to the syslog service via the Cilium Gateway VIP
+- All log topics except DNS queries/replies forwarded over TCP (`remote_log_format = "cef"`, newline-delimited) to the syslog service via the Cilium Gateway VIP
 
 ### DHCP
 - DHCP servers per VLAN interface

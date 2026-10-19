@@ -53,15 +53,17 @@ resource "routeros_system_user" "opentofu" {
 }
 
 resource "routeros_system_logging_action" "syslog" {
-  name              = "syslog"
-  target            = "remote"
-  remote            = var.syslog_host
-  remote_port       = var.syslog_port
-  remote_protocol   = "tcp"
-  remote_log_format = "syslog"
+  name                = "syslog"
+  target              = "remote"
+  remote              = var.syslog_host
+  remote_port         = var.syslog_port
+  remote_protocol     = "tcp"
+  remote_log_format   = "cef"
+  cef_event_delimiter = "\n"
 }
 
-# No topics = all log topics are forwarded
+# All log topics forwarded, except dns queries/replies
 resource "routeros_system_logging" "syslog" {
   action = routeros_system_logging_action.syslog.name
+  topics = ["!dns"]
 }
