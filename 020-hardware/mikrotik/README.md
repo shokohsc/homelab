@@ -10,6 +10,21 @@ This Terraform configuration manages a MikroTik CRS328-24P-4S+RM switch with VLA
 - **Model**: MikroTik CRS328-24P-4S+RM
 - **Role**: Router backbone with VLAN filtering, DHCP servers, and firewall rules
 
+### WAN / Internet
+
+Two upstreams are treated as a single logical gateway with automatic failover (see `wan.tf`):
+
+| WAN | Interface | Handoff | Gateway | Role |
+|-----|-----------|---------|---------|------|
+| Fiber | ether2 | DHCP (ONT) | ISP-provided, applied by the dhcp-client script | Primary |
+| Mobile | ether1 | Static `192.168.1.254/24` | `192.168.1.1` (OPPO 5G CPE) | Failover |
+
+Failover uses recursive static routes: each WAN gets a probe route to a public IP (`1.1.1.1/32` for fiber, `8.8.8.8/32` for mobile) and the two default routes resolve recursively through those probes (fiber distance 1, mobile distance 2). `check-gateway=ping` on the default routes pings the probe IP itself, not the CPE, so failover also triggers when a CPE is up but its internet is dead (e.g. a dropped mobile data session). When the fiber lease binds, the fiber dhcp-client script rewrites the fiber probe route's gateway, so nothing manual is needed once the ISP delivers the connection.
+
+Notes:
+- This is safe to apply before the fiber is installed: the fiber DHCP client stays unbound, its probe route stays inactive, and traffic keeps flowing via mobile.
+- Assumption: the fiber ISP hands off plain DHCP with an on-link gateway. PPPoE or static handoffs need a small adaptation in `wan.tf`.
+
 ### Management Access
 
 The router can be managed from two networks:
@@ -48,6 +63,8 @@ The following steps must be done manually through the Winbox GUI before applying
 
 2. **Configure HTTPS certificate**: To access Winbox via HTTPS without browser SSL warnings, upload a trusted TLS certificate and key:
    - Upload as File a fullchain bundle certificate (ca + certificate + key) and use it for www-ssl service
+
+3. **Remove the pre-existing default route**: Default routes are now managed by Terraform (`wan.tf`). Before the first apply, delete any manually created `0.0.0.0/0` route (e.g. via `192.168.1.1`) and any pre-existing DHCP client on `ether2` from IP → Routes / IP → DHCP Client, otherwise traffic will ECMP-split across the old and new default routes.
 
 ### Installation
 
@@ -354,7 +371,8 @@ mikrotik/
 ├── routeros-backup.backup     # RouterOS backup file
 ├── terraform.tfvars           # Variable overrides
 ├── variables.tf               # Input variables and locals
-└── vlans.tf                   # Bridge, VLANs, IP addressing, DHCP
+├── vlans.tf                   # Bridge, VLANs, IP addressing, DHCP
+└── wan.tf                     # WAN clients and dual-WAN failover routes
 ```
 
 ## DNS Configuration
