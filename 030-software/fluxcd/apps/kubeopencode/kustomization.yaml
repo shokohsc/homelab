@@ -6,7 +6,7 @@ resources:
   - secret.yaml
   - rbac.yaml
   - agent-templates
-  - agents
+  # - agents
   - cilium-network-policy.yaml
 configMapGenerator:
 - name: config

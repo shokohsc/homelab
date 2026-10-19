@@ -17,13 +17,14 @@ spec:
     metadata:
       labels:
         app: deemix
+        policy.gatekeeper.sh/ignore: "true"
     spec:
       automountServiceAccountToken: false
       securityContext:
-        runAsNonRoot: true
-        runAsUser: 1000
-        runAsGroup: 1000
-        fsGroup: 1000
+        # runAsNonRoot: true
+        # runAsUser: 1000
+        # runAsGroup: 1000
+        # fsGroup: 1000
         seccompProfile:
           type: RuntimeDefault
       affinity:
@@ -45,13 +46,13 @@ spec:
       containers:
         - name: deemix
           image: ghcr.io/bambanah/deemix:v4.7.1
-          securityContext:
-            allowPrivilegeEscalation: false
-            readOnlyRootFilesystem: true
-            runAsNonRoot: true
-            capabilities:
-              drop:
-                - ALL
+          # securityContext:
+          #   allowPrivilegeEscalation: false
+          #   readOnlyRootFilesystem: true
+          #   runAsNonRoot: true
+          #   capabilities:
+          #     drop:
+          #       - ALL
           env:
             - name: TZ
               value: ${timezone}
@@ -88,6 +89,7 @@ spec:
           persistentVolumeClaim:
             claimName: config
         - name: downloads
-          nfs:
-            server: ${nfsDownloadsServer}
-            path: /deemix
+          emptyDir: {}
+          # nfs:
+          #   server: ${nfsDownloadsServer}
+          #   path: /deemix

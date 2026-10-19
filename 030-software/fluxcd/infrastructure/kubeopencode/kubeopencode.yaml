@@ -18,9 +18,23 @@ metadata:
   name: kubeopencode
 spec:
   interval: ${interval}
+  maxHistory: 1
   chartRef:
     kind: OCIRepository
     name: kubeopencode
+  postRenderers:
+    - kustomize:
+        patches:
+          - patch: |
+              apiVersion: apps/v1
+              kind: Deployment
+              metadata:
+                name: all
+              spec:
+                revisionHistoryLimit: 0
+            target:
+              kind: Deployment
+              labelSelector: app.kubernetes.io/instance=kubeopencode
   values:
     controller:
       podSecurityContext:

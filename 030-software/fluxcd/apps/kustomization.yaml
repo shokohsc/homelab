@@ -36,6 +36,7 @@ resources:
   - alloy
   - http-echo
   - jellyfin
+  - kaneo
   - kaniko
   - konflate
   - kube-state-metrics
@@ -45,10 +46,12 @@ resources:
   - matrix
   - metrics-server
   - miniflux
+  - mitmproxy
   - mongoku
   - nats
   - nfs-downloads
-  - nostr-gateway
+  - nosterm
+  # - nostr-gateway
   - opentelemetry
   - paint
   - pairdrop
@@ -92,6 +95,7 @@ resources:
   - webrcade
   - weechat
   - wekan
+  - whsah
   - whoami
   - ws-screenshot
   - zipkin

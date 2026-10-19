@@ -86,7 +86,7 @@ spec:
               name: chromecast
               subPath: Chromecast.xml
             - name: transcode
-              mountPath: /plex/tmp
+              mountPath: /transcode
             - name: movies
               mountPath: /data/movies
             - name: tvshows

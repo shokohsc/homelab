@@ -13,14 +13,27 @@ metadata:
   name: grafana
 spec:
   interval: ${interval}
+  maxHistory: 1
   chart:
     spec:
       chart: grafana
-      version: 13.5.0
+      version: 13.5.1
       sourceRef:
         kind: HelmRepository
         name: grafana-community
-
+  postRenderers:
+    - kustomize:
+        patches:
+          - patch: |
+              apiVersion: apps/v1
+              kind: Deployment
+              metadata:
+                name: all
+              spec:
+                revisionHistoryLimit: 0
+            target:
+              kind: Deployment
+              labelSelector: app.kubernetes.io/instance=grafana
   values:
     rbac:
       pspEnabled: false

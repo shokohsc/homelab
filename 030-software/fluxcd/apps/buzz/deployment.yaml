@@ -242,6 +242,7 @@ spec:
           volumeMounts:
             - name: assets
               mountPath: /assets
+              # subPath: srv
             - name: config
               mountPath: /assets/config.json
               subPath: config.json
@@ -249,6 +250,7 @@ spec:
         - name: assets
           image:
             reference: shokohsc/buzz:a6766c4-dirty
+            # reference: public.ecr.aws/k3k1z1x5/nosterm:latest@sha256:8f52832f290d76a511f844cf7b5177fe1a2b808255f8df65381afb89abc09f42
             pullPolicy: Always
         - name: config
           configMap:

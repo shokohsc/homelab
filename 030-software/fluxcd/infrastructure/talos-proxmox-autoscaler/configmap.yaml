@@ -4,25 +4,26 @@ metadata:
   name: autoscaler-config
 data:
   cluster_name: "talos"
+  autoscaler_tag: "talos"
   min_workers: "0"
-  max_workers: "10"
-  disk_gib: "50"
-  storage_pool: "local-lvm"
-  network_bridge: "vmbr1"
-  proxmox_api_url: "https://proxmox.${domain}"
-  base_vmid: "8000"
-  base_gpu_vmid: "9000"
+  max_workers: "5"
   min_cpu: "2"
   max_cpu: "8"
   min_memory_gib: "4"
   max_memory_gib: "16"
-  # mac_address: ""
-  serial: "worker-vm"
+  disk_gib: "50"
+  storage_pool: "local-lvm"
+  network_bridge: "vmbr1"
+  proxmox_api_url: "https://proxmox.${domain}"
   proxmox_insecure: "false"
+  base_vmid: "8000"
+  base_gpu_vmid: "9000"
+  tags: "autoscaler,worker"
+  mac_address: ""
+  serial: "worker-vm"
   vlan_id: "20"
   worker_prefix: "worker-vm"
   gpu_prefix: "worker-vm-gpu"
-  worker_nodes: '[{"name":"worker-vm"}]'
   worker_gpu_nodes: |
     [
         {

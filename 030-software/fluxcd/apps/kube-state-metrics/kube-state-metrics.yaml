@@ -18,9 +18,23 @@ metadata:
   name: kube-state-metrics
 spec:
   interval: ${interval}
+  maxHistory: 1
   chartRef:
     kind: OCIRepository
     name: kube-state-metrics
+  postRenderers:
+    - kustomize:
+        patches:
+          - patch: |
+              apiVersion: apps/v1
+              kind: Deployment
+              metadata:
+                name: all
+              spec:
+                revisionHistoryLimit: 0
+            target:
+              kind: Deployment
+              labelSelector: app.kubernetes.io/instance=kube-state-metrics
   values:
     resources:
       requests:

@@ -1,0 +1,32 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: whsah-server
+  labels:
+    app: whsah-server
+spec:
+  type: ClusterIP
+  ports:
+    - port: 80
+      targetPort: http
+      protocol: TCP
+      name: http
+  selector:
+    app: whsah-server
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: whsah-web
+  labels:
+    app: whsah-web
+spec:
+  type: ClusterIP
+  ports:
+    - port: 80
+      targetPort: http
+      protocol: TCP
+      name: http
+  selector:
+    app: whsah-web

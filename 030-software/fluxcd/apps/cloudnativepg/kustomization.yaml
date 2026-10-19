@@ -12,6 +12,7 @@ resources:
   - database-roles/atuin.yaml
   - database-roles/buzz.yaml
   - database-roles/ferretdb.yaml
+  - database-roles/kaneo.yaml
   - database-roles/kubeopencode.yaml
   - database-roles/lidarr.yaml
   - database-roles/maddy.yaml
@@ -24,4 +25,5 @@ resources:
   - database-roles/sonarr.yaml
   - database-roles/sftpgo.yaml
   - database-roles/vaultwarden.yaml
+  - database-roles/whsah.yaml
   # - pooler.yaml

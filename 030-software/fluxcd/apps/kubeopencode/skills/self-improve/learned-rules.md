@@ -2,6 +2,9 @@
 - Keep an app's heap/memory limit below the container memory limit so native allocations have headroom; setting them equal starves startup.
 - Size the startup probe window (failureThreshold x periodSeconds) above the worst-case cold start, or the app restart-loops.
 - For readOnlyRootFilesystem containers, mount a writable emptyDir at /tmp and point HOME at it; tools that write to temp or $HOME crash otherwise.
-- S3-compatible object stores don't auto-create buckets; provision them idempotently (e.g. `mc mb --ignore-existing`) in an init Job before consumers start.
 - SOPS MACs cover unencrypted fields too, so copy-renaming or hand-editing an encrypted object fails with a MAC mismatch; only edit secrets when the decrypt key is available.
 - Helm charts often default unused components to non-zero replicas; explicitly zero the components you don't run or the chart fails validation/rendering.
+- When the secret-encryption key is unavailable, commit placeholder secret manifests plus the exact encrypt command instead of plaintext secrets or stalling the change.
+- OSS Loki and VictoriaMetrics have no disk-size retention cap; bound growth with a time-based retention (limits_config.retention_period / server.retentionPeriod) and size the volume to fit it.
+- In CI containers, pass `gh pr create --head <branch> --base main`; gh may not resolve tracking even after `git push -u` succeeds.
+- Always run `tofu validate` with the pinned provider after writing Terraform: provider schemas enforce value enums (e.g. routeros `add_default_route` = "yes"/"no", not "true"/"false") that fmt and review miss.

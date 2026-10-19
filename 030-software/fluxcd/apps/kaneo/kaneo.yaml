@@ -1,0 +1,113 @@
+---
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: OCIRepository
+metadata:
+  name: kaneo
+spec:
+  interval: ${interval}
+  url: oci://ghcr.io/usekaneo/charts/kaneo
+  layerSelector:
+    mediaType: "application/vnd.cncf.helm.chart.content.v1.tar+gzip"
+    operation: copy
+  ref:
+    semver: "^2.46.2"
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: kaneo
+spec:
+  interval: ${interval}
+  maxHistory: 1
+  chartRef:
+    kind: OCIRepository
+    name: kaneo
+  postRenderers:
+    - kustomize:
+        patches:
+          - patch: |
+              apiVersion: apps/v1
+              kind: Deployment
+              metadata:
+                name: all
+              spec:
+                revisionHistoryLimit: 0
+                template:
+                  metadata:
+                    labels:
+                      policy.gatekeeper.sh/ignore-psp-readonlyrootfilesystem: "true"
+                      policy.gatekeeper.sh/ignore-psp-pods-allowed-user-ranges: "true"
+            target:
+              kind: Deployment
+              labelSelector: app.kubernetes.io/instance=kaneo
+  values:
+    affinity:
+      podAntiAffinity:
+        preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 100
+            podAffinityTerm:
+              topologyKey: kubernetes.io/hostname
+              labelSelector:
+                matchLabels:
+                  app.kubernetes.io/instance: kaneo
+    topologySpreadConstraints:
+      - maxSkew: 1
+        topologyKey: kubernetes.io/hostname
+        whenUnsatisfiable: ScheduleAnyway
+        labelSelector:
+          matchLabels:
+            app.kubernetes.io/instance: kaneo
+    podSecurityContext:
+      seccompProfile:
+        type: RuntimeDefault
+    serviceAccount:
+      create: false
+    postgresql:
+      enabled: false
+    kaneo:
+      securityContext:
+        allowPrivilegeEscalation: false
+        capabilities:
+          drop:
+            - ALL
+      resources:
+        limits:
+          memory: 512Mi
+        requests:
+          cpu: 100m
+      env:
+        # Public URL of this Kaneo instance (e.g. https://kaneo.example.com)
+        # Required public HTTP(S) origin, e.g. https://kaneo.example.com.
+        # KANEO_API_URL is derived automatically as clientUrl/api if not set
+        clientUrl: https://kaneo.${domain}
+        # Allowed CORS origins. Accepts a comma-separated string or YAML list.
+        # Defaults to clientUrl when left empty.
+        corsOrigins: []
+        # Required Better Auth secret (minimum 32 characters), unless existingSecret is enabled.
+        # Generate with: openssl rand -hex 32
+        existingSecret:
+          enabled: true
+          name: kaneo
+          key: auth-secret
+        disableRegistration: false
+        disablePasswordRegistration: false
+        disableEmailOtpSignIn: false
+        # Database configuration
+        database:
+          external:
+            enabled: true
+            existingSecret:
+              enabled: true
+              name: kaneo
+              passwordKey: postgres-url
+    gateway:
+      enabled: true
+      annotations:
+        dashboard.${domain}/name: kaneo
+        dashboard.${domain}/url: https://kaneo.${domain}
+        dashboard.${domain}/icon: trello
+      parentRefs:
+        - name: cilium
+          namespace: cilium
+      hostnames:
+        - kaneo.${domain}

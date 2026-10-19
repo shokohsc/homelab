@@ -77,6 +77,8 @@ spec:
             #   value: squid.squid.svc.cluster.local:3128
             # - name: HTTPS_PROXY
             #   value: squid.squid.svc.cluster.local:3128
+            # - name: NO_PROXY
+            #   value: "10.96.0.0/12,10.42.0.0/16,.${domain}"
           ports:
             - name: http
               containerPort: 8080

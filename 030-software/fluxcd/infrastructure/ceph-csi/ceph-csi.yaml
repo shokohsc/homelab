@@ -13,6 +13,7 @@ metadata:
   name: ceph-csi
 spec:
   interval: ${interval}
+  maxHistory: 1
   chart:
     spec:
       chart: ceph-csi-rbd
@@ -21,6 +22,51 @@ spec:
         kind: HelmRepository
         name: ceph-csi
       interval: ${interval}
+  postRenderers:
+    - kustomize:
+        patches:
+          - patch: |
+              apiVersion: apps/v1
+              kind: Deployment
+              metadata:
+                name: all
+              spec:
+                replicas: null
+                revisionHistoryLimit: 0
+                template:
+                  spec:
+                    affinity:
+                      nodeAffinity:
+                        preferredDuringSchedulingIgnoredDuringExecution:
+                        - weight: 1
+                          preference:
+                            matchExpressions:
+                            - key: topology.kubernetes.io/region
+                              operator: In
+                              values:
+                              - homelab
+                    tolerations:
+                      - key: "node.kubernetes.io/nuc"
+                        operator: "Exists"
+                        effect: "NoSchedule"
+            target:
+              kind: Deployment
+              labelSelector: app=ceph-csi-rbd
+          - patch: |
+              apiVersion: apps/v1
+              kind: DaemonSet
+              metadata:
+                name: all
+              spec:
+                template:
+                  spec:
+                    tolerations:
+                      - key: "node.kubernetes.io/nuc"
+                        operator: "Exists"
+                        effect: "NoSchedule"
+            target:
+              kind: DaemonSet
+              labelSelector: app=ceph-csi-rbd
   values:
     csiConfig:
       - clusterID: b6e1f4cf-3e62-40f2-95aa-b403d469a097
