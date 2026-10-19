@@ -1,6 +1,6 @@
 machine:
+  # talos.${TALOS_DOMAIN} comes from additionalSubjectAltNames in talstomize.yaml
   certSANs:
-    - talos.${TALOS_DOMAIN}
     - ${TALOS_SUBNET}.10
     - ${TALOS_SUBNET}.20
     - ${TALOS_SUBNET}.30
