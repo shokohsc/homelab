@@ -7,3 +7,5 @@ resources:
   - talos-proxmox-autoscaler
   # - nostr-gateway
   - whsah
+  - container-factory
+  - gosync
