@@ -50,6 +50,8 @@ spec:
             - name: secrets
               mountPath: /etc/secrets
               readOnly: true
+            - mountPath: /etc/ssl/certs
+              name: tls
           resources:
             requests:
               cpu: 100m
@@ -59,3 +61,7 @@ spec:
         - name: secrets
           secret:
             secretName: talos-proxmox-autoscaler-credentials
+        - name: tls
+          configMap:
+            name: homelab-ca-cm
+            defaultMode: 0600

@@ -1,0 +1,24 @@
+apiVersion: postgresql.cnpg.io/v1
+kind: Database
+metadata:
+  name: whsah
+spec:
+  name: whsah
+  owner: whsah
+  cluster:
+    name: main
+---
+apiVersion: postgresql.cnpg.io/v1
+kind: DatabaseRole
+metadata:
+  name: whsah
+spec:
+  cluster:
+    name: main
+  name: whsah
+  login: true
+  superuser: false
+  createdb: false
+  createrole: false
+  passwordSecret:
+    name: whsah

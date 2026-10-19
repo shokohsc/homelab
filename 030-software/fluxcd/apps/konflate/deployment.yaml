@@ -41,7 +41,7 @@ spec:
               app: konflate
       containers:
         - name: konflate
-          image: ghcr.io/home-operations/konflate:0.6.4
+          image: ghcr.io/home-operations/konflate:0.6.5
           securityContext:
             allowPrivilegeEscalation: false
             readOnlyRootFilesystem: true

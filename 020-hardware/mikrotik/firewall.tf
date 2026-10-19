@@ -167,7 +167,7 @@ resource "routeros_ip_firewall_filter" "new_wan" {
   action               = "drop"
   connection_state     = "new"
   connection_nat_state = "!dstnat"
-  in_interface         = "ether1"
+  in_interface_list    = routeros_interface_list.wan.name
   log                  = true
   log_prefix           = "new_connection"
   comment              = "Rule 040-Drop-New-From-WAN"
@@ -185,15 +185,15 @@ resource "routeros_ip_firewall_filter" "new_wan" {
 #################################
 
 resource "routeros_ip_firewall_filter" "iot_no_internet" {
-  disabled      = var.disable_firewall_rules
-  chain         = "forward"
-  action        = "drop"
-  src_address   = local.vlan_cidrs["100"]
-  out_interface = "ether1"
-  log           = true
-  log_prefix    = "iot_no_internet"
-  comment       = "Rule 050-Block-IoT-Internet"
-  place_before  = routeros_ip_firewall_filter.allow_isp_ui.id
+  disabled           = var.disable_firewall_rules
+  chain              = "forward"
+  action             = "drop"
+  src_address        = local.vlan_cidrs["100"]
+  out_interface_list = routeros_interface_list.wan.name
+  log                = true
+  log_prefix         = "iot_no_internet"
+  comment            = "Rule 050-Block-IoT-Internet"
+  place_before       = routeros_ip_firewall_filter.allow_isp_ui.id
   lifecycle {
     ignore_changes = [
       disabled
@@ -383,7 +383,6 @@ resource "routeros_ip_firewall_filter" "dns_allow_trusted" {
 
 resource "routeros_ip_firewall_nat" "masquerade" {
   chain              = "srcnat"
-  out_interface      = "ether1"
   action             = "masquerade"
   comment            = "NAT-Masquerade"
   out_interface_list = routeros_interface_list.wan.name

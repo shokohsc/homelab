@@ -10,3 +10,7 @@
 ## 2026-10-18
 
 - learned-rules: `gh pr create` in CI containers needs explicit `--head`/`--base` even after a successful `git push -u`.
+- learned-rules: always run `tofu validate` with the pinned provider after writing Terraform.
+  - What: provider schemas enforce value enums that fmt/review miss (routeros `add_default_route` = "yes"/"no").
+  - Why: a dual-WAN mikrotik change passed fmt but `tofu validate` rejected `add_default_route = "false"`.
+  - Benefit: schema-level mistakes surface in seconds locally instead of at plan/apply time.

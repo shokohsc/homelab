@@ -75,4 +75,4 @@ spec:
       volumes:
         - name: assets
           image:
-            reference: webrcade/webrcade:0.2.3
+            reference: webrcade/webrcade:0.2.4
