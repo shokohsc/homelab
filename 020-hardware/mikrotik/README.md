@@ -16,14 +16,14 @@ Two upstreams are treated as a single logical gateway with automatic failover (s
 
 | WAN | Interface | Handoff | Gateway | Role |
 |-----|-----------|---------|---------|------|
-| Fiber | ether2 | DHCP (ONT) | ISP-provided, applied by the dhcp-client script | Primary |
+| Fiber | ether2 | DHCP (ONT) | DHCP-provided (option 3), installed by the DHCP client at distance 1 | Primary |
 | Mobile | ether1 | Static `192.168.1.254/24` | `192.168.1.1` (OPPO 5G CPE) | Failover |
 
-Failover uses recursive static routes: each WAN gets a probe route to a public IP (`1.1.1.1/32` for fiber, `8.8.8.8/32` for mobile) and the two default routes resolve recursively through those probes (fiber distance 1, mobile distance 2). `check-gateway=ping` on the default routes pings the probe IP itself, not the CPE, so failover also triggers when a CPE is up but its internet is dead (e.g. a dropped mobile data session). When the fiber lease binds, the fiber dhcp-client script rewrites the fiber probe route's gateway, so nothing manual is needed once the ISP delivers the connection.
+Failover works by distance: the fiber DHCP client installs the default route itself (`add-default-route=special-classless`, distance 1), so the route always points at the real ISP gateway and is removed automatically when the lease is lost. The mobile WAN stays a recursive static default (distance 2) resolved through a probe route to `8.8.8.8/32` via the CPE, with `check-gateway=ping` on the probe IP itself (not the CPE), so failover also triggers when the CPE is up but its internet is dead (e.g. a dropped mobile data session). When the fiber lease returns, the DHCP-installed default reappears at distance 1 and preempts the mobile route - no manual steps.
 
 Notes:
-- This is safe to apply before the fiber is installed: the fiber DHCP client stays unbound, its probe route stays inactive, and traffic keeps flowing via mobile.
-- Assumption: the fiber ISP hands off plain DHCP with an on-link gateway. PPPoE or static handoffs need a small adaptation in `wan.tf`.
+- This is safe to apply before the fiber is installed: the fiber DHCP client stays unbound, installs no default route, and traffic keeps flowing via mobile.
+- Assumption: the fiber ISP hands off plain DHCP. PPPoE or static handoffs need a small adaptation in `wan.tf`.
 
 ### Management Access
 

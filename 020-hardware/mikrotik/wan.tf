@@ -1,25 +1,25 @@
 ###########################################################
 ##  WAN - Dual Internet (fiber primary, mobile failover) ##
-##  Both WANs are processed as one logical gateway:      ##
-##  recursive default routes with real-internet probes.   ##
+##  Fiber: DHCP-installed default (distance 1).          ##
+##  Mobile: recursive static default (distance 2) failover.##
 ###########################################################
 
-# Fiber WAN: DHCP client on ether2 (ONT). Default routes are not taken from
-# DHCP; they are managed as recursive static routes below so both WANs behave
-# as a single gateway with failover. Safe to apply before the fiber is
-# installed: the client stays unbound and traffic keeps flowing via mobile.
+# Fiber WAN: DHCP client on ether2 (ONT). The ISP gateway is only known from
+# the lease, so the default route is installed by the DHCP client itself
+# (distance 1, auto-updated on renew, removed when the lease is lost). This
+# avoids the event-script pitfall: dhcp-client scripts only run on lease
+# events, so a script that copies the gateway into a static probe route never
+# fires when the lease was already bound at apply time - leaving the probe
+# inactive and the distance-1 static default silently resolving through the
+# mobile WAN (recursive lookup falls through 0.0.0.0/0). Safe to apply before
+# the fiber is installed: the client stays unbound, adds no route, and traffic
+# keeps flowing via the mobile default.
 resource "routeros_ip_dhcp_client" "fiber" {
-  interface         = "ether2"
-  add_default_route = "no"  # static recursive defaults instead
-  use_peer_dns      = false # router DNS stays 1.1.1.1 / 9.9.9.9
-  comment           = "WAN-Fiber"
-  # On lease bind, point the fiber probe route at the ISP-provided gateway.
-  script = <<-EOT
-    :if ([/ip dhcp-client get [find interface="ether2"] status] = "bound") do={
-      :local gw [/ip dhcp-client get [find interface="ether2"] gateway]
-      /route set [find comment="WAN-Fiber-Probe"] gateway=$gw
-    }
-  EOT
+  interface              = "ether2"
+  add_default_route      = "special-classless" # option-3 default + option-121 classless routes
+  default_route_distance = 1
+  use_peer_dns           = false # router DNS stays 1.1.1.1 / 9.9.9.9
+  comment                = "WAN-Fiber"
 }
 
 resource "routeros_interface_list_member" "wan_fiber" {
@@ -28,21 +28,9 @@ resource "routeros_interface_list_member" "wan_fiber" {
   comment   = "Fiber WAN"
 }
 
-# Probe routes: prove real internet reachability through each WAN's gateway.
-# Their scope/target-scope lets the default routes resolve recursively.
-resource "routeros_ip_route" "fiber_probe" {
-  dst_address   = "1.1.1.1/32"
-  gateway       = "192.168.0.1" # placeholder until the fiber DHCP lease binds
-  distance      = 1
-  scope         = 10
-  target_scope  = 10
-  check_gateway = "ping"
-  comment       = "WAN-Fiber-Probe"
-  lifecycle {
-    ignore_changes = [gateway] # rewritten by the dhcp-client script on renew
-  }
-}
-
+# Probe route: proves real internet reachability through the mobile WAN's
+# gateway (the CPE is static, so no DHCP script is needed). Its scope/target-
+# scope lets the mobile default route resolve recursively.
 resource "routeros_ip_route" "mobile_probe" {
   dst_address   = "8.8.8.8/32"
   gateway       = "192.168.1.1" # OPPO 5G CPE
@@ -53,20 +41,12 @@ resource "routeros_ip_route" "mobile_probe" {
   comment       = "WAN-Mobile-Probe"
 }
 
-# Single logical default gateway, resolved recursively through the probe IPs.
+# Failover default: resolves recursively through the mobile probe.
 # check-gateway pings the probe IP itself (not the CPE), so failover also
-# triggers when a CPE is up but its internet is dead (e.g. dropped mobile
-# data session). Fiber wins with distance 1 while healthy.
-resource "routeros_ip_route" "fiber_default" {
-  dst_address   = "0.0.0.0/0"
-  gateway       = "1.1.1.1"
-  distance      = 1
-  scope         = 11
-  target_scope  = 11
-  check_gateway = "ping"
-  comment       = "WAN-Fiber-Default"
-}
-
+# triggers when the CPE is up but its internet is dead (e.g. dropped mobile
+# data session). Distance 2 keeps it behind the fiber DHCP default; when the
+# fiber lease is lost, the DHCP-installed default disappears and this route
+# takes over automatically.
 resource "routeros_ip_route" "mobile_default" {
   dst_address   = "0.0.0.0/0"
   gateway       = "8.8.8.8"
