@@ -16,14 +16,14 @@ Two upstreams are treated as a single logical gateway with automatic failover (s
 
 | WAN | Interface | Handoff | Gateway | Role |
 |-----|-----------|---------|---------|------|
-| Fiber | ether2 | DHCP (ONT) | DHCP-provided (option 3), installed by the DHCP client at distance 1 | Primary |
-| Mobile | ether1 | Static `192.168.1.254/24` | `192.168.1.1` (OPPO 5G CPE) | Failover |
+| Fiber | ether2 | DHCP (ONT) | `192.168.0.1`, static default at distance 1 | Primary |
+| Mobile | ether1 | DHCP (OPPO CPE) `192.168.1.100/24` | `192.168.1.1`, static default at distance 2 | Failover |
 
-Failover works by distance: the fiber DHCP client installs the default route itself (`add-default-route=special-classless`, distance 1), so the route always points at the real ISP gateway and is removed automatically when the lease is lost. The mobile WAN stays a recursive static default (distance 2) resolved through a probe route to `8.8.8.8/32` via the CPE, with `check-gateway=ping` on the probe IP itself (not the CPE), so failover also triggers when the CPE is up but its internet is dead (e.g. a dropped mobile data session). When the fiber lease returns, the DHCP-installed default reappears at distance 1 and preempts the mobile route - no manual steps.
+Failover works by distance: two static default routes are declared explicitly (`/ip route`, fiber distance 1, mobile distance 2), each with `check-gateway=ping` so a gateway that stops answering pings marks its route inactive and the other one takes over. The fiber default is static rather than DHCP-installed because a DHCP-installed default silently disappears when the ISP omits option 3 (or the lease was already bound when Terraform applied), leaving all traffic on the mobile WAN. Both WAN DHCP clients are managed in `wan.tf` with `add_default_route = "no"`: a distance-1 DHCP-installed default on either WAN would ECMP against the static defaults and split traffic onto the wrong uplink. Each WAN has its own masquerade rule in `firewall.tf` (`NAT Fiber ISP` on ether2, `NAT Mobile ISP` on ether1), so traffic is NAT'd out of whichever interface carries it.
 
 Notes:
-- This is safe to apply before the fiber is installed: the fiber DHCP client stays unbound, installs no default route, and traffic keeps flowing via mobile.
-- Assumption: the fiber ISP hands off plain DHCP. PPPoE or static handoffs need a small adaptation in `wan.tf`.
+- The static fiber gateway `192.168.0.1` is fixed in `wan.tf`; if the ONT hands out a different gateway, update it there.
+- Assumption: the fiber ISP hands off plain DHCP on `192.168.0.0/24`. PPPoE or different subnets need a small adaptation in `wan.tf`.
 
 ### Management Access
 
@@ -64,7 +64,7 @@ The following steps must be done manually through the Winbox GUI before applying
 2. **Configure HTTPS certificate**: To access Winbox via HTTPS without browser SSL warnings, upload a trusted TLS certificate and key:
    - Upload as File a fullchain bundle certificate (ca + certificate + key) and use it for www-ssl service
 
-3. **Remove the pre-existing default route**: Default routes are now managed by Terraform (`wan.tf`). Before the first apply, delete any manually created `0.0.0.0/0` route (e.g. via `192.168.1.1`) and any pre-existing DHCP client on `ether2` from IP → Routes / IP → DHCP Client, otherwise traffic will ECMP-split across the old and new default routes.
+3. **Remove pre-existing default routes**: Default routes are now managed by Terraform (`wan.tf`), and both WAN DHCP clients are declared there with `add_default_route = "no"`. Before the first apply, delete any manually created `0.0.0.0/0` route (e.g. via `192.168.1.1`) and any leftover DHCP clients from IP → Routes / IP → DHCP Client, otherwise traffic will ECMP-split across the old and new default routes.
 
 ### Installation
 
