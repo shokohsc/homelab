@@ -382,8 +382,15 @@ resource "routeros_ip_firewall_filter" "dns_allow_trusted" {
 ############################################
 
 resource "routeros_ip_firewall_nat" "masquerade" {
-  chain              = "srcnat"
-  action             = "masquerade"
-  comment            = "NAT-Masquerade"
-  out_interface_list = routeros_interface_list.wan.name
+  chain         = "srcnat"
+  out_interface = "ether1"
+  action        = "masquerade"
+  comment       = "NAT Mobile ISP"
+}
+
+resource "routeros_ip_firewall_nat" "masquerade_fiber" {
+  chain         = "srcnat"
+  out_interface = "ether2"
+  action        = "masquerade"
+  comment       = "NAT Fiber ISP"
 }
