@@ -187,4 +187,4 @@ spec:
       volumes:
         - name: assets
           image:
-            reference: ghcr.io/shokohsc/whsah-web:sha- 
+            reference: ghcr.io/shokohsc/whsah-web:sha-b9eb686
