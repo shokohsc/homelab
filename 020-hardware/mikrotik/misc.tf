@@ -64,13 +64,13 @@ resource "routeros_system_logging_action" "syslog" {
 
 resource "routeros_system_logging" "dns" {
   action = routeros_system_logging_action.syslog.name
-  topics = ["dns","info","!packet"]
+  topics = ["dns", "info", "!packet"]
 }
 resource "routeros_system_logging" "firewall" {
   action = routeros_system_logging_action.syslog.name
-  topics = ["firewall","info"]
+  topics = ["firewall", "info"]
 }
 resource "routeros_system_logging" "system" {
   action = routeros_system_logging_action.syslog.name
-  topics = ["system","info"]
+  topics = ["system", "info"]
 }

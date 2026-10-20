@@ -32,7 +32,7 @@ resource "routeros_interface_list_member" "wan_fiber" {
 # Their scope/target-scope lets the default routes resolve recursively.
 resource "routeros_ip_route" "fiber_probe" {
   dst_address   = "1.1.1.1/32"
-  gateway       = "192.0.2.1" # placeholder until the fiber DHCP lease binds
+  gateway       = "192.168.0.1" # placeholder until the fiber DHCP lease binds
   distance      = 1
   scope         = 10
   target_scope  = 10
