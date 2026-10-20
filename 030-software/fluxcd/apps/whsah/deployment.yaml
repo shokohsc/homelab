@@ -40,7 +40,7 @@ spec:
               app: whsah-server
       containers:
         - name: whsah-server
-          image: ghcr.io/shokohsc/whsah-server:sha-4dcae02
+          image: ghcr.io/shokohsc/whsah-server:sha-b9eb686
           securityContext:
             allowPrivilegeEscalation: false
             readOnlyRootFilesystem: true
@@ -64,6 +64,8 @@ spec:
               value: /mnt/games
             - name: VDI_LOKI_URL
               value: https://loki.${domain}
+            - name: VDI_FRONTEND_ORIGIN
+              value: https://whsah.${domain}
             - name: VDI_AGENT_TOKEN
               value: 25b7774fecb7e64f07998005316ed66177c35724ae118244b97f10d7771a3ff3
             - name: VDI_PROXMOX_USER
@@ -185,4 +187,4 @@ spec:
       volumes:
         - name: assets
           image:
-            reference: ghcr.io/shokohsc/whsah-web:sha-4dcae02
+            reference: ghcr.io/shokohsc/whsah-web:sha- 
