@@ -24,3 +24,9 @@
   - What: put build-time config (e.g. `VITE_API_BASE`) in the Dockerfile/build step instead of a CI workflow edit.
   - Why: the push was rejected until the workflow change was reverted.
   - Benefit: deploy-time config lands without needing an elevated token scope or stalling on a rejected push.
+## 2026-10-20
+
+- learned-rules: event-driven config scripts never fire for state that already exists at apply time.
+  - What: a mikrotik dhcp-client `script` was meant to rewrite a probe route's gateway, but the lease was already bound so the script never ran; the distance-1 default stayed "active" by recursively resolving its probe through the mobile WAN's default, silently egressing all VLAN traffic via mobile.
+  - Why: lease-event scripts only trigger on subsequent lease changes, and recursive check-gateway resolution hides the failure behind an "active" route flag.
+  - Benefit: prefer native declarative options (DHCP-installed default with distance) over event scripts, and verify actual egress per VLAN instead of trusting route status or pings to fixed IPs.
