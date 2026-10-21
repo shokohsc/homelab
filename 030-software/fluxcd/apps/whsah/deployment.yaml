@@ -54,20 +54,36 @@ spec:
                 secretKeyRef:
                   name: whsah
                   key: postgresql-url
+            - name: VDI_OIDC_ISSUER
+              valueFrom:
+                secretKeyRef:
+                  name: oidc
+                  key: issuer
+            - name: VDI_OIDC_PUBLIC_URL
+              valueFrom:
+                secretKeyRef:
+                  name: oidc
+                  key: public-url
+            - name: VDI_OIDC_CLIENT_ID
+              valueFrom:
+                secretKeyRef:
+                  name: oidc
+                  key: client-id
+            - name: VDI_OIDC_CLIENT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: oidc
+                  key: client-secret
+            - name: VDI_ADMIN_SUBJECTS
+              value: shokohsc
             - name: VDI_PROXMOX_BASE
               value: "https://proxmox.${domain}"
+            - name: VDI_FRONTEND_ORIGIN
+              value: https://whsah.${domain}
             - name: VDI_PROXMOX_NODE
               value: roadhog
             - name: VDI_PROXMOX_AUTH_MODE
               value: password
-            - name: VDI_LIBRARY_PATH
-              value: /mnt/games
-            - name: VDI_LOKI_URL
-              value: https://loki.${domain}
-            - name: VDI_FRONTEND_ORIGIN
-              value: https://whsah.${domain}
-            - name: VDI_AGENT_TOKEN
-              value: 25b7774fecb7e64f07998005316ed66177c35724ae118244b97f10d7771a3ff3
             - name: VDI_PROXMOX_USER
               valueFrom:
                 secretKeyRef:
@@ -78,6 +94,12 @@ spec:
                 secretKeyRef:
                   name: whsah-credentials
                   key: password
+            - name: VDI_LIBRARY_PATH
+              value: /mnt/games
+            - name: VDI_LOKI_URL
+              value: https://loki.${domain}
+            - name: VDI_AGENT_TOKEN
+              value: 25b7774fecb7e64f07998005316ed66177c35724ae118244b97f10d7771a3ff3
           ports:
             - name: http
               containerPort: 8080
