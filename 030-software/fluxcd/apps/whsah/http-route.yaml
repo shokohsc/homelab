@@ -50,6 +50,7 @@ spec:
         - https://whsah.${domain}
         allowMethods:
         - GET
+        - POST
         - OPTIONS
         allowHeaders:
         - DNT
