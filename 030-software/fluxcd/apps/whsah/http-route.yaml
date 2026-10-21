@@ -53,6 +53,7 @@ spec:
         - POST
         - OPTIONS
         allowHeaders:
+        - Authorization
         - DNT
         - Keep-Alive
         - User-Agent
