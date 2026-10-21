@@ -3,6 +3,8 @@ kind: Deployment
 apiVersion: apps/v1
 metadata:
   name: whsah-server
+  annotations:
+    secret.reloader.stakater.com/reload: "whsah,oidc"
   labels:
     nfs-hanzo: "true"
 spec:
