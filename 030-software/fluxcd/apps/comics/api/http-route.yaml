@@ -33,7 +33,6 @@ spec:
         - OPTIONS
         allowHeaders:
         - DNT
-        - X-CustomHeader
         - Keep-Alive
         - User-Agent
         - X-Requested-With
