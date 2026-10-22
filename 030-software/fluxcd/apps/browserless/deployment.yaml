@@ -42,7 +42,7 @@ spec:
               app: browserless
       containers:
         - name: browserless
-          image: ghcr.io/browserless/chromium:v2.57.1
+          image: ghcr.io/browserless/chromium:v2.57.2
           securityContext:
             allowPrivilegeEscalation: false
             readOnlyRootFilesystem: true
