@@ -6,7 +6,7 @@ kind: AgentTemplate
 metadata:
   name: opencode
 spec:
-  agentImage: shokohsc/kubeopencode-agent-opencode:v0.1.9@sha256:f5e2d8ff75c7df5b3bf82ea67afe4e8e67eb5c7a2d98647b7d40b0f031b003ee
+  agentImage: shokohsc/kubeopencode-agent-opencode:v0.1.9@sha256:e519749e9322f245f89c7d01cdb459c80edd863700d5bb582d08f67739e7af95
   executorImage: ghcr.io/kubeopencode/kubeopencode-agent-devbox:latest
   attachImage: ghcr.io/kubeopencode/kubeopencode-agent-attach:latest
   workspaceDir: /workspace
