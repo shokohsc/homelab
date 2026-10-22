@@ -76,6 +76,8 @@ spec:
                 secretKeyRef:
                   name: oidc
                   key: client-secret
+            - name: VDI_LOG_LEVEL
+              value: debug
             - name: VDI_ADMIN_SUBJECTS
               value: shokohsc
             - name: VDI_PROXMOX_BASE
