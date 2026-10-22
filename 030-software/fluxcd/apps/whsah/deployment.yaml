@@ -42,7 +42,7 @@ spec:
               app: whsah-server
       containers:
         - name: whsah-server
-          image: ghcr.io/shokohsc/whsah-server:sha-20ac2ab
+          image: ghcr.io/shokohsc/whsah-server:sha-fc2824c
           securityContext:
             allowPrivilegeEscalation: false
             readOnlyRootFilesystem: true
@@ -213,4 +213,4 @@ spec:
       volumes:
         - name: assets
           image:
-            reference: ghcr.io/shokohsc/whsah-web:sha-20ac2ab
+            reference: ghcr.io/shokohsc/whsah-web:sha-fc2824c
