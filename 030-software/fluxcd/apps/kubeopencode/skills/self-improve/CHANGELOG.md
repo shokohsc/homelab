@@ -37,3 +37,7 @@
   - What: YAMLResume publishes a CLI-only image; a plain Deployment/Service would never listen on HTTP, so the app uses a small Node wrapper around `yamlresume build`.
   - Why: the repo link alone does not imply a web server, and probes would fail only after rollout.
   - Benefit: app additions match the upstream interface instead of shipping a crash-looping manifest.
+- learned-rules: soft deletes on config tables break unique constraints on re-add.
+  - What: a GORM `DeletedAt` library-path row kept its (category, path) unique key, so deleting and re-adding the same path failed.
+  - Why: soft delete hides the row from queries but not from the unique index.
+  - Benefit: config tables use hard deletes, so remove/re-add works and duplicate checks stay simple.
