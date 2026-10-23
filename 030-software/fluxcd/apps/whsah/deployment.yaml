@@ -42,7 +42,7 @@ spec:
               app: whsah-server
       containers:
         - name: whsah-server
-          image: ghcr.io/shokohsc/whsah-server:sha-fc2824c
+          image: ghcr.io/shokohsc/whsah-server:sha-34dbfab
           securityContext:
             allowPrivilegeEscalation: false
             readOnlyRootFilesystem: true
@@ -138,6 +138,81 @@ spec:
             name: homelab-ca-cm
             defaultMode: 0600
 ---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vdi-worker
+  annotations:
+    secret.reloader.stakater.com/reload: "whsah"
+  labels:
+    nfs-hanzo: "true"
+    app: whsah-worker
+spec:
+  selector:
+    matchLabels:
+      app: whsah-worker
+  template:
+    metadata:
+      labels:
+        app: whsah-worker
+    spec:
+      automountServiceAccountToken: false
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        seccompProfile:
+          type: RuntimeDefault
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              podAffinityTerm:
+                topologyKey: kubernetes.io/hostname
+                labelSelector:
+                  matchLabels:
+                    app: whsah-worker
+      topologySpreadConstraints:
+        - maxSkew: 1
+          topologyKey: kubernetes.io/hostname
+          whenUnsatisfiable: ScheduleAnyway
+          labelSelector:
+            matchLabels:
+              app: whsah-worker
+      containers:
+        - name: worker
+          image: ghcr.io/shokohsc/whsah-worker:sha-34dbfab
+          env:
+            - name: VDI_DATABASE_DSN
+              valueFrom:
+                secretKeyRef:
+                  name: whsah
+                  key: postgresql-url
+            - name: VDI_METADATA_URL
+              value: http://whsah-server.whsah.svc.cluster.local
+            - name: VDI_LIBRARY_PATH
+              value: /mnt/games
+          resources:
+            requests:
+              cpu: 100m
+            limits:
+              memory: 64Mi
+          volumeMounts:
+            - name: hanzo
+              mountPath: /mnt/games
+            # - mountPath: /etc/ssl/certs
+            #   name: tls
+      volumes:
+        - name: hanzo
+          nfs:
+            server: hanzo.${domain}
+            path: /
+        # - name: tls
+        #   configMap:
+        #     name: homelab-ca-cm
+        #     defaultMode: 0600
+---
 kind: Deployment
 apiVersion: apps/v1
 metadata:
@@ -153,6 +228,7 @@ spec:
         app: whsah-web
         policy.gatekeeper.sh/ignore-psp-volume-types: "true"
     spec:
+      automountServiceAccountToken: false
       securityContext:
         runAsNonRoot: true
         runAsUser: 1000
@@ -213,4 +289,4 @@ spec:
       volumes:
         - name: assets
           image:
-            reference: ghcr.io/shokohsc/whsah-web:sha-fc2824c
+            reference: ghcr.io/shokohsc/whsah-web:sha-34dbfab
