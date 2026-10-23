@@ -48,6 +48,7 @@ resources:
   - miniflux
   - mitmproxy
   - mongoku
+  - motrix
   - nats
   - nfs-downloads
   - nosterm
