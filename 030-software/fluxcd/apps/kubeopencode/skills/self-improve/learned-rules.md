@@ -11,3 +11,4 @@
 - A GitHub Personal Access Token needs the `workflow` scope to push changes under `.github/workflows/`; if it's missing, put build-time config in the Dockerfile/build step instead of editing the workflow.
 - Event-driven config scripts (e.g. dhcp-client `script`) never fire for state that already exists at apply time; use native declarative options or re-run the script once after apply.
 - A recursive failover default can stay "active" by resolving its probe through the other WAN's default; verify egress with per-VLAN public IP, not route flags or pings to fixed IPs.
+- Check an upstream image's ENTRYPOINT before adding an app: CLI-only images need a small server wrapper or the project's own web UI, not a bare Deployment + Service.

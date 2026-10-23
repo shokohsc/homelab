@@ -30,3 +30,10 @@
   - What: a mikrotik dhcp-client `script` was meant to rewrite a probe route's gateway, but the lease was already bound so the script never ran; the distance-1 default stayed "active" by recursively resolving its probe through the mobile WAN's default, silently egressing all VLAN traffic via mobile.
   - Why: lease-event scripts only trigger on subsequent lease changes, and recursive check-gateway resolution hides the failure behind an "active" route flag.
   - Benefit: prefer native declarative options (DHCP-installed default with distance) over event scripts, and verify actual egress per VLAN instead of trusting route status or pings to fixed IPs.
+
+## 2026-10-23
+
+- learned-rules: check an upstream image's ENTRYPOINT before adding an app.
+  - What: YAMLResume publishes a CLI-only image; a plain Deployment/Service would never listen on HTTP, so the app uses a small Node wrapper around `yamlresume build`.
+  - Why: the repo link alone does not imply a web server, and probes would fail only after rollout.
+  - Benefit: app additions match the upstream interface instead of shipping a crash-looping manifest.
