@@ -1,0 +1,23 @@
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: yamlresume
+  annotations:
+    dashboard.${domain}/name: yamlresume
+    dashboard.${domain}/url: https://yamlresume.${domain}
+    dashboard.${domain}/icon: file-document-edit
+spec:
+  hostnames:
+  - yamlresume.${domain}
+  parentRefs:
+  - name: cilium
+    namespace: cilium
+  rules:
+  - backendRefs:
+    - name: yamlresume
+      port: 80
+    matches:
+    - path:
+        type: PathPrefix
+        value: /
