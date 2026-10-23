@@ -51,6 +51,7 @@ spec:
         allowMethods:
         - GET
         - POST
+        - DELETE
         - OPTIONS
         allowHeaders:
         - Authorization
