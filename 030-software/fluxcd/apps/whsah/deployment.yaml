@@ -42,7 +42,7 @@ spec:
               app: whsah-server
       containers:
         - name: whsah-server
-          image: ghcr.io/shokohsc/whsah-server:sha-75940c1
+          image: ghcr.io/shokohsc/whsah-server:sha-0fc11d3
           securityContext:
             allowPrivilegeEscalation: false
             readOnlyRootFilesystem: true
@@ -182,7 +182,7 @@ spec:
               app: whsah-worker
       containers:
         - name: worker
-          image: ghcr.io/shokohsc/whsah-worker:sha-75940c1
+          image: ghcr.io/shokohsc/whsah-worker:sha-0fc11d3
           securityContext:
             allowPrivilegeEscalation: false
             readOnlyRootFilesystem: true
@@ -196,10 +196,19 @@ spec:
                 secretKeyRef:
                   name: whsah
                   key: postgresql-url
-            - name: VDI_METADATA_URL
-              value: http://whsah-server.whsah.svc.cluster.local
+            - name: VDI_BROWSERLESS_URL
+              value: http://browserless.browserless.svc.cluster.local
+            - name: VDI_BROWSERLESS_TOKEN
+              value: EeJ4Ou3waagh7goMohsah6sooTeehoom
+            - name: VDI_FITGIRL_SEARCH_URL
+              value: https://fitgirl-repacks.site/?s=
             - name: VDI_LIBRARY_PATH
               value: /mnt/games
+            - name: VDI_RAWG_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: whsah
+                  key: rawg-api-key
           resources:
             requests:
               cpu: 100m
@@ -296,4 +305,4 @@ spec:
       volumes:
         - name: assets
           image:
-            reference: ghcr.io/shokohsc/whsah-web:sha-75940c1
+            reference: ghcr.io/shokohsc/whsah-web:sha-0fc11d3
