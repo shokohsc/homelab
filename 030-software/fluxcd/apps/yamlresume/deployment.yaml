@@ -78,5 +78,4 @@ spec:
           configMap:
             name: yamlresume
         - name: work
-          emptyDir:
-            sizeLimit: 2Gi
+          emptyDir: {}
