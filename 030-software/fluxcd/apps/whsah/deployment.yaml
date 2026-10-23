@@ -148,6 +148,7 @@ metadata:
     nfs-hanzo: "true"
     app: whsah-worker
 spec:
+  revisionHistoryLimit: 0
   selector:
     matchLabels:
       app: whsah-worker
