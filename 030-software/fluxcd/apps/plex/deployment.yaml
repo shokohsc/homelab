@@ -47,7 +47,7 @@ spec:
               app: plex
       containers:
         - name: plex
-          image: plexinc/pms-docker:1.43.4.10903-e5521bd8c
+          image: plexinc/pms-docker:latest@sha256:01bdf0ad6d53198da4331540c1e73ab65db7a72e961fff97ecb0847d46055c5f
           env:
             - name: ADVERTISE_IP
               value: "http://${vip}:32400,https://plex.${domain}"
