@@ -11,7 +11,7 @@ resources:
 configMapGenerator:
 - name: yamlresume
   files:
-    - server.mjs
+    - config/server.mjs
 generatorOptions:
   disableNameSuffixHash: true
   annotations:
