@@ -102,6 +102,12 @@ spec:
                   apiGroups: [""]
                   resources: ["nodes"]
                   verbs: ["get", "list", "watch"]
+              - op: add
+                path: /rules/-
+                value:
+                  apiGroups: ["networking.k8s.io"]
+                  resources: ["servicecidrs"]
+                  verbs: ["get", "list", "watch"]
             target:
               kind: ClusterRole
               labelSelector: app.kubernetes.io/name=kloak
