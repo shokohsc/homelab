@@ -7,3 +7,4 @@ resources:
   - service.yaml
   - pvc.yaml
   - http-route.yaml
+  - secret.yaml
