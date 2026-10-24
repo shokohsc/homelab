@@ -24,6 +24,7 @@ These sections must never be removed:
 - Small readable code
 - Current best practices
 - Avoid unnecessary abstractions
+- Remove unused code
 
 ---
 
