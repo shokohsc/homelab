@@ -97,6 +97,7 @@ resources:
   - weechat
   - wekan
   - whsah
+  - llamacpp
   - whoami
   - ws-screenshot
   - zipkin
