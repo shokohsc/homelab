@@ -3,6 +3,9 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: motrix
+  labels:
+    stateful: "true"
+    nfs-downloads: "true"
 spec:
   strategy:
     type: Recreate
