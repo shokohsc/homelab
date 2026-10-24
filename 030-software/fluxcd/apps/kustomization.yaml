@@ -38,6 +38,7 @@ resources:
   - jellyfin
   - kaneo
   - kaniko
+  - gofer
   - konflate
   - kube-state-metrics
   - kube-system
