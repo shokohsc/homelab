@@ -96,14 +96,12 @@ spec:
               kind: Deployment
               labelSelector: app.kubernetes.io/name=kloak
           - patch: |
-              apiVersion: rbac.authorization.k8s.io/v1
-              kind: ClusterRole
-              metadata:
-                name: kloak-controller
-              rules:
-                - apiGroups: [""]
-                  resources: ["nodes"]
-                  verbs: ["get", "list", "watch"]
+              - op: add
+                path: /rules
+                value:
+                  - apiGroups: [""]
+                    resources: ["nodes"]
+                    verbs: ["get", "list", "watch"]
             target:
               kind: ClusterRole
               labelSelector: app.kubernetes.io/name=kloak
