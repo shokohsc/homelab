@@ -75,7 +75,7 @@ spec:
             claimName: data
         - name: downloads
           nfs:
-            server: 10.102.22.211
+            server: ${nfsDownloadsServer}
             path: /motrix
         - name: temp
           emptyDir: {}
