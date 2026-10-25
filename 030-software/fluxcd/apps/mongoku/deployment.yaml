@@ -39,7 +39,7 @@ spec:
               app: mongoku
       containers:
         - name: mongoku
-          image: huggingface/mongoku:2.11.3
+          image: huggingface/mongoku:2.11.4
           securityContext:
             allowPrivilegeEscalation: false
             readOnlyRootFilesystem: true
