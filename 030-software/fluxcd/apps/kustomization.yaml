@@ -23,7 +23,7 @@ resources:
   - excalidraw
   - external-dns
   - external-services
-  - ferretdb
+  # - ferretdb
   - gatekeeper
   - git-mirror
   - grafana
@@ -48,7 +48,7 @@ resources:
   - metrics-server
   - miniflux
   - mitmproxy
-  - mongoku
+  # - mongoku
   - motrix
   - nats
   - nfs-downloads
@@ -96,7 +96,7 @@ resources:
   - web-check
   - webrcade
   - weechat
-  - wekan
+  # - wekan
   - whsah
   - whoami
   - ws-screenshot
