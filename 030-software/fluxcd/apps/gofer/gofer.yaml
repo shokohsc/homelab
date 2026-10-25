@@ -39,8 +39,8 @@ spec:
   valuesFrom:
     - kind: Secret
       name: gofer-secrets
-      valuesKey: secret.existingSecret
-      targetPath: GOFER_SECRET_KEY
+      valuesKey: GOFER_SECRET_KEY
+      targetPath: secret.existingSecret
   values:
     serviceAccount:
       create: false
