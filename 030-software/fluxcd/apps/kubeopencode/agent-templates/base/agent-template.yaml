@@ -67,7 +67,11 @@ spec:
 
   config:
     $schema: https://opencode.ai/config.json
-    model: opencode/big-pickle
+    # model: opencode/big-pickle
+    # model: nvidia_custom/deepseek-ai/deepseek-v4.1-flash
+    # model: nvidia_custom/z-ai/glm-5.3-flash
+    # model: nvidia_custom/nvidia/nemotron-3.5-super-vl-120b-a12b
+    model: opencode/deepseek-v4.1-flash
     provider:
       nvidia_custom:
         npm: "@ai-sdk/openai-compatible"
