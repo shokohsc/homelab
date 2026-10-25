@@ -36,11 +36,6 @@ spec:
             target:
               kind: Deployment
               labelSelector: app.kubernetes.io/name=gofer
-  valuesFrom:
-    - kind: Secret
-      name: gofer-secrets
-      valuesKey: gofer-secrets
-      targetPath: secret.existingSecret
   values:
     serviceAccount:
       create: false
@@ -60,6 +55,8 @@ spec:
       capabilities:
         drop:
           - ALL
+    secret:
+      existingSecret: gofer-secrets
 
     config:
       baseUrl: https://gofer.${domain}
