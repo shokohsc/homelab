@@ -113,7 +113,7 @@ spec:
               labelSelector: app.kubernetes.io/name=kloak
   values:
     image:
-      tag: sha-3ce5941856e09aaf8a04aab034a682256f6f9ac6
+      tag: sha-677ec033aa139ccb2fb2040bb6dba2a18969a9eb
     certificates:
       mode: certManager
       certManager:
