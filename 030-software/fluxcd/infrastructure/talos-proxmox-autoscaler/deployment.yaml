@@ -2,8 +2,6 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: talos-proxmox-autoscaler
-  labels:
-    app: talos-proxmox-autoscaler
 spec:
   revisionHistoryLimit: 0
   selector:
