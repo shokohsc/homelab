@@ -6,7 +6,7 @@ kind: AgentTemplate
 metadata:
   name: opencode
 spec:
-  agentImage: shokohsc/kubeopencode-agent-opencode:v0.1.9@sha256:e519749e9322f245f89c7d01cdb459c80edd863700d5bb582d08f67739e7af95
+  agentImage: shokohsc/kubeopencode-agent-opencode:v0.1.9@sha256:e6875f86aaab85cc6a8a94c3d1d4d5d1668c1e7865a71cdc978d553ac872ed62
   executorImage: ghcr.io/kubeopencode/kubeopencode-agent-devbox:latest
   attachImage: ghcr.io/kubeopencode/kubeopencode-agent-attach:latest
   workspaceDir: /workspace
@@ -20,6 +20,8 @@ spec:
         means read only root filesystem, non root user, user with 1000 uid and gid.
         Available workspace is at /workspace.
         No container runtime is available so no docker commands.
+        Remove unused code.
+        You can authenticate to github with the personnal access token from the GITHUB_TOKEN environment variable.
     - name: platform-info
       type: Runtime
 
