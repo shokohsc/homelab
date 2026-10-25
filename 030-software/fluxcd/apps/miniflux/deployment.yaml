@@ -41,7 +41,7 @@ spec:
               app: miniflux
       containers:
         - name: miniflux
-          image: miniflux/miniflux:2.3.3
+          image: miniflux/miniflux:2.3.4
           securityContext:
             allowPrivilegeEscalation: false
             readOnlyRootFilesystem: true
