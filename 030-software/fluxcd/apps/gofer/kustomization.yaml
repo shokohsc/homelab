@@ -4,9 +4,10 @@ kind: Kustomization
 namespace: gofer
 resources:
   - namespace.yaml
-  # - deployment.yaml
-  # - poddisruptionbudget.yaml
-  # - service.yaml
-  # - http-route.yaml
-  - gofer.yaml
+  - deployment.yaml
+  - poddisruptionbudget.yaml
+  - service.yaml
+  - http-route.yaml
+  - pvc.yaml
+  # - gofer.yaml
   - secret.yaml

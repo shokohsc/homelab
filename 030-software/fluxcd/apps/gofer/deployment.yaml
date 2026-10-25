@@ -39,7 +39,7 @@ spec:
               app: gofer
       containers:
         - name: gofer
-          image: ghcr.io/cristianadrielbraun/gofer:latest
+          image: ghcr.io/cristianadrielbraun/gofer:0.15.0
           securityContext:
             allowPrivilegeEscalation: false
             readOnlyRootFilesystem: true
@@ -47,6 +47,23 @@ spec:
             capabilities:
               drop:
                 - ALL
+          env:
+            - name: GO_ENV
+              value: production
+            - name: GOFER_ADDR
+              value: 0.0.0.0:8090
+            - name: GOFER_ALLOWED_CIDRS
+              value: ${kubePodsCidr}
+            - name: GOFER_AUTH_MODE
+              value: open
+            - name: GOFER_BASE_URL
+              value: https://gofer.${domain}
+            - name: GOFER_DB_PATH
+              value: /data/gofer.db
+            - name: GOFER_TRUSTED_PROXY_CIDRS
+              value: ${kubeServicesCidr}
+            - name: TZ
+              value: Europe/Paris
           ports:
             - name: http
               containerPort: 8090
@@ -64,11 +81,17 @@ spec:
           resources:
             requests:
               cpu: 100m
+              memory: 64Mi
             limits:
-              memory: 256Mi
+              memory: 1024Mi
           volumeMounts:
             - name: data
               mountPath: /data
+            - name: temp
+              mountPath: /tmp
       volumes:
         - name: data
+          persistentVolumeClaim:
+            claimName: data
+        - name: temp
           emptyDir: {}
