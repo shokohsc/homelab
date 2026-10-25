@@ -39,7 +39,7 @@ spec:
   valuesFrom:
     - kind: Secret
       name: gofer-secrets
-      valuesKey: GOFER_SECRET_KEY
+      valuesKey: gofer-secrets
       targetPath: secret.existingSecret
   values:
     serviceAccount:
