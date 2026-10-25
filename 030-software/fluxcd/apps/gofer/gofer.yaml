@@ -65,7 +65,7 @@ spec:
       # CIDRs of the ingress/proxy, so the real client IP is honored.
       trustedProxyCidrs: ${kubeServicesCidr}
       # Optional allowlist of client networks (GOFER_ALLOWED_CIDRS).
-      allowedCidrs: ${cidr}
+      allowedCidrs: ${kubePodsCidr}
       allowInsecureLan: false
       # Extra non-secret GOFER_* variables.
       extraEnv: {}

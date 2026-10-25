@@ -22,12 +22,14 @@ spec:
       subnet: "10.42.60"
       gateway: "10.42.60.1"
       kubeServicesCidr: "10.96.0.0/12"
+      kubePodsCidr: "10.244.0.0/16"
       kubeDns: "10.96.0.10"
       talosSubnet: "10.42.20"
       interval: 10m
       timezone: Europe/Paris
       pollingInterval: "2"
       cooldownPeriod: "180"
+      nfsDownloadsServer: "10.99.242.42"
   decryption:
     provider: sops
     secretRef:
