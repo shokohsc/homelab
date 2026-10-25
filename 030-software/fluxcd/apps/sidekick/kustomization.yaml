@@ -8,7 +8,7 @@ resources:
   - vpn/
   # - kubernetesevents/
   # - cmangos/
-  - email/
+  # - email/
 
 images:
   - name: shokohsc/moleculer-sidekick

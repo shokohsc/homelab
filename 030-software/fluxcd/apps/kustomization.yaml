@@ -61,7 +61,7 @@ resources:
   - pdfcraft
   - plex
   - pocket-id
-  - postal
+  # - postal
   - prowlarr
   - proxmox
   - pyload

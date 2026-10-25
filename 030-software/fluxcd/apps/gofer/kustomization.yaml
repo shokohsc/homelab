@@ -9,5 +9,4 @@ resources:
   - service.yaml
   - http-route.yaml
   - pvc.yaml
-  # - gofer.yaml
   - secret.yaml
