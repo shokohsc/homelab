@@ -89,9 +89,15 @@ spec:
               mountPath: /data
             - name: temp
               mountPath: /tmp
+            - mountPath: /etc/ssl/certs
+              name: tls
       volumes:
         - name: data
           persistentVolumeClaim:
             claimName: data
         - name: temp
           emptyDir: {}
+        - name: tls
+          configMap:
+            name: homelab-ca-cm
+            defaultMode: 0600
