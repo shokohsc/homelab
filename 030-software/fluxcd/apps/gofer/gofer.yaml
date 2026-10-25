@@ -62,13 +62,13 @@ spec:
       baseUrl: https://gofer.${domain}
       authMode: open
       timezone: ${timezone}
-      # # CIDRs of the ingress/proxy, so the real client IP is honored.
-      # trustedProxyCidrs: ""
-      # # Optional allowlist of client networks (GOFER_ALLOWED_CIDRS).
-      # allowedCidrs: ""
-      # allowInsecureLan: false
-      # # Extra non-secret GOFER_* variables.
-      # extraEnv: {}
+      # CIDRs of the ingress/proxy, so the real client IP is honored.
+      trustedProxyCidrs: ${kubeServicesCidr}
+      # Optional allowlist of client networks (GOFER_ALLOWED_CIDRS).
+      allowedCidrs: ${cidr}
+      allowInsecureLan: false
+      # Extra non-secret GOFER_* variables.
+      extraEnv: {}
 
     persistence:
       enabled: true
