@@ -39,7 +39,7 @@ spec:
               app: web-check
       containers:
         - name: web-check
-          image: lissy93/web-check:latest@sha256:1cd3f9599dd54e6c08b545bd22435887251e75ba9408a888d9e736eb10360b17
+          image: lissy93/web-check:latest@sha256:40f21ac4cd9d18c9454ab1e85b4d59c8648e40c4677fd3076ed0bc29e123fe2d
           imagePullPolicy: Always
           securityContext:
             allowPrivilegeEscalation: false
