@@ -44,7 +44,7 @@ spec:
               app: motrix
       containers:
         - name: motrix
-          image: ghcr.io/agalwood/motrix-server:2.0.0
+          image: ghcr.io/agalwood/motrix-server:2.0.1
           securityContext:
             allowPrivilegeEscalation: false
             readOnlyRootFilesystem: true
