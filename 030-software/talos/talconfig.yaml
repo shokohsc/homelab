@@ -53,6 +53,7 @@ nodes:
     nodeLabels:
       topology.kubernetes.io/region: "homelab"
       topology.kubernetes.io/zone: "metal"
+      gpu: on
     patches:
       - |-
           machine:
@@ -183,7 +184,7 @@ nodes:
     hostname: worker-vm-gpu
     installDisk: /dev/sda
     networkInterfaces:
-      - interface: eth0
+      - interface: ens18
         dhcp: true
     ignoreHostname: true
     ipAddress: ${TALOS_SUBNET}.255
@@ -194,17 +195,22 @@ nodes:
       topology.kubernetes.io/region: "homelab"
       topology.kubernetes.io/zone: "vm"
       node.kubernetes.io/gpu: "nvidia"
+      gpu: on
     schematic:
       customization:
         extraKernelArgs:
           - net.ifnames=0
           - talos.config=http://tracer.home.arpa:8080/metadata?p=worker-vm-gpu
-          - vlan=eth0.20:eth0
+          - vlan=ens18.20:ens18
         systemExtensions:
           officialExtensions:
-            - siderolabs/nvidia-container-toolkit-lts
-            - siderolabs/nvidia-open-gpu-kernel-modules-lts
             - siderolabs/nonfree-kmod-nvidia-lts
+            - siderolabs/nvidia-container-toolkit-lts
+
+            # - siderolabs/nvidia-container-toolkit-lts
+            # - siderolabs/nvidia-open-gpu-kernel-modules-lts
+            # - siderolabs/nonfree-kmod-nvidia-lts
+
             # - siderolabs/nvidia-container-toolkit-production
             # - siderolabs/nvidia-open-gpu-kernel-modules-production
             # - siderolabs/nonfree-kmod-nvidia-production
