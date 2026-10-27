@@ -64,7 +64,7 @@ resources:
   # - postal
   - prowlarr
   - proxmox
-  - pyload
+  # - pyload
   - radarr
   - radio
   - rathole
