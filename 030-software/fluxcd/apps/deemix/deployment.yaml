@@ -45,7 +45,7 @@ spec:
               app: deemix
       containers:
         - name: deemix
-          image: ghcr.io/bambanah/deemix:v4.7.1
+          image: ghcr.io/bambanah/deemix:v4.7.2
           # securityContext:
           #   allowPrivilegeEscalation: false
           #   readOnlyRootFilesystem: true
