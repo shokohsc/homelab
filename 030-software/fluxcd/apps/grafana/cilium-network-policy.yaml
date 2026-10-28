@@ -1,0 +1,38 @@
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: grafana
+spec:
+  endpointSelector: {}
+  egress:
+    # DNS
+    - toEndpoints:
+        - matchLabels:
+            io.kubernetes.pod.namespace: kube-system
+            k8s-app: kube-dns
+      toPorts:
+        - ports:
+            - port: "53"
+              protocol: UDP
+            - port: "53"
+              protocol: TCP
+          rules:
+            dns:
+              - matchPattern: "*"
+    - toEndpoints:
+        - matchLabels:
+            io.kubernetes.pod.namespace: grafana
+        - matchLabels:
+            io.kubernetes.pod.namespace: cnpg-system
+        - matchLabels:
+            io.kubernetes.pod.namespace: sidekick
+        - matchLabels:
+            io.kubernetes.pod.namespace: victoria-metrics
+        - matchLabels:
+            io.kubernetes.pod.namespace: loki
+        - matchLabels:
+            io.kubernetes.pod.namespace: tempo
+    - toCIDR:
+        - ${cidr}
+    - toEntities:
+        - world

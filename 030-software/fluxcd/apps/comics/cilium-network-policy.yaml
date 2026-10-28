@@ -1,0 +1,32 @@
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: comics
+spec:
+  endpointSelector: {}
+  egress:
+    # DNS
+    - toEndpoints:
+        - matchLabels:
+            io.kubernetes.pod.namespace: kube-system
+            k8s-app: kube-dns
+      toPorts:
+        - ports:
+            - port: "53"
+              protocol: UDP
+            - port: "53"
+              protocol: TCP
+          rules:
+            dns:
+              - matchPattern: "*"
+    - toEndpoints:
+        - matchLabels:
+            io.kubernetes.pod.namespace: comics
+        - matchLabels:
+            io.kubernetes.pod.namespace: nats
+        - matchLabels:
+            io.kubernetes.pod.namespace: valkey
+    - toCIDR:
+        - ${cidr}
+    - toEntities:
+        - world
