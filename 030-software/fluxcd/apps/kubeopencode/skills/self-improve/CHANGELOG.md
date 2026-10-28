@@ -41,3 +41,10 @@
   - What: a GORM `DeletedAt` library-path row kept its (category, path) unique key, so deleting and re-adding the same path failed.
   - Why: soft delete hides the row from queries but not from the unique index.
   - Benefit: config tables use hard deletes, so remove/re-add works and duplicate checks stay simple.
+
+## 2026-10-28
+
+- learned-rules: derive egress policy dependencies from real workload config, including init containers and lifecycle hooks.
+  - What: `shell2http` needed world egress only because its init container runs `apk add`; several config references pointed at namespaces that no longer exist.
+  - Why: app-name-based guesses miss bootstrap downloads and keep stale dependencies alive.
+  - Benefit: network policies stay least-privilege without breaking startup or preserving dead links.

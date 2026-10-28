@@ -13,3 +13,4 @@
 - A recursive failover default can stay "active" by resolving its probe through the other WAN's default; verify egress with per-VLAN public IP, not route flags or pings to fixed IPs.
 - Check an upstream image's ENTRYPOINT before adding an app: CLI-only images need a small server wrapper or the project's own web UI, not a bare Deployment + Service.
 - Config/allow-list tables with a unique key should hard-delete rows; soft deletes leave the key occupied and make re-adding the same value fail.
+- Derive egress network-policy dependencies from the real workload config, including init containers and lifecycle hooks; skip references to namespaces that no longer exist.
