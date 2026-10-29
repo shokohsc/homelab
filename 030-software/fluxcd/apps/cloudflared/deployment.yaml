@@ -63,7 +63,3 @@ spec:
               cpu: 100m
             limits: 
               memory: 64Mi
-      tolerations:
-        - key: "node.kubernetes.io/nuc"
-          operator: "Exists"
-          effect: "NoSchedule"
