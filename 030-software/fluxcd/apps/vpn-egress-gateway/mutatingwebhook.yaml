@@ -25,5 +25,5 @@ webhooks:
         port: 443
     admissionReviewVersions: ["v1"]
     sideEffects: None
-    failurePolicy: Ignore
+    failurePolicy: Fail
     reinvocationPolicy: IfNeeded
