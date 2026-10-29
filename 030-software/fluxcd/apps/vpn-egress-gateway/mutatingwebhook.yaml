@@ -8,6 +8,9 @@ metadata:
 webhooks:
   - name: vpn-egress.shokohsc.com
     namespaceSelector: {}
+    objectSelector:
+      matchLabels:
+        routed-gateway: "true"
     rules:
       - apiGroups: [""]
         apiVersions: ["v1"]
@@ -22,5 +25,5 @@ webhooks:
         port: 443
     admissionReviewVersions: ["v1"]
     sideEffects: None
-    failurePolicy: Fail
+    failurePolicy: Ignore
     reinvocationPolicy: IfNeeded
