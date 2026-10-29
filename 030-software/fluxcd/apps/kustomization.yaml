@@ -97,7 +97,7 @@ resources:
   - webrcade
   - weechat
   # - wekan
-  - whsah
+  # - whsah
   - whoami
   - ws-screenshot
   - zipkin
