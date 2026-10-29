@@ -48,3 +48,10 @@
   - What: `shell2http` needed world egress only because its init container runs `apk add`; several config references pointed at namespaces that no longer exist.
   - Why: app-name-based guesses miss bootstrap downloads and keep stale dependencies alive.
   - Benefit: network policies stay least-privilege without breaking startup or preserving dead links.
+
+## 2026-10-29
+
+- learned-rules: never combine `failurePolicy: Fail` with an unscoped selector on a MutatingWebhookConfiguration.
+  - What: `vpn-egress-webhook` matched every pod and used `Fail`, so an unready webhook denied all pod creation instead of only VPN-egress pods.
+  - Why: `Fail` applies to every object the webhook matches, and an empty selector matches everything.
+  - Benefit: `Ignore` plus an `objectSelector` keeps unrelated workloads creatable while the webhook is down or restarting.
