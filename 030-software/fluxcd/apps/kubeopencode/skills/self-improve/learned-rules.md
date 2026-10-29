@@ -14,3 +14,4 @@
 - Check an upstream image's ENTRYPOINT before adding an app: CLI-only images need a small server wrapper or the project's own web UI, not a bare Deployment + Service.
 - Config/allow-list tables with a unique key should hard-delete rows; soft deletes leave the key occupied and make re-adding the same value fail.
 - Derive egress network-policy dependencies from the real workload config, including init containers and lifecycle hooks; skip references to namespaces that no longer exist.
+- A MutatingWebhookConfiguration with failurePolicy Fail and an unscoped selector blocks unrelated resources when the webhook is down; use Ignore plus an objectSelector unless the mutation is mandatory.
