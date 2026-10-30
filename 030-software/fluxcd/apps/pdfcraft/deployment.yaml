@@ -75,4 +75,4 @@ spec:
       volumes:
         - name: assets
           image:
-            reference: ghcr.io/pdfcrafttool/pdfcraft:latest@sha256:2e1c26b4fc1cd3101a18f2422b713ebe7532b813fda94ced9f7ffcfd0b66da14
+            reference: ghcr.io/pdfcrafttool/pdfcraft:latest@sha256:ac8e1014de8c31d10c1b3b9f34e49c77c821db4c050713c3f16f05740c5559d5
