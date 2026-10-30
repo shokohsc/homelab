@@ -43,7 +43,7 @@ spec:
               app: grist
       containers:
         - name: grist
-          image: gristlabs/grist:1.7.21
+          image: gristlabs/grist:1.7.22
           securityContext:
             allowPrivilegeEscalation: false
             readOnlyRootFilesystem: true
