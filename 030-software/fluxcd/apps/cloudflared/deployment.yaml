@@ -40,7 +40,7 @@ spec:
               app: cloudflared
       containers:
         - name: cloudflared
-          image: cloudflare/cloudflared:2026.10.5
+          image: cloudflare/cloudflared:2026.10.6
           securityContext:
             allowPrivilegeEscalation: false
             readOnlyRootFilesystem: true
