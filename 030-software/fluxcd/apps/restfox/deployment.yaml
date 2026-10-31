@@ -39,7 +39,7 @@ spec:
               app: restfox
       containers:
         - name: restfox
-          image: flawiddsouza/restfox:0.41.0
+          image: flawiddsouza/restfox:0.42.0
           securityContext:
             allowPrivilegeEscalation: false
             readOnlyRootFilesystem: true
