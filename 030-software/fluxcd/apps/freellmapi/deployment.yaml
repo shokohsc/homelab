@@ -81,7 +81,11 @@ spec:
           volumeMounts:
             - mountPath: /app/server/data
               name: data
+            - mountPath: /tmp
+              name: temp
       volumes:
         - name: data
           persistentVolumeClaim:
             claimName: data
+        - name: temp
+          emptyDir: {}
