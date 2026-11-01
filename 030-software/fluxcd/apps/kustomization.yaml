@@ -24,6 +24,7 @@ resources:
   - external-dns
   - external-services
   # - ferretdb
+  - freellmapi
   - gatekeeper
   - git-mirror
   - grafana
