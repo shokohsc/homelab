@@ -87,6 +87,8 @@ spec:
             name: z-ai/glm-5.3-flash
           nvidia/nemotron-3.5-super-vl-120b-a12b:
             name: nvidia/nemotron-3.5-super-vl-120b-a12b
+          mistralai/mistral-large-4-1t-a52b:
+            name: mistralai/mistral-large-4-1t-a52b
       llama.cpp:
         npm: "@ai-sdk/openai-compatible"
         name: "llama CPP (local)"
