@@ -44,7 +44,7 @@ spec:
               app: weechat
       containers:
         - name: weechat
-          image: weechat/weechat:4.10.1-alpine-slim
+          image: weechat/weechat:4.10.2-alpine-slim
           securityContext:
             allowPrivilegeEscalation: false
             readOnlyRootFilesystem: true
