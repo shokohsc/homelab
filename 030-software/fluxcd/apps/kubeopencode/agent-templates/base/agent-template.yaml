@@ -103,6 +103,11 @@ spec:
             name: ggml-org/gpt-oss-20b-GGUF:MXFP4
           unsloth/Qwen3.8-27B-GGUF:Q4_K_M:
             name: unsloth/Qwen3.8-27B-GGUF:Q4_K_M
+      freellmapi:
+        npm: "@ai-sdk/openai-compatible"
+        name: "FreeLLMApi (homelab)"
+        options:
+          baseURL: "https://freellmapi.${domain}/v1"
   # configRef:
   #   configMapRef:
   #     name: config
