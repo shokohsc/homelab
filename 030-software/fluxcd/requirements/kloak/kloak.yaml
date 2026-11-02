@@ -17,7 +17,7 @@ spec:
   chart:
     spec:
       chart: kloak
-      version: 0.2.0
+      version: 0.3.0
       sourceRef:
         kind: HelmRepository
         name: kloak
@@ -95,25 +95,7 @@ spec:
             target:
               kind: Deployment
               labelSelector: app.kubernetes.io/name=kloak
-          - patch: |
-              - op: add
-                path: /rules/-
-                value:
-                  apiGroups: [""]
-                  resources: ["nodes"]
-                  verbs: ["get", "list", "watch"]
-              - op: add
-                path: /rules/-
-                value:
-                  apiGroups: ["networking.k8s.io"]
-                  resources: ["servicecidrs"]
-                  verbs: ["get", "list", "watch"]
-            target:
-              kind: ClusterRole
-              labelSelector: app.kubernetes.io/name=kloak
   values:
-    image:
-      tag: sha-2196cd3d29101e35c9ffbfb3bf348cf5596d2b08
     certificates:
       mode: certManager
       certManager:
