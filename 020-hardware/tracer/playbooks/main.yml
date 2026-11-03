@@ -2,17 +2,17 @@
 - name: Harden Raspberry Pi for PXE Boot Server
   hosts: tracer
   become: yes
-  pre_tasks:
-    - name: Update packages
-      apt:
-        autoclean: yes
-        autoremove: yes
-        update_cache: yes
-        upgrade: yes
-      become: yes
-      tags:
-        - packages
-        - pre
+  # pre_tasks:
+  #   - name: Update packages
+  #     apt:
+  #       autoclean: yes
+  #       autoremove: yes
+  #       update_cache: yes
+  #       upgrade: yes
+  #     become: yes
+  #     tags:
+  #       - packages
+  #       - pre
   roles:
     - role: raspi-hardening
       become: yes
