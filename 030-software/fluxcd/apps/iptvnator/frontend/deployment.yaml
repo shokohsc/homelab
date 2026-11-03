@@ -79,5 +79,5 @@ spec:
       volumes:
         - name: assets
           image:
-            reference: 4gray/iptvnator:latest@sha256:8ff6c3fbb270a4694aeb1a595da9ad574266bfda634ea530f4f6c5332b8aa5b9
+            reference: 4gray/iptvnator:latest@sha256:b6c21306d2ce147fd5d4ccfdcea830e3de50674484fb176b289d01030d49300b
             pullPolicy: Always
