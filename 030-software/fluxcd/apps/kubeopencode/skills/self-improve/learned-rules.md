@@ -15,3 +15,4 @@
 - Config/allow-list tables with a unique key should hard-delete rows; soft deletes leave the key occupied and make re-adding the same value fail.
 - Derive egress network-policy dependencies from the real workload config, including init containers and lifecycle hooks; skip references to namespaces that no longer exist.
 - A MutatingWebhookConfiguration with failurePolicy Fail and an unscoped selector blocks unrelated resources when the webhook is down; use Ignore plus an objectSelector unless the mutation is mandatory.
+- Apps gated by a one-time launch token need a documented token-retrieval step (e.g. container logs) or a stable secret; the dashboard URL alone returns 401.

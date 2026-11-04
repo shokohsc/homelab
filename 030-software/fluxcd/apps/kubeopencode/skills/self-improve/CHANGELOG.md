@@ -55,3 +55,10 @@
   - What: `vpn-egress-webhook` matched every pod and used `Fail`, so an unready webhook denied all pod creation instead of only VPN-egress pods.
   - Why: `Fail` applies to every object the webhook matches, and an empty selector matches everything.
   - Benefit: `Ignore` plus an `objectSelector` keeps unrelated workloads creatable while the webhook is down or restarting.
+
+## 2026-11-04
+
+- learned-rules: apps gated by a one-time launch token need a documented token-retrieval step or a stable secret.
+  - What: DeepSeek Harness prints its launch URL with a process token to the logs; the gateway URL alone returns 401 until that token is exchanged for a session cookie.
+  - Why: exposing only the dashboard URL leaves users with an unusable app and no obvious next step.
+  - Benefit: PRs for token-gated apps include the exact command to fetch the URL, so first access works without guesswork.
