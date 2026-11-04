@@ -17,6 +17,7 @@ resources:
   - commander
   - cyberchef
   - dashboard
+  - deepseek-harness
   # - deemix
   - deluge
   - descheduler

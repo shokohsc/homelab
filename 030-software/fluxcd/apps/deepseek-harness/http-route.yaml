@@ -1,0 +1,23 @@
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: deepseek-harness
+  annotations:
+    dashboard.${domain}/name: deepseek-harness
+    dashboard.${domain}/url: https://deepseek.${domain}
+    dashboard.${domain}/icon: robot
+spec:
+  hostnames:
+  - deepseek.${domain}
+  parentRefs:
+  - name: cilium
+    namespace: cilium
+  rules:
+  - backendRefs:
+    - name: deepseek-harness
+      port: 80
+    matches:
+    - path:
+        type: PathPrefix
+        value: /

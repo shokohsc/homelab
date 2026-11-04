@@ -1,0 +1,122 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: deepseek-harness
+  labels:
+    stateful: "true"
+spec:
+  revisionHistoryLimit: 0
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: deepseek-harness
+  template:
+    metadata:
+      labels:
+        app: deepseek-harness
+    spec:
+      automountServiceAccountToken: false
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        seccompProfile:
+          type: RuntimeDefault
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              podAffinityTerm:
+                topologyKey: kubernetes.io/hostname
+                labelSelector:
+                  matchLabels:
+                    app: deepseek-harness
+      topologySpreadConstraints:
+        - maxSkew: 1
+          topologyKey: kubernetes.io/hostname
+          whenUnsatisfiable: ScheduleAnyway
+          labelSelector:
+            matchLabels:
+              app: deepseek-harness
+      containers:
+        - name: deepseek-harness
+          image: runzhliu/deepseek-harness:0.2.2-alpha.3-r1
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+            capabilities:
+              drop:
+                - ALL
+          args:
+            - web
+            - --patch
+            - /opt/deepseek-harness/web.cordis.patch.yml
+            - --no-open
+            - --public-url
+            - https://deepseek.${domain}/
+            - --trusted-host
+            - deepseek.${domain}
+          env:
+            - name: DSH_DESKTOP_ENABLED
+              value: "0"
+            - name: DSH_BROWSER_USE_ENABLED
+              value: "0"
+          ports:
+            - name: http
+              containerPort: 3080
+              protocol: TCP
+          startupProbe:
+            exec:
+              command:
+                - node
+                - -e
+                - "fetch('http://127.0.0.1:3080/').then(r => { if (r.status !== 401) process.exit(1) }).catch(() => process.exit(1))"
+            periodSeconds: 2
+            timeoutSeconds: 2
+            failureThreshold: 30
+          livenessProbe:
+            exec:
+              command:
+                - node
+                - -e
+                - "fetch('http://127.0.0.1:3080/').then(r => { if (r.status !== 401) process.exit(1) }).catch(() => process.exit(1))"
+            initialDelaySeconds: 20
+            periodSeconds: 20
+            timeoutSeconds: 3
+            failureThreshold: 3
+          readinessProbe:
+            exec:
+              command:
+                - node
+                - -e
+                - "fetch('http://127.0.0.1:3080/').then(r => { if (r.status !== 401) process.exit(1) }).catch(() => process.exit(1))"
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 3
+            failureThreshold: 6
+          resources:
+            requests:
+              cpu: 100m
+              memory: 512Mi
+            limits:
+              memory: 2Gi
+          volumeMounts:
+            - name: data
+              mountPath: /home/node/.dsh
+            - name: workspace
+              mountPath: /workspace
+            - name: temp
+              mountPath: /tmp
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: data
+        - name: workspace
+          persistentVolumeClaim:
+            claimName: workspace
+        - name: temp
+          emptyDir: {}
