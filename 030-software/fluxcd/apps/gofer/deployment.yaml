@@ -43,7 +43,7 @@ spec:
               app: gofer
       containers:
         - name: gofer
-          image: ghcr.io/cristianadrielbraun/gofer:0.20.0
+          image: ghcr.io/cristianadrielbraun/gofer:0.22.0
           securityContext:
             allowPrivilegeEscalation: false
             readOnlyRootFilesystem: true
