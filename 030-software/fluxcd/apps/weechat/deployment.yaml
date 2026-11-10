@@ -94,7 +94,7 @@ spec:
             limits:
               memory: 128Mi
         - name: glowing-bear
-          image: j33r/glowing-bear:latest@sha256:406b35cace80bb334b5cf03853bc5b9a616a0d7921ba2d2477127da55621136a
+          image: j33r/glowing-bear:latest@sha256:e9ba02665e217196f73f04b224e50947da241aa7066f532e044b541d5a8201cf
           imagePullPolicy: Always
           securityContext:
             allowPrivilegeEscalation: false
