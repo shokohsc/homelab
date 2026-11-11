@@ -196,16 +196,25 @@ nodes:
       topology.kubernetes.io/zone: "vm"
       node.kubernetes.io/gpu: "nvidia"
       gpu: on
+    kernelModules:
+      - name: br_netfilter
+        parameters:
+          - nf_conntrack_max=131072
+      - name: nvidia
+      - name: nvidia_uvm
+      - name: nvidia_modeset
+      - name: nvidia_drm
+      - name: nvidia_peermem
     schematic:
       customization:
         extraKernelArgs:
           - net.ifnames=0
-          - talos.config=http://tracer.home.arpa:8080/metadata?p=worker-vm-gpu
+          - talos.config=http://tracer.home.arpa:8080/metadata?s=worker-vm-gpu
           - vlan=ens18.20:ens18
         systemExtensions:
           officialExtensions:
-            - siderolabs/nonfree-kmod-nvidia-lts
-            - siderolabs/nvidia-container-toolkit-lts
+            # - siderolabs/nonfree-kmod-nvidia-lts
+            # - siderolabs/nvidia-container-toolkit-lts
 
             # - siderolabs/nvidia-container-toolkit-lts
             # - siderolabs/nvidia-open-gpu-kernel-modules-lts
@@ -214,6 +223,7 @@ nodes:
             # - siderolabs/nvidia-container-toolkit-production
             # - siderolabs/nvidia-open-gpu-kernel-modules-production
             # - siderolabs/nonfree-kmod-nvidia-production
+
             - siderolabs/gvisor
             - siderolabs/nfs-utils
             - siderolabs/nfsd

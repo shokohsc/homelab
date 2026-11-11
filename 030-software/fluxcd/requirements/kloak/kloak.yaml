@@ -96,6 +96,8 @@ spec:
               kind: Deployment
               labelSelector: app.kubernetes.io/name=kloak
   values:
+    image:
+      tag: sha-902539face3eb045e7080ce9bf23161f60e44297
     certificates:
       mode: certManager
       certManager:
