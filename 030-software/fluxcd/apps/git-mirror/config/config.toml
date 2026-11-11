@@ -57,10 +57,13 @@ Origin = "https://github.com/jrtashjian/cmangos-docker.git"
 Origin = "https://gitea-production-9f32.up.railway.app/movie-web/providers.git"
 
 [[Repo]]
-Origin = "https://github.com/NotRexed/Hookshot"
+Origin = "https://github.com/NotRexed/Hookshot.git"
 
 [[Repo]]
-Origin = "https://github.com/tangerineturtle1/NX2navi"
+Origin = "https://github.com/tangerineturtle1/NX2navi.git"
 
 [[Repo]]
-Origin = "https://github.com/sostenesfreitas/ocarina-recomp"
+Origin = "https://github.com/sostenesfreitas/ocarina-recomp.git"
+
+[[Repo]]
+Origin = "https://github.com/adrbn/bo2-mac.git"
