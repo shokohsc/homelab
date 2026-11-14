@@ -67,3 +67,27 @@ Origin = "https://github.com/sostenesfreitas/ocarina-recomp.git"
 
 [[Repo]]
 Origin = "https://github.com/adrbn/bo2-mac.git"
+
+[[Repo]]
+Origin = "https://github.com/adriadam10/mkw-recomp.git"
+
+[[Repo]]
+Origin = "https://github.com/azmasm/hermit.git"
+
+[[Repo]]
+Origin = "https://github.com/jhaizhou-ops/d2r-mobile.git"
+
+[[Repo]]
+Origin = "https://github.com/seedds/nxnative.git"
+
+[[Repo]]
+Origin = "https://github.com/Supermedo/bloodborne_pc.git"
+
+[[Repo]]
+Origin = "https://github.com/Awakenchan/LanternEngine.git"
+
+[[Repo]]
+Origin = "https://github.com/Mrsuss60/bloodborne_pc_windows_port.git"
+
+[[Repo]]
+Origin = "https://github.com/snuri00/psp-web-recomp.git"
