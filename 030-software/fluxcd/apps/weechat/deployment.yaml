@@ -56,6 +56,8 @@ spec:
             - weechat-headless
             - --stdout
             - --dir
+            - /log
+            - disable
             - /weechat
             - -r
             - "/set relay.network.password weechat"

@@ -1,6 +1,6 @@
 ---
 clusterName: talos
-talosVersion: v1.13.7
+talosVersion: v1.13.10
 kubernetesVersion: v1.36.2
 endpoint: https://talos.${TALOS_DOMAIN}:6443
 additionalApiServerCertSans:
@@ -224,6 +224,7 @@ nodes:
             # - siderolabs/nvidia-open-gpu-kernel-modules-production
             # - siderolabs/nonfree-kmod-nvidia-production
 
+            - siderolabs/glibc
             - siderolabs/gvisor
             - siderolabs/nfs-utils
             - siderolabs/nfsd

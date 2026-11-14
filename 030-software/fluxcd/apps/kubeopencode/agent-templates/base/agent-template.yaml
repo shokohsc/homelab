@@ -87,6 +87,10 @@ spec:
             name: z-ai/glm-5.3-flash
           nvidia/nemotron-3.5-super-vl-120b-a12b:
             name: nvidia/nemotron-3.5-super-vl-120b-a12b
+          nvidia/nemotron-3.5-bolt-e4b:
+            name: nvidia/nemotron-3.5-bolt-e4b
+          minimaxai/minimax-m3.1-flash:
+            name: minimaxai/minimax-m3.1-flash
           mistralai/mistral-large-4-1t-a52b:
             name: mistralai/mistral-large-4-1t-a52b
       llama.cpp:
@@ -95,14 +99,16 @@ spec:
         options:
           baseURL: "http://llama-cpp.${domain}:11434/v1"
         models:
-          dealignai/Ornith-1.5-9B-UNCENSORED-GGUF:Q4_K_M:
-            name: dealignai/Ornith-1.5-9B-UNCENSORED-GGUF:Q4_K_M
           ggml-org/gemma-4-E4B-it-GGUF:Q4_0:
             name: ggml-org/gemma-4-E4B-it-GGUF:Q4_0
           ggml-org/gpt-oss-20b-GGUF:MXFP4:
             name: ggml-org/gpt-oss-20b-GGUF:MXFP4
-          unsloth/Qwen3.8-27B-GGUF:Q4_K_M:
-            name: unsloth/Qwen3.8-27B-GGUF:Q4_K_M
+          ggml-org/Laya-GGUF:Q8_0:
+            name: ggml-org/Laya-GGUF:Q8_0
+          ggml-org/LFM3-Omni-2B-GGUF:Q8_0:
+            name: ggml-org/LFM3-Omni-2B-GGUF:Q8_0
+          ggml-org/LFM2.5-24B-A2B-GGUF:Q4_K_M:
+            name: ggml-org/LFM2.5-24B-A2B-GGUF:Q4_K_M
       freellmapi:
         npm: "@ai-sdk/openai-compatible"
         name: "FreeLLMApi (homelab)"
