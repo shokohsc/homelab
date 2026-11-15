@@ -56,21 +56,21 @@ spec:
 
   plugins:
     - name: cc-safety-net
+    - name: opencode-helicone-session
+    - name: opencode-pty
     - name: opencode-database-plugin
     # - name: "@dietrichgebert/ponytail"
-    - name: opencode-helicone-session
     # - name: "@tarquinen/opencode-dcp"
-    - name: opencode-pty
     # - name: "@nicholasgriffintn/opencode-plugin-otel"
     #   options:
     #     endpoint: "http://otel-collector:4318"
 
   config:
     $schema: https://opencode.ai/config.json
-    # model: opencode/big-pickle
+    model: opencode/big-pickle
     # model: opencode/deepseek-v4.1-flash-free
     # model: nvidia_custom/deepseek-ai/deepseek-v4.1-flash
-    model: nvidia_custom/z-ai/glm-5.3-flash
+    # model: nvidia_custom/z-ai/glm-5.3-flash
     # model: nvidia_custom/nvidia/nemotron-3.5-super-vl-120b-a12b
     provider:
       nvidia_custom:
