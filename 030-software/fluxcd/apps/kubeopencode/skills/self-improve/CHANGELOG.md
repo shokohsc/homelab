@@ -62,3 +62,14 @@
   - What: DeepSeek Harness prints its launch URL with a process token to the logs; the gateway URL alone returns 401 until that token is exchanged for a session cookie.
   - Why: exposing only the dashboard URL leaves users with an unusable app and no obvious next step.
   - Benefit: PRs for token-gated apps include the exact command to fetch the URL, so first access works without guesswork.
+
+## 2026-11-15
+
+- learned-rules: apps that generate signing keys on first start must persist them on a volume.
+  - What: fastapi-dls generates NLS CA/SI keys into `CERT_PATH` on startup and signs client-tokens/leases with them; a fresh empty volume would silently regenerate them and break every licensed guest with `JWTError: Signature verification failed`.
+  - Why: state produced by an app's startup is easy to treat as disposable when it is actually the trust anchor for all issued artifacts.
+  - Benefit: app additions check whether generated material is a trust anchor before deciding which volumes are optional.
+- learned-rules: when a gateway terminates TLS, override container commands that hardcode TLS keyfiles to plain HTTP.
+  - What: the fastapi-dls image CMD requires `webserver.key`/`webserver.crt` for uvicorn; overriding `command` to plain HTTP behind the cilium gateway removed the need to provision any webserver certificate while guests still reach the service over HTTPS.
+  - Why: upstream reverse-proxy examples show TLS termination at the proxy is the supported pattern, and the client-token env vars (`DLS_URL`/`DLS_PORT`) describe the external endpoint, not the container's.
+  - Benefit: TLS-in-TLS double termination and self-signed cert babysitting are avoided for gateway-fronted apps.
