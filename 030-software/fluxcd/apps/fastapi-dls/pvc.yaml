@@ -1,0 +1,28 @@
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: cert
+  labels:
+    app.kubernetes.io/name: fastapi-dls
+  annotations:
+spec:
+  accessModes:
+    - "ReadWriteOnce"
+  resources:
+    requests:
+      storage: "10Mi"
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: database
+  labels:
+    app.kubernetes.io/name: fastapi-dls
+  annotations:
+spec:
+  accessModes:
+    - "ReadWriteOnce"
+  resources:
+    requests:
+      storage: "100Mi"

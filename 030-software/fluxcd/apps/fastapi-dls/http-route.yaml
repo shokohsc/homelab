@@ -1,0 +1,23 @@
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: fastapi-dls
+  annotations:
+    dashboard.${domain}/icon: nvidia
+    dashboard.${domain}/name: fastapi-dls
+    dashboard.${domain}/url: https://dls.${domain}
+spec:
+  hostnames:
+  - dls.${domain}
+  parentRefs:
+  - name: cilium
+    namespace: cilium
+  rules:
+  - backendRefs:
+    - name: fastapi-dls
+      port: 80
+    matches:
+    - path:
+        type: PathPrefix
+        value: /
