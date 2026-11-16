@@ -23,6 +23,7 @@ resources:
   - excalidraw
   - external-dns
   - external-services
+  - fastapi-dls
   # - ferretdb
   - freellmapi
   - gatekeeper

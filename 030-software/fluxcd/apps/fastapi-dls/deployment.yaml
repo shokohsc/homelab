@@ -1,0 +1,123 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fastapi-dls
+spec:
+  revisionHistoryLimit: 0
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: fastapi-dls
+  template:
+    metadata:
+      labels:
+        app: fastapi-dls
+    spec:
+      automountServiceAccountToken: false
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        fsGroupChangePolicy: OnRootMismatch
+        seccompProfile:
+          type: RuntimeDefault
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              podAffinityTerm:
+                topologyKey: kubernetes.io/hostname
+                labelSelector:
+                  matchLabels:
+                    app: fastapi-dls
+      topologySpreadConstraints:
+        - maxSkew: 1
+          topologyKey: kubernetes.io/hostname
+          whenUnsatisfiable: ScheduleAnyway
+          labelSelector:
+            matchLabels:
+              app: fastapi-dls
+      containers:
+        - name: fastapi-dls
+          image: collinwebdesigns/fastapi-dls:2.0.3
+          # Plain HTTP uvicorn, TLS is terminated by the gateway
+          # (same pattern as upstream examples/docker-compose-http-and-https.yml)
+          command:
+            - uvicorn
+            - main:app
+            - --host
+            - 0.0.0.0
+            - --port
+            - "8080"
+            - --app-dir
+            - /app
+            - --proxy-headers
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+            capabilities:
+              drop:
+                - ALL
+          env:
+            - name: TZ
+              value: ${timezone}
+            - name: PYTHONUNBUFFERED
+              value: "1"
+            - name: PYTHONDONTWRITEBYTECODE
+              value: "1"
+            - name: DLS_URL
+              value: dls.${domain}
+            - name: DLS_PORT
+              value: "443"
+            - name: LEASE_EXPIRE_DAYS
+              value: "90"
+            - name: CERT_PATH
+              value: /app/cert
+            - name: DATABASE
+              value: sqlite:////app/database/db.sqlite
+            - name: DEBUG
+              value: "false"
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+          startupProbe:
+            httpGet:
+              path: /-/health
+              port: http
+            failureThreshold: 30
+            periodSeconds: 5
+          livenessProbe:
+            httpGet:
+              path: /-/health
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /-/health
+              port: http
+          resources:
+            limits:
+              memory: 512Mi
+            requests:
+              memory: 128Mi
+              cpu: 100m
+          volumeMounts:
+            - name: cert
+              mountPath: /app/cert
+            - name: database
+              mountPath: /app/database
+            - name: tmp
+              mountPath: /tmp
+      volumes:
+        - name: cert
+          persistentVolumeClaim:
+            claimName: cert
+        - name: database
+          persistentVolumeClaim:
+            claimName: database
+        - name: tmp
+          emptyDir: {}
