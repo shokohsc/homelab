@@ -16,3 +16,5 @@
 - Derive egress network-policy dependencies from the real workload config, including init containers and lifecycle hooks; skip references to namespaces that no longer exist.
 - A MutatingWebhookConfiguration with failurePolicy Fail and an unscoped selector blocks unrelated resources when the webhook is down; use Ignore plus an objectSelector unless the mutation is mandatory.
 - Apps gated by a one-time launch token need a documented token-retrieval step (e.g. container logs) or a stable secret; the dashboard URL alone returns 401.
+- Apps that generate signing keys on first start must persist them on a volume; losing them invalidates every token/cert signed with them after a restart.
+- When a gateway terminates TLS, override container commands that hardcode TLS keyfiles to plain HTTP and point client-facing URL/port env vars at the external endpoint.
