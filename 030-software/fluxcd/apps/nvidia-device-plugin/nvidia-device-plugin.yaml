@@ -39,10 +39,10 @@ spec:
               kind: DaemonSet
               labelSelector: app.kubernetes.io/name=nvidia-device-plugin
   values:
+    affinity: null
     runtimeClassName: nvidia
     nodeSelector:
-      # node.kubernetes.io/gpu: nvidia
-      gpu: on
+      node.kubernetes.io/gpu: nvidia
     tolerations:
       - key: nvidia
         operator: Exists
