@@ -196,6 +196,8 @@ nodes:
       topology.kubernetes.io/zone: "vm"
       node.kubernetes.io/gpu: "nvidia"
       gpu: on
+    nodeTaints:
+      nvidia: true:NoSchedule
     kernelModules:
       - name: br_netfilter
         parameters:

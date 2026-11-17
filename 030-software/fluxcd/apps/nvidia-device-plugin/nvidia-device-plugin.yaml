@@ -41,7 +41,8 @@ spec:
   values:
     runtimeClassName: nvidia
     nodeSelector:
-      node.kubernetes.io/gpu: nvidia
+      # node.kubernetes.io/gpu: nvidia
+      gpu: on
     tolerations:
       - key: nvidia
         operator: Exists
