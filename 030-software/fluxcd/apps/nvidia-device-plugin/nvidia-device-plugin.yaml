@@ -41,3 +41,7 @@ spec:
     runtimeClassName: nvidia
     nodeSelector:
       node.kubernetes.io/gpu: nvidia
+    tolerations:
+      - key: nvidia
+        operator: Exists
+        effect: NoSchedule
