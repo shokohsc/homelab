@@ -32,11 +32,12 @@ spec:
                 name: all
               spec:
                 template:
-                  labels:
-                    policy.gatekeeper.sh/ignore: "true"
+                  metadata:
+                    labels:
+                      policy.gatekeeper.sh/ignore: "true"
             target:
               kind: DaemonSet
-              labelSelector: app=nvidia-device-plugin
+              labelSelector: app.kubernetes.io/name=nvidia-device-plugin
   values:
     runtimeClassName: nvidia
     nodeSelector:
@@ -44,4 +45,4 @@ spec:
     tolerations:
       - key: nvidia
         operator: Exists
-        effect: NoSchedule
+        effect: PreferNoSchedule
