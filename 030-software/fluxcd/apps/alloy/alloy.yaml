@@ -35,6 +35,9 @@ spec:
         - key: "node.kubernetes.io/nuc"
           operator: "Exists"
           effect: "NoSchedule"
+        - key: nvidia
+          operator: "Exists"
+          effect: "NoSchedule"
     mounts:
       varlog: true
       dockercontainers: false

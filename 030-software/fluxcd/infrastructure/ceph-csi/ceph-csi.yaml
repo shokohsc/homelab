@@ -49,6 +49,9 @@ spec:
                       - key: "node.kubernetes.io/nuc"
                         operator: "Exists"
                         effect: "NoSchedule"
+                      - key: nvidia
+                        operator: "Exists"
+                        effect: "NoSchedule"
             target:
               kind: Deployment
               labelSelector: app=ceph-csi-rbd

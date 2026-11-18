@@ -49,3 +49,6 @@ spec:
         - effect: NoSchedule
           key: node.kubernetes.io/nuc
           operator: Exists
+        - effect: NoSchedule
+          key: nvidia
+          operator: Exists
