@@ -205,6 +205,14 @@ nodes:
       - name: nvidia
       - name: nvidia_uvm
       - name: nvidia_modeset
+    patches:
+      - |-
+        apiVersion: v1alpha1
+        kind: ExtensionServiceConfig
+        name: nvidia-gridd
+        environment:
+          - NVIDIA_DLS_URL=https://dls.home.arpa
+          - NVIDIA_DLS_INSECURE_SKIP_VERIFY=true
     schematic:
       customization:
         extraKernelArgs:
