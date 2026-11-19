@@ -39,6 +39,16 @@ spec:
               kind: DaemonSet
               labelSelector: app.kubernetes.io/name=nvidia-device-plugin
   values:
+    config:
+      default: default
+      map:
+        default: |-
+          version: v1
+          sharing:
+            timeSlicing:
+              renameByDefault: true
+              failRequestsGreaterThanOne: false
+              replicas: 4
     affinity: null
     runtimeClassName: nvidia
     nodeSelector:
