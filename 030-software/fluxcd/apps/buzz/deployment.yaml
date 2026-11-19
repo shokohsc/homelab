@@ -43,7 +43,7 @@ spec:
                     app: relay
       containers:
         - name: relay
-          image: ghcr.io/block/buzz:0.2.1
+          image: ghcr.io/block/buzz:0.3.0
           securityContext:
             allowPrivilegeEscalation: false
             readOnlyRootFilesystem: true
