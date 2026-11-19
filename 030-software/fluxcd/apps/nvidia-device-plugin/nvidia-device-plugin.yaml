@@ -48,7 +48,9 @@ spec:
             timeSlicing:
               renameByDefault: true
               failRequestsGreaterThanOne: false
-              replicas: 4
+              resources:
+                - name: nvidia.com/gpu
+                  replicas: 5
     affinity: null
     runtimeClassName: nvidia
     nodeSelector:

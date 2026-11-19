@@ -69,9 +69,7 @@ spec:
     $schema: https://opencode.ai/config.json
     # model: opencode/big-pickle
     # model: opencode/deepseek-v4.1-flash-free
-    # model: nvidia_custom/deepseek-ai/deepseek-v4.1-flash
     model: nvidia_custom/z-ai/glm-5.3-flash
-    # model: nvidia_custom/nvidia/nemotron-3.5-super-vl-120b-a12b
     provider:
       nvidia_custom:
         npm: "@ai-sdk/openai-compatible"
@@ -93,22 +91,14 @@ spec:
             name: minimaxai/minimax-m3.1-flash
           mistralai/mistral-large-4-1t-a52b:
             name: mistralai/mistral-large-4-1t-a52b
-      llama.cpp:
+      vllm:
         npm: "@ai-sdk/openai-compatible"
-        name: "llama CPP (local)"
+        name: "vLLM (homelab)"
         options:
-          baseURL: "http://llama-cpp.${domain}:11434/v1"
+          baseURL: "https://vllm.${domain}/v1"
         models:
           ggml-org/gemma-4-E4B-it-GGUF:Q4_0:
             name: ggml-org/gemma-4-E4B-it-GGUF:Q4_0
-          ggml-org/gpt-oss-20b-GGUF:MXFP4:
-            name: ggml-org/gpt-oss-20b-GGUF:MXFP4
-          ggml-org/Laya-GGUF:Q8_0:
-            name: ggml-org/Laya-GGUF:Q8_0
-          ggml-org/LFM3-Omni-2B-GGUF:Q8_0:
-            name: ggml-org/LFM3-Omni-2B-GGUF:Q8_0
-          ggml-org/LFM2.5-24B-A2B-GGUF:Q4_K_M:
-            name: ggml-org/LFM2.5-24B-A2B-GGUF:Q4_K_M
       freellmapi:
         npm: "@ai-sdk/openai-compatible"
         name: "FreeLLMApi (homelab)"
