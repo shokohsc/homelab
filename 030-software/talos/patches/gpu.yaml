@@ -1,0 +1,3 @@
+machine:
+  install:
+    image: ghcr.io/shokohsc/talos-nvidia-vgpu-installer:535.161.07-aa0048c
