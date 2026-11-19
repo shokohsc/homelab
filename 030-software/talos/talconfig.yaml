@@ -17,14 +17,6 @@ inlineManifests:
     contents: "@./patches/rps-ds-tuning.yaml"
     skipEnvsubst: true
 patches:
-  # - |-
-  #   apiVersion: v1alpha1
-  #   kind: TrustedRootsConfig
-  #   name: custom-ca
-  #   certificates: |
-  #       -----BEGIN CERTIFICATE-----
-  #       ${CA_CERT}
-  #       -----END CERTIFICATE-----
   - "@./patches/cluster.yaml"
   - "@./patches/machine.yaml"
   - "@./patches/network.yaml"
@@ -206,12 +198,14 @@ nodes:
       - name: nvidia_uvm
       - name: nvidia_modeset
     patches:
+      - "@./patches/gpu.yaml"
       - |-
         apiVersion: v1alpha1
         kind: ExtensionServiceConfig
         name: nvidia-gridd
         environment:
           - NVIDIA_DLS_URL=https://dls.home.arpa
+          - NVIDIA_DLS_CA_BUNDLE=/etc/ssl/certs/ca-certificates.crt
           - NVIDIA_DLS_INSECURE_SKIP_VERIFY=true
     schematic:
       customization:
@@ -221,17 +215,6 @@ nodes:
           - vlan=ens18.20:ens18
         systemExtensions:
           officialExtensions:
-            # - siderolabs/nonfree-kmod-nvidia-lts
-            # - siderolabs/nvidia-container-toolkit-lts
-
-            # - siderolabs/nvidia-container-toolkit-lts
-            # - siderolabs/nvidia-open-gpu-kernel-modules-lts
-            # - siderolabs/nonfree-kmod-nvidia-lts
-
-            # - siderolabs/nvidia-container-toolkit-production
-            # - siderolabs/nvidia-open-gpu-kernel-modules-production
-            # - siderolabs/nonfree-kmod-nvidia-production
-
             - siderolabs/glibc
             - siderolabs/gvisor
             - siderolabs/nfs-utils
