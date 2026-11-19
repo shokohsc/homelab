@@ -40,7 +40,7 @@ spec:
               labelSelector: app.kubernetes.io/name=nvidia-device-plugin
   values:
     affinity: null
-    # runtimeClassName: nvidia
+    runtimeClassName: nvidia
     nodeSelector:
       node.kubernetes.io/gpu: nvidia
     tolerations:
