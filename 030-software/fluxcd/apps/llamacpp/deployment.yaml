@@ -44,7 +44,7 @@ spec:
               app: llamacpp
       containers:
         - name: llamacpp
-          image: ghcr.io/ggml-org/llama.cpp:server-cuda
+          image: ghcr.io/ggml-org/llama.cpp:server-cuda12-b12464
           securityContext:
             allowPrivilegeEscalation: false
             readOnlyRootFilesystem: true
@@ -81,6 +81,7 @@ spec:
               memory: 2048Mi
             limits:
               memory: 8192Mi
+              nvidia.com/gpu: "1"
           volumeMounts:
             - name: models
               mountPath: /models
@@ -93,14 +94,9 @@ spec:
         - name: tmp
           emptyDir:
             medium: Memory
----
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: models
-spec:
-  accessModes:
-    - ReadWriteOnce
-  resources:
-    requests:
-      storage: 50Gi
+      nodeSelector:
+        node.kubernetes.io/gpu: nvidia
+      tolerations:
+        - key: nvidia
+          operator: Exists
+          effect: NoSchedule

@@ -7,3 +7,4 @@ resources:
   - poddisruptionbudget.yaml
   - service.yaml
   - http-route.yaml
+  - pvc.yaml
