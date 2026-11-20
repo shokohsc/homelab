@@ -19,7 +19,6 @@ spec:
         policy.gatekeeper.sh/ignore-container-must-have-limits: "true"
     spec:
       automountServiceAccountToken: false
-      runtimeClassName: nvidia
       securityContext:
         runAsNonRoot: true
         runAsUser: 1000
@@ -66,6 +65,9 @@ spec:
             - "2"
             - -ngl
             - "999"
+          env:
+            - name: "NVIDIA_DRIVER_CAPABILITIES"
+              value: "compute,utility"
           ports:
             - containerPort: 8080
               name: http
@@ -90,7 +92,7 @@ spec:
               memory: 64Mi
             limits:
               memory: 1024Mi
-              # nvidia.com/gpu.shared: "1"
+              nvidia.com/gpu.shared: "1"
           volumeMounts:
             - name: models
               mountPath: /models
@@ -103,8 +105,6 @@ spec:
         - name: tmp
           emptyDir:
             medium: Memory
-      nodeSelector:
-        node.kubernetes.io/gpu: nvidia
       tolerations:
         - key: nvidia
           operator: Exists

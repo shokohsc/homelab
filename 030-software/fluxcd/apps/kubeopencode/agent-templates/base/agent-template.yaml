@@ -68,8 +68,8 @@ spec:
   config:
     $schema: https://opencode.ai/config.json
     # model: opencode/big-pickle
-    # model: opencode/deepseek-v4.1-flash-free
-    model: nvidia_custom/z-ai/glm-5.3-flash
+    model: opencode/deepseek-v4.1-flash-free
+    # model: nvidia_custom/z-ai/glm-5.3-flash
     provider:
       nvidia_custom:
         npm: "@ai-sdk/openai-compatible"
