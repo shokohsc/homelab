@@ -3,6 +3,8 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: llamacpp
+  annotations:
+    configmap.reloader.stakater.com/reload: "config"
   labels:
     stateful: "true"
 spec:
@@ -58,27 +60,40 @@ spec:
             - 0.0.0.0
             - --port
             - "8080"
-            - -m
-            - /models/gemma-4-E4B-it-Q4_0.gguf
-            - -c
-            - "32768"
-            - -np
+            - --models-preset 
+            - /app/config.ini
+            - --models-dir
+            - /models
+            - --models-max
+            - "0"
+            # - --model
+            # - /models/gemma-4-E4B-it-Q4_0.gguf
+            - --hf-token
+            - $HUGGINGFACE_TOKEN
+            # - --ctx-size
+            # - "32768"
+            - --parallel
             - "1"
-            - -ngl
-            - "99"
-            - -fa
-            - on
-            - -ctk
+            # - --gpu-layers
+            # - "99"
+            # - --flash-attn
+            # - on
+            - --cache-type-k
             - q8_0
-            - -ctv
+            - --cache-type-v
             - q8_0
-            - -b
-            - "2048"
-            - -ub
-            - "1024"
+            # - --batch-size
+            # - "2048"
+            # - --ubatch-size
+            # - "1024"
           env:
             - name: "NVIDIA_DRIVER_CAPABILITIES"
               value: "compute,utility"
+            - name: HUGGINGFACE_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: credentials
+                  key: huggingface-token
           ports:
             - containerPort: 8080
               name: http
@@ -109,6 +124,8 @@ spec:
               mountPath: /models
             - name: tmp
               mountPath: /tmp
+            - name: config
+              mountPath: /app/config.ini
       volumes:
         - name: models
           persistentVolumeClaim:
@@ -116,6 +133,10 @@ spec:
         - name: tmp
           emptyDir:
             medium: Memory
+        - name: config
+          configMap:
+            name: config
+            defaultMode: 0644
       tolerations:
         - key: nvidia
           operator: Exists

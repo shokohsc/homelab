@@ -8,3 +8,10 @@ resources:
   - service.yaml
   - http-route.yaml
   - pvc.yaml
+  - secret.yaml
+configMapGenerator:
+- name: config
+  files:
+  - ./config/config.ini
+generatorOptions:
+  disableNameSuffixHash: true

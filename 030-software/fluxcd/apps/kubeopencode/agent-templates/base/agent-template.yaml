@@ -67,9 +67,22 @@ spec:
 
   config:
     $schema: https://opencode.ai/config.json
+
     # model: opencode/big-pickle
     model: opencode/deepseek-v4.1-flash-free
+    # model: opencode/hy4-flash-free
+    # model: opencode/mimo-v2.6-flash-free
+    # model: opencode/jev-1.13-free
+    # model: opencode/longcat-2.5-free
+    # model: opencode/iceman-free
+    # model: opencode/beam-free
+    # model: opencode/flint-40b-free
+    # model: opencode/nemotron-3.5-super-vl-free
+    # model: opencode/nemotron-3.5-lightning-free
+    # model: opencode/tidepool-alpha-free
+
     # model: nvidia_custom/z-ai/glm-5.3-flash
+
     provider:
       nvidia_custom:
         npm: "@ai-sdk/openai-compatible"
@@ -91,11 +104,11 @@ spec:
             name: minimaxai/minimax-m3.1-flash
           mistralai/mistral-large-4-1t-a52b:
             name: mistralai/mistral-large-4-1t-a52b
-      vllm:
+      llamacpp:
         npm: "@ai-sdk/openai-compatible"
-        name: "vLLM (homelab)"
+        name: "llama CPP (homelab)"
         options:
-          baseURL: "https://vllm.${domain}/v1"
+          baseURL: "https://llama.${domain}/v1"
         models:
           ggml-org/gemma-4-E4B-it-GGUF:Q4_0:
             name: ggml-org/gemma-4-E4B-it-GGUF:Q4_0
