@@ -50,7 +50,7 @@ spec:
               failRequestsGreaterThanOne: false
               resources:
                 - name: nvidia.com/gpu
-                  replicas: 5
+                  replicas: 2
     affinity: null
     runtimeClassName: nvidia
     nodeSelector:

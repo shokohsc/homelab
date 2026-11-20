@@ -28,19 +28,20 @@ resources:
   - freellmapi
   - gatekeeper
   - git-mirror
+  - gofer
   - grafana
   - grist
   - headlamp
   - iptvnator
   - jsoncrack
   # - lidarr
+  - llamacpp
   - loki
   - alloy
   - http-echo
   - jellyfin
   - kaneo
   - kaniko
-  - gofer
   - konflate
   - kube-state-metrics
   - kube-system
@@ -101,7 +102,6 @@ resources:
   - weechat
   # - wekan
   - whsah
-  - llamacpp
   - whoami
   - ws-screenshot
   - zipkin
