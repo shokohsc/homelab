@@ -110,8 +110,16 @@ spec:
         options:
           baseURL: "https://llama.${domain}/v1"
         models:
-          ggml-org/gemma-4-E4B-it-GGUF:Q4_0:
-            name: ggml-org/gemma-4-E4B-it-GGUF:Q4_0
+          gemma-4-E4B-it-Q4_0:
+            name: gemma-4-E4B-it-Q4_0
+          NVIDIA-Nemotron-3.5-Bolt-E4B-Q8_0:
+            name: NVIDIA-Nemotron-3.5-Bolt-E4B-Q8_0
+          LFM3-Omni-2B-Q8_0:
+            name: LFM3-Omni-2B-Q8_0
+          LFM2.5-24B-A2B-Q4_K_M:
+            name: LFM2.5-24B-A2B-Q4_K_M
+          Laya-Q8_0:
+            name: Laya-Q8_0
       freellmapi:
         npm: "@ai-sdk/openai-compatible"
         name: "FreeLLMApi (homelab)"
