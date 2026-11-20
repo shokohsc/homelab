@@ -19,6 +19,7 @@ spec:
         policy.gatekeeper.sh/ignore-container-must-have-limits: "true"
     spec:
       automountServiceAccountToken: false
+      runtimeClassName: nvidia
       securityContext:
         runAsNonRoot: true
         runAsUser: 1000
@@ -89,7 +90,7 @@ spec:
               memory: 64Mi
             limits:
               memory: 1024Mi
-              nvidia.com/gpu.shared: "1"
+              # nvidia.com/gpu.shared: "1"
           volumeMounts:
             - name: models
               mountPath: /models
