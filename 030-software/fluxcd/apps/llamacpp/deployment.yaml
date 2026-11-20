@@ -44,7 +44,7 @@ spec:
               app: llamacpp
       containers:
         - name: llamacpp
-          image: ghcr.io/ggml-org/llama.cpp:server-cuda12-b10818
+          image: ghcr.io/ggml-org/llama.cpp:server-cuda12-b12464
           securityContext:
             allowPrivilegeEscalation: false
             readOnlyRootFilesystem: true
