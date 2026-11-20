@@ -60,9 +60,11 @@ spec:
             tcpSocket:
               port: http
           readinessProbe:
-            httpGet:
+            # httpGet:
+            #   port: http
+            #   path: /
+            tcpSocket:
               port: http
-              path: /
           resources:
             requests:
               cpu: 100m
