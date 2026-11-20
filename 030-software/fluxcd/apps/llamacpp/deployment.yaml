@@ -89,7 +89,7 @@ spec:
               memory: 2048Mi
             limits:
               memory: 8192Mi
-              nvidia.com/gpu.shared: "1"
+              nvidia.com/gpu: "1"
           volumeMounts:
             - name: models
               mountPath: /models
