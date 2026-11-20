@@ -62,12 +62,12 @@ spec:
             - "8080"
             # - --model
             # - /models/gemma-4-E4B-it-Q4_0.gguf
-            - --models-preset 
-            - /app/config.ini
-            # - --models-dir
-            # - /models
-            # - --models-max
-            # - "0"
+            # - --models-preset 
+            # - /app/config.ini
+            - --models-dir
+            - /models
+            - --models-max
+            - "0"
             - --hf-token
             - $HUGGINGFACE_TOKEN
             # - --ctx-size
