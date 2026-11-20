@@ -61,11 +61,21 @@ spec:
             - -m
             - /models/gemma-4-E4B-it-Q4_0.gguf
             - -c
-            - "0"
+            - "32768"
             - -np
-            - "2"
+            - "1"
             - -ngl
-            - "999"
+            - "99"
+            - -fa
+            - on
+            - -ctk
+            - q8_0
+            - -ctv
+            - q8_0
+            - -b
+            - "2048"
+            - -ub
+            - "1024"
           env:
             - name: "NVIDIA_DRIVER_CAPABILITIES"
               value: "compute,utility"
@@ -90,9 +100,9 @@ spec:
           resources:
             requests:
               cpu: 100m
-              memory: 64Mi
+              memory: 1064Mi
             limits:
-              memory: 1024Mi
+              memory: 4096Mi
               nvidia.com/gpu.shared: "1"
           volumeMounts:
             - name: models
