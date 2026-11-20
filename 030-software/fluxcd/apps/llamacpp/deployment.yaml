@@ -62,33 +62,33 @@ spec:
             - "8080"
             # - --model
             # - /models/gemma-4-E4B-it-Q4_0.gguf
-            # - --models-preset 
-            # - /app/config.ini
             - --models-dir
             - /models
             - --models-max
             - "0"
             - --hf-token
             - $HUGGINGFACE_TOKEN
-            # - --ctx-size
-            # - "32768"
+            # - --models-preset 
+            # - /app/config.ini
+            - --ctx-size
+            - "32768"
             - --parallel
             - "1"
-            # - --gpu-layers
-            # - "99"
-            # - --flash-attn
-            # - on
+            - --gpu-layers
+            - "99"
+            - --flash-attn
+            - on
             - --cache-type-k
             - q8_0
             - --cache-type-v
             - q8_0
-            # - --batch-size
-            # - "2048"
-            # - --ubatch-size
-            # - "1024"
+            - --batch-size
+            - "2048"
+            - --ubatch-size
+            - "1024"
           env:
-            - name: "NVIDIA_DRIVER_CAPABILITIES"
-              value: "compute,utility"
+            # - name: "NVIDIA_DRIVER_CAPABILITIES"
+            #   value: "compute,utility"
             - name: HUGGINGFACE_TOKEN
               valueFrom:
                 secretKeyRef:
