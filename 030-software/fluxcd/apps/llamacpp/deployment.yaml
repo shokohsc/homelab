@@ -64,7 +64,7 @@ spec:
             - -np
             - "2"
             - -ngl
-            - auto
+            - "999"
           ports:
             - containerPort: 8080
               name: http
