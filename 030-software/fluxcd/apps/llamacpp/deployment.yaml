@@ -85,11 +85,11 @@ spec:
             periodSeconds: 10
           resources:
             requests:
-              cpu: 500m
-              memory: 2048Mi
+              cpu: 100m
+              memory: 64Mi
             limits:
-              memory: 8192Mi
-              nvidia.com/gpu: "1"
+              memory: 1024Mi
+              nvidia.com/gpu.shared: "1"
           volumeMounts:
             - name: models
               mountPath: /models
