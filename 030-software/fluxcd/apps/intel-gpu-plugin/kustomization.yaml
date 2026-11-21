@@ -24,6 +24,8 @@ patches:
                   - "2"
             nodeSelector:
               kubernetes.io/hostname: mercy
+              intel.feature.node.kubernetes.io/gpu: null
+              kubernetes.io/arch: null
             tolerations:
               - effect: NoSchedule
                 key: node.kubernetes.io/nuc
