@@ -1,5 +1,5 @@
 # helm upgrade -i cilium cilium/cilium \
-# --version 1.20.2 \
+# --version 1.20.5 \
 # --namespace cilium \
 # --values cilium.values.yaml
 #
@@ -83,13 +83,6 @@ hubble:
               operator: NotIn
               values:
               - mercy
-        - weight: 1
-          preference:
-            matchExpressions:
-            - key: topology.kubernetes.io/region
-              operator: In
-              values:
-              - homelab
     tolerations:
       - key: "node.kubernetes.io/nuc"
         operator: "Exists"
@@ -118,13 +111,6 @@ hubble:
               operator: NotIn
               values:
               - mercy
-        - weight: 1
-          preference:
-            matchExpressions:
-            - key: topology.kubernetes.io/region
-              operator: In
-              values:
-              - homelab
     tolerations:
       - key: "node.kubernetes.io/nuc"
         operator: "Exists"
