@@ -20,6 +20,7 @@ patches:
               - name: intel-gpu-plugin
                 image: intel/intel-gpu-plugin:0.37.1
                 args:
+                  - -prefix=/host
                   - -shared-dev-num
                   - "2"
             nodeSelector:
