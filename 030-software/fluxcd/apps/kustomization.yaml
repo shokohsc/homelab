@@ -32,7 +32,7 @@ resources:
   - grafana
   - grist
   - headlamp
-  # - intel-gpu-plugin
+  - intel-gpu-plugin
   - iptvnator
   - jsoncrack
   # - lidarr

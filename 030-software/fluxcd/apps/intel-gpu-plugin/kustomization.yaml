@@ -3,7 +3,7 @@ kind: Kustomization
 namespace: intel-gpu-plugin
 resources:
   - namespace.yaml
-  - https://github.com/intel/intel-device-plugins-for-kubernetes/raw/refs/heads/main/deployments/gpu_plugin/overlays/nfd_labeled_nodes/kustomization.yaml
+  - https://github.com/intel/intel-device-plugins-for-kubernetes/deployments/gpu_plugin/overlays/nfd_labeled_nodes?ref=main
 patches:
   - patch: |
       apiVersion: apps/v1
