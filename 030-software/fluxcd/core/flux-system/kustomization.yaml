@@ -52,10 +52,10 @@ patches:
                 - weight: 1
                   preference:
                     matchExpressions:
-                    - key: topology.kubernetes.io/region
-                      operator: In
+                    - key: kubernetes.io/hostname
+                      operator: NotIn
                       values:
-                      - metal
+                      - mercy
             tolerations:
               - effect: NoSchedule
                 key: node.kubernetes.io/nuc

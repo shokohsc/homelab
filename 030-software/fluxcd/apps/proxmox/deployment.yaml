@@ -82,13 +82,6 @@ spec:
                 operator: NotIn
                 values:
                 - mercy
-          - weight: 1
-            preference:
-              matchExpressions:
-              - key: topology.kubernetes.io/region
-                operator: In
-                values:
-                - metal
         podAntiAffinity:
           preferredDuringSchedulingIgnoredDuringExecution:
             - weight: 100

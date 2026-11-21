@@ -17,13 +17,13 @@ patches:
             affinity:
               nodeAffinity:
                 preferredDuringSchedulingIgnoredDuringExecution:
-                - weight: 1
-                  preference:
-                    matchExpressions:
-                    - key: topology.kubernetes.io/zone
-                      operator: In
-                      values:
-                      - metal
+                  - weight: 1
+                    preference:
+                      matchExpressions:
+                        - key: kubernetes.io/hostname
+                          operator: NotIn
+                          values:
+                            - mercy
             tolerations:
               - effect: NoSchedule
                 key: node.kubernetes.io/nuc

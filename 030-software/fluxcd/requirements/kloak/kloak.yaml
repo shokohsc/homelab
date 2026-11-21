@@ -39,13 +39,13 @@ spec:
                     affinity:
                       nodeAffinity:
                         preferredDuringSchedulingIgnoredDuringExecution:
-                        - weight: 1
-                          preference:
-                            matchExpressions:
-                            - key: topology.kubernetes.io/region
-                              operator: In
-                              values:
-                              - metal
+                          - weight: 1
+                            preference:
+                              matchExpressions:
+                                - key: kubernetes.io/hostname
+                                  operator: NotIn
+                                  values:
+                                    - mercy
                     tolerations:
                       - effect: NoSchedule
                         key: node.kubernetes.io/nuc
@@ -65,13 +65,13 @@ spec:
                     affinity:
                       nodeAffinity:
                         preferredDuringSchedulingIgnoredDuringExecution:
-                        - weight: 1
-                          preference:
-                            matchExpressions:
-                            - key: topology.kubernetes.io/region
-                              operator: In
-                              values:
-                              - metal
+                          - weight: 1
+                            preference:
+                              matchExpressions:
+                                - key: kubernetes.io/hostname
+                                  operator: NotIn
+                                  values:
+                                    - mercy
                     securityContext:
                       runAsNonRoot: true
                       runAsUser: 1000

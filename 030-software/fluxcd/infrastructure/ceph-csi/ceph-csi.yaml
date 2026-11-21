@@ -41,10 +41,10 @@ spec:
                         - weight: 1
                           preference:
                             matchExpressions:
-                            - key: topology.kubernetes.io/region
-                              operator: In
+                            - key: kubernetes.io/hostname
+                              operator: NotIn
                               values:
-                              - homelab
+                              - mercy
                     tolerations:
                       - key: "node.kubernetes.io/nuc"
                         operator: "Exists"

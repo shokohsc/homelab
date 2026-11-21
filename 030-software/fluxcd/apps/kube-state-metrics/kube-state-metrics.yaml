@@ -41,6 +41,16 @@ spec:
         cpu: 100m
       limits:
         memory: 64Mi
+    affinity:
+      nodeAffinity:
+        preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 1
+            preference:
+              matchExpressions:
+                - key: kubernetes.io/hostname
+                  operator: NotIn
+                  values:
+                    - mercy
     tolerations:
       - key: "node.kubernetes.io/nuc"
         operator: "Exists"
