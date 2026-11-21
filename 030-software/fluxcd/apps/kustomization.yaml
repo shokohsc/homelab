@@ -36,6 +36,7 @@ resources:
   - jsoncrack
   # - lidarr
   - llamacpp
+  - localai
   - loki
   - alloy
   - http-echo
