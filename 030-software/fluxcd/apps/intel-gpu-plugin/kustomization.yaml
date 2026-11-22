@@ -23,6 +23,14 @@ patches:
                   - -prefix=/host
                   - -shared-dev-num
                   - "2"
+                volumeMounts:
+                  - name: sysfs
+                    mountPath: /sys/class/drm
+                    readOnly: true
+            volumes:
+              - name: sysfs
+                hostPath:
+                  path: /sys/class/drm
             nodeSelector:
               kubernetes.io/hostname: mercy
               intel.feature.node.kubernetes.io/gpu: null
