@@ -34,6 +34,7 @@ patches:
               - name: devfs
                 hostPath:
                   path: /dev/dri
+                  type: Directory
               - name: sysfs
                 hostPath:
                   path: /sys/class/drm
