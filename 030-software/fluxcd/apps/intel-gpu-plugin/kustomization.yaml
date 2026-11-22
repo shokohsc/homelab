@@ -3,50 +3,51 @@ kind: Kustomization
 namespace: intel-gpu-plugin
 resources:
   - namespace.yaml
-  - https://github.com/intel/intel-device-plugins-for-kubernetes/deployments/gpu_plugin/overlays/nfd_labeled_nodes?ref=main
-patches:
-  - patch: |
-      apiVersion: apps/v1
-      kind: DaemonSet
-      metadata:
-        name: all
-      spec:
-        template:
-          metadata:
-            labels:
-              policy.gatekeeper.sh/ignore: "true"
-          spec:
-            containers:
-              - name: intel-gpu-plugin
-                image: intel/intel-gpu-plugin:0.37.1
-                args:
-                  # - -prefix=/host
-                  - -shared-dev-num
-                  - "2"
-                volumeMounts:
-                  - name: devfs
-                    mountPath: /dev/dri
-                    readOnly: true
-                  - name: sysfs
-                    mountPath: /sys/class/drm
-                    readOnly: true
-            volumes:
-              # - name: devfs
-              #   hostPath:
-              #     path: /dev/dri
-              #     type: Directory
-              - name: sysfs
-                hostPath:
-                  path: /sys/class/drm
-                  type: Directory
-            nodeSelector:
-              kubernetes.io/hostname: mercy
-              intel.feature.node.kubernetes.io/gpu: null
-              kubernetes.io/arch: null
-            tolerations:
-              - effect: NoSchedule
-                key: node.kubernetes.io/nuc
-                operator: Exists
-    target:
-      kind: DaemonSet
-      labelSelector: app=intel-gpu-plugin
+  - daemonset.yaml
+#   - https://github.com/intel/intel-device-plugins-for-kubernetes/deployments/gpu_plugin/overlays/nfd_labeled_nodes?ref=main
+# patches:
+#   - patch: |
+#       apiVersion: apps/v1
+#       kind: DaemonSet
+#       metadata:
+#         name: all
+#       spec:
+#         template:
+#           metadata:
+#             labels:
+#               policy.gatekeeper.sh/ignore: "true"
+#           spec:
+#             containers:
+#               - name: intel-gpu-plugin
+#                 image: intel/intel-gpu-plugin:0.37.1
+#                 args:
+#                   # - -prefix=/host
+#                   - -shared-dev-num
+#                   - "2"
+#                 volumeMounts:
+#                   - name: devfs
+#                     mountPath: /dev/dri
+#                     readOnly: true
+#                   - name: sysfs
+#                     mountPath: /sys/class/drm
+#                     readOnly: true
+#             volumes:
+#               # - name: devfs
+#               #   hostPath:
+#               #     path: /dev/dri
+#               #     type: Directory
+#               - name: sysfs
+#                 hostPath:
+#                   path: /sys/class/drm
+#                   type: Directory
+#             nodeSelector:
+#               kubernetes.io/hostname: mercy
+#               intel.feature.node.kubernetes.io/gpu: null
+#               kubernetes.io/arch: null
+#             tolerations:
+#               - effect: NoSchedule
+#                 key: node.kubernetes.io/nuc
+#                 operator: Exists
+#     target:
+#       kind: DaemonSet
+#       labelSelector: app=intel-gpu-plugin

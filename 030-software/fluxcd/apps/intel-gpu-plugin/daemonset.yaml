@@ -1,0 +1,84 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: intel-gpu-plugin
+spec:
+  revisionHistoryLimit: 0
+  selector:
+    matchLabels:
+      app: intel-gpu-plugin
+  template:
+    metadata:
+      labels:
+        app: intel-gpu-plugin
+        policy.gatekeeper.sh/ignore: "true"
+    spec:
+      automountServiceAccountToken: false
+      containers:
+      - args:
+        - -shared-dev-num
+        - "2"
+        env:
+        - name: NODE_NAME
+          valueFrom:
+            fieldRef:
+              apiVersion: v1
+              fieldPath: spec.nodeName
+        - name: HOST_IP
+          valueFrom:
+            fieldRef:
+              apiVersion: v1
+              fieldPath: status.hostIP
+        image: intel/intel-gpu-plugin:0.37.1
+        name: intel-gpu-plugin
+        resources:
+          limits:
+            cpu: 100m
+            memory: 115Mi
+          requests:
+            cpu: 40m
+            memory: 45Mi
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+          readOnlyRootFilesystem: true
+          seLinuxOptions:
+            type: container_device_plugin_t
+          seccompProfile:
+            type: RuntimeDefault
+        volumeMounts:
+        - mountPath: /dev/dri
+          name: devfs
+          readOnly: true
+        - mountPath: /sys/class/drm
+          name: sysfs
+          readOnly: true
+        - mountPath: /var/lib/kubelet/device-plugins
+          name: kubeletsockets
+        - mountPath: /var/run/cdi
+          name: cdipath
+      nodeSelector:
+        kubernetes.io/hostname: mercy
+      tolerations:
+      - effect: NoSchedule
+        key: node.kubernetes.io/nuc
+        operator: Exists
+      volumes:
+      - hostPath:
+          path: /sys/class/drm
+          type: Directory
+        name: sysfs
+      - hostPath:
+          path: /dev
+          type: Directory
+        name: devfs
+      - hostPath:
+          path: /var/lib/kubelet/device-plugins
+          type: ""
+        name: kubeletsockets
+      - hostPath:
+          path: /var/run/cdi
+          type: DirectoryOrCreate
+        name: cdipath
