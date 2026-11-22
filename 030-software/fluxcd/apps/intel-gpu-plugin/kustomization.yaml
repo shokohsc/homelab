@@ -24,17 +24,17 @@ patches:
                   - -shared-dev-num
                   - "2"
                 volumeMounts:
-                  - name: devfs
-                    mountPath: /host/dev/dri
-                    readOnly: true
+                  # - name: devfs
+                  #   mountPath: /host/dev/dri
+                  #   readOnly: true
                   - name: sysfs
                     mountPath: /host/sys/class/drm
                     readOnly: true
             volumes:
-              - name: devfs
-                hostPath:
-                  path: /dev/dri
-                  type: Directory
+              # - name: devfs
+              #   hostPath:
+              #     path: /dev/dri
+              #     type: Directory
               - name: sysfs
                 hostPath:
                   path: /sys/class/drm
