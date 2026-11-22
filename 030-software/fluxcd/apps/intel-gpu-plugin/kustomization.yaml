@@ -38,6 +38,7 @@ patches:
               - name: sysfs
                 hostPath:
                   path: /sys/class/drm
+                  type: Directory
             nodeSelector:
               kubernetes.io/hostname: mercy
               intel.feature.node.kubernetes.io/gpu: null
