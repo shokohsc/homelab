@@ -25,7 +25,7 @@ patches:
                   - "2"
                 volumeMounts:
                   - name: sysfs
-                    mountPath: /sys/class/drm
+                    mountPath: /host/sys/class/drm
                     readOnly: true
             volumes:
               - name: sysfs
