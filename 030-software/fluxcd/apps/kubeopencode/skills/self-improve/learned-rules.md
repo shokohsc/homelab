@@ -18,3 +18,6 @@
 - Apps gated by a one-time launch token need a documented token-retrieval step (e.g. container logs) or a stable secret; the dashboard URL alone returns 401.
 - Apps that generate signing keys on first start must persist them on a volume; losing them invalidates every token/cert signed with them after a restart.
 - When a gateway terminates TLS, override container commands that hardcode TLS keyfiles to plain HTTP and point client-facing URL/port env vars at the external endpoint.
+- A single-replica workload in a cluster running a descheduler is ping-ponged by LowNodeUtilization; protect it with the descheduler prefer-no-eviction annotation plus DefaultEvictor noEvictionPolicy: Mandatory (the default Preferred is only advisory).
+- When a pod "keeps crashing", separate pod-level evictions (descheduler/kubelet events) from container-level restarts (probe/OOM); they compound, so fixing one still leaves the other loop.
+- Size kube-state-metrics memory for the initial all-namespace informer sync, not steady state; a tight limit stalls the process and trips liveness probes.

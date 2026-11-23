@@ -73,3 +73,14 @@
   - What: the fastapi-dls image CMD requires `webserver.key`/`webserver.crt` for uvicorn; overriding `command` to plain HTTP behind the cilium gateway removed the need to provision any webserver certificate while guests still reach the service over HTTPS.
   - Why: upstream reverse-proxy examples show TLS termination at the proxy is the supported pattern, and the client-token env vars (`DLS_URL`/`DLS_PORT`) describe the external endpoint, not the container's.
   - Benefit: TLS-in-TLS double termination and self-signed cert babysitting are avoided for gateway-fronted apps.
+
+## 2026-11-23
+
+- learned-rules: a single-replica workload is ping-ponged by the descheduler's LowNodeUtilization; opt out with `descheduler.alpha.kubernetes.io/prefer-no-eviction: "true"` plus `DefaultEvictor` `noEvictionPolicy: "Mandatory"` (the default `Preferred` is only advisory).
+  - What: the kube-state-metrics pod was evicted every ~5 minutes (12 events/hour) and forced into repeated cold starts; the annotation alone is ignored under the default policy.
+  - Why: LowNodeUtilization always picks the cheapest single replica to rebalance, and without a redundant copy the eviction only causes churn.
+  - Benefit: singleton monitoring pods stay put instead of restarting on every descheduler cycle.
+- learned-rules: separate pod-level evictions from container-level restarts when diagnosing a "crashing" pod.
+  - What: the same pod showed both descheduler eviction events and liveness-probe failures followed by `exitCode: 2`; the tight `64Mi` limit stalled the cold-start informer sync while the descheduler kept triggering those cold starts.
+  - Why: `kubectl get pods` shows one symptom, but eviction events and container `lastState` explain two different loops that compound.
+  - Benefit: fixes address both the eviction churn and the resource/probe sizing instead of only half the loop.
