@@ -57,6 +57,8 @@ spec:
               add:
                 - DAC_OVERRIDE
                 - CHOWN
+                - SETUID
+                - SETGID
           env:
             - name: DATA_DIR
               value: /data
