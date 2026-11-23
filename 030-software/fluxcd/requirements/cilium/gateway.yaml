@@ -59,29 +59,29 @@ spec:
             matchLabels:
               app: squid
 
-    - name: postgres
-      port: 5432
-      protocol: TCP
-      allowedRoutes:
-        kinds:
-          - kind: TCPRoute
-        namespaces:
-          from: Selector
-          selector:
-            matchLabels:
-              app.kubernetes.io/name: cloudnative-pg
+    # - name: postgres
+    #   port: 5432
+    #   protocol: TCP
+    #   allowedRoutes:
+    #     kinds:
+    #       - kind: TCPRoute
+    #     namespaces:
+    #       from: Selector
+    #       selector:
+    #         matchLabels:
+    #           app.kubernetes.io/name: cloudnative-pg
 
-    - name: ferretdb
-      port: 27017
-      protocol: TCP
-      allowedRoutes:
-        kinds:
-          - kind: TCPRoute
-        namespaces:
-          from: Selector
-          selector:
-            matchLabels:
-              app: ferretdb
+    # - name: ferretdb
+    #   port: 27017
+    #   protocol: TCP
+    #   allowedRoutes:
+    #     kinds:
+    #       - kind: TCPRoute
+    #     namespaces:
+    #       from: Selector
+    #       selector:
+    #         matchLabels:
+    #           app: ferretdb
 
     - name: plex
       port: 32400
@@ -230,7 +230,6 @@ spec:
           selector:
             matchLabels:
               app: samba
-
     - name: smb
       port: 445
       protocol: TCP
@@ -244,7 +243,7 @@ spec:
               app: samba
 
     - name: tcpmux
-      port: 32469
+      port: 8081
       protocol: TCP
       allowedRoutes:
         kinds:
@@ -255,7 +254,7 @@ spec:
             matchLabels:
               app: neko
     - name: udpmux
-      port: 1900
+      port: 8082
       protocol: UDP
       allowedRoutes:
         kinds:
