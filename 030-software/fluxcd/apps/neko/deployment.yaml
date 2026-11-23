@@ -41,7 +41,7 @@ spec:
               app: llamacpp
       containers:
         - name: neko
-          image: ghcr.io/m1k1o/neko/nvidia-firefox:3.1.6
+          image: ghcr.io/m1k1o/neko/nvidia-firefox:3.2.0
           securityContext:
             allowPrivilegeEscalation: false
             readOnlyRootFilesystem: true
