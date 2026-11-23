@@ -82,7 +82,11 @@ spec:
           volumeMounts:
             - name: data
               mountPath: /meili_data
+            - name: temp
+              mountPath: /tmp
       volumes:
         - name: data
           persistentVolumeClaim:
             claimName: meilisearch
+        - name: temp
+          emptyDir: {}
