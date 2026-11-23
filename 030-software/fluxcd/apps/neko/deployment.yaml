@@ -54,6 +54,12 @@ spec:
             capabilities:
               drop:
                 - ALL
+              add:
+                - DAC_OVERRIDE
+                - CHOWN
+                - SETUID
+                - SETGID
+                - FOWNER
           env:
             - name: TZ
               value: ${timezone}
