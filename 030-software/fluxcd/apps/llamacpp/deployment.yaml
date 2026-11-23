@@ -66,18 +66,18 @@ spec:
             - gemma-4-E4B-it-Q4_0
             - --models-dir
             - /models
+            # - --models-preset
+            # - /app/config.ini
             - --models-max
             - "0"
             - --hf-token
             - $HUGGINGFACE_TOKEN
-            # - --models-preset 
-            # - /app/config.ini
             - --ctx-size
             - "0"
             - --parallel
-            - "1"
+            - "2"
             - --gpu-layers
-            - "99"
+            - "999"
             - --flash-attn
             - on
             - --cache-type-k
@@ -85,9 +85,9 @@ spec:
             - --cache-type-v
             - q8_0
             - --batch-size
-            - "2048"
+            - "4096"
             - --ubatch-size
-            - "1024"
+            - "4096"
           env:
             # - name: "NVIDIA_DRIVER_CAPABILITIES"
             #   value: "compute,utility"

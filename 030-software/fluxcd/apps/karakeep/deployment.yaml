@@ -1,0 +1,106 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: karakeep
+  labels:
+    stateful: "true"
+spec:
+  revisionHistoryLimit: 0
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: karakeep
+  template:
+    metadata:
+      labels:
+        app: karakeep
+    spec:
+      automountServiceAccountToken: false
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        seccompProfile:
+          type: RuntimeDefault
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              podAffinityTerm:
+                topologyKey: kubernetes.io/hostname
+                labelSelector:
+                  matchLabels:
+                    app: karakeep
+      topologySpreadConstraints:
+        - maxSkew: 1
+          topologyKey: kubernetes.io/hostname
+          whenUnsatisfiable: ScheduleAnyway
+          labelSelector:
+            matchLabels:
+              app: karakeep
+      containers:
+        - name: karakeep
+          image: ghcr.io/karakeep-app/karakeep:0.35.0
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+            capabilities:
+              drop:
+                - ALL
+          env:
+            - name: DATA_DIR
+              value: /data
+            - name: MEILI_ADDR
+              value: http://meilisearch.meilisearch.svc.cluster.local
+            - name: MEILI_MASTER_KEY
+              value: "qmYF/hseka0kMHX6uDSZIgUlyA9FHzpYMQZkC3p31eFgtyuX"
+            - name: NEXTAUTH_URL
+              value: https://karakeep.${domain}
+            - name: NEXTAUTH_SECRET
+              value: "77CfmX22aWunUCyE4tK9Pcj58if8LPvtK61twEwDfQnMT/z4"
+            - name: BROWSER_WEBSOCKET_URL
+              value: ws://browserless.browserless:80/chromium/playwright?token=EeJ4Ou3waagh7goMohsah6sooTeehoom&blockAds=true&headless=false&stealth=true
+            - name: BROWSER_CONNECT_ONDEMAND
+              value: "true"
+            - name: OLLAMA_BASE_URL
+              value: http://llamacpp.llamacpp.svc.cluster.local:80
+            - name: INFERENCE_TEXT_MODEL
+              value: "Gemma-4-E4B-Uncensored-HauhauCS-Aggressive-Q8_K_P"
+            - name: INFERENCE_IMAGE_MODEL
+              value: "llava-phi-3-mini-int4"
+            - name: EMBEDDING_TEXT_MODEL
+              value: "nomic-embed-text-v1-GGUF"
+          ports:
+            - name: http
+              containerPort: 3000
+              protocol: TCP
+          startupProbe:
+            tcpSocket:
+              port: http
+            initialDelaySeconds: 120
+            failureThreshold: 30
+            periodSeconds: 10
+          livenessProbe:
+            tcpSocket:
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+          resources:
+            requests:
+              cpu: 100m
+              memory: 512M
+            limits:
+              memory: 2048M
+          volumeMounts:
+            - name: data
+              mountPath: /data
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: karakeep

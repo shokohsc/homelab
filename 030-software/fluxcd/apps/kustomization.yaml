@@ -43,12 +43,14 @@ resources:
   - jellyfin
   - kaneo
   - kaniko
+  - karakeep
   - konflate
   - kube-state-metrics
   - kube-system
   - kubeopencode
   - maddy
   - matrix
+  - meilisearch
   - metrics-server
   - miniflux
   - mitmproxy

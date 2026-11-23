@@ -1,0 +1,72 @@
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: backup
+spec:
+  schedule: "0 5 * * *"
+  successfulJobsHistoryLimit: 0
+  failedJobsHistoryLimit: 1
+  jobTemplate:
+    spec:
+      backoffLimit: 0
+      template:
+        spec:
+          restartPolicy: OnFailure
+          securityContext:
+            fsGroup: 1000
+          automountServiceAccountToken: false
+          containers:
+          - name: backup
+            image: offen/docker-volume-backup:v2.49.1@sha256:e1da571e739d73f633f19e7a9f324007907089ffd80b3b7a1d71de5b87f80d77
+            command:
+              - backup
+            env:
+              - name: BACKUP_RETENTION_DAYS
+                value: '1'
+            volumeMounts:
+              - name: data
+                mountPath: /backup
+              - name: shared
+                mountPath: /archive
+          - name: curl-jq
+            image: badouralix/curl-jq:alpine
+            command: ["/bin/backup-bookmarks.sh"]
+            env:
+              - name: TOKEN
+                valueFrom:
+                  secretKeyRef:
+                    name: karakeep
+                    key: jwt
+            volumeMounts:
+              - name: scripts
+                mountPath: /bin/backup-bookmarks.sh
+                subPath: backup-bookmarks.sh
+              - name: tmp
+                mountPath: /tmp
+              - name: shared
+                mountPath: /archive
+          volumes:
+            - name: tmp
+              emptyDir: {}
+            - name: scripts
+              configMap:
+                name: scripts
+                defaultMode: 0755
+            - name: data
+              persistentVolumeClaim:
+                claimName: karakeep
+            - name: shared
+              nfs:
+                server: nfs-shared.nfs-shared.svc.cluster.local
+                path: /backups/karakeep
+          affinity:
+            podAffinity:
+              requiredDuringSchedulingIgnoredDuringExecution:
+              - labelSelector:
+                  matchExpressions:
+                  - key: app.kubernetes.io/name
+                    operator: In
+                    values:
+                    - karakeep
+                topologyKey: kubernetes.io/hostname
