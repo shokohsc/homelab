@@ -18,6 +18,7 @@ spec:
         app: karakeep
         policy.gatekeeper.sh/ignore-psp-pods-allowed-user-ranges: "true"
         policy.gatekeeper.sh/ignore-psp-readonlyrootfilesystem: "true"
+        policy.gatekeeper.sh/ignore-psp-capabilities-baseline: "true"
     spec:
       automountServiceAccountToken: false
       securityContext:
@@ -53,6 +54,9 @@ spec:
             capabilities:
               drop:
                 - ALL
+              add:
+                - DAC_OVERRIDE
+                - CHOWN
           env:
             - name: DATA_DIR
               value: /data
