@@ -5,6 +5,8 @@ profiles:
   - name: TooManyRestarts
     pluginConfig:
     - name: "DefaultEvictor"
+      args:
+        noEvictionPolicy: "Mandatory"
     - name: "RemovePodsViolatingInterPodAntiAffinity"
     - name: "RemoveDuplicates"
     - name: "LowNodeUtilization"

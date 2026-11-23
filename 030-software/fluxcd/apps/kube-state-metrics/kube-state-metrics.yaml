@@ -39,8 +39,16 @@ spec:
     resources:
       requests:
         cpu: 100m
+        memory: 128Mi
       limits:
-        memory: 64Mi
+        memory: 256Mi
+    startupProbe:
+      enabled: true
+      failureThreshold: 30
+      periodSeconds: 10
+      timeoutSeconds: 5
+    podAnnotations:
+      descheduler.alpha.kubernetes.io/prefer-no-eviction: "true"
     affinity:
       nodeAffinity:
         preferredDuringSchedulingIgnoredDuringExecution:
