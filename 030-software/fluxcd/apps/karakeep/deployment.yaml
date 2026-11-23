@@ -16,13 +16,15 @@ spec:
     metadata:
       labels:
         app: karakeep
+        policy.gatekeeper.sh/ignore-psp-pods-allowed-user-ranges: "true"
+        policy.gatekeeper.sh/ignore-psp-readonlyrootfilesystem: "true"
     spec:
       automountServiceAccountToken: false
       securityContext:
-        runAsNonRoot: true
-        runAsUser: 1000
-        runAsGroup: 1000
-        fsGroup: 1000
+        # runAsNonRoot: true
+        # runAsUser: 1000
+        # runAsGroup: 1000
+        # fsGroup: 1000
         seccompProfile:
           type: RuntimeDefault
       affinity:
@@ -46,8 +48,8 @@ spec:
           image: ghcr.io/karakeep-app/karakeep:0.35.0
           securityContext:
             allowPrivilegeEscalation: false
-            readOnlyRootFilesystem: true
-            runAsNonRoot: true
+            # readOnlyRootFilesystem: true
+            # runAsNonRoot: true
             capabilities:
               drop:
                 - ALL

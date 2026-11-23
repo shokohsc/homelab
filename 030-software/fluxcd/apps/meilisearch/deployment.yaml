@@ -53,7 +53,7 @@ spec:
                 - ALL
           args:
             - /bin/meilisearch
-            - --experimental-dumpless-upgrade
+            # - --experimental-dumpless-upgrade
           env:
             - name: MEILI_NO_ANALYTICS
               value: "true"
