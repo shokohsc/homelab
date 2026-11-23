@@ -75,7 +75,7 @@ spec:
             - name: INFERENCE_IMAGE_MODEL
               value: "llava-phi-3-mini-int4"
             - name: EMBEDDING_TEXT_MODEL
-              value: "nomic-embed-text-v1-GGUF"
+              value: "nomic-embed-text-v1.Q8_0"
           ports:
             - name: http
               containerPort: 3000
