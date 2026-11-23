@@ -59,6 +59,7 @@ spec:
                 - CHOWN
                 - SETUID
                 - SETGID
+                - FOWNER
           env:
             - name: DATA_DIR
               value: /data
