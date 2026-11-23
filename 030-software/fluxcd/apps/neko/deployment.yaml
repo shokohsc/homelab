@@ -17,6 +17,7 @@ spec:
       labels:
         app: neko
         policy.gatekeeper.sh/ignore-psp-pods-allowed-user-ranges: "true"
+        policy.gatekeeper.sh/ignore-psp-readonlyrootfilesystem: "true"
     spec:
       automountServiceAccountToken: false
       runtimeClassName: nvidia
@@ -48,7 +49,7 @@ spec:
           image: ghcr.io/m1k1o/neko/nvidia-firefox:3.2.0
           securityContext:
             allowPrivilegeEscalation: false
-            readOnlyRootFilesystem: true
+            # readOnlyRootFilesystem: true
             # runAsNonRoot: true
             capabilities:
               drop:
