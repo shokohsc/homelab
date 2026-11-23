@@ -242,3 +242,26 @@ spec:
           selector:
             matchLabels:
               app: samba
+
+    - name: tcpmux
+      port: 32469
+      protocol: TCP
+      allowedRoutes:
+        kinds:
+          - kind: TCPRoute
+        namespaces:
+          from: Selector
+          selector:
+            matchLabels:
+              app: neko
+    - name: udpmux
+      port: 1900
+      protocol: UDP
+      allowedRoutes:
+        kinds:
+          - kind: UDPRoute
+        namespaces:
+          from: Selector
+          selector:
+            matchLabels:
+              app: neko

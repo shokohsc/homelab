@@ -57,6 +57,7 @@ resources:
   # - mongoku
   - motrix
   - nats
+  - neko
   - nfs-downloads
   - nosterm
   # - nostr-gateway

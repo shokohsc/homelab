@@ -1,0 +1,131 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: neko
+  annotations:
+    configmap.reloader.stakater.com/reload: "policies"
+spec:
+  selector:
+    matchLabels:
+      app: neko
+  template:
+    metadata:
+      labels:
+        app: neko
+    spec:
+      automountServiceAccountToken: false
+      runtimeClassName: nvidia
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        seccompProfile:
+          type: RuntimeDefault
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              podAffinityTerm:
+                topologyKey: kubernetes.io/hostname
+                labelSelector:
+                  matchLabels:
+                    app: llamacpp
+      topologySpreadConstraints:
+        - maxSkew: 1
+          topologyKey: kubernetes.io/hostname
+          whenUnsatisfiable: ScheduleAnyway
+          labelSelector:
+            matchLabels:
+              app: llamacpp
+      containers:
+        - name: neko
+          image: ghcr.io/m1k1o/neko/nvidia-firefox:3.1.6
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+            capabilities:
+              drop:
+                - ALL
+          env:
+            - name: TZ
+              value: ${timezone}
+            - name: NEKO_DESKTOP_SCREEN
+              value: 1920x1080@30
+            - name: NEKO_MEMBER_MULTIUSER_USER_PASSWORD
+              value: neko
+            - name: NEKO_MEMBER_PROVIDER
+              value: multiuser
+            - name: NEKO_MEMBER_MULTIUSER_ADMIN_PASSWORD
+              value: admin
+            - name: NEKO_WEBRTC_TCPMUX
+              value: '8081'
+            - name: NEKO_WEBRTC_UDPMUX
+              value: '8082'
+            - name: NEKO_WEBRTC_NAT1TO1
+              value: ${vip}
+            - name: NEKO_SESSION_IMPLICIT_HOSTING
+              value: "true"
+            - name: NEKO_WEBRTC_ICELITE
+              value: "false"
+            # - name: NEKO_MAX_FPS
+            #   value: "30"
+            # - name: NEKO_HWENC
+            #   value: VAAPI
+            - name: NEKO_CAPTURE_VIDEO_CODEC
+              value: h264
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+            - name: tcpmux
+              containerPort: 8081
+              protocol: TCP
+            - name: udpmux
+              containerPort: 8082
+              protocol: UDP
+          startupProbe:
+            tcpSocket:
+              port: http
+          livenessProbe:
+            tcpSocket:
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+          resources:
+            limits:
+              nvidia.com/gpu.shared: "1"
+              memory: 4096M
+            requests:
+              cpu: 2
+              memory: 2048M
+          volumeMounts:
+            - name: shm
+              mountPath: /dev/shm
+            - name: policies
+              mountPath: /usr/lib/firefox/distribution/policies.json
+              subPath: firefox.json
+            - name: downloads
+              mountPath: /downloads
+      volumes:
+        - name: shm
+          emptyDir:
+            medium: Memory
+            sizeLimit: 2G
+        - name: policies
+          configMap:
+            name: policies
+            defaultMore: 0644
+        - name: downloads
+          nfs:
+            server: ${nfsDownloadsServer}
+            path: /neko
+      tolerations:
+        - key: nvidia
+          operator: Exists
+          effect: NoSchedule
+

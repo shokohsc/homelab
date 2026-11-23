@@ -1,0 +1,51 @@
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: neko
+  annotations:
+    dashboard.${domain}/name: neko
+    dashboard.${domain}/url: https://neko.${domain}/?usr=admin&pwd=admin
+    dashboard.${domain}/icon: firefox
+spec:
+  hostnames:
+  - neko.${domain}
+  parentRefs:
+  - name: cilium
+    namespace: cilium
+  rules:
+  - backendRefs:
+    - name: neko
+      port: 80
+    matches:
+    - path:
+        type: PathPrefix
+        value: /
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: TCPRoute
+metadata:
+  name: tcpmux
+spec:
+  parentRefs:
+    - name: cilium
+      namespace: cilium
+      sectionName: tcpmux
+  rules:
+    - backendRefs:
+        - name: tcpmux
+          port: 8081
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: UDPRoute
+metadata:
+  name: udpmux
+spec:
+  parentRefs:
+    - name: cilium
+      namespace: cilium
+      sectionName: udpmux
+  rules:
+    - backendRefs:
+        - name: udpmux
+          port: 8082
