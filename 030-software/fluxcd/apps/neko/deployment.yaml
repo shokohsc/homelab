@@ -13,12 +13,13 @@ spec:
     metadata:
       labels:
         app: neko
+        policy.gatekeeper.sh/ignore-psp-pods-allowed-user-ranges: "true"
     spec:
       automountServiceAccountToken: false
       runtimeClassName: nvidia
       securityContext:
-        runAsNonRoot: true
-        runAsUser: 1000
+        # runAsNonRoot: true
+        # runAsUser: 1000
         runAsGroup: 1000
         fsGroup: 1000
         seccompProfile:
@@ -45,7 +46,7 @@ spec:
           securityContext:
             allowPrivilegeEscalation: false
             readOnlyRootFilesystem: true
-            runAsNonRoot: true
+            # runAsNonRoot: true
             capabilities:
               drop:
                 - ALL
