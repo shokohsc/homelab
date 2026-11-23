@@ -104,6 +104,8 @@ spec:
               cpu: 2
               memory: 2048M
           volumeMounts:
+            - name: temp
+              mountPath: /tmp
             - name: shm
               mountPath: /dev/shm
             - name: policies
@@ -112,6 +114,8 @@ spec:
             - name: downloads
               mountPath: /downloads
       volumes:
+        - name: temp
+          emptyDir: {}
         - name: shm
           emptyDir:
             medium: Memory
