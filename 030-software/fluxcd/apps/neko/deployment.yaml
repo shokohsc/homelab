@@ -36,14 +36,14 @@ spec:
                 topologyKey: kubernetes.io/hostname
                 labelSelector:
                   matchLabels:
-                    app: llamacpp
+                    app: neko
       topologySpreadConstraints:
         - maxSkew: 1
           topologyKey: kubernetes.io/hostname
           whenUnsatisfiable: ScheduleAnyway
           labelSelector:
             matchLabels:
-              app: llamacpp
+              app: neko
       containers:
         - name: neko
           image: ghcr.io/m1k1o/neko/nvidia-firefox:3.2.0
@@ -81,10 +81,24 @@ spec:
               value: "true"
             - name: NEKO_WEBRTC_ICELITE
               value: "false"
-            # - name: NEKO_MAX_FPS
-            #   value: "30"
-            # - name: NEKO_HWENC
-            #   value: VAAPI
+            - name: NEKO_CAPTURE_VIDEO_PIPELINE
+              value: |
+                ximagesrc display-name={display} show-pointer=true use-damage=false
+                  ! video/x-raw,framerate=25/1
+                  ! cudaupload ! cudaconvert ! queue
+                  ! video/x-raw(memory:CUDAMemory),format=NV12
+                  ! nvautogpuh264enc
+                    name=encoder
+                    preset=2
+                    gop-size=25
+                    spatial-aq=true
+                    temporal-aq=true
+                    bitrate=4096
+                    vbv-buffer-size=4096
+                    rc-mode=6
+                  ! h264parse config-interval=-1
+                  ! video/x-h264,stream-format=byte-stream
+                  ! appsink name=appsink
             - name: NEKO_CAPTURE_VIDEO_CODEC
               value: h264
           ports:
@@ -134,7 +148,7 @@ spec:
         - name: policies
           configMap:
             name: policies
-            defaultMore: 0644
+            defaultMode: 0644
         - name: downloads
           nfs:
             server: ${nfsDownloadsServer}
