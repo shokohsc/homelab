@@ -22,5 +22,21 @@ spec:
     - toEndpoints:
         - matchLabels:
             io.kubernetes.pod.namespace: samba
+    # Samba file sharing
+    - toEndpoints:
+        - matchLabels:
+            io.kubernetes.pod.namespace: samba
+      toPorts:
+        - ports:
+            - port: "139"
+              protocol: TCP
+          rules:
+            dns: []
+    - toPorts:
+        - ports:
+            - port: "445"
+              protocol: TCP
+          rules:
+            dns: []
     - toCIDR:
         - ${cidr}

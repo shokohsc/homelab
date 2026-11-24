@@ -24,5 +24,15 @@ spec:
             io.kubernetes.pod.namespace: sftpgo
         - matchLabels:
             io.kubernetes.pod.namespace: cnpg-system
+    # Sftpgo file transfer
+    - toEndpoints:
+        - matchLabels:
+            io.kubernetes.pod.namespace: sftpgo
+      toPorts:
+        - ports:
+            - port: "2022"
+              protocol: TCP
+          rules:
+            dns: []
     - toCIDR:
         - ${cidr}

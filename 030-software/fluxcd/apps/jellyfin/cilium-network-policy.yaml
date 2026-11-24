@@ -22,6 +22,28 @@ spec:
     - toEndpoints:
         - matchLabels:
             io.kubernetes.pod.namespace: jellyfin
+    # Jellyfin web interface
+    - toEndpoints:
+        - matchLabels:
+            io.kubernetes.pod.namespace: jellyfin
+      toPorts:
+        - ports:
+            - port: "8096"
+              protocol: TCP
+          rules:
+            dns: []
+    - toPorts:
+        - ports:
+            - port: "7359"
+              protocol: TCP
+          rules:
+            dns: []
+    - toPorts:
+        - ports:
+            - port: "1900"
+              protocol: UDP
+          rules:
+            dns: []
     - toCIDR:
         - ${cidr}
     - toEntities:
