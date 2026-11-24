@@ -18,3 +18,5 @@
 - Apps gated by a one-time launch token need a documented token-retrieval step (e.g. container logs) or a stable secret; the dashboard URL alone returns 401.
 - Apps that generate signing keys on first start must persist them on a volume; losing them invalidates every token/cert signed with them after a restart.
 - When a gateway terminates TLS, override container commands that hardcode TLS keyfiles to plain HTTP and point client-facing URL/port env vars at the external endpoint.
+- Copy-pasted workload blocks (affinity, topology spread) often keep the source app's labels; verify every selector matches the workload's own pods.
+- Features that default on only for the default AI provider silently disable when a self-hosted provider is set; explicitly set the enable flag and the model's dimensions.
