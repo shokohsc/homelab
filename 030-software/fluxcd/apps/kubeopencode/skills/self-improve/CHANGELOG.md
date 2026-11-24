@@ -73,3 +73,14 @@
   - What: the fastapi-dls image CMD requires `webserver.key`/`webserver.crt` for uvicorn; overriding `command` to plain HTTP behind the cilium gateway removed the need to provision any webserver certificate while guests still reach the service over HTTPS.
   - Why: upstream reverse-proxy examples show TLS termination at the proxy is the supported pattern, and the client-token env vars (`DLS_URL`/`DLS_PORT`) describe the external endpoint, not the container's.
   - Benefit: TLS-in-TLS double termination and self-signed cert babysitting are avoided for gateway-fronted apps.
+
+## 2026-11-24
+
+- learned-rules: verify every selector in copied workload blocks matches the workload's own labels.
+  - What: the neko Deployment's podAntiAffinity and topologySpreadConstraints still selected `app: llamacpp`; the ConfigMap volume also had a `defaultMore` typo instead of `defaultMode`.
+  - Why: these fields render fine and the pod schedules, so review-by-eye misses that affinity/spread and volume defaults are wrong.
+  - Benefit: comparing manifests against docs catches silent copy-paste residue before it affects placement or permissions.
+- learned-rules: explicitly enable AI features that default on only for the default provider.
+  - What: Karakeep's `EMBEDDING_ENABLE_AUTO_INDEXING` defaults to false when `OLLAMA_BASE_URL` is set, and `EMBEDDING_DIMENSIONS` stayed at 1536 for a 768-dimension model, so semantic search was off.
+  - Why: provider-specific defaults are easy to miss when only the model name and base URL are configured.
+  - Benefit: self-hosted inference setups get working semantic features instead of silently disabled ones.
