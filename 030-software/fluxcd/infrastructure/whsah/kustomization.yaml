@@ -4,5 +4,6 @@ namespace: whsah
 resources:
   - namespace.yaml
   - secret.yaml
+  - cilium-network-policy.yaml
   - provider-config.yaml
   - proxmoxidentity.yaml

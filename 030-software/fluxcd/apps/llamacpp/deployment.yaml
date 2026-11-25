@@ -61,9 +61,9 @@ spec:
             - --port
             - "8080"
             # - --model
-            # - /models/gemma-4-E4B-it-Q4_0.gguf
+            # - /models/Gemma-4-E4B-Uncensored-HauhauCS-Aggressive-Q8_K_P.gguf
             - --alias
-            - gemma-4-E4B-it-Q4_0
+            - Gemma-4-E4B-Uncensored-HauhauCS-Aggressive-Q8_K_P
             - --models-dir
             - /models
             # - --models-preset

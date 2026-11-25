@@ -21,6 +21,6 @@ spec:
               - matchPattern: "*"
     - toEndpoints:
         - matchLabels:
-            io.kubernetes.pod.namespace: restfox
-    - toCIDR:
-        - ${cidr}
+            io.kubernetes.pod.namespace: sidekick
+        - matchLabels:
+            io.kubernetes.pod.namespace: buzz

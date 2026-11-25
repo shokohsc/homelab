@@ -30,6 +30,8 @@ spec:
             io.kubernetes.pod.namespace: browserless
         - matchLabels:
             io.kubernetes.pod.namespace: loki
+    - toCIDR:
+        - ${cidr}
     - toEntities:
         - kube-apiserver
-        - world
+        - cluster
