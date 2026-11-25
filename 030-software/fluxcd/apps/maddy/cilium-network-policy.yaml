@@ -1,0 +1,61 @@
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: maddy
+spec:
+  endpointSelector: {}
+  egress:
+    # DNS
+    - toEndpoints:
+        - matchLabels:
+            io.kubernetes.pod.namespace: kube-system
+            k8s-app: kube-dns
+      toPorts:
+        - ports:
+            - port: "53"
+              protocol: UDP
+            - port: "53"
+              protocol: TCP
+          rules:
+            dns:
+              - matchPattern: "*"
+    - toEndpoints:
+        - matchLabels:
+            io.kubernetes.pod.namespace: maddy
+        - matchLabels:
+            io.kubernetes.pod.namespace: cnpg-system
+        - matchLabels:
+            io.kubernetes.pod.namespace: nfs-shared
+    # Maddy web interface and API
+    - toEndpoints:
+        - matchLabels:
+            io.kubernetes.pod.namespace: maddy
+      toPorts:
+        - ports:
+            - port: "143"
+              protocol: TCP
+          rules:
+            dns: []
+    - toPorts:
+        - ports:
+            - port: "993"
+              protocol: TCP
+          rules:
+            dns: []
+    - toPorts:
+        - ports:
+            - port: "587"
+              protocol: TCP
+          rules:
+            dns: []
+    - toPorts:
+        - ports:
+            - port: "465"
+              protocol: TCP
+          rules:
+            dns: []
+    - toCIDR:
+        - ${cidr}
+    - toEntities:
+        - kube-apiserver
+        - world

@@ -59,29 +59,29 @@ spec:
             matchLabels:
               app: squid
 
-    # - name: postgres
-    #   port: 5432
-    #   protocol: TCP
-    #   allowedRoutes:
-    #     kinds:
-    #       - kind: TCPRoute
-    #     namespaces:
-    #       from: Selector
-    #       selector:
-    #         matchLabels:
-    #           app.kubernetes.io/name: cloudnative-pg
+     - name: postgres
+       port: 5432
+       protocol: TCP
+       allowedRoutes:
+         kinds:
+           - kind: TCPRoute
+         namespaces:
+           from: Selector
+           selector:
+             matchLabels:
+               app.kubernetes.io/name: cloudnative-pg
 
-    # - name: ferretdb
-    #   port: 27017
-    #   protocol: TCP
-    #   allowedRoutes:
-    #     kinds:
-    #       - kind: TCPRoute
-    #     namespaces:
-    #       from: Selector
-    #       selector:
-    #         matchLabels:
-    #           app: ferretdb
+     - name: ferretdb
+       port: 27017
+       protocol: TCP
+       allowedRoutes:
+         kinds:
+           - kind: TCPRoute
+         namespaces:
+           from: Selector
+           selector:
+             matchLabels:
+               app: ferretdb
 
     - name: plex
       port: 32400
@@ -117,39 +117,39 @@ spec:
             matchLabels:
               app: plex
 
-    # - name: jellyfin
-    #   port: 8096
-    #   protocol: TCP
-    #   allowedRoutes:
-    #     kinds:
-    #       - kind: TCPRoute
-    #     namespaces:
-    #       from: Selector
-    #       selector:
-    #         matchLabels:
-    #           app: jellyfin
-    # - name: discovery
-    #   port: 7359
-    #   protocol: TCP
-    #   allowedRoutes:
-    #     kinds:
-    #       - kind: TCPRoute
-    #     namespaces:
-    #       from: Selector
-    #       selector:
-    #         matchLabels:
-    #           app: jellyfin
-    # - name: dlna
-    #   port: 1900
-    #   protocol: UDP
-    #   allowedRoutes:
-    #     kinds:
-    #       - kind: UDPRoute
-    #     namespaces:
-    #       from: Selector
-    #       selector:
-    #         matchLabels:
-    #           app: jellyfin
+     - name: jellyfin
+       port: 8096
+       protocol: TCP
+       allowedRoutes:
+         kinds:
+           - kind: TCPRoute
+         namespaces:
+           from: Selector
+           selector:
+             matchLabels:
+               app: jellyfin
+     - name: discovery
+       port: 7359
+       protocol: TCP
+       allowedRoutes:
+         kinds:
+           - kind: TCPRoute
+         namespaces:
+           from: Selector
+           selector:
+             matchLabels:
+               app: jellyfin
+     - name: dlna
+       port: 1900
+       protocol: UDP
+       allowedRoutes:
+         kinds:
+           - kind: UDPRoute
+         namespaces:
+           from: Selector
+           selector:
+             matchLabels:
+               app: jellyfin
 
     - name: imap
       port: 143
