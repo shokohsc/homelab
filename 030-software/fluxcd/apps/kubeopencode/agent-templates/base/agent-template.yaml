@@ -68,7 +68,7 @@ spec:
   config:
     $schema: https://opencode.ai/config.json
     # model: opencode/big-pickle
-    # model: opencode/deepseek-v4.1-flash-free
+    model: opencode/deepseek-v4.1-flash-free
     # model: opencode/hy4-flash-free
     # model: opencode/mimo-v2.6-flash-free
     # model: opencode/jev-1.13-free
@@ -79,8 +79,12 @@ spec:
     # model: opencode/nemotron-3.5-super-vl-free
     # model: opencode/nemotron-3.5-lightning-free
     # model: opencode/tidepool-alpha-free
+    # model: nvidia_custom/deepseek-ai/deepseek-v4.1-flash
+    # model: nvidia_custom/minimaxai/minimax-m3.1-flash
+    # model: nvidia_custom/mistralai/mistral-large-4-1t-a52b
+    # model: nvidia_custom/nemotron-3.5-super-vl-120b-a12b
     # model: nvidia_custom/z-ai/glm-5.3-flash
-    model: llamacpp/NVIDIA-Nemotron-3.5-Bolt-E4B-Q8_0
+    # model: llamacpp/Gemma-4-E4B-Uncensored-HauhauCS-Aggressive-Q8_K_P
 
     provider:
       nvidia_custom:
@@ -93,16 +97,14 @@ spec:
         models:
           deepseek-ai/deepseek-v4.1-flash:
             name: deepseek-ai/deepseek-v4.1-flash
-          z-ai/glm-5.3-flash:
-            name: z-ai/glm-5.3-flash
-          nvidia/nemotron-3.5-super-vl-120b-a12b:
-            name: nvidia/nemotron-3.5-super-vl-120b-a12b
-          nvidia/nemotron-3.5-bolt-e4b:
-            name: nvidia/nemotron-3.5-bolt-e4b
           minimaxai/minimax-m3.1-flash:
             name: minimaxai/minimax-m3.1-flash
           mistralai/mistral-large-4-1t-a52b:
             name: mistralai/mistral-large-4-1t-a52b
+          nvidia/nemotron-3.5-super-vl-120b-a12b:
+            name: nvidia/nemotron-3.5-super-vl-120b-a12b
+          z-ai/glm-5.3-flash:
+            name: z-ai/glm-5.3-flash
       llamacpp:
         npm: "@ai-sdk/openai-compatible"
         name: "llama CPP (homelab)"
@@ -110,10 +112,6 @@ spec:
           # baseURL: "https://llamacpp.${domain}/v1"
           baseURL: "http://llamacpp.llamacpp.svc.cluster.local/v1"
         models:
-          gemma-4-E4B-it-Q4_0:
-            name: gemma-4-E4B-it-Q4_0
-          NVIDIA-Nemotron-3.5-Bolt-E4B-Q8_0:
-            name: NVIDIA-Nemotron-3.5-Bolt-E4B-Q8_0
           Laya-Q8_0:
             name: Laya-Q8_0
           Gemma-4-E4B-Uncensored-HauhauCS-Aggressive-Q8_K_P:
