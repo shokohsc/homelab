@@ -26,7 +26,5 @@ spec:
             io.kubernetes.pod.namespace: nats
         - matchLabels:
             io.kubernetes.pod.namespace: valkey
-    - toCIDR:
-        - ${cidr}
     - toEntities:
         - world

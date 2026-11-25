@@ -21,8 +21,4 @@ spec:
               - matchPattern: "*"
     - toEndpoints:
         - matchLabels:
-            io.kubernetes.pod.namespace: storm
-        - matchLabels:
             io.kubernetes.pod.namespace: deluge
-    - toCIDR:
-        - ${cidr}

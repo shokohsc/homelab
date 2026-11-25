@@ -19,8 +19,3 @@ spec:
           rules:
             dns:
               - matchPattern: "*"
-    - toEndpoints:
-        - matchLabels:
-            io.kubernetes.pod.namespace: tinyauth
-    - toCIDR:
-        - ${cidr}

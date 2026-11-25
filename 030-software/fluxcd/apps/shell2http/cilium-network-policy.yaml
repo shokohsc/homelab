@@ -21,15 +21,11 @@ spec:
               - matchPattern: "*"
     - toEndpoints:
         - matchLabels:
-            io.kubernetes.pod.namespace: shell2http
-        - matchLabels:
             io.kubernetes.pod.namespace: deluge
         - matchLabels:
             io.kubernetes.pod.namespace: sidekick
         - matchLabels:
             io.kubernetes.pod.namespace: victoria-metrics
-    - toCIDR:
-        - ${cidr}
     - toEntities:
         - kube-apiserver
         - world

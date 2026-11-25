@@ -28,5 +28,3 @@ spec:
             io.kubernetes.pod.namespace: valkey
         - matchLabels:
             io.kubernetes.pod.namespace: rustfs
-    - toCIDR:
-        - ${cidr}

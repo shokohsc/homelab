@@ -24,7 +24,5 @@ spec:
             io.kubernetes.pod.namespace: matrix
         - matchLabels:
             io.kubernetes.pod.namespace: cnpg-system
-    - toCIDR:
-        - ${cidr}
     - toEntities:
         - world

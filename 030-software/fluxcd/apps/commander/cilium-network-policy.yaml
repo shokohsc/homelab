@@ -1,12 +1,11 @@
 apiVersion: cilium.io/v2
 kind: CiliumNetworkPolicy
 metadata:
-  name: egress-default-deny
+  name: commander
 spec:
-  endpointSelector: {} # all pods in the namespace
+  endpointSelector: {}
   egress:
-    - toEntities:
-        - kube-apiserver # API server access
+    # DNS
     - toEndpoints:
         - matchLabels:
             io.kubernetes.pod.namespace: kube-system
@@ -20,7 +19,3 @@ spec:
           rules:
             dns:
               - matchPattern: "*"
-    - toCIDR:
-        - 10.42.0.0/16 # cluster pod CIDR
-    - toEntities:
-        - cluster # in-cluster (services, endpoints)

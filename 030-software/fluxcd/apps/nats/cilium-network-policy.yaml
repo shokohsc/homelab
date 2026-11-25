@@ -22,5 +22,3 @@ spec:
     - toEndpoints:
         - matchLabels:
             io.kubernetes.pod.namespace: nats
-    - toCIDR:
-        - ${cidr}

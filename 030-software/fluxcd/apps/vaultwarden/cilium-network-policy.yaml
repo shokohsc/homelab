@@ -21,10 +21,6 @@ spec:
               - matchPattern: "*"
     - toEndpoints:
         - matchLabels:
-            io.kubernetes.pod.namespace: vaultwarden
-        - matchLabels:
             io.kubernetes.pod.namespace: cnpg-system
         - matchLabels:
             io.kubernetes.pod.namespace: nfs-shared
-    - toCIDR:
-        - ${cidr}

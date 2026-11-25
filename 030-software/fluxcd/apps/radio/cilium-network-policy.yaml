@@ -22,7 +22,3 @@ spec:
     - toEndpoints:
         - matchLabels:
             io.kubernetes.pod.namespace: radio
-    - toCIDR:
-        - ${cidr}
-    - toEntities:
-        - world

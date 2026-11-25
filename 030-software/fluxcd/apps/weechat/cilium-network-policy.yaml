@@ -22,7 +22,5 @@ spec:
     - toEndpoints:
         - matchLabels:
             io.kubernetes.pod.namespace: weechat
-    - toCIDR:
-        - ${cidr}
     - toEntities:
         - world

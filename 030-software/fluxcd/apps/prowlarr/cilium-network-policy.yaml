@@ -21,8 +21,6 @@ spec:
               - matchPattern: "*"
     - toEndpoints:
         - matchLabels:
-            io.kubernetes.pod.namespace: prowlarr
-        - matchLabels:
             io.kubernetes.pod.namespace: sonarr
         - matchLabels:
             io.kubernetes.pod.namespace: radarr

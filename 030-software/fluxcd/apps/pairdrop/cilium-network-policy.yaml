@@ -19,10 +19,10 @@ spec:
           rules:
             dns:
               - matchPattern: "*"
-    - toEndpoints:
-        - matchLabels:
-            io.kubernetes.pod.namespace: pairdrop
+    # - toEndpoints:
+    #     - matchLabels:
+    #         io.kubernetes.pod.namespace: pairdrop
     - toCIDR:
         - ${cidr}
-    - toEntities:
-        - world
+    # - toEntities:
+    #     - world

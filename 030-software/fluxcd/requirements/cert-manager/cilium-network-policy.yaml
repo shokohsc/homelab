@@ -22,8 +22,6 @@ spec:
     - toEndpoints:
         - matchLabels:
             io.kubernetes.pod.namespace: cert-manager
-    - toCIDR:
-        - ${cidr}
     - toEntities:
         - kube-apiserver
         - cluster

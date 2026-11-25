@@ -21,10 +21,6 @@ spec:
               - matchPattern: "*"
     - toEndpoints:
         - matchLabels:
-            io.kubernetes.pod.namespace: pocket-id
-        - matchLabels:
             io.kubernetes.pod.namespace: cnpg-system
-    - toCIDR:
-        - ${cidr}
     - toEntities:
         - world

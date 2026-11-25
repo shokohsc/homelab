@@ -21,8 +21,4 @@ spec:
               - matchPattern: "*"
     - toEndpoints:
         - matchLabels:
-            io.kubernetes.pod.namespace: redisinsight
-        - matchLabels:
             io.kubernetes.pod.namespace: valkey
-    - toCIDR:
-        - ${cidr}

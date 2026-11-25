@@ -9,6 +9,7 @@ resources:
   - pvc.yaml
   # - cronjob.yaml
   - secret.yaml
+  - cilium-network-policy.yaml
 configMapGenerator:
 - name: scripts
   files:

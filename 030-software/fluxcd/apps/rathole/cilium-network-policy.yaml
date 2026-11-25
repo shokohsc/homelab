@@ -21,8 +21,6 @@ spec:
               - matchPattern: "*"
     - toEndpoints:
         - matchLabels:
-            io.kubernetes.pod.namespace: rathole
-    - toCIDR:
-        - ${cidr}
+            io.kubernetes.pod.namespace: maddy
     - toEntities:
         - world

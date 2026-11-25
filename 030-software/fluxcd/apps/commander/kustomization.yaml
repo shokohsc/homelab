@@ -7,4 +7,4 @@ resources:
   - poddisruptionbudget.yaml
   - service.yaml
   - http-route.yaml
-  - netpol.yaml
+  - cilium-network-policy.yaml

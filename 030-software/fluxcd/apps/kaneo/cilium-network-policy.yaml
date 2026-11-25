@@ -21,8 +21,4 @@ spec:
               - matchPattern: "*"
     - toEndpoints:
         - matchLabels:
-            io.kubernetes.pod.namespace: kaneo
-        - matchLabels:
             io.kubernetes.pod.namespace: cnpg-system
-    - toCIDR:
-        - ${cidr}

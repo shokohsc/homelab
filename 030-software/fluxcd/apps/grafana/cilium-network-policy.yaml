@@ -32,7 +32,5 @@ spec:
             io.kubernetes.pod.namespace: loki
         - matchLabels:
             io.kubernetes.pod.namespace: tempo
-    - toCIDR:
-        - ${cidr}
     - toEntities:
         - world

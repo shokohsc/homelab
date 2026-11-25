@@ -21,8 +21,6 @@ spec:
               - matchPattern: "*"
     - toEndpoints:
         - matchLabels:
-            io.kubernetes.pod.namespace: alloy
-        - matchLabels:
             io.kubernetes.pod.namespace: loki
     - toCIDR:
         - ${cidr}

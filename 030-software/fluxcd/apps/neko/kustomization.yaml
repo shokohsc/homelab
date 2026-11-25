@@ -6,7 +6,7 @@ resources:
   - deployment.yaml
   - service.yaml
   - routes.yaml
-  # - networkpolicy.yaml
+  - cilium-network-policy.yaml
 configMapGenerator:
 - name: policies
   files:

@@ -21,8 +21,4 @@ spec:
               - matchPattern: "*"
     - toEndpoints:
         - matchLabels:
-            io.kubernetes.pod.namespace: zipkin
-        - matchLabels:
             io.kubernetes.pod.namespace: tempo
-    - toCIDR:
-        - ${cidr}

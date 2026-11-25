@@ -23,6 +23,10 @@ spec:
     - toEndpoints:
         - matchLabels:
             io.kubernetes.pod.namespace: crossplane-system
+        - matchLabels:
+            io.kubernetes.pod.namespace: talos-proxmox-autoscaler
+        - matchLabels:
+            io.kubernetes.pod.namespace: whsah
     - toCIDR:
         - ${cidr}
     - toEntities:
