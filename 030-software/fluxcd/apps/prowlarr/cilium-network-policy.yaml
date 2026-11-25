@@ -27,6 +27,8 @@ spec:
         - matchLabels:
             io.kubernetes.pod.namespace: radarr
         - matchLabels:
+            io.kubernetes.pod.namespace: deluge
+        - matchLabels:
             io.kubernetes.pod.namespace: cnpg-system
     - toEntities:
         - world
