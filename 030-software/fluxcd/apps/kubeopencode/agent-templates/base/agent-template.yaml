@@ -80,7 +80,7 @@ spec:
     # model: opencode/nemotron-3.5-lightning-free
     # model: opencode/tidepool-alpha-free
     # model: nvidia_custom/z-ai/glm-5.3-flash
-    model: llamacpp/LFM2.5-24B-A2B-Q4_K_M
+    model: llamacpp/NVIDIA-Nemotron-3.5-Bolt-E4B-Q8_0
 
     provider:
       nvidia_custom:
@@ -114,8 +114,6 @@ spec:
             name: gemma-4-E4B-it-Q4_0
           NVIDIA-Nemotron-3.5-Bolt-E4B-Q8_0:
             name: NVIDIA-Nemotron-3.5-Bolt-E4B-Q8_0
-          LFM2.5-24B-A2B-Q4_K_M:
-            name: LFM2.5-24B-A2B-Q4_K_M
           Laya-Q8_0:
             name: Laya-Q8_0
           Gemma-4-E4B-Uncensored-HauhauCS-Aggressive-Q8_K_P:
