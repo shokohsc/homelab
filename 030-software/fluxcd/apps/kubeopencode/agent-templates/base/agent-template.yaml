@@ -107,7 +107,8 @@ spec:
         npm: "@ai-sdk/openai-compatible"
         name: "llama CPP (homelab)"
         options:
-          baseURL: "https://llama.${domain}/v1"
+          # baseURL: "https://llamacpp.${domain}/v1"
+          baseURL: "http://llamacpp.llamacpp.svc.cluster.local/v1"
         models:
           gemma-4-E4B-it-Q4_0:
             name: gemma-4-E4B-it-Q4_0
