@@ -84,3 +84,10 @@
   - What: Karakeep's `EMBEDDING_ENABLE_AUTO_INDEXING` defaults to false when `OLLAMA_BASE_URL` is set, and `EMBEDDING_DIMENSIONS` stayed at 1536 for a 768-dimension model, so semantic search was off.
   - Why: provider-specific defaults are easy to miss when only the model name and base URL are configured.
   - Benefit: self-hosted inference setups get working semantic features instead of silently disabled ones.
+
+## 2026-11-25
+
+- learned-rules: generate app credentials in the pod when the SOPS key is unavailable instead of committing placeholders.
+  - What: OpenChamber needs a UI password and JWT secret; with the SOPS public key file blocked, its container generates both from Python secrets on first start, persists them on the config PVC and accepts an optional Secret override.
+  - Why: placeholders leave the app unauthenticated or unschedulable, while plaintext values violate the no-secrets-in-Git rule.
+  - Benefit: app additions stay deliverable, authenticated and restart-stable without needing the encryption key.
