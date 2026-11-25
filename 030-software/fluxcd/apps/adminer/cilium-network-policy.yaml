@@ -24,5 +24,3 @@ spec:
             io.kubernetes.pod.namespace: adminer
         - matchLabels:
             io.kubernetes.pod.namespace: cnpg-system
-    - toCIDR:
-        - ${cidr}

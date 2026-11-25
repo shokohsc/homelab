@@ -23,8 +23,8 @@ spec:
         - matchLabels:
             io.kubernetes.pod.namespace: sonarr
         - matchLabels:
+            io.kubernetes.pod.namespace: prowlarr
+        - matchLabels:
             io.kubernetes.pod.namespace: cnpg-system
-    - toCIDR:
-        - ${cidr}
     - toEntities:
         - world
