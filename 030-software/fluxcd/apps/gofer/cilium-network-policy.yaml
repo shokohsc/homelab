@@ -21,3 +21,8 @@ spec:
               - matchPattern: "*"
     - toCIDR:
         - ${cidr}
+    - toEntities:
+        - world
+    - toEndpoints:
+        - matchLabels:
+            io.kubernetes.pod.namespace: maddy
