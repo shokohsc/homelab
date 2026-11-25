@@ -1,0 +1,44 @@
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: openchamber-config
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: openchamber-local
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 5Gi
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: openchamber-ssh
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 100Mi
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: openchamber-workspaces
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Gi
