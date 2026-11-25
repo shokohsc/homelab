@@ -25,5 +25,8 @@ spec:
       toPorts:
         - ports:
             - port: "2746"
+    - toEndpoints:
+        - matchLabels:
+            io.kubernetes.pod.namespace: llamacpp
     - toEntities:
         - world

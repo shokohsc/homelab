@@ -19,11 +19,11 @@ spec:
           rules:
             dns:
               - matchPattern: "*"
-    - toEndpoints:
-        - matchLabels:
-            io.kubernetes.pod.namespace: nfs-proxmox
-    - toCIDR:
-        - ${cidr}
+    # - toEndpoints:
+    #     - matchLabels:
+    #         io.kubernetes.pod.namespace: nfs-proxmox
+    # - toCIDR:
+    #     - ${cidr}
     - toEntities:
         - host
         - cluster
