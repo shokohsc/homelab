@@ -24,8 +24,6 @@ spec:
             io.kubernetes.pod.namespace: kubeopencode
         - matchLabels:
             io.kubernetes.pod.namespace: workspace
-    - toCIDR:
-        - ${cidr}
     - toEntities:
         - kube-apiserver
         - cluster
