@@ -74,8 +74,6 @@ spec:
             - $HUGGINGFACE_TOKEN
             - --ctx-size
             - "8192"
-            - --threads
-            - $(nproc)
             - --parallel
             - "1"
             - --gpu-layers
@@ -125,8 +123,8 @@ spec:
               memory: 1064Mi
             limits:
               memory: 4096Mi
-              # nvidia.com/gpu.shared: "1"
-              nvidia.com/gpu: "1"
+              nvidia.com/gpu.shared: "1"
+              # nvidia.com/gpu: "1"
           volumeMounts:
             - name: models
               mountPath: /models
