@@ -22,3 +22,5 @@ spec:
     - toEndpoints:
         - matchLabels:
             io.kubernetes.pod.namespace: deluge
+        - matchLabels:
+            io.kubernetes.pod.namespace: storm
