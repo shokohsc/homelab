@@ -87,9 +87,9 @@ spec:
             - --cache-type-v
             - q8_0
             - --batch-size
-            - "4096"
+            - "2048"
             - --ubatch-size
-            - "4096"
+            - "2048"
             - --jinja
             - --chat-template-kwargs
             - '{"enable_thinking":false}'
