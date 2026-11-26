@@ -73,9 +73,11 @@ spec:
             - --hf-token
             - $HUGGINGFACE_TOKEN
             - --ctx-size
-            - "0"
+            - "8192"
+            - --threads
+            - $(nproc)
             - --parallel
-            - "2"
+            - "1"
             - --gpu-layers
             - "999"
             - --flash-attn
@@ -88,6 +90,9 @@ spec:
             - "4096"
             - --ubatch-size
             - "4096"
+            - --jinja
+            - --chat-template-kwargs
+            - '{"enable_thinking":false}'
           env:
             # - name: "NVIDIA_DRIVER_CAPABILITIES"
             #   value: "compute,utility"
