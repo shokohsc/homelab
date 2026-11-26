@@ -34,6 +34,7 @@ resources:
   - headlamp
   - intel-gpu-plugin
   - iptvnator
+  - job-navigator
   - jsoncrack
   # - lidarr
   - llamacpp

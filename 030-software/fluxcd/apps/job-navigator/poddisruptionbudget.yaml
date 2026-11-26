@@ -1,0 +1,20 @@
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: job-navigator-backend
+spec:
+  minAvailable: 1
+  selector:
+    matchLabels:
+      app: job-navigator-backend
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: job-navigator-frontend
+spec:
+  minAvailable: 1
+  selector:
+    matchLabels:
+      app: job-navigator-frontend

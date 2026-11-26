@@ -1,0 +1,51 @@
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: job-navigator
+  annotations:
+    dashboard.${domain}/icon: briefcase
+    dashboard.${domain}/name: job-navigator
+    dashboard.${domain}/url: https://job-navigator.${domain}
+spec:
+  hostnames:
+  - job-navigator.${domain}
+  parentRefs:
+  - name: cilium
+    namespace: cilium
+  rules:
+  - matches:
+    - path:
+        type: PathPrefix
+        value: /api
+    - path:
+        type: PathPrefix
+        value: /.well-known/oauth-
+    - path:
+        type: PathPrefix
+        value: /cv/
+    - path:
+        type: Exact
+        value: /health
+    - path:
+        type: Exact
+        value: /docs
+    - path:
+        type: PathPrefix
+        value: /docs/
+    - path:
+        type: Exact
+        value: /redoc
+    - path:
+        type: Exact
+        value: /openapi.json
+    backendRefs:
+    - name: job-navigator-backend
+      port: 80
+  - matches:
+    - path:
+        type: PathPrefix
+        value: /
+    backendRefs:
+    - name: job-navigator-frontend
+      port: 80
