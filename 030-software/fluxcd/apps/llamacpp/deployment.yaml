@@ -73,7 +73,7 @@ spec:
             - --hf-token
             - $HUGGINGFACE_TOKEN
             - --ctx-size
-            - "131072"
+            - "65536"
             - --parallel
             - "1"
             - --gpu-layers
