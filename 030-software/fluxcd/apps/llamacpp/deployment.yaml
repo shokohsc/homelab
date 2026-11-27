@@ -112,6 +112,7 @@ spec:
               mountPath: /tmp
             - name: config
               mountPath: /app/config.ini
+              subPath: config.ini
       volumes:
         - name: models
           persistentVolumeClaim:
