@@ -62,6 +62,7 @@ resources:
   - nosterm
   # - nostr-gateway
   - nvidia-device-plugin
+  - openchamber
   - opentelemetry
   - paint
   - pairdrop

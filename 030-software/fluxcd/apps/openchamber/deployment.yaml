@@ -1,0 +1,139 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: openchamber
+  labels:
+    stateful: "true"
+spec:
+  revisionHistoryLimit: 0
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: openchamber
+  template:
+    metadata:
+      labels:
+        app: openchamber
+    spec:
+      automountServiceAccountToken: false
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        seccompProfile:
+          type: RuntimeDefault
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              podAffinityTerm:
+                topologyKey: kubernetes.io/hostname
+                labelSelector:
+                  matchLabels:
+                    app: openchamber
+      topologySpreadConstraints:
+        - maxSkew: 1
+          topologyKey: kubernetes.io/hostname
+          whenUnsatisfiable: ScheduleAnyway
+          labelSelector:
+            matchLabels:
+              app: openchamber
+      containers:
+        - name: openchamber
+          image: ghcr.io/openchamber/openchamber:2.8.1
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+            capabilities:
+              drop:
+                - ALL
+          env:
+            - name: OPENCHAMBER_HOST
+              value: "0.0.0.0"
+            - name: OPENCHAMBER_LAN_URL
+              value: "https://openchamber.${domain}"
+            - name: OPENCHAMBER_TRUSTED_PROXIES
+              value: "${kubePodsCidr}"
+            - name: OPENCHAMBER_UI_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: openchamber
+                  key: ui-password
+            - name: OPENCODE_JWT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: openchamber
+                  key: jwt-secret
+            - name: GITHUB_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: openchamber
+                  key: github-token
+            - name: OPENCODE_DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: openchamber
+                  key: github-token
+          ports:
+            - name: http
+              containerPort: 3000
+              protocol: TCP
+          startupProbe:
+            tcpSocket:
+              port: http
+            failureThreshold: 30
+            periodSeconds: 5
+          livenessProbe:
+            tcpSocket:
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+          resources:
+            requests:
+              cpu: 100m
+              memory: 256Mi
+            limits:
+              memory: 4096Mi
+          volumeMounts:
+            - name: config
+              mountPath: /home/openchamber/.config
+            - name: local
+              mountPath: /home/openchamber/.local
+            - name: ssh
+              mountPath: /home/openchamber/.ssh
+            - name: workspaces
+              mountPath: /home/openchamber/workspaces
+            - name: npm-global
+              mountPath: /home/openchamber/.npm-global
+            - name: bun
+              mountPath: /home/openchamber/.bun
+            - name: cache
+              mountPath: /home/openchamber/.cache
+            - name: tmp
+              mountPath: /tmp
+      volumes:
+        - name: config
+          persistentVolumeClaim:
+            claimName: openchamber-config
+        - name: local
+          persistentVolumeClaim:
+            claimName: openchamber-local
+        - name: ssh
+          emptyDir: {}
+        - name: workspaces
+          persistentVolumeClaim:
+            claimName: openchamber-workspaces
+        - name: npm-global
+          emptyDir: {}
+        - name: bun
+          emptyDir: {}
+        - name: cache
+          emptyDir: {}
+        - name: tmp
+          emptyDir: {}

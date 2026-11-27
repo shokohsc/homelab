@@ -1,0 +1,30 @@
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: openchamber
+spec:
+  endpointSelector:
+    matchLabels:
+      app: openchamber
+  egress:
+    - toEndpoints:
+        - matchLabels:
+            io.kubernetes.pod.namespace: kube-system
+            k8s-app: kube-dns
+      toPorts:
+        - ports:
+            - port: "53"
+              protocol: UDP
+            - port: "53"
+              protocol: TCP
+          rules:
+            dns:
+              - matchPattern: "*"
+    - toEndpoints:
+        - matchLabels:
+            io.kubernetes.pod.namespace: llamacpp
+        - matchLabels:
+            io.kubernetes.pod.namespace: cnpg-system
+    - toEntities:
+        - kube-apiserver
+        - world

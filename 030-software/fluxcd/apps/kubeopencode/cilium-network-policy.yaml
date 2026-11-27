@@ -28,5 +28,7 @@ spec:
     - toEndpoints:
         - matchLabels:
             io.kubernetes.pod.namespace: llamacpp
+        - matchLabels:
+            io.kubernetes.pod.namespace: cnpg-system
     - toEntities:
         - world
