@@ -39,7 +39,7 @@ spec:
               app: job-navigator-backend
       containers:
         - name: job-navigator-backend
-          image: ghcr.io/vesaias/jobnavigator-backend:3.1@sha256:9689df1b985fd58443a4b876886b643818562fe9305bc51ba87cfc8abead8c9f
+          image: ghcr.io/vesaias/jobnavigator-backend:3.1
           imagePullPolicy: Always
           securityContext:
             allowPrivilegeEscalation: false
