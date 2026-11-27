@@ -95,7 +95,6 @@ spec:
                     temporal-aq=true
                     bitrate=4096
                     vbv-buffer-size=4096
-                    rc-mode=6
                   ! h264parse config-interval=-1
                   ! video/x-h264,stream-format=byte-stream
                   ! appsink name=appsink
