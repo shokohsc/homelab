@@ -34,6 +34,8 @@ spec:
             io.kubernetes.pod.namespace: browserless
         - matchLabels:
             io.kubernetes.pod.namespace: maddy
+        - matchLabels:
+            io.kubernetes.pod.namespace: zipkin
     - toEntities:
         - kube-apiserver
         - world
