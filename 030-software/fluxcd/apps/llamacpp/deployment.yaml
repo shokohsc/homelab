@@ -62,8 +62,8 @@ spec:
             - "8080"
             # - --model
             # - /models/Gemma-4-E4B-Uncensored-HauhauCS-Aggressive-Q8_K_P.gguf
-            - --alias
-            - Gemma-4-E4B-Uncensored-HauhauCS-Aggressive-Q8_K_P
+            # - --alias
+            # - Gemma-4-E4B-Uncensored-HauhauCS-Aggressive-Q8_K_P
             - --models-dir
             - /models
             # - --models-preset
@@ -73,24 +73,40 @@ spec:
             - --hf-token
             - $HUGGINGFACE_TOKEN
             - --ctx-size
-            - "65536"
+            - "0"
             - --parallel
             - "1"
             - --gpu-layers
-            - "999"
+            - "99"
             - --flash-attn
             - on
             - --cache-type-k
-            - q8_0
+            - f16
             - --cache-type-v
-            - q8_0
+            - f16
+            - --cache-ram
+            - "65536"
+            - --kv-unified
+            - --cache-reuse
+            -  "1024"
+            - --ctx-checkpoints
+            -  "128"
             - --batch-size
-            - "2048"
+            - "32768"
             - --ubatch-size
-            - "2048"
+            - "4096"
+            - --spec-default
+            - --spec-type
+            - draft-mtp
+            - --spec-draft-n-max
+            - "8"
+            - --rope-scaling
+            - yarn
+            - --yarn-orig-ctx
+            - "262144"
             - --jinja
             - --chat-template-kwargs
-            - '{"enable_thinking":false}'
+            - '{"preserve_thinking": true, "enable_thinking":false}'
           env:
             # - name: "NVIDIA_DRIVER_CAPABILITIES"
             #   value: "compute,utility"
