@@ -3,7 +3,9 @@ kind: CiliumNetworkPolicy
 metadata:
   name: openchamber
 spec:
-  endpointSelector: {}
+  endpointSelector:
+    matchLabels:
+      app: openchamber
   egress:
     - toEndpoints:
         - matchLabels:
@@ -18,6 +20,11 @@ spec:
           rules:
             dns:
               - matchPattern: "*"
+    - toEndpoints:
+        - matchLabels:
+            io.kubernetes.pod.namespace: llamacpp
+        - matchLabels:
+            io.kubernetes.pod.namespace: cnpg-system
     - toEntities:
         - kube-apiserver
         - world

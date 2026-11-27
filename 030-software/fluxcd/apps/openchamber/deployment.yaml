@@ -43,7 +43,7 @@ spec:
               app: openchamber
       containers:
         - name: openchamber
-          image: ghcr.io/openchamber/openchamber:2.8.0
+          image: ghcr.io/openchamber/openchamber:2.8.1
           securityContext:
             allowPrivilegeEscalation: false
             readOnlyRootFilesystem: true
@@ -51,28 +51,6 @@ spec:
             capabilities:
               drop:
                 - ALL
-          command:
-            - /bin/sh
-            - -c
-          args:
-            - |
-              umask 077
-              config_dir=/home/openchamber/.config
-              if [ -z "${OPENCODE_JWT_SECRET:-}" ]; then
-                if [ ! -f "${config_dir}/opencode-jwt-secret" ]; then
-                  python3 -c 'import secrets; print(secrets.token_hex(48))' > "${config_dir}/opencode-jwt-secret"
-                fi
-                OPENCODE_JWT_SECRET="$(cat "${config_dir}/opencode-jwt-secret")"
-                export OPENCODE_JWT_SECRET
-              fi
-              if [ -z "${OPENCHAMBER_UI_PASSWORD:-}" ]; then
-                if [ ! -f "${config_dir}/ui-password" ]; then
-                  python3 -c 'import secrets; print(secrets.token_hex(32))' > "${config_dir}/ui-password"
-                fi
-                OPENCHAMBER_UI_PASSWORD="$(cat "${config_dir}/ui-password")"
-                export OPENCHAMBER_UI_PASSWORD
-              fi
-              exec sh /home/openchamber/openchamber-entrypoint.sh
           env:
             - name: OPENCHAMBER_HOST
               value: "0.0.0.0"
@@ -85,13 +63,21 @@ spec:
                 secretKeyRef:
                   name: openchamber
                   key: ui-password
-                  optional: true
             - name: OPENCODE_JWT_SECRET
               valueFrom:
                 secretKeyRef:
                   name: openchamber
                   key: jwt-secret
-                  optional: true
+            - name: GITHUB_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: openchamber
+                  key: github-token
+            - name: OPENCODE_DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: openchamber
+                  key: github-token
           ports:
             - name: http
               containerPort: 3000
@@ -139,8 +125,7 @@ spec:
           persistentVolumeClaim:
             claimName: openchamber-local
         - name: ssh
-          persistentVolumeClaim:
-            claimName: openchamber-ssh
+          emptyDir: {}
         - name: workspaces
           persistentVolumeClaim:
             claimName: openchamber-workspaces

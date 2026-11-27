@@ -86,6 +86,7 @@ spec:
     # model: nvidia_custom/z-ai/glm-5.3-flash
     # model: llamacpp/Gemma-4-E4B-Uncensored-HauhauCS-Aggressive-Q8_K_P
     # model: llamacpp/Qwen3.6-35B-A3B-Q4_K_M
+    # model: llamacpp/Qwen3.8-27B-Q4_K_M
     # model: llamacpp/Qwen3-8B-Q8_0
     # model: llamacpp/qwen2.5-coder-14b-instruct-q8_0
 
@@ -116,6 +117,8 @@ spec:
         models:
           Qwen3.6-35B-A3B-Q4_K_M:
             name: Qwen3.6-35B-A3B-Q4_K_M
+          Qwen3.8-27B-Q4_K_M:
+            name: Qwen3.8-27B-Q4_K_M
           Qwen3-8B-Q8_0:
             name: Qwen3-8B-Q8_0
           qwen2.5-coder-14b-instruct-q8_0:

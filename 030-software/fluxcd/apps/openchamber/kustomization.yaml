@@ -6,6 +6,6 @@ resources:
   - deployment.yaml
   - http-route.yaml
   - namespace.yaml
-  - poddisruptionbudget.yaml
   - pvc.yaml
   - service.yaml
+  - secret.yaml
