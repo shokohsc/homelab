@@ -27,7 +27,7 @@ spec:
     server:
       extraLabels:
         stateful: "true"
-      retentionPeriod: 1w
+      retentionPeriod: 48h
       scrape:
         enabled: true
       route:
