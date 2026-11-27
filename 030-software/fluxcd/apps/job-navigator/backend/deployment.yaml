@@ -1,0 +1,113 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: job-navigator-backend
+spec:
+  revisionHistoryLimit: 0
+  selector:
+    matchLabels:
+      app: job-navigator-backend
+  template:
+    metadata:
+      labels:
+        app: job-navigator-backend
+    spec:
+      automountServiceAccountToken: false
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        seccompProfile:
+          type: RuntimeDefault
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              podAffinityTerm:
+                topologyKey: kubernetes.io/hostname
+                labelSelector:
+                  matchLabels:
+                    app: job-navigator-backend
+      topologySpreadConstraints:
+        - maxSkew: 1
+          topologyKey: kubernetes.io/hostname
+          whenUnsatisfiable: ScheduleAnyway
+          labelSelector:
+            matchLabels:
+              app: job-navigator-backend
+      containers:
+        - name: job-navigator-backend
+          image: ghcr.io/vesaias/jobnavigator-backend:3.1
+          imagePullPolicy: Always
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+            capabilities:
+              drop:
+                - ALL
+          env:
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: job-navigator
+                  key: postgresql-database-url
+            - name: ALLOWED_ORIGINS
+              value: https://job-navigator.${domain}
+            - name: JN_RUNNER_MANAGEMENT
+              value: "0"
+            - name: JN_TELEMETRY
+              value: "off"
+          ports:
+            - name: http
+              containerPort: 8000
+              protocol: TCP
+          startupProbe:
+            tcpSocket:
+              port: http
+          livenessProbe:
+            tcpSocket:
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: http
+          resources:
+            requests:
+              cpu: 100m
+              memory: 256Mi
+            limits:
+              memory: 2048Mi
+          volumeMounts:
+            - name: temp
+              mountPath: /tmp
+            - name: backups
+              mountPath: /app/backups
+            - name: linkedin-api
+              mountPath: /app/backend/.linkedin_api
+            - name: runner-control
+              mountPath: /run/jobnavigator-runner
+            - name: codex-auth
+              mountPath: /root/.codex
+            - name: antigravity-auth
+              mountPath: /root/.gemini
+            - name: claude-accounts
+              mountPath: /root/.claude-accounts
+      volumes:
+        - name: temp
+          emptyDir:
+            medium: Memory
+        - name: backups
+          emptyDir: {}
+        - name: linkedin-api
+          emptyDir: {}
+        - name: runner-control
+          emptyDir: {}
+        - name: codex-auth
+          emptyDir: {}
+        - name: antigravity-auth
+          emptyDir: {}
+        - name: claude-accounts
+          emptyDir: {}

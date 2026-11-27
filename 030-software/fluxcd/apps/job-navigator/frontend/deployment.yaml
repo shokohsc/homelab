@@ -1,0 +1,82 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: job-navigator-frontend
+spec:
+  revisionHistoryLimit: 0
+  selector:
+    matchLabels:
+      app: job-navigator-frontend
+  template:
+    metadata:
+      labels:
+        app: job-navigator-frontend
+        policy.gatekeeper.sh/ignore-psp-volume-types: "true"
+    spec:
+      automountServiceAccountToken: false
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        seccompProfile:
+          type: RuntimeDefault
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              podAffinityTerm:
+                topologyKey: kubernetes.io/hostname
+                labelSelector:
+                  matchLabels:
+                    app: job-navigator-frontend
+      topologySpreadConstraints:
+        - maxSkew: 1
+          topologyKey: kubernetes.io/hostname
+          whenUnsatisfiable: ScheduleAnyway
+          labelSelector:
+            matchLabels:
+              app: job-navigator-frontend
+      containers:
+        - name: job-navigator-frontend
+          image: busybox:1.38
+          args: ["busybox", "httpd", "-f", "-v", "-p", "8080"]
+          workingDir: /assets
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+            capabilities:
+              drop:
+                - ALL
+          env:
+            - name: BACKEND_URL
+              value: https://api.iptvnator.${domain}
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+          startupProbe:
+            tcpSocket:
+              port: http
+          livenessProbe:
+            tcpSocket:
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+          resources:
+            requests:
+              cpu: 100m
+            limits:
+              memory: 64Mi
+          volumeMounts:
+            - name: assets
+              mountPath: /assets
+              subPath: usr/share/nginx/html
+      volumes:
+        - name: assets
+          image:
+            reference: ghcr.io/vesaias/jobnavigator-frontend:3.1

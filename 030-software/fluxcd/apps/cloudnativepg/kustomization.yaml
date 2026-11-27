@@ -12,6 +12,8 @@ resources:
   - database-roles/atuin.yaml
   - database-roles/buzz.yaml
   - database-roles/ferretdb.yaml
+  - database-roles/job-navigator-secret.yaml
+  - database-roles/job-navigator.yaml
   - database-roles/kaneo.yaml
   - database-roles/kubeopencode.yaml
   - database-roles/lidarr.yaml

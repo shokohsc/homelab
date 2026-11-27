@@ -18,3 +18,4 @@ worker.yaml
 talosconfig
 convert/
 commander-debug.yaml
+cnpg-system.yaml
