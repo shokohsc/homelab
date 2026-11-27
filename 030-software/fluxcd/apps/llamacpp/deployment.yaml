@@ -55,62 +55,26 @@ spec:
             capabilities:
               drop:
                 - ALL
-          args:
-            - --host
-            - 0.0.0.0
-            - --port
-            - "8080"
-            # - --model
-            # - /models/Gemma-4-E4B-Uncensored-HauhauCS-Aggressive-Q8_K_P.gguf
-            # - --alias
-            # - Gemma-4-E4B-Uncensored-HauhauCS-Aggressive-Q8_K_P
-            - --models-dir
-            - /models
-            # - --models-preset
-            # - /app/config.ini
-            - --models-max
-            - "0"
-            - --hf-token
-            - $HUGGINGFACE_TOKEN
-            - --ctx-size
-            - "0"
-            - --parallel
-            - "1"
-            - --gpu-layers
-            - "99"
-            - --flash-attn
-            - on
-            - --cache-type-k
-            - f16
-            - --cache-type-v
-            - f16
-            - --cache-ram
-            - "65536"
-            - --kv-unified
-            - --cache-reuse
-            -  "1024"
-            - --ctx-checkpoints
-            -  "128"
-            - --batch-size
-            - "32768"
-            - --ubatch-size
-            - "4096"
-            - --spec-default
-            - --spec-type
-            - draft-mtp
-            - --spec-draft-n-max
-            - "8"
-            - --rope-scaling
-            - yarn
-            - --yarn-orig-ctx
-            - "262144"
-            - --jinja
-            - --chat-template-kwargs
-            - '{"preserve_thinking": true, "enable_thinking":false}'
+            args:
+              - --host
+              - "0.0.0.0"
+              - --port
+              - "8080"
+              - --models-dir
+              - /models
+              - --models-preset
+              - /app/config.ini
+              - --models-max
+              - "1"
+              # Preserve VRAM headroom
+              - --models-memory-margin
+              - "2048"
+              # Enable monitoring
+              - --metrics
           env:
             # - name: "NVIDIA_DRIVER_CAPABILITIES"
             #   value: "compute,utility"
-            - name: HUGGINGFACE_TOKEN
+            - name: HF_TOKEN
               valueFrom:
                 secretKeyRef:
                   name: credentials
@@ -138,7 +102,7 @@ spec:
               cpu: 100m
               memory: 1064Mi
             limits:
-              memory: 4096Mi
+              memory: 8192Mi
               nvidia.com/gpu.shared: "1"
               # nvidia.com/gpu: "1"
           volumeMounts:
