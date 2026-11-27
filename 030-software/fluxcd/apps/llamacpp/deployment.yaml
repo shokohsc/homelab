@@ -55,22 +55,22 @@ spec:
             capabilities:
               drop:
                 - ALL
-            args:
-              - --host
-              - "0.0.0.0"
-              - --port
-              - "8080"
-              # - --models-dir
-              # - /models
-              - --models-preset
-              - /app/config.ini
-              - --models-max
-              - "1"
-              # Preserve VRAM headroom
-              - --models-memory-margin
-              - "2048"
-              # Enable monitoring
-              - --metrics
+          args:
+            - --host
+            - "0.0.0.0"
+            - --port
+            - "8080"
+            # - --models-dir
+            # - /models
+            - --models-preset
+            - /app/config.ini
+            - --models-max
+            - "1"
+            # Preserve VRAM headroom
+            - --models-memory-margin
+            - "2048"
+            # Enable monitoring
+            - --metrics
           env:
             # - name: "NVIDIA_DRIVER_CAPABILITIES"
             #   value: "compute,utility"
