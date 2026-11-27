@@ -26,5 +26,7 @@ spec:
             io.kubernetes.pod.namespace: browserless
         - matchLabels:
             io.kubernetes.pod.namespace: meilisearch
+        - matchLabels:
+            io.kubernetes.pod.namespace: llamacpp
     - toEntities:
         - world
