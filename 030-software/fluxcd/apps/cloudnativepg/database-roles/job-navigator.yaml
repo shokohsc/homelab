@@ -1,7 +1,7 @@
 apiVersion: postgresql.cnpg.io/v1
 kind: Database
 metadata:
-  name: job-navigator
+  name: jobnavigator
 spec:
   name: jobnavigator
   owner: jobnavigator
@@ -11,7 +11,7 @@ spec:
 apiVersion: postgresql.cnpg.io/v1
 kind: DatabaseRole
 metadata:
-  name: job-navigator
+  name: jobnavigator
 spec:
   cluster:
     name: main
@@ -21,4 +21,4 @@ spec:
   createdb: false
   createrole: false
   passwordSecret:
-    name: job-navigator
+    name: jobnavigator
